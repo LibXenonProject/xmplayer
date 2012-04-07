@@ -1,0 +1,8 @@
+*.o
+*.d
+*.sys
+*.dll
+*.elf
+*.elf32
+ffmpeg
+
