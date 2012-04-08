@@ -104,6 +104,7 @@ FAAD = no
 FASTMEMCPY = yes
 FBDEV = no
 FREETYPE = yes
+#FREETYPE = no
 FTP = no
 GIF = no
 GGI = no

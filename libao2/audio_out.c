@@ -55,8 +55,13 @@ extern const ao_functions_t audio_out_mpegpes;
 extern const ao_functions_t audio_out_pcm;
 extern const ao_functions_t audio_out_pss;
 
+//xenon
+extern const ao_functions_t audio_out_xenon;
+
 const ao_functions_t* const audio_out_drivers[] =
 {
+	//xenon
+	&audio_out_xenon,
 // native:
 #ifdef CONFIG_DIRECTX
         &audio_out_dsound,

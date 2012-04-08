@@ -904,12 +904,14 @@ static int load_sub_face(const char *name, int face_index, FT_Face *face)
 	err = FT_New_Face(library, font_file, 0, face);
 	free(font_file);
 	if (err) {
+		//printf("Failed to load : %s\n",font_file);
 		char ttf_file[256];
 		sprintf(ttf_file,"%s/%s",MPLAYER_DATADIR,"/subfont.ttf");
 	    err = FT_New_Face(library, ttf_file, 0, face);
 	    if (err) {
+			printf("Failed to load : %s %08x\r\n",ttf_file,err);
 	        mp_msg(MSGT_OSD, MSGL_ERR, MSGTR_LIBVO_FONT_LOAD_FT_NewFaceFailed);
-		return -1;
+			return -1;
 	    }
 	}
     }

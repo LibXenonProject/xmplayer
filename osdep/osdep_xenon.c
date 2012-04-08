@@ -116,6 +116,7 @@ void waitpid(){
 
 int usleep(useconds_t __useconds){
 	udelay(__useconds);
+	return 0;
 }
 
 

@@ -299,9 +299,11 @@ SRCS_COMMON-$(ZR)                    += libmpcodecs/vd_zrmjpeg.c \
                                         libmpcodecs/vf_zrmjpeg.c
 
 GETCH = getch-xenon.c
+TIMER = timer-xenon.c
 
 SRCS_XENON  =	osdep/osdep_xenon.c \
-		libvo/vo_xenon.c
+		libvo/vo_xenon.c \
+		libao2/ao_xenon.c
 
 
 SRCS_COMMON = asxparser.c \

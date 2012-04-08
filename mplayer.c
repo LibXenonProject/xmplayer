@@ -3007,19 +3007,29 @@ int mplayer_main(int argc, char *argv[])
 
 #ifdef CONFIG_MENU
     if (use_menu) {
+		TR;
         if (menu_cfg && menu_init(mpctx, menu_cfg))
-            mp_msg(MSGT_CPLAYER, MSGL_V, "Menu initialized: %s\n", menu_cfg);
+		{
+			mp_msg(MSGT_CPLAYER, MSGL_V, "Menu initialized: %s\n", menu_cfg);
+		}
         else {
+			TR;
             menu_cfg = get_path("menu.conf");
             if (menu_init(mpctx, menu_cfg))
-                mp_msg(MSGT_CPLAYER, MSGL_V, "Menu initialized: %s\n", menu_cfg);
+			{
+				TR;
+				mp_msg(MSGT_CPLAYER, MSGL_V, "Menu initialized: %s\n", menu_cfg);
+			}
             else {
+				TR;
 				char menu_conf[256];
 				sprintf(menu_conf,"%s/%s",MPLAYER_CONFDIR,"/menu.conf");
                 if (menu_init(mpctx, menu_conf)){
+					TR;
                     mp_msg(MSGT_CPLAYER, MSGL_V,  "Menu initialized: %s\n", menu_conf);
 				}
                 else {
+					TR;
                     mp_msg(MSGT_CPLAYER, MSGL_ERR, MSGTR_MenuInitFailed);
                     use_menu = 0;
                 }
@@ -3028,6 +3038,8 @@ int mplayer_main(int argc, char *argv[])
     }
 #endif
 
+	TR;
+	
     initialized_flags |= INITIALIZED_INPUT;
     current_module     = NULL;
 

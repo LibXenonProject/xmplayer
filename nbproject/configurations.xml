@@ -317,7 +317,6 @@
           <in>aac_tablegen.c</in>
           <in>aac_tablegen.h</in>
           <in>aac_tablegen_decl.h</in>
-          <in>aac_tables.h</in>
           <in>aacadtsdec.c</in>
           <in>aacadtsdec.h</in>
           <in>aaccoder.c</in>
@@ -329,7 +328,6 @@
           <in>aacps.h</in>
           <in>aacps_tablegen.c</in>
           <in>aacps_tablegen.h</in>
-          <in>aacps_tables.h</in>
           <in>aacpsdata.c</in>
           <in>aacpsy.c</in>
           <in>aacpsy.h</in>
@@ -440,7 +438,6 @@
           <in>cavsdsp.h</in>
           <in>cbrt_tablegen.c</in>
           <in>cbrt_tablegen.h</in>
-          <in>cbrt_tables.h</in>
           <in>cdgraphics.c</in>
           <in>cdxl.c</in>
           <in>celp_filters.c</in>
@@ -454,9 +451,7 @@
           <in>cljr.c</in>
           <in>cook.c</in>
           <in>cookdata.h</in>
-          <in>cos_fixed_tables.c</in>
           <in>cos_tablegen.c</in>
-          <in>cos_tables.c</in>
           <in>cscd.c</in>
           <in>cyuv.c</in>
           <in>dca.c</in>
@@ -497,7 +492,6 @@
           <in>dv.c</in>
           <in>dv_tablegen.c</in>
           <in>dv_tablegen.h</in>
-          <in>dv_tables.h</in>
           <in>dv_vlc_data.h</in>
           <in>dvbsub.c</in>
           <in>dvbsub_parser.c</in>
@@ -735,7 +729,6 @@
           <in>motionpixels.c</in>
           <in>motionpixels_tablegen.c</in>
           <in>motionpixels_tablegen.h</in>
-          <in>motionpixels_tables.h</in>
           <in>movsub_bsf.c</in>
           <in>mp3_header_compress_bsf.c</in>
           <in>mp3_header_decompress_bsf.c</in>
@@ -767,7 +760,6 @@
           <in>mpegaudio_parser.c</in>
           <in>mpegaudio_tablegen.c</in>
           <in>mpegaudio_tablegen.h</in>
-          <in>mpegaudio_tables.h</in>
           <in>mpegaudiodata.c</in>
           <in>mpegaudiodata.h</in>
           <in>mpegaudiodec.c</in>
@@ -815,7 +807,6 @@
           <in>pcm.c</in>
           <in>pcm_tablegen.c</in>
           <in>pcm_tablegen.h</in>
-          <in>pcm_tables.h</in>
           <in>pcx.c</in>
           <in>pcxenc.c</in>
           <in>pgssubdec.c</in>
@@ -847,7 +838,6 @@
           <in>qdm2.c</in>
           <in>qdm2_tablegen.c</in>
           <in>qdm2_tablegen.h</in>
-          <in>qdm2_tables.h</in>
           <in>qdm2data.h</in>
           <in>qdrw.c</in>
           <in>qpeg.c</in>
@@ -918,12 +908,10 @@
           <in>simple_idct.c</in>
           <in>simple_idct.h</in>
           <in>simple_idct_template.c</in>
-          <in>sin_tables.c</in>
           <in>sinewin.c</in>
           <in>sinewin.h</in>
           <in>sinewin_tablegen.c</in>
           <in>sinewin_tablegen.h</in>
-          <in>sinewin_tables.h</in>
           <in>sipr.c</in>
           <in>sipr.h</in>
           <in>sipr16k.c</in>
@@ -1915,6 +1903,7 @@
         <in>ao_sun.c</in>
         <in>ao_v4l2.c</in>
         <in>ao_win32.c</in>
+        <in>ao_xenon.c</in>
         <in>audio_out.c</in>
         <in>audio_out.h</in>
         <in>audio_out_internal.h</in>
@@ -2588,6 +2577,8 @@
         <in>mmap_anon.c</in>
         <in>mmap_anon.h</in>
         <in>osdep.h</in>
+        <in>osdep_xenon.c</in>
+        <in>osdep_xenon.h</in>
         <in>priority.c</in>
         <in>priority.h</in>
         <in>setenv.c</in>

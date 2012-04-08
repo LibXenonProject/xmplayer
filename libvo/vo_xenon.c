@@ -55,6 +55,11 @@
 
 #include "fastmemcpy.h"
 
+#include "libavutil/common.h"
+#include "sub/font_load.h"
+#include "sub/sub.h"
+
+
 // Parameters:
 //
 //   sampler2D UTexture;
@@ -105,6 +110,29 @@ static const uint32_t vs[] = {
 	0xc8038000, 0x00b0b000, 0xe2000000, 0x00000000, 0x00000000, 0x00000000
 };
 
+// Parameters:
+//
+//   sampler2D YTexture;
+//
+//
+// Registers:
+//
+//   Name         Reg   Size
+//   ------------ ----- ----
+//   YTexture     s0       1
+static const uint32_t ps_osd[] ={
+    0x102a1100, 0x000000ac, 0x0000003c, 0x00000000, 0x00000024, 0x00000000, 
+    0x00000088, 0x00000000, 0x00000000, 0x00000060, 0x0000001c, 0x00000053, 
+    0xffff0300, 0x00000001, 0x0000001c, 0x00000000, 0x0000004c, 0x00000030, 
+    0x00030000, 0x00010000, 0x0000003c, 0x00000000, 0x59546578, 0x74757265, 
+    0x00ababab, 0x0004000c, 0x00010001, 0x00010000, 0x00000000, 0x70735f33, 
+    0x5f300032, 0x2e302e32, 0x30333533, 0x2e3000ab, 0x00000000, 0x0000003c, 
+    0x10000000, 0x00000004, 0x00000000, 0x00000821, 0x00010001, 0x00000001, 
+    0x00003050, 0x00011002, 0x00001200, 0xc4000000, 0x00001003, 0x00002200, 
+    0x00000000, 0x10080001, 0x1f1ff688, 0x00004000, 0xc80f8000, 0x00000000, 
+    0xe2000000, 0x00000000, 0x00000000, 0x00000000
+};
+
 static const vo_info_t info = {
 	"Xenon video output",
 	"xenon",
@@ -127,21 +155,25 @@ typedef struct YUVSurface {
 	AVSurface V;
 } YUVSurface;
 
-static uint32_t image_width, image_height;
+static uint32_t image_width, image_height, osd_width, osd_height;
 
 static struct XenosVertexBuffer *vb = NULL;
+static struct XenosVertexBuffer *vb_osd = NULL;
 static struct XenosDevice * g_pVideoDevice = NULL;
 static struct XenosShader * g_pVertexShader = NULL;
 static struct XenosShader * g_pPixelTexturedShader = NULL;
+static struct XenosShader * g_pPixeOsdShader = NULL;
 
 static struct XenosDevice _xe;
 static YUVSurface * g_pTexture = NULL;
+static struct XenosSurface * g_pOsdSurf=NULL;
 
 typedef struct verticeFormats {
 	float x, y, z, w;
 	float u, v;
 } verticeFormats;
 
+static int is_osd_populated = 0;
 
 static YUVSurface * video_create_yuvsurf(int w, int h);
 static void video_lock_yuvsurf(YUVSurface*);
@@ -226,8 +258,58 @@ static int draw_slice(uint8_t *src[], int stride[], int w, int h, int x, int y) 
 	return 0; /* Success */
 }
 
+/** @brief Maps MPlayer alpha to D3D
+ *         0x0 -> transparent and discarded by alpha test
+ *         0x1 -> 0xFF to become opaque
+ *         other alpha values are inverted +1 (2 = -2)
+ *         These values are then inverted again with
+           the texture filter D3DBLEND_INVSRCALPHA
+ */
+static void vo_draw_alpha_l8a8(int w, int h, unsigned char* src,
+                               unsigned char *srca, int srcstride,
+                               unsigned char* dstbase, int dststride)
+{
+    int y;
+    for (y = 0; y < h; y++) {
+        unsigned short *dst = (unsigned short*)dstbase;
+        int x;
+        for (x = 0; x < w; x++) {
+            dst[x] = (-srca[x] << 8) | src[x];
+        }
+        src     += srcstride;
+        srca    += srcstride;
+        dstbase += dststride;
+    }	
+}
+
+/** @brief Callback function to render the OSD to the texture
+ */
+static void draw_alpha(int x0, int y0, int w, int h, unsigned char *src,
+                       unsigned char *srca, int stride)
+{
+	unsigned char * dst = (unsigned char *)Xe_Surface_LockRect(g_pVideoDevice,g_pOsdSurf, 0, 0, 0, 0, XE_LOCK_WRITE);
+
+    vo_draw_alpha_l8a8(w, h, src, srca, stride,
+        (unsigned char *)dst+ g_pOsdSurf->wpitch*y0 + 2*x0, g_pOsdSurf->wpitch);
+
+	Xe_Surface_Unlock(g_pVideoDevice,g_pOsdSurf);
+
+    is_osd_populated = 1;
+}
+
 static void draw_osd(void) {
 	//TR
+	//osd_has_changed = vo_osd_changed(0);
+	int border_x=0,border_y=0;
+	int src_width=image_width,src_height=image_height;
+	
+	
+	if (vo_osd_changed(0)) 
+	{
+		memset(g_pOsdSurf->base,0,g_pOsdSurf->wpitch*g_pOsdSurf->hpitch);
+	}
+	vo_draw_text_ext(osd_width, osd_height, border_x, border_y,
+                         border_x, border_y, src_width, src_height, draw_alpha);
 }
 
 static void ShowFPS(void) {
@@ -261,6 +343,11 @@ static void flip_page(void) {
 	// Reset states
 	Xe_InvalidateState(g_pVideoDevice);
 	Xe_SetClearColor(g_pVideoDevice, 0x88888888);
+	
+	Xe_SetBlendOp(g_pVideoDevice, XE_BLENDOP_ADD);
+    Xe_SetSrcBlend(g_pVideoDevice, XE_BLEND_SRCALPHA);
+    Xe_SetDestBlend(g_pVideoDevice, XE_BLEND_INVSRCALPHA);
+    Xe_SetAlphaTestEnable(g_pVideoDevice, 1);
 
 	// Select stream and shaders
 	Xe_SetCullMode(g_pVideoDevice, XE_CULL_NONE);
@@ -275,6 +362,19 @@ static void flip_page(void) {
 
 	// Draw
 	Xe_DrawPrimitive(g_pVideoDevice, XE_PRIMTYPE_RECTLIST, 0, 1);
+	
+	
+	if(is_osd_populated)
+	{
+		Xe_SetShader(g_pVideoDevice, SHADER_TYPE_PIXEL, g_pPixeOsdShader, 0);
+		Xe_SetShader(g_pVideoDevice, SHADER_TYPE_VERTEX, g_pVertexShader, 0);
+		
+		Xe_SetTexture(g_pVideoDevice, 0, g_pOsdSurf);
+		
+		Xe_SetStreamSource(g_pVideoDevice, 0, vb_osd, 0, 10);
+		
+		Xe_DrawPrimitive(g_pVideoDevice, XE_PRIMTYPE_RECTLIST, 0, 1);
+	}
 
 	// Resolve
 	Xe_Resolve(g_pVideoDevice);
@@ -295,16 +395,24 @@ query_format(uint32_t format) {
 	return VFCAP_CSP_SUPPORTED;
 }
 
-static int
-config(uint32_t width, uint32_t height, uint32_t d_width, uint32_t d_height, uint32_t flags, char *title, uint32_t format) {
+static int config(uint32_t width, uint32_t height, uint32_t d_width, uint32_t d_height, uint32_t flags, char *title, uint32_t format) {
 	TR;
 	image_width = width;
 	image_height = height;
+	
+	osd_width = d_width;
+	osd_height = d_height;
 
 	if (g_pTexture)
 		video_delete_yuvsurf(g_pTexture);
+	
+	if(g_pOsdSurf)
+		Xe_DestroyTexture(g_pVideoDevice,g_pOsdSurf);
 
 	g_pTexture = video_create_yuvsurf(width, height);
+	g_pOsdSurf = Xe_CreateTexture(g_pVideoDevice,osd_width,osd_height,1, XE_FMT_8, 0);
+	
+	memset(g_pOsdSurf->base,0,g_pOsdSurf->wpitch*g_pOsdSurf->hpitch);
 
 	printf("width:%d\r\n", width);
 	printf("height:%d\r\n", height);
@@ -333,6 +441,7 @@ static int preinit(const char *arg) {
 	};
 
 	verticeFormats *Rect = NULL;
+	verticeFormats *Rect_osd = NULL;
 
 	g_pVideoDevice = &_xe;
 	Xe_Init(g_pVideoDevice);
@@ -342,6 +451,9 @@ static int preinit(const char *arg) {
 	/* create shaders */
 	g_pPixelTexturedShader = Xe_LoadShaderFromMemory(g_pVideoDevice, (void*) ps);
 	Xe_InstantiateShader(g_pVideoDevice, g_pPixelTexturedShader, 0);
+	
+	g_pPixeOsdShader = Xe_LoadShaderFromMemory(g_pVideoDevice, (void*) ps_osd);
+	Xe_InstantiateShader(g_pVideoDevice, g_pPixeOsdShader, 0);
 
 	g_pVertexShader = Xe_LoadShaderFromMemory(g_pVideoDevice, (void*) vs);
 	Xe_InstantiateShader(g_pVideoDevice, g_pVertexShader, 0);
@@ -352,6 +464,8 @@ static int preinit(const char *arg) {
 	/* create vb */
 	vb = Xe_CreateVertexBuffer(g_pVideoDevice, 3 * sizeof (verticeFormats));
 	Rect = Xe_VB_Lock(g_pVideoDevice, vb, 0, 3 * sizeof (verticeFormats), XE_LOCK_WRITE);
+	vb_osd = Xe_CreateVertexBuffer(g_pVideoDevice, 3 * sizeof (verticeFormats));
+	Rect_osd = Xe_VB_Lock(g_pVideoDevice, vb_osd, 0, 3 * sizeof (verticeFormats), XE_LOCK_WRITE);
 	{
 		int i = 0;
 
@@ -376,9 +490,18 @@ static int preinit(const char *arg) {
 		for (i = 0; i < 3; i++) {
 			Rect[i].z = 0.0;
 			Rect[i].w = 1.0;
+			
+			Rect_osd[i].x=Rect[i].x;
+			Rect_osd[i].y=Rect[i].y;
+			Rect_osd[i].z=Rect[i].z;
+			Rect_osd[i].w=Rect[i].w;
+			
+			Rect_osd[i].u=Rect[i].u;
+			Rect_osd[i].v=Rect[i].v;
 		}
 	}
 	Xe_VB_Unlock(g_pVideoDevice, vb);
+	Xe_VB_Unlock(g_pVideoDevice, vb_osd);
 
 	Xe_SetClearColor(g_pVideoDevice, 0);
 

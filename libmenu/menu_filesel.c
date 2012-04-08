@@ -46,6 +46,8 @@
 #include "input/input.h"
 #include "osdep/keycodes.h"
 
+#include <debug.h>
+
 #define MENU_KEEP_PATH "/tmp/mp_current_path"
 
 int menu_keepdir = 0;
@@ -228,6 +230,7 @@ static void free_extensions(char **extensions){
 }
 
 static int open_dir(menu_t* menu,char* args) {
+	BP;
   char **namelist, **tp;
   struct dirent *dp;
   struct stat st;
@@ -416,6 +419,8 @@ static void clos(menu_t* menu) {
 }
 
 static int open_fs(menu_t* menu, char* args) {
+	
+	BP;
   char *path = mpriv->path;
   int r = 0;
   char wd[PATH_MAX+1], b[PATH_MAX+1];
