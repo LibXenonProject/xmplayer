@@ -2754,8 +2754,9 @@ void main(){
 	char * argv[]= {
         "mplayer.xenon",
 		//"-menu",
-		"usb:/video.avi"
-		//"usb:/video.mp4"
+		//"usb:/video.avi"
+		"usb:/video.m2ts"
+		//"usb:/video.mkv"
     };
 	int argc = sizeof(argv) / sizeof(char *);
 	mplayer_main(argc,argv);

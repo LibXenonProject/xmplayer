@@ -32,6 +32,7 @@
 
 #ifdef CONFIG_ICONV
 #include <iconv.h>
+#define iconv_open libiconv_open
 #endif
 
 #include <ft2build.h>

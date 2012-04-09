@@ -41,6 +41,9 @@
 #include "spudec.h"
 #include "libavutil/common.h"
 
+
+#include <debug.h>
+
 #define NEW_SPLITTING
 
 

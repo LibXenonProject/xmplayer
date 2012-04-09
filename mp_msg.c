@@ -27,6 +27,7 @@
 #ifdef CONFIG_ICONV
 #include <iconv.h>
 #include <errno.h>
+#define iconv_open libiconv_open
 #endif
 
 #include "mp_msg.h"

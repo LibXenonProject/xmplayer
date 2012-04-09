@@ -317,6 +317,7 @@
           <in>aac_tablegen.c</in>
           <in>aac_tablegen.h</in>
           <in>aac_tablegen_decl.h</in>
+          <in>aac_tables.h</in>
           <in>aacadtsdec.c</in>
           <in>aacadtsdec.h</in>
           <in>aaccoder.c</in>
@@ -328,6 +329,7 @@
           <in>aacps.h</in>
           <in>aacps_tablegen.c</in>
           <in>aacps_tablegen.h</in>
+          <in>aacps_tables.h</in>
           <in>aacpsdata.c</in>
           <in>aacpsy.c</in>
           <in>aacpsy.h</in>
@@ -438,6 +440,7 @@
           <in>cavsdsp.h</in>
           <in>cbrt_tablegen.c</in>
           <in>cbrt_tablegen.h</in>
+          <in>cbrt_tables.h</in>
           <in>cdgraphics.c</in>
           <in>cdxl.c</in>
           <in>celp_filters.c</in>
@@ -451,7 +454,9 @@
           <in>cljr.c</in>
           <in>cook.c</in>
           <in>cookdata.h</in>
+          <in>cos_fixed_tables.c</in>
           <in>cos_tablegen.c</in>
+          <in>cos_tables.c</in>
           <in>cscd.c</in>
           <in>cyuv.c</in>
           <in>dca.c</in>
@@ -492,6 +497,7 @@
           <in>dv.c</in>
           <in>dv_tablegen.c</in>
           <in>dv_tablegen.h</in>
+          <in>dv_tables.h</in>
           <in>dv_vlc_data.h</in>
           <in>dvbsub.c</in>
           <in>dvbsub_parser.c</in>
@@ -729,6 +735,7 @@
           <in>motionpixels.c</in>
           <in>motionpixels_tablegen.c</in>
           <in>motionpixels_tablegen.h</in>
+          <in>motionpixels_tables.h</in>
           <in>movsub_bsf.c</in>
           <in>mp3_header_compress_bsf.c</in>
           <in>mp3_header_decompress_bsf.c</in>
@@ -760,6 +767,7 @@
           <in>mpegaudio_parser.c</in>
           <in>mpegaudio_tablegen.c</in>
           <in>mpegaudio_tablegen.h</in>
+          <in>mpegaudio_tables.h</in>
           <in>mpegaudiodata.c</in>
           <in>mpegaudiodata.h</in>
           <in>mpegaudiodec.c</in>
@@ -807,6 +815,7 @@
           <in>pcm.c</in>
           <in>pcm_tablegen.c</in>
           <in>pcm_tablegen.h</in>
+          <in>pcm_tables.h</in>
           <in>pcx.c</in>
           <in>pcxenc.c</in>
           <in>pgssubdec.c</in>
@@ -838,6 +847,7 @@
           <in>qdm2.c</in>
           <in>qdm2_tablegen.c</in>
           <in>qdm2_tablegen.h</in>
+          <in>qdm2_tables.h</in>
           <in>qdm2data.h</in>
           <in>qdrw.c</in>
           <in>qpeg.c</in>
@@ -908,10 +918,12 @@
           <in>simple_idct.c</in>
           <in>simple_idct.h</in>
           <in>simple_idct_template.c</in>
+          <in>sin_tables.c</in>
           <in>sinewin.c</in>
           <in>sinewin.h</in>
           <in>sinewin_tablegen.c</in>
           <in>sinewin_tablegen.h</in>
+          <in>sinewin_tables.h</in>
           <in>sipr.c</in>
           <in>sipr.h</in>
           <in>sipr16k.c</in>
@@ -1744,6 +1756,56 @@
             <in>url.h</in>
           </df>
           <df name="pixmaps">
+            <in>audiolang.xpm</in>
+            <in>cd.xpm</in>
+            <in>chapter.xpm</in>
+            <in>dolby.xpm</in>
+            <in>dvd.xpm</in>
+            <in>playcd.xpm</in>
+            <in>playdvd.xpm</in>
+            <in>playvcd.xpm</in>
+            <in>sublang.xpm</in>
+            <in>vcd.xpm</in>
+          </df>
+          <df name="pixmaps">
+            <in>about.xpm</in>
+            <in>aspect.xpm</in>
+            <in>aspect11.xpm</in>
+            <in>aspect169.xpm</in>
+            <in>aspect235.xpm</in>
+            <in>aspect43.xpm</in>
+            <in>dir.xpm</in>
+            <in>dir2.xpm</in>
+            <in>double.xpm</in>
+            <in>emblem.xpm</in>
+            <in>empty.xpm</in>
+            <in>empty1px.xpm</in>
+            <in>equalizer.xpm</in>
+            <in>error.xpm</in>
+            <in>exit.xpm</in>
+            <in>file.xpm</in>
+            <in>file2.xpm</in>
+            <in>full.xpm</in>
+            <in>half.xpm</in>
+            <in>loadeaf.xpm</in>
+            <in>next.xpm</in>
+            <in>normal.xpm</in>
+            <in>nosub.xpm</in>
+            <in>open.xpm</in>
+            <in>open2.xpm</in>
+            <in>pause.xpm</in>
+            <in>play.xpm</in>
+            <in>playlist.xpm</in>
+            <in>prefs.xpm</in>
+            <in>prev.xpm</in>
+            <in>skin.xpm</in>
+            <in>sound.xpm</in>
+            <in>stop.xpm</in>
+            <in>sub.xpm</in>
+            <in>title.xpm</in>
+            <in>up.xpm</in>
+            <in>url.xpm</in>
+            <in>warning.xpm</in>
           </df>
           <in>actions.c</in>
           <in>actions.h</in>
@@ -2568,6 +2630,7 @@
         <in>getch2.h</in>
         <in>gettimeofday.c</in>
         <in>glob-win.c</in>
+        <in>glob-xenon.c</in>
         <in>glob.h</in>
         <in>keycodes.h</in>
         <in>macosx_finder_args.c</in>
@@ -2590,6 +2653,7 @@
         <in>timer-darwin.c</in>
         <in>timer-linux.c</in>
         <in>timer-win2.c</in>
+        <in>timer-xenon.c</in>
         <in>timer.h</in>
         <in>vsscanf.c</in>
       </df>
@@ -3253,9 +3317,18 @@
             flavor="0">
         <cTool>
           <incDir>
-            <pElem>/usr/include/valgrind</pElem>
+            <pElem>ffmpeg</pElem>
+            <pElem>.</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>CODECS2HTML</Elem>
+          </preprocessorList>
         </cTool>
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/codecs.conf.h"
+            ex="true"
+            tool="3"
+            flavor="0">
       </item>
       <item path="/home/cc/xenon/mplayer_xenon/command.c"
             ex="false"
@@ -3266,6 +3339,586 @@
             <pElem>/usr/include/valgrind</pElem>
           </incDir>
         </cTool>
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/etc/inttypes.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/config.asm"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/aacpsy.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/alpha/dsputil_alpha_asm.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/alpha/motion_est_mvi_asm.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/alpha/regdef.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/aac.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/ac3dsp_arm.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/ac3dsp_armv6.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/ac3dsp_neon.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/asm.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/dca.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/dcadsp_neon.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/dsputil_arm.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/dsputil_armv6.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/dsputil_neon.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/dsputil_vfp.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/fft_fixed_neon.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/fft_neon.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/fmtconvert_neon.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/fmtconvert_vfp.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/h264cmc_neon.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/h264dsp_neon.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/h264idct_neon.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/h264pred_neon.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/int_neon.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/jrevdct_arm.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/mathops.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/mdct_fixed_neon.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/mdct_neon.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/mpegaudiodsp_fixed_armv6.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/mpegvideo_armv5te_s.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/mpegvideo_neon.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/neon.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/rdft_neon.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/rv34dsp_neon.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/rv40dsp_neon.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/sbrdsp_neon.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/simple_idct_arm.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/simple_idct_armv5te.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/simple_idct_armv6.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/simple_idct_neon.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/synth_filter_neon.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/vp3dsp_neon.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/vp56_arith.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/vp56dsp_neon.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/vp8.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/vp8_armv6.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/vp8dsp_neon.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/avr32/mathops.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/bfin/config_bfin.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/bfin/fdct_bfin.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/bfin/idct_bfin.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/bfin/mathops.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/bfin/pixels_bfin.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/bfin/vp3_idct_bfin.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/mips/mathops.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/ppc/asm.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/ppc/fft_altivec_s.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/ppc/regs.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/version.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/w32pthreads.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/ac3dsp.asm"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/cabac.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/dct32_sse.asm"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/deinterlace.asm"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/dsputil_yasm.asm"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/dsputilenc_yasm.asm"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/fft_mmx.asm"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/fmtconvert.asm"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/h264_chromamc.asm"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/h264_chromamc_10bit.asm"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/h264_deblock.asm"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/h264_deblock_10bit.asm"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/h264_i386.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/h264_idct.asm"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/h264_idct_10bit.asm"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/h264_intrapred.asm"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/h264_intrapred_10bit.asm"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/h264_qpel_10bit.asm"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/h264_weight.asm"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/h264_weight_10bit.asm"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/imdct36_sse.asm"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/mathops.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/pngdsp.asm"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/proresdsp.asm"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/rv34dsp.asm"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/rv40dsp.asm"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/sbrdsp.asm"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/vc1dsp_yasm.asm"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/vp3dsp.asm"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/vp56_arith.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/vp56dsp.asm"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/vp8dsp.asm"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavutil/arm/bswap.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavutil/arm/intmath.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavutil/arm/intreadwrite.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavutil/arm/timer.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavutil/avr32/bswap.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavutil/avr32/intreadwrite.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavutil/bfin/bswap.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavutil/bfin/timer.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavutil/intfloat.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavutil/mips/intreadwrite.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavutil/sh4/bswap.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavutil/tomi/intreadwrite.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavutil/x86/bswap.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavutil/x86/intmath.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavutil/x86/intreadwrite.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavutil/x86/timer.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavutil/x86/x86inc.asm"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavutil/x86/x86util.asm"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libswscale/bfin/internal_bfin.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libswscale/x86/input.asm"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libswscale/x86/output.asm"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libswscale/x86/scale.asm"
+            ex="true"
+            tool="4"
+            flavor="0">
       </item>
       <item path="/home/cc/xenon/mplayer_xenon/fmt-conversion.c"
             ex="false"
@@ -3419,6 +4072,56 @@
           </incDir>
         </cTool>
       </item>
+      <item path="/home/cc/xenon/mplayer_xenon/gui/ui/pixmaps/audiolang.xpm"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/gui/ui/pixmaps/cd.xpm"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/gui/ui/pixmaps/chapter.xpm"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/gui/ui/pixmaps/dolby.xpm"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/gui/ui/pixmaps/dvd.xpm"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/gui/ui/pixmaps/playcd.xpm"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/gui/ui/pixmaps/playdvd.xpm"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/gui/ui/pixmaps/playvcd.xpm"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/gui/ui/pixmaps/sublang.xpm"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/gui/ui/pixmaps/vcd.xpm"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
       <item path="/home/cc/xenon/mplayer_xenon/gui/ui/playbar.c"
             ex="false"
             tool="0"
@@ -3559,6 +4262,131 @@
           </incDir>
         </cTool>
       </item>
+      <item path="/home/cc/xenon/mplayer_xenon/help/help_mp-bg.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/help/help_mp-cs.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/help/help_mp-de.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/help/help_mp-dk.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/help/help_mp-el.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/help/help_mp-en.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/help/help_mp-es.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/help/help_mp-fr.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/help/help_mp-hu.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/help/help_mp-it.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/help/help_mp-ja.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/help/help_mp-ko.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/help/help_mp-mk.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/help/help_mp-nb.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/help/help_mp-nl.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/help/help_mp-pl.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/help/help_mp-pt_BR.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/help/help_mp-ro.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/help/help_mp-ru.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/help/help_mp-sk.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/help/help_mp-sv.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/help/help_mp-tr.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/help/help_mp-uk.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/help/help_mp-zh_CN.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/help/help_mp-zh_TW.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
       <item path="/home/cc/xenon/mplayer_xenon/libaf/af.c"
             ex="false"
             tool="0"
@@ -3698,6 +4526,11 @@
             <pElem>/usr/include/valgrind</pElem>
           </incDir>
         </cTool>
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/libdvdcss/bsdi_dvd.h"
+            ex="true"
+            tool="3"
+            flavor="0">
       </item>
       <item path="/home/cc/xenon/mplayer_xenon/libmenu/menu_filesel.c"
             ex="false"
@@ -4098,6 +4931,11 @@
             <pElem>/usr/include/valgrind</pElem>
           </incDir>
         </cTool>
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/libmpcodecs/native/mmx.h"
+            ex="true"
+            tool="3"
+            flavor="0">
       </item>
       <item path="/home/cc/xenon/mplayer_xenon/libmpcodecs/vd.c"
             ex="false"
@@ -5209,6 +6047,26 @@
           </incDir>
         </cTool>
       </item>
+      <item path="/home/cc/xenon/mplayer_xenon/libmpeg2/alpha_asm.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/libmpeg2/mmx.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/libmpeg2/motion_comp_arm_s.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/libmpeg2/vis.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
       <item path="/home/cc/xenon/mplayer_xenon/libvo/csputils.c"
             ex="false"
             tool="0"
@@ -5248,6 +6106,11 @@
             <pElem>/usr/include/valgrind</pElem>
           </incDir>
         </cTool>
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/libvo/vo_corevideo.h"
+            ex="true"
+            tool="3"
+            flavor="0">
       </item>
       <item path="/home/cc/xenon/mplayer_xenon/libvo/vo_direct3d.c"
             ex="false"
@@ -5459,6 +6322,46 @@
           </incDir>
         </cTool>
       </item>
+      <item path="/home/cc/xenon/mplayer_xenon/loader/qt_fv.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/loader/wine/elfdll.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/loader/wine/ldt.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/loader/wine/ntdef.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/loader/wine/pshpack4.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/loader/wine/pshpack8.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/loader/wrapper.S"
+            ex="true"
+            tool="4"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/loader/wrapper.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
       <item path="/home/cc/xenon/mplayer_xenon/mencoder.c"
             ex="false"
             tool="0"
@@ -5649,6 +6552,26 @@
           </incDir>
         </cTool>
       </item>
+      <item path="/home/cc/xenon/mplayer_xenon/stream/vcd_read_darwin.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/stream/vcd_read_fbsd.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/stream/vcd_read_os2.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/stream/vcd_read_win32.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
       <item path="/home/cc/xenon/mplayer_xenon/sub/av_sub.c"
             ex="false"
             tool="0"
@@ -5729,6 +6652,11 @@
           </incDir>
         </cTool>
       </item>
+      <item path="/home/cc/xenon/mplayer_xenon/vidix/dhahelperwin/ntverp.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
       <item path="/home/cc/xenon/mplayer_xenon/vidix/drivers.c"
             ex="false"
             tool="0"
@@ -5789,6 +6717,31 @@
           </incDir>
         </cTool>
       </item>
+      <item path="/home/cc/xenon/mplayer_xenon/vidix/sysdep/AsmMacros_alpha.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/vidix/sysdep/AsmMacros_arm32.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/vidix/sysdep/AsmMacros_ia64.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/vidix/sysdep/AsmMacros_sparc.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="/home/cc/xenon/mplayer_xenon/vidix/sysdep/AsmMacros_x86.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
       <item path="/home/cc/xenon/mplayer_xenon/vidix/sysdep/pci_linux.c"
             ex="false"
             tool="0"
@@ -5808,6 +6761,27 @@
             <pElem>/usr/include/valgrind</pElem>
           </incDir>
         </cTool>
+      </item>
+      <item path="ffmpeg/libavcodec/aac_tables.h" ex="true" tool="3" flavor="0">
+      </item>
+      <item path="ffmpeg/libavcodec/aacps_tables.h" ex="true" tool="3" flavor="0">
+      </item>
+      <item path="ffmpeg/libavcodec/cbrt_tables.h" ex="true" tool="3" flavor="0">
+      </item>
+      <item path="ffmpeg/libavcodec/dv_tables.h" ex="true" tool="3" flavor="0">
+      </item>
+      <item path="ffmpeg/libavcodec/motionpixels_tables.h"
+            ex="true"
+            tool="3"
+            flavor="0">
+      </item>
+      <item path="ffmpeg/libavcodec/mpegaudio_tables.h" ex="true" tool="3" flavor="0">
+      </item>
+      <item path="ffmpeg/libavcodec/pcm_tables.h" ex="true" tool="3" flavor="0">
+      </item>
+      <item path="ffmpeg/libavcodec/qdm2_tables.h" ex="true" tool="3" flavor="0">
+      </item>
+      <item path="ffmpeg/libavcodec/sinewin_tables.h" ex="true" tool="3" flavor="0">
       </item>
     </conf>
   </confs>

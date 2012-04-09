@@ -303,7 +303,8 @@ TIMER = timer-xenon.c
 
 SRCS_XENON  =	osdep/osdep_xenon.c \
 		libvo/vo_xenon.c \
-		libao2/ao_xenon.c
+		libao2/ao_xenon.c \
+		osdep/glob-xenon.c
 
 
 SRCS_COMMON = asxparser.c \

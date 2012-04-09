@@ -282,6 +282,30 @@ static void vo_draw_alpha_l8a8(int w, int h, unsigned char* src,
     }	
 }
 
+/** @brief Maps MPlayer alpha to D3D
+ *         0x0 -> transparent and discarded by alpha test
+ *         0x1 -> 0xFF to become opaque
+ *         other alpha values are inverted +1 (2 = -2)
+ *         These values are then inverted again with
+           the texture filter D3DBLEND_INVSRCALPHA
+ */
+static void vo_draw_alpha_a8(int w, int h, unsigned char* src,
+                               unsigned char *srca, int srcstride,
+                               unsigned char* dstbase, int dststride)
+{
+    int y;
+    for (y = 0; y < h; y++) {
+        unsigned char *dst = (unsigned char*)dstbase;
+        int x;
+        for (x = 0; x < w; x++) {
+            dst[x] = src[x];
+        }
+        src     += srcstride;
+        srca    += srcstride;
+        dstbase += dststride;
+    }	
+}
+
 /** @brief Callback function to render the OSD to the texture
  */
 static void draw_alpha(int x0, int y0, int w, int h, unsigned char *src,
@@ -289,7 +313,7 @@ static void draw_alpha(int x0, int y0, int w, int h, unsigned char *src,
 {
 	unsigned char * dst = (unsigned char *)Xe_Surface_LockRect(g_pVideoDevice,g_pOsdSurf, 0, 0, 0, 0, XE_LOCK_WRITE);
 
-    vo_draw_alpha_l8a8(w, h, src, srca, stride,
+    vo_draw_alpha_a8(w, h, src, srca, stride,
         (unsigned char *)dst+ g_pOsdSurf->wpitch*y0 + 2*x0, g_pOsdSurf->wpitch);
 
 	Xe_Surface_Unlock(g_pVideoDevice,g_pOsdSurf);
@@ -298,18 +322,12 @@ static void draw_alpha(int x0, int y0, int w, int h, unsigned char *src,
 }
 
 static void draw_osd(void) {
-	//TR
-	//osd_has_changed = vo_osd_changed(0);
-	int border_x=0,border_y=0;
-	int src_width=image_width,src_height=image_height;
-	
-	
 	if (vo_osd_changed(0)) 
 	{
 		memset(g_pOsdSurf->base,0,g_pOsdSurf->wpitch*g_pOsdSurf->hpitch);
 	}
-	vo_draw_text_ext(osd_width, osd_height, border_x, border_y,
-                         border_x, border_y, src_width, src_height, draw_alpha);
+	
+	vo_draw_text(image_width,image_height,draw_alpha);
 }
 
 static void ShowFPS(void) {
@@ -339,14 +357,22 @@ static void flip_page(void) {
 	video_lock_yuvsurf(g_pTexture);
 	video_unlock_yuvsurf(g_pTexture);
 
-	//ShowFPS();
+	ShowFPS();
 	// Reset states
 	Xe_InvalidateState(g_pVideoDevice);
 	Xe_SetClearColor(g_pVideoDevice, 0x88888888);
 	
+/*
 	Xe_SetBlendOp(g_pVideoDevice, XE_BLENDOP_ADD);
     Xe_SetSrcBlend(g_pVideoDevice, XE_BLEND_SRCALPHA);
     Xe_SetDestBlend(g_pVideoDevice, XE_BLEND_INVSRCALPHA);
+    Xe_SetAlphaTestEnable(g_pVideoDevice, 1);
+*/
+	
+	Xe_SetBlendOp(g_pVideoDevice, XE_BLENDOP_ADD);
+    Xe_SetSrcBlend(g_pVideoDevice, XE_BLEND_ONE);
+    Xe_SetDestBlend(g_pVideoDevice, XE_BLEND_INVSRCALPHA);
+	Xe_SetAlphaFunc(g_pVideoDevice, XE_CMP_GREATER);
     Xe_SetAlphaTestEnable(g_pVideoDevice, 1);
 
 	// Select stream and shaders

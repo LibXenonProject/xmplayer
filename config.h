@@ -101,7 +101,8 @@ extern char MPLAYER_LIBDIR[100];
 #define HAVE_DOS_PATHS 0
 #define EXTERN_ASM 
 #define EXTERN_PREFIX ""
-#undef CONFIG_ICONV
+//#undef CONFIG_ICONV
+#define CONFIG_ICONV 1
 #undef HAVE_LIBKSTAT
 
 
@@ -297,15 +298,17 @@ extern char MPLAYER_LIBDIR[100];
 
 
 /* font stuff */
-#undef CONFIG_ASS
-#undef CONFIG_ASS_INTERNAL
+//#undef CONFIG_ASS
+//#undef CONFIG_ASS_INTERNAL
+#define CONFIG_ASS 1
+#define CONFIG_ASS_INTERNAL 1
 #define CONFIG_BITMAP_FONT 1
 #undef CONFIG_ENCA
 #undef CONFIG_FONTCONFIG
 //#undef CONFIG_FREETYPE
 #define CONFIG_FREETYPE 1
-#undef CONFIG_FRIBIDI
-
+//#undef CONFIG_FRIBIDI
+#define CONFIG_FRIBIDI 1
 
 /* networking */
 #define HAVE_CLOSESOCKET 0

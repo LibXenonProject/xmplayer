@@ -49,8 +49,7 @@
 
 //#include <input/input.h>
 
-struct controller_data_s
-{
+struct controller_data_s {
 	signed short s1_x, s1_y, s2_x, s2_y;
 	int s1_z, s2_z, lb, rb, start, select, a, b, x, y, up, down, left, right;
 	unsigned char lt, rt;
@@ -62,26 +61,26 @@ void set_controller_data(int port, const struct controller_data_s *d);
 void set_controller_rumble(int port, uint8_t l, uint8_t r);
 
 
-static int getch2_len=0;
+static int getch2_len = 0;
 static char getch2_buf[BUF_LEN];
 
-int screen_width=80;
-int screen_height=24;
+int screen_width = 80;
+int screen_height = 24;
 char * erase_to_end_of_line = NULL;
 
 typedef struct {
-  int len;
-  int code;
-  char chars[8];
+	int len;
+	int code;
+	char chars[8];
 } keycode_st;
 static keycode_st getch2_keys[MAX_KEYS];
-static int getch2_key_db=0;
+static int getch2_key_db = 0;
 
 
-static int getch2_status=0;
+static int getch2_status = 0;
 
-void get_screen_size(void){
-	console_get_dimensions(&screen_width,&screen_height);
+void get_screen_size(void) {
+	console_get_dimensions(&screen_width, &screen_height);
 }
 
 #define MAX_INPUTS 4
@@ -93,107 +92,128 @@ static struct controller_data_s old_ctrl[MAX_INPUTS];
 #define RELEASED(x) ((ctrl[ictrl].x==0)&&(old_ctrl[ictrl].x==1))
 #define HELD(x) ((ctrl[ictrl].x==1))
 
-void get_controller_down(struct controller_data_s * pCtrl, int ictrl){
-	memset(&ctrl[ictrl],0,sizeof(struct controller_data_s));
-	memset(pCtrl,0,sizeof(struct controller_data_s));
-	
-	get_controller_data(&ctrl,ictrl);
-	
-	if(PUSHED(down))
-		pCtrl->down=1;
-	if(PUSHED(up))
-		pCtrl->up=1;
-	if(PUSHED(left))
-		pCtrl->left=1;
-	if(PUSHED(right))
-		pCtrl->right=1;
-	if(PUSHED(a))
-		pCtrl->a=1;
-	if(PUSHED(b))
-		pCtrl->b=1;
-	if(PUSHED(x))
-		pCtrl->x=1;	
-	if(PUSHED(y))
-		pCtrl->y=1;
-	if(PUSHED(start))
-		pCtrl->x=1;	
-	if(PUSHED(select))
-		pCtrl->y=1;
-	if(PUSHED(logo))
-		pCtrl->y=1;
-	
+void get_controller_down(struct controller_data_s * pCtrl, int ictrl) {
+	memset(&ctrl[ictrl], 0, sizeof (struct controller_data_s));
+	memset(pCtrl, 0, sizeof (struct controller_data_s));
+
+	get_controller_data(&ctrl, ictrl);
+
+	if (PUSHED(down))
+		pCtrl->down = 1;
+	if (PUSHED(up))
+		pCtrl->up = 1;
+	if (PUSHED(left))
+		pCtrl->left = 1;
+	if (PUSHED(right))
+		pCtrl->right = 1;
+	if (PUSHED(a))
+		pCtrl->a = 1;
+	if (PUSHED(b))
+		pCtrl->b = 1;
+	if (PUSHED(x))
+		pCtrl->x = 1;
+	if (PUSHED(y))
+		pCtrl->y = 1;
+	if (PUSHED(start))
+		pCtrl->x = 1;
+	if (PUSHED(select))
+		pCtrl->y = 1;
+	if (PUSHED(logo))
+		pCtrl->y = 1;
+
 	old_ctrl[ictrl] = ctrl[ictrl];
 }
 
-static int getch2_internal(void)
-{
+static int getch2_internal(void) {
 	int i = 0;
-	int max_ctrl=4;
-	
+	int max_ctrl = 4;
+
 	int key = -1;
 	static s64 lasttime = 0;
 	s64 curtime = mftb();
 
 	usb_do_poll();
-	
-	if (getch2_status && tb_diff_msec(curtime,lasttime)>60 )		
-	{
-		
+
+	if (getch2_status && tb_diff_msec(curtime, lasttime) > 60) {
+
 		struct controller_data_s ctrl;
-		
-		get_controller_down(&ctrl,i);
-		
-		if(ctrl.left)
-			key = KEY_LEFT;		
-		if(ctrl.right)
-			key = KEY_RIGHT;	
-		if(ctrl.up)
-			key = KEY_UP;		
-		if(ctrl.down)
+
+		get_controller_down(&ctrl, i);
+
+		if (ctrl.left)
+			key = KEY_LEFT;
+		if (ctrl.right)
+			key = KEY_RIGHT;
+		if (ctrl.up)
+			key = KEY_UP;
+		if (ctrl.down)
 			key = KEY_DOWN;
-	
-		
-		if(ctrl.start)
+
+
+		if (ctrl.start)
 			key = KEY_ENTER;
-		if(ctrl.select)
-			key = KEY_ESC;	
-		if(ctrl.logo)
+		if (ctrl.select)
+			key = KEY_ESC;
+		if (ctrl.logo)
 			key = 'o';
-		
-		if(ctrl.a)
-			key = KEY_PLAYPAUSE;		
-		if(ctrl.b)
-			key = KEY_STOP;		
-		if(ctrl.x)
+
+		if (ctrl.a)
+			key = KEY_PLAYPAUSE;
+		if (ctrl.b)
+			key = KEY_STOP;
+		if (ctrl.x)
 			key = KEY_PAUSE;
-		if(ctrl.y)
+		if (ctrl.y)
 			key = KEY_MENU;
-		
-		if(ctrl.rb)
+
+		if (ctrl.rb)
 			key = KEY_NEXT;
-		if(ctrl.lb)
+		if (ctrl.lb)
 			key = KEY_PREV;
-	
+
 		lasttime = curtime;
 	}
-	
+
 	return key;
 }
 
-void getch2(void)
-{
-    int r = getch2_internal();
-    if (r >= 0)
+void getch2(void) {
+	int r = getch2_internal();
+	if (r >= 0)
 		mplayer_put_key(r);
 }
 
-void getch2_enable(void){
+void getch2_enable(void) {
 	TR;
-    getch2_status=1;
+	getch2_status = 1;
 }
 
-void getch2_disable(void){
+void getch2_disable(void) {
 	TR;
-    if(!getch2_status) return; // already disabled / never enabled
-    getch2_status=0;
+	if (!getch2_status) return; // already disabled / never enabled
+	getch2_status = 0;
 }
+
+
+#if defined(HAVE_LANGINFO) && defined(CONFIG_ICONV)
+#include <locale.h>
+#include <langinfo.h>
+#endif
+
+#ifdef CONFIG_ICONV
+
+char* get_term_charset(void) {
+#ifdef HAVE_LANGINFO
+	static const char *charset_aux = "ASCII";
+	char *charset = NULL;
+	setlocale(LC_CTYPE, "");
+	charset = nl_langinfo(CODESET);
+	setlocale(LC_CTYPE, "C");
+	if (charset == NULL || charset[0] == '\0')charset = charset_aux;
+#else
+	static const char *charset = "ASCII";
+#endif
+	return charset;
+}
+#endif
+

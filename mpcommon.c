@@ -469,6 +469,7 @@ static void sanitize_os(void)
 /**
  * Initialization code to be run after command-line parsing.
  */
+void load_builtin_codecs();
 int common_init(void)
 {
 #if (defined(__MINGW32__) || defined(__CYGWIN__)) && defined(CONFIG_WIN32DLL)
@@ -482,7 +483,9 @@ int common_init(void)
 
     if (codec_path)
         set_codec_path(codec_path);
-
+#if 1
+	 load_builtin_codecs();
+#else
     /* Check codecs.conf. */
     if (!codecs_file || !parse_codec_cfg(codecs_file)) {
         char *conf_path = get_path("codecs.conf");
@@ -499,6 +502,7 @@ int common_init(void)
         }
         free(conf_path);
     }
+#endif
 
     // check font
 #ifdef CONFIG_FREETYPE

@@ -141,7 +141,7 @@ void mp_msg_init(void);
 int mp_msg_test(int mod, int lev);
 
 #include "config.h"
-
+#if 1
 void mp_msg_va(int mod, int lev, const char *format, va_list va);
 #ifdef __GNUC__
 void mp_msg(int mod, int lev, const char *format, ... ) __attribute__ ((format (printf, 3, 4)));
@@ -160,7 +160,11 @@ void mp_msg(int mod, int lev, const char *format, ... );
 #      define mp_dbg(mod,lev, ... ) do { if (0) mp_msg(mod, lev, __VA_ARGS__); } while (0)
 #   endif
 #endif /* __GNUC__ */
-
+#else
+#define mp_msg_va(...)
+#define mp_msg(...)
+#define mp_dbg(...)
+#endif
 const char* filename_recode(const char* filename);
 
 #endif /* MPLAYER_MP_MSG_H */

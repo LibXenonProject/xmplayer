@@ -6,7 +6,7 @@
             <name>mplayer_xenon</name>
             <c-extensions>c,m</c-extensions>
             <cpp-extensions>cpp</cpp-extensions>
-            <header-extensions>h</header-extensions>
+            <header-extensions>h,xpm</header-extensions>
             <sourceEncoding>UTF-8</sourceEncoding>
             <make-dep-projects/>
             <sourceRootList>
