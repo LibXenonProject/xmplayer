@@ -34,7 +34,7 @@
 
 #define HW_CHANNELS 2
 
-static const ao_info_t info ={
+static const ao_info_t info = {
 	"Xenon audio output",
 	"xenon",
 	"Ced2911",
@@ -52,19 +52,20 @@ static int control(int cmd, void *arg) {
 // open & setup audio device
 // return: 1=success 0=fail
 
-static int init(int rate, int channels, int format, int flags) {	
+static int init(int rate, int channels, int format, int flags) {
+	xenon_sound_init();
+	
 	// A "buffer" for about 0.2 seconds of audio
-	int samplesize = af_fmt2bits(format)>>3;
-    ao_data.outburst = 256 * 2 * samplesize;
+	int samplesize = af_fmt2bits(format) >> 3;
+	
 	//ao_data.outburst = BUFFER_SIZE;
-	ao_data.buffersize = BUFFER_SIZE * BUFFER_COUNT;
+	ao_data.buffersize = 65536;
+	ao_data.outburst = 2048;
 	ao_data.channels = 2;
 	ao_data.samplerate = 48000;
 	ao_data.format = AF_FORMAT_S16_LE;
-	ao_data.bps = ao_data.channels * ao_data.samplerate * 2;
+	ao_data.bps = ao_data.channels * ao_data.samplerate * sizeof(signed short);
 	
-
-	xenon_sound_init();
 
 	return 1;
 }
@@ -78,7 +79,7 @@ static void uninit(int immed) {
 // stop playing and empty buffers (for seeking/pause)
 
 static void reset(void) {
-//	buffer = 0;
+	//	buffer = 0;
 }
 
 // stop playing, keep buffers (for pause)
@@ -107,7 +108,7 @@ static int get_space(void) {
 static int play(void* data, int len, int flags) {
 	if (!(flags & AOPLAY_FINAL_CHUNK))
 		len -= len % ao_data.outburst;
-	
+
 	xenon_sound_submit(data, len);
 
 	return len;
@@ -116,6 +117,6 @@ static int play(void* data, int len, int flags) {
 // return: delay in seconds between first and last sample in buffer
 
 static float get_delay(void) {
-	return ((float) (ao_data.buffersize -xenon_sound_get_free())) / ((float) ao_data.bps);
+	return ((float) (ao_data.buffersize - xenon_sound_get_free())) / ((float) ao_data.bps);
 }
 
