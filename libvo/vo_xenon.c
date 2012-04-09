@@ -349,6 +349,8 @@ static void flip_page(void) {
 	if (g_pTexture == NULL)
 		return;
 	
+	ShowFPS();
+	
 	//while (!Xe_IsVBlank(g_pVideoDevice));
 	// Sync gpu
 	Xe_Sync(g_pVideoDevice);
@@ -357,7 +359,7 @@ static void flip_page(void) {
 	video_lock_yuvsurf(g_pTexture);
 	video_unlock_yuvsurf(g_pTexture);
 
-	ShowFPS();
+
 	// Reset states
 	Xe_InvalidateState(g_pVideoDevice);
 	Xe_SetClearColor(g_pVideoDevice, 0x88888888);

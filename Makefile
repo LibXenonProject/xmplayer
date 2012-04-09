@@ -784,10 +784,12 @@ all: $(ALL_PRG-yes)
 	$(CC) $(CC_DEPFLAGS) $(CFLAGS) -c -o $@ $<
 
 %.o: %.c
-	$(CC) $(CC_DEPFLAGS) $(CFLAGS) -c -o $@ $<
+	@echo [$(notdir $<)]
+	@$(CC) $(CC_DEPFLAGS) $(CFLAGS) -c -o $@ $<
 
 %.o: %.cpp
-	$(CC) $(CC_DEPFLAGS) $(CXXFLAGS) -c -o $@ $<
+	@echo [$(notdir $<)]
+	@$(CC) $(CC_DEPFLAGS) $(CXXFLAGS) -c -o $@ $<
 
 %.o: %.m
 	$(CC) $(CC_DEPFLAGS) $(CFLAGS) -c -o $@ $<
@@ -978,7 +980,7 @@ uninstall:
 	rm -f $(foreach lang,$(MAN_LANGS),$(foreach man,mplayer.1 mencoder.1,$(MANDIR)/$(lang)/man1/$(man)))
 
 clean:
-	-$(MAKE) -C ffmpeg $@
+#	-$(MAKE) -C ffmpeg $@
 	-rm -rf tests/res
 	-rm -f $(call ADD_ALL_DIRS,/*.o /*.a /*.ho /*~)
 	-rm -f $(call ADD_ALL_EXESUFS,mplayer mencoder)

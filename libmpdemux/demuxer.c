@@ -46,6 +46,8 @@
 #include "libmpcodecs/dec_teletext.h"
 #include "sub/ass_mp.h"
 
+#include <debug.h>
+
 #ifdef CONFIG_FFMPEG
 #include "libavcodec/avcodec.h"
 #if MP_INPUT_BUFFER_PADDING_SIZE < FF_INPUT_BUFFER_PADDING_SIZE
@@ -637,11 +639,30 @@ int demux_fill_buffer(demuxer_t *demux, demux_stream_t *ds)
 //     0 = EOF
 //     1 = successful
 #define MAX_ACCUMULATED_PACKETS 64
+
+static inline void my_free_demux_packet(demux_packet_t* dp){
+  if (dp->master==NULL){  //dp is a master packet
+    dp->refcount--;
+    if (dp->refcount==0){
+/*
+		if(dp->buffer)
+			free(dp->buffer);
+*/
+      free(dp);
+    }
+    return;
+  }
+  // dp is a clone:
+  my_free_demux_packet(dp->master);
+  free(dp);
+}
+
 int ds_fill_buffer(demux_stream_t *ds)
 {
     demuxer_t *demux = ds->demuxer;
-    if (ds->current)
-        free_demux_packet(ds->current);
+    if (ds->current){
+        my_free_demux_packet(ds->current);
+	}
     ds->current = NULL;
     if (mp_msg_test(MSGT_DEMUXER, MSGL_DBG3)) {
         if (ds == demux->audio)

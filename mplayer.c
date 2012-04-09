@@ -2753,10 +2753,13 @@ void main(){
 	
 	char * argv[]= {
         "mplayer.xenon",
-		//"-menu",
+		//"-menu","-menu-startup",
+		//"-v",
+		//"-nosound",
 		//"usb:/video.avi"
-		"usb:/video.m2ts"
-		//"usb:/video.mkv"
+		//"usb:/video.m2ts"
+		//"usb:/video2.mp4"
+		"usb:/trailer.mkv"
     };
 	int argc = sizeof(argv) / sizeof(char *);
 	mplayer_main(argc,argv);
@@ -2766,8 +2769,6 @@ int mplayer_main(int argc, char *argv[])
     int opt_exit = 0; // Flag indicating whether MPlayer should exit without playing anything.
     int profile_config_loaded;
     int i;
-	
-	//verbose = MSGL_INFO;
 
     common_preinit();
 
