@@ -230,7 +230,6 @@ static void free_extensions(char **extensions){
 }
 
 static int open_dir(menu_t* menu,char* args) {
-	BP;
   char **namelist, **tp;
   struct dirent *dp;
   struct stat st;
@@ -250,6 +249,7 @@ static int open_dir(menu_t* menu,char* args) {
   mpriv->p.title = replace_path(mpriv->title,mpriv->dir,0);
 
   if ((dirp = opendir (mpriv->dir)) == NULL){
+	  printf("opendir:%s!\r\n",mpriv->dir);
     mp_msg(MSGT_GLOBAL,MSGL_ERR,MSGTR_LIBMENU_OpendirError, strerror(errno));
     return 0;
   }
@@ -419,13 +419,11 @@ static void clos(menu_t* menu) {
 }
 
 static int open_fs(menu_t* menu, char* args) {
-	
-	BP;
   char *path = mpriv->path;
   int r = 0;
   char wd[PATH_MAX+1], b[PATH_MAX+1];
   args = NULL; // Warning kill
-
+  
   menu->draw = menu_list_draw;
   menu->read_cmd = read_cmd;
   menu->read_key = read_key;
@@ -477,16 +475,19 @@ static int open_fs(menu_t* menu, char* args) {
 	  path = getenv("HOME");
   }
   
+/*
   if (path[0] != '/') {
     if(path[strlen(path)-1] != '/')
       snprintf(b,sizeof(b),"%s/%s/",wd,path);
     else
       snprintf(b,sizeof(b),"%s/%s",wd,path);
     path = b;
-  } else if (path[strlen(path)-1]!='/') {
+  } else */
+  if (path[strlen(path)-1]!='/') {
     sprintf(b,"%s/",path);
     path = b;
   }
+
   if (menu_chroot && menu_chroot[0] == '/') {
     int l = strlen(menu_chroot);
     if (l > 0 && menu_chroot[l-1] == '/')

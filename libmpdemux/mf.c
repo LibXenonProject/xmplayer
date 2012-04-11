@@ -42,16 +42,13 @@
 
 #include "mf.h"
 
-#define PATH_MAX 1024
-
 int    mf_w = 0; //352; // let codecs to detect it
 int    mf_h = 0; //288;
 double mf_fps = 25.0;
 char * mf_type = NULL; //"jpg";
 
 mf_t* open_mf(char * filename){
-//#if defined(HAVE_GLOB) || defined(__MINGW32__)
-#if 1
+#if defined(HAVE_GLOB) || defined(__MINGW32__)
  glob_t        gg;
  struct stat   fs;
  int           i;

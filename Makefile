@@ -298,7 +298,7 @@ SRCS_COMMON-$(XVID4)                 += libmpcodecs/vd_xvid4.c
 SRCS_COMMON-$(ZR)                    += libmpcodecs/vd_zrmjpeg.c \
                                         libmpcodecs/vf_zrmjpeg.c
 
-GETCH = getch-xenon.c
+GETCH = getch2-xenon.c
 TIMER = timer-xenon.c
 
 SRCS_XENON  =	osdep/osdep_xenon.c \
@@ -716,7 +716,8 @@ OBJS_MPLAYER   += $(OBJS_MPLAYER-yes)
 
 MENCODER_DEPS = $(OBJS_MENCODER) $(OBJS_COMMON) $(COMMON_LIBS)
 #MPLAYER_DEPS  = $(OBJS_MPLAYER)  $(OBJS_COMMON) -lpostproc -lavfilter -lavformat -lavcodec -lswscale -lswresample -lavutil
-MPLAYER_DEPS  = $(OBJS_MPLAYER)  $(OBJS_COMMON)  -lavformat -lavcodec -lswscale -lavutil
+#MPLAYER_DEPS  = $(OBJS_MPLAYER)  $(OBJS_COMMON)  -lavformat -lavcodec -lswscale -lavutil
+MPLAYER_DEPS  = $(OBJS_MPLAYER)  $(OBJS_COMMON) 
 DEP_FILES = $(SRCS_COMMON) $(SRCS_MPLAYER) $(SRCS_MENCODER)
 $(foreach suffix,.c .cpp .m .S,$(eval DEP_FILES := $(DEP_FILES:$(suffix)=.d)))
 
@@ -785,11 +786,11 @@ all: $(ALL_PRG-yes)
 
 %.o: %.c
 	@echo [$(notdir $<)]
-	@$(CC) $(CC_DEPFLAGS) $(CFLAGS) -c -o $@ $<
+	$(CC) $(CC_DEPFLAGS) $(CFLAGS) -c -o $@ $<
 
 %.o: %.cpp
 	@echo [$(notdir $<)]
-	@$(CC) $(CC_DEPFLAGS) $(CXXFLAGS) -c -o $@ $<
+	$(CC) $(CC_DEPFLAGS) $(CXXFLAGS) -c -o $@ $<
 
 %.o: %.m
 	$(CC) $(CC_DEPFLAGS) $(CFLAGS) -c -o $@ $<
@@ -798,11 +799,11 @@ all: $(ALL_PRG-yes)
 	$(WINDRES) -I. $< -o $@
 
 $(FFMPEGLIBS): $(FFMPEGFILES) config.h
-	#$(MAKE) -C ffmpeg $(@:ffmpeg/%=%)
+	$(MAKE) -C ffmpeg $(@:ffmpeg/%=%)
 
 mencoder$(EXESUF): $(MENCODER_DEPS)
 mencoder$(EXESUF): EXTRALIBS += $(EXTRALIBS_MENCODER)
-mplayer$(EXESUF): $(MPLAYER_DEPS)
+mplayer$(EXESUF): $(MPLAYER_DEPS) $(COMMON_LIBS)
 mplayer$(EXESUF): EXTRALIBS += $(EXTRALIBS_MPLAYER)
 mencoder$(EXESUF) mplayer$(EXESUF):
 	$(CC) -o $@ $^ $(EXTRALIBS)

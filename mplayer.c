@@ -2753,13 +2753,18 @@ void main(){
 	
 	char * argv[]= {
         "mplayer.xenon",
-		//"-menu","-menu-startup",
+		//"-demux mkv",
+		"-menu",//"-menu-startup",
+		//"-vo","null",
+		//"-vc","ffmpeg4",
 		//"-v",
 		//"-nosound",
-		//"usb:/video.avi"
+		//"-vfm","xvid",
+		"-ao","null",
+		"usb:/video.avi"
 		//"usb:/video.m2ts"
 		//"usb:/video2.mp4"
-		"usb:/trailer.mkv"
+		//"usb:/trailer.mkv"
     };
 	int argc = sizeof(argv) / sizeof(char *);
 	mplayer_main(argc,argv);
@@ -3009,29 +3014,23 @@ int mplayer_main(int argc, char *argv[])
 
 #ifdef CONFIG_MENU
     if (use_menu) {
-		TR;
         if (menu_cfg && menu_init(mpctx, menu_cfg))
 		{
 			mp_msg(MSGT_CPLAYER, MSGL_V, "Menu initialized: %s\n", menu_cfg);
 		}
         else {
-			TR;
             menu_cfg = get_path("menu.conf");
             if (menu_init(mpctx, menu_cfg))
 			{
-				TR;
 				mp_msg(MSGT_CPLAYER, MSGL_V, "Menu initialized: %s\n", menu_cfg);
 			}
             else {
-				TR;
 				char menu_conf[256];
 				sprintf(menu_conf,"%s/%s",MPLAYER_CONFDIR,"/menu.conf");
                 if (menu_init(mpctx, menu_conf)){
-					TR;
                     mp_msg(MSGT_CPLAYER, MSGL_V,  "Menu initialized: %s\n", menu_conf);
 				}
                 else {
-					TR;
                     mp_msg(MSGT_CPLAYER, MSGL_ERR, MSGTR_MenuInitFailed);
                     use_menu = 0;
                 }

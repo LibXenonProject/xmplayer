@@ -49,14 +49,15 @@ static int control(int cmd, void *arg) {
 	return -1;
 }
 
+static void sound_reset(void){
+	// xenon_sound_init();
+}
+
 // open & setup audio device
 // return: 1=success 0=fail
 
 static int init(int rate, int channels, int format, int flags) {
 	xenon_sound_init();
-	
-	// A "buffer" for about 0.2 seconds of audio
-	int samplesize = af_fmt2bits(format) >> 3;
 	
 	//ao_data.outburst = BUFFER_SIZE;
 	ao_data.buffersize = 65536;
@@ -64,8 +65,7 @@ static int init(int rate, int channels, int format, int flags) {
 	ao_data.channels = 2;
 	ao_data.samplerate = 48000;
 	ao_data.format = AF_FORMAT_S16_LE;
-	ao_data.bps = ao_data.channels * ao_data.samplerate * sizeof(signed short);
-	
+	ao_data.bps = ao_data.channels * ao_data.samplerate * sizeof(signed short);	
 
 	return 1;
 }
@@ -80,6 +80,7 @@ static void uninit(int immed) {
 
 static void reset(void) {
 	//	buffer = 0;
+	sound_reset();
 }
 
 // stop playing, keep buffers (for pause)
@@ -92,6 +93,7 @@ static void audio_pause(void) {
 // resume playing, after audio_pause()
 
 static void audio_resume(void) {
+	sound_reset();
 }
 
 // return: how many bytes can be played without blocking

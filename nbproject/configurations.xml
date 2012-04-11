@@ -83,9 +83,16 @@
         <df name="doc">
           <df name="doxy">
           </df>
+          <df name="examples">
+            <in>decoding_encoding.c</in>
+            <in>filtering_audio.c</in>
+            <in>filtering_video.c</in>
+            <in>metadata.c</in>
+            <in>muxing.c</in>
+          </df>
           <in>print_options.c</in>
         </df>
-        <df name="git_libav">
+        <df name="ffpresets">
         </df>
         <df name="libavcodec">
           <df name="alpha">
@@ -164,6 +171,7 @@
             <in>vp56dsp_neon.S</in>
             <in>vp8.h</in>
             <in>vp8_armv6.S</in>
+            <in>vp8dsp_armv6.S</in>
             <in>vp8dsp_init_arm.c</in>
             <in>vp8dsp_neon.S</in>
           </df>
@@ -235,6 +243,9 @@
             <in>cavsdsp_mmx.c</in>
             <in>dct32_sse.asm</in>
             <in>deinterlace.asm</in>
+            <in>diracdsp_mmx.c</in>
+            <in>diracdsp_mmx.h</in>
+            <in>diracdsp_yasm.asm</in>
             <in>dnxhd_mmx.c</in>
             <in>dsputil_mmx.c</in>
             <in>dsputil_mmx.h</in>
@@ -244,6 +255,9 @@
             <in>dsputil_yasm.asm</in>
             <in>dsputilenc_mmx.c</in>
             <in>dsputilenc_yasm.asm</in>
+            <in>dwt.c</in>
+            <in>dwt.h</in>
+            <in>dwt_yasm.asm</in>
             <in>fdct_mmx.c</in>
             <in>fft.c</in>
             <in>fft.h</in>
@@ -292,6 +306,1915 @@
             <in>sbrdsp_init.c</in>
             <in>simple_idct_mmx.c</in>
             <in>snowdsp_mmx.c</in>
+            <in>v210-init.c</in>
+            <in>v210.asm</in>
+            <in>vc1dsp_mmx.c</in>
+            <in>vc1dsp_yasm.asm</in>
+            <in>vp3dsp.asm</in>
+            <in>vp56_arith.h</in>
+            <in>vp56dsp.asm</in>
+            <in>vp56dsp_init.c</in>
+            <in>vp8dsp-init.c</in>
+            <in>vp8dsp.asm</in>
+            <in>w64xmmtest.c</in>
+          </df>
+          <in>4xm.c</in>
+          <in>8bps.c</in>
+          <in>8svx.c</in>
+          <in>a64colors.h</in>
+          <in>a64enc.h</in>
+          <in>a64multienc.c</in>
+          <in>a64tables.h</in>
+          <in>aac.h</in>
+          <in>aac_ac3_parser.c</in>
+          <in>aac_ac3_parser.h</in>
+          <in>aac_adtstoasc_bsf.c</in>
+          <in>aac_parser.c</in>
+          <in>aac_tablegen.c</in>
+          <in>aac_tablegen.h</in>
+          <in>aac_tablegen_decl.h</in>
+          <in>aacadtsdec.c</in>
+          <in>aacadtsdec.h</in>
+          <in>aaccoder.c</in>
+          <in>aacdec.c</in>
+          <in>aacdectab.h</in>
+          <in>aacenc.c</in>
+          <in>aacenc.h</in>
+          <in>aacps.c</in>
+          <in>aacps.h</in>
+          <in>aacps_tablegen.c</in>
+          <in>aacps_tablegen.h</in>
+          <in>aacpsdata.c</in>
+          <in>aacpsy.c</in>
+          <in>aacpsy.h</in>
+          <in>aacsbr.c</in>
+          <in>aacsbr.h</in>
+          <in>aacsbrdata.h</in>
+          <in>aactab.c</in>
+          <in>aactab.h</in>
+          <in>aandcttab.c</in>
+          <in>aandcttab.h</in>
+          <in>aasc.c</in>
+          <in>ac3.c</in>
+          <in>ac3.h</in>
+          <in>ac3_parser.c</in>
+          <in>ac3_parser.h</in>
+          <in>ac3dec.c</in>
+          <in>ac3dec.h</in>
+          <in>ac3dec_data.c</in>
+          <in>ac3dec_data.h</in>
+          <in>ac3dsp.c</in>
+          <in>ac3dsp.h</in>
+          <in>ac3enc.c</in>
+          <in>ac3enc.h</in>
+          <in>ac3enc_fixed.c</in>
+          <in>ac3enc_float.c</in>
+          <in>ac3enc_opts_template.c</in>
+          <in>ac3enc_template.c</in>
+          <in>ac3tab.c</in>
+          <in>ac3tab.h</in>
+          <in>acelp_filters.c</in>
+          <in>acelp_filters.h</in>
+          <in>acelp_pitch_delay.c</in>
+          <in>acelp_pitch_delay.h</in>
+          <in>acelp_vectors.c</in>
+          <in>acelp_vectors.h</in>
+          <in>adpcm.c</in>
+          <in>adpcm.h</in>
+          <in>adpcm_data.c</in>
+          <in>adpcm_data.h</in>
+          <in>adpcmenc.c</in>
+          <in>adx.c</in>
+          <in>adx.h</in>
+          <in>adx_parser.c</in>
+          <in>adxdec.c</in>
+          <in>adxenc.c</in>
+          <in>alac.c</in>
+          <in>alacenc.c</in>
+          <in>allcodecs.c</in>
+          <in>alsdec.c</in>
+          <in>amr.h</in>
+          <in>amrnbdata.h</in>
+          <in>amrnbdec.c</in>
+          <in>amrwbdata.h</in>
+          <in>amrwbdec.c</in>
+          <in>anm.c</in>
+          <in>ansi.c</in>
+          <in>apedec.c</in>
+          <in>ass.c</in>
+          <in>ass.h</in>
+          <in>ass_split.c</in>
+          <in>ass_split.h</in>
+          <in>assdec.c</in>
+          <in>assenc.c</in>
+          <in>asv1.c</in>
+          <in>atrac.c</in>
+          <in>atrac.h</in>
+          <in>atrac1.c</in>
+          <in>atrac1data.h</in>
+          <in>atrac3.c</in>
+          <in>atrac3data.h</in>
+          <in>audio_frame_queue.c</in>
+          <in>audio_frame_queue.h</in>
+          <in>audioconvert.c</in>
+          <in>audioconvert.h</in>
+          <in>aura.c</in>
+          <in>avcodec.h</in>
+          <in>avfft.c</in>
+          <in>avfft.h</in>
+          <in>avpacket.c</in>
+          <in>avs.c</in>
+          <in>bethsoftvideo.c</in>
+          <in>bethsoftvideo.h</in>
+          <in>bfi.c</in>
+          <in>bgmc.c</in>
+          <in>bgmc.h</in>
+          <in>bink.c</in>
+          <in>binkaudio.c</in>
+          <in>binkdata.h</in>
+          <in>binkdsp.c</in>
+          <in>binkdsp.h</in>
+          <in>bintext.c</in>
+          <in>bintext.h</in>
+          <in>bit_depth_template.c</in>
+          <in>bitstream.c</in>
+          <in>bitstream_filter.c</in>
+          <in>bmp.c</in>
+          <in>bmp.h</in>
+          <in>bmpenc.c</in>
+          <in>bmv.c</in>
+          <in>bytestream.h</in>
+          <in>c93.c</in>
+          <in>cabac.c</in>
+          <in>cabac.h</in>
+          <in>cabac_functions.h</in>
+          <in>cavs.c</in>
+          <in>cavs.h</in>
+          <in>cavs_parser.c</in>
+          <in>cavsdata.h</in>
+          <in>cavsdec.c</in>
+          <in>cavsdsp.c</in>
+          <in>cavsdsp.h</in>
+          <in>cbrt_tablegen.c</in>
+          <in>cbrt_tablegen.h</in>
+          <in>cdgraphics.c</in>
+          <in>cdxl.c</in>
+          <in>celp_filters.c</in>
+          <in>celp_filters.h</in>
+          <in>celp_math.c</in>
+          <in>celp_math.h</in>
+          <in>cga_data.c</in>
+          <in>cga_data.h</in>
+          <in>chomp_bsf.c</in>
+          <in>cinepak.c</in>
+          <in>cljr.c</in>
+          <in>codec_names.h</in>
+          <in>cook.c</in>
+          <in>cookdata.h</in>
+          <in>cos_tablegen.c</in>
+          <in>crystalhd.c</in>
+          <in>cscd.c</in>
+          <in>cyuv.c</in>
+          <in>dca.c</in>
+          <in>dca.h</in>
+          <in>dca_parser.c</in>
+          <in>dca_parser.h</in>
+          <in>dcadata.h</in>
+          <in>dcadsp.c</in>
+          <in>dcadsp.h</in>
+          <in>dcaenc.c</in>
+          <in>dcaenc.h</in>
+          <in>dcahuff.h</in>
+          <in>dct-test.c</in>
+          <in>dct.c</in>
+          <in>dct.h</in>
+          <in>dct32.c</in>
+          <in>dct32.h</in>
+          <in>dct32_fixed.c</in>
+          <in>dct32_float.c</in>
+          <in>dctref.c</in>
+          <in>dctref.h</in>
+          <in>dfa.c</in>
+          <in>dirac.c</in>
+          <in>dirac.h</in>
+          <in>dirac_arith.c</in>
+          <in>dirac_arith.h</in>
+          <in>dirac_parser.c</in>
+          <in>diracdec.c</in>
+          <in>diracdsp.c</in>
+          <in>diracdsp.h</in>
+          <in>dnxhd_parser.c</in>
+          <in>dnxhddata.c</in>
+          <in>dnxhddata.h</in>
+          <in>dnxhddec.c</in>
+          <in>dnxhdenc.c</in>
+          <in>dnxhdenc.h</in>
+          <in>dpcm.c</in>
+          <in>dpx.c</in>
+          <in>dpxenc.c</in>
+          <in>dsicinav.c</in>
+          <in>dsputil.c</in>
+          <in>dsputil.h</in>
+          <in>dsputil_template.c</in>
+          <in>dump_extradata_bsf.c</in>
+          <in>dv.c</in>
+          <in>dv_tablegen.c</in>
+          <in>dv_tablegen.h</in>
+          <in>dv_vlc_data.h</in>
+          <in>dvbsub.c</in>
+          <in>dvbsub_parser.c</in>
+          <in>dvbsubdec.c</in>
+          <in>dvdata.c</in>
+          <in>dvdata.h</in>
+          <in>dvdec.c</in>
+          <in>dvdsub_parser.c</in>
+          <in>dvdsubdec.c</in>
+          <in>dvdsubenc.c</in>
+          <in>dvquant.h</in>
+          <in>dwt.c</in>
+          <in>dwt.h</in>
+          <in>dxa.c</in>
+          <in>dxtory.c</in>
+          <in>dxva2.c</in>
+          <in>dxva2.h</in>
+          <in>dxva2_h264.c</in>
+          <in>dxva2_internal.h</in>
+          <in>dxva2_mpeg2.c</in>
+          <in>dxva2_vc1.c</in>
+          <in>eac3_data.c</in>
+          <in>eac3_data.h</in>
+          <in>eac3dec.c</in>
+          <in>eac3enc.c</in>
+          <in>eac3enc.h</in>
+          <in>eacmv.c</in>
+          <in>eaidct.c</in>
+          <in>eamad.c</in>
+          <in>eatgq.c</in>
+          <in>eatgv.c</in>
+          <in>eatqi.c</in>
+          <in>elbg.c</in>
+          <in>elbg.h</in>
+          <in>error_resilience.c</in>
+          <in>escape124.c</in>
+          <in>escape130.c</in>
+          <in>exr.c</in>
+          <in>faandct.c</in>
+          <in>faandct.h</in>
+          <in>faanidct.c</in>
+          <in>faanidct.h</in>
+          <in>faxcompr.c</in>
+          <in>faxcompr.h</in>
+          <in>fft-fixed-test.c</in>
+          <in>fft-internal.h</in>
+          <in>fft-test.c</in>
+          <in>fft.c</in>
+          <in>fft.h</in>
+          <in>fft_fixed.c</in>
+          <in>fft_float.c</in>
+          <in>ffv1.c</in>
+          <in>ffwavesynth.c</in>
+          <in>flac.c</in>
+          <in>flac.h</in>
+          <in>flac_parser.c</in>
+          <in>flacdata.c</in>
+          <in>flacdata.h</in>
+          <in>flacdec.c</in>
+          <in>flacenc.c</in>
+          <in>flashsv.c</in>
+          <in>flashsv2enc.c</in>
+          <in>flashsvenc.c</in>
+          <in>flicvideo.c</in>
+          <in>flv.h</in>
+          <in>flvdec.c</in>
+          <in>flvenc.c</in>
+          <in>fmtconvert.c</in>
+          <in>fmtconvert.h</in>
+          <in>fraps.c</in>
+          <in>frwu.c</in>
+          <in>g722.c</in>
+          <in>g722.h</in>
+          <in>g722dec.c</in>
+          <in>g722enc.c</in>
+          <in>g723_1.c</in>
+          <in>g723_1_data.h</in>
+          <in>g726.c</in>
+          <in>g729.h</in>
+          <in>g729data.h</in>
+          <in>g729dec.c</in>
+          <in>g729postfilter.c</in>
+          <in>g729postfilter.h</in>
+          <in>get_bits.h</in>
+          <in>gif.c</in>
+          <in>gifdec.c</in>
+          <in>golomb-test.c</in>
+          <in>golomb.c</in>
+          <in>golomb.h</in>
+          <in>gsm.h</in>
+          <in>gsm_parser.c</in>
+          <in>gsmdec.c</in>
+          <in>gsmdec_data.c</in>
+          <in>gsmdec_data.h</in>
+          <in>gsmdec_template.c</in>
+          <in>h261.c</in>
+          <in>h261.h</in>
+          <in>h261_parser.c</in>
+          <in>h261data.h</in>
+          <in>h261dec.c</in>
+          <in>h261enc.c</in>
+          <in>h263.c</in>
+          <in>h263.h</in>
+          <in>h263_parser.c</in>
+          <in>h263_parser.h</in>
+          <in>h263data.h</in>
+          <in>h263dec.c</in>
+          <in>h264.c</in>
+          <in>h264.h</in>
+          <in>h264_cabac.c</in>
+          <in>h264_cavlc.c</in>
+          <in>h264_direct.c</in>
+          <in>h264_loopfilter.c</in>
+          <in>h264_mp4toannexb_bsf.c</in>
+          <in>h264_mvpred.h</in>
+          <in>h264_parser.c</in>
+          <in>h264_ps.c</in>
+          <in>h264_refs.c</in>
+          <in>h264_sei.c</in>
+          <in>h264data.h</in>
+          <in>h264dsp.c</in>
+          <in>h264dsp.h</in>
+          <in>h264dsp_template.c</in>
+          <in>h264idct.c</in>
+          <in>h264idct_template.c</in>
+          <in>h264pred.c</in>
+          <in>h264pred.h</in>
+          <in>h264pred_template.c</in>
+          <in>huffman.c</in>
+          <in>huffman.h</in>
+          <in>huffyuv.c</in>
+          <in>idcinvideo.c</in>
+          <in>iff.c</in>
+          <in>iirfilter.c</in>
+          <in>iirfilter.h</in>
+          <in>imc.c</in>
+          <in>imcdata.h</in>
+          <in>imgconvert.c</in>
+          <in>imgconvert.h</in>
+          <in>imx_dump_header_bsf.c</in>
+          <in>indeo2.c</in>
+          <in>indeo2data.h</in>
+          <in>indeo3.c</in>
+          <in>indeo3data.h</in>
+          <in>indeo4.c</in>
+          <in>indeo4data.h</in>
+          <in>indeo5.c</in>
+          <in>indeo5data.h</in>
+          <in>intelh263dec.c</in>
+          <in>internal.h</in>
+          <in>interplayvideo.c</in>
+          <in>intrax8.c</in>
+          <in>intrax8.h</in>
+          <in>intrax8dsp.c</in>
+          <in>intrax8huf.h</in>
+          <in>inverse.c</in>
+          <in>ituh263dec.c</in>
+          <in>ituh263enc.c</in>
+          <in>ivi_common.c</in>
+          <in>ivi_common.h</in>
+          <in>ivi_dsp.c</in>
+          <in>ivi_dsp.h</in>
+          <in>j2k.c</in>
+          <in>j2k.h</in>
+          <in>j2k_dwt.c</in>
+          <in>j2k_dwt.h</in>
+          <in>j2kdec.c</in>
+          <in>j2kenc.c</in>
+          <in>jfdctfst.c</in>
+          <in>jfdctint.c</in>
+          <in>jfdctint_template.c</in>
+          <in>jpegls.c</in>
+          <in>jpegls.h</in>
+          <in>jpeglsdec.c</in>
+          <in>jpeglsdec.h</in>
+          <in>jpeglsenc.c</in>
+          <in>jrevdct.c</in>
+          <in>jvdec.c</in>
+          <in>kbdwin.c</in>
+          <in>kbdwin.h</in>
+          <in>kgv1dec.c</in>
+          <in>kmvc.c</in>
+          <in>lagarith.c</in>
+          <in>lagarithrac.c</in>
+          <in>lagarithrac.h</in>
+          <in>latm_parser.c</in>
+          <in>lcl.h</in>
+          <in>lcldec.c</in>
+          <in>lclenc.c</in>
+          <in>libaacplus.c</in>
+          <in>libcelt_dec.c</in>
+          <in>libdirac.h</in>
+          <in>libdirac_libschro.c</in>
+          <in>libdirac_libschro.h</in>
+          <in>libdiracdec.c</in>
+          <in>libfaac.c</in>
+          <in>libgsm.c</in>
+          <in>libmp3lame.c</in>
+          <in>libopencore-amr.c</in>
+          <in>libopenjpegdec.c</in>
+          <in>libopenjpegenc.c</in>
+          <in>libschroedinger.c</in>
+          <in>libschroedinger.h</in>
+          <in>libschroedingerdec.c</in>
+          <in>libschroedingerenc.c</in>
+          <in>libspeexdec.c</in>
+          <in>libspeexenc.c</in>
+          <in>libstagefright.cpp</in>
+          <in>libtheoraenc.c</in>
+          <in>libutvideo.h</in>
+          <in>libutvideodec.cpp</in>
+          <in>libutvideoenc.cpp</in>
+          <in>libvo-aacenc.c</in>
+          <in>libvo-amrwbenc.c</in>
+          <in>libvorbis.c</in>
+          <in>libvpxdec.c</in>
+          <in>libvpxenc.c</in>
+          <in>libx264.c</in>
+          <in>libxavs.c</in>
+          <in>libxvid_internal.h</in>
+          <in>libxvid_rc.c</in>
+          <in>libxvidff.c</in>
+          <in>ljpegenc.c</in>
+          <in>loco.c</in>
+          <in>lpc.c</in>
+          <in>lpc.h</in>
+          <in>lsp.c</in>
+          <in>lsp.h</in>
+          <in>lzw.c</in>
+          <in>lzw.h</in>
+          <in>lzwenc.c</in>
+          <in>mace.c</in>
+          <in>mathops.h</in>
+          <in>mdct.c</in>
+          <in>mdct_fixed.c</in>
+          <in>mdct_float.c</in>
+          <in>mdec.c</in>
+          <in>mimic.c</in>
+          <in>mjpeg.c</in>
+          <in>mjpeg.h</in>
+          <in>mjpeg2jpeg_bsf.c</in>
+          <in>mjpeg_parser.c</in>
+          <in>mjpega_dump_header_bsf.c</in>
+          <in>mjpegbdec.c</in>
+          <in>mjpegdec.c</in>
+          <in>mjpegdec.h</in>
+          <in>mjpegenc.c</in>
+          <in>mjpegenc.h</in>
+          <in>mlp.c</in>
+          <in>mlp.h</in>
+          <in>mlp_parser.c</in>
+          <in>mlp_parser.h</in>
+          <in>mlpdec.c</in>
+          <in>mlpdsp.c</in>
+          <in>mmvideo.c</in>
+          <in>motion-test.c</in>
+          <in>motion_est.c</in>
+          <in>motion_est_template.c</in>
+          <in>motionpixels.c</in>
+          <in>motionpixels_tablegen.c</in>
+          <in>motionpixels_tablegen.h</in>
+          <in>movsub_bsf.c</in>
+          <in>mp3_header_compress_bsf.c</in>
+          <in>mp3_header_decompress_bsf.c</in>
+          <in>mpc.c</in>
+          <in>mpc.h</in>
+          <in>mpc7.c</in>
+          <in>mpc7data.h</in>
+          <in>mpc8.c</in>
+          <in>mpc8data.h</in>
+          <in>mpc8huff.h</in>
+          <in>mpcdata.h</in>
+          <in>mpeg12.c</in>
+          <in>mpeg12.h</in>
+          <in>mpeg12data.c</in>
+          <in>mpeg12data.h</in>
+          <in>mpeg12decdata.h</in>
+          <in>mpeg12enc.c</in>
+          <in>mpeg4audio.c</in>
+          <in>mpeg4audio.h</in>
+          <in>mpeg4data.h</in>
+          <in>mpeg4video.c</in>
+          <in>mpeg4video.h</in>
+          <in>mpeg4video_parser.c</in>
+          <in>mpeg4video_parser.h</in>
+          <in>mpeg4videodec.c</in>
+          <in>mpeg4videoenc.c</in>
+          <in>mpegaudio.c</in>
+          <in>mpegaudio.h</in>
+          <in>mpegaudio_parser.c</in>
+          <in>mpegaudio_tablegen.c</in>
+          <in>mpegaudio_tablegen.h</in>
+          <in>mpegaudiodata.c</in>
+          <in>mpegaudiodata.h</in>
+          <in>mpegaudiodec.c</in>
+          <in>mpegaudiodec_float.c</in>
+          <in>mpegaudiodecheader.c</in>
+          <in>mpegaudiodecheader.h</in>
+          <in>mpegaudiodectab.h</in>
+          <in>mpegaudiodsp.c</in>
+          <in>mpegaudiodsp.h</in>
+          <in>mpegaudiodsp_fixed.c</in>
+          <in>mpegaudiodsp_float.c</in>
+          <in>mpegaudiodsp_template.c</in>
+          <in>mpegaudioenc.c</in>
+          <in>mpegaudiotab.h</in>
+          <in>mpegvideo.c</in>
+          <in>mpegvideo.h</in>
+          <in>mpegvideo_common.h</in>
+          <in>mpegvideo_enc.c</in>
+          <in>mpegvideo_parser.c</in>
+          <in>mpegvideo_xvmc.c</in>
+          <in>mqc.c</in>
+          <in>mqc.h</in>
+          <in>mqcdec.c</in>
+          <in>mqcenc.c</in>
+          <in>msgsmdec.c</in>
+          <in>msgsmdec.h</in>
+          <in>msmpeg4.c</in>
+          <in>msmpeg4.h</in>
+          <in>msmpeg4data.c</in>
+          <in>msmpeg4data.h</in>
+          <in>msmpeg4enc.c</in>
+          <in>msrle.c</in>
+          <in>msrledec.c</in>
+          <in>msrledec.h</in>
+          <in>msvideo1.c</in>
+          <in>msvideo1enc.c</in>
+          <in>mxpegdec.c</in>
+          <in>nellymoser.c</in>
+          <in>nellymoser.h</in>
+          <in>nellymoserdec.c</in>
+          <in>nellymoserenc.c</in>
+          <in>noise_bsf.c</in>
+          <in>nuv.c</in>
+          <in>options.c</in>
+          <in>options_table.h</in>
+          <in>os2threads.h</in>
+          <in>pamenc.c</in>
+          <in>parser.c</in>
+          <in>parser.h</in>
+          <in>pcm-mpeg.c</in>
+          <in>pcm.c</in>
+          <in>pcm_tablegen.c</in>
+          <in>pcm_tablegen.h</in>
+          <in>pcx.c</in>
+          <in>pcxenc.c</in>
+          <in>pgssubdec.c</in>
+          <in>pictordec.c</in>
+          <in>png.c</in>
+          <in>png.h</in>
+          <in>pngdec.c</in>
+          <in>pngdsp.c</in>
+          <in>pngdsp.h</in>
+          <in>pngenc.c</in>
+          <in>pnm.c</in>
+          <in>pnm.h</in>
+          <in>pnm_parser.c</in>
+          <in>pnmdec.c</in>
+          <in>pnmenc.c</in>
+          <in>proresdata.c</in>
+          <in>proresdata.h</in>
+          <in>proresdec.h</in>
+          <in>proresdec2.c</in>
+          <in>proresdec_lgpl.c</in>
+          <in>proresdsp.c</in>
+          <in>proresdsp.h</in>
+          <in>proresenc_anatoliy.c</in>
+          <in>proresenc_kostya.c</in>
+          <in>psymodel.c</in>
+          <in>psymodel.h</in>
+          <in>pthread.c</in>
+          <in>ptx.c</in>
+          <in>put_bits.h</in>
+          <in>qcelpdata.h</in>
+          <in>qcelpdec.c</in>
+          <in>qdm2.c</in>
+          <in>qdm2_tablegen.c</in>
+          <in>qdm2_tablegen.h</in>
+          <in>qdm2data.h</in>
+          <in>qdrw.c</in>
+          <in>qpeg.c</in>
+          <in>qtrle.c</in>
+          <in>qtrleenc.c</in>
+          <in>r210dec.c</in>
+          <in>r210enc.c</in>
+          <in>ra144.c</in>
+          <in>ra144.h</in>
+          <in>ra144dec.c</in>
+          <in>ra144enc.c</in>
+          <in>ra288.c</in>
+          <in>ra288.h</in>
+          <in>ralf.c</in>
+          <in>ralfdata.h</in>
+          <in>rangecoder.c</in>
+          <in>rangecoder.h</in>
+          <in>ratecontrol.c</in>
+          <in>ratecontrol.h</in>
+          <in>raw.c</in>
+          <in>raw.h</in>
+          <in>rawdec.c</in>
+          <in>rawenc.c</in>
+          <in>rdft.c</in>
+          <in>rdft.h</in>
+          <in>rectangle.h</in>
+          <in>remove_extradata_bsf.c</in>
+          <in>resample.c</in>
+          <in>resample2.c</in>
+          <in>rl.h</in>
+          <in>rl2.c</in>
+          <in>rle.c</in>
+          <in>rle.h</in>
+          <in>roqaudioenc.c</in>
+          <in>roqvideo.c</in>
+          <in>roqvideo.h</in>
+          <in>roqvideodec.c</in>
+          <in>roqvideoenc.c</in>
+          <in>rpza.c</in>
+          <in>rtjpeg.c</in>
+          <in>rtjpeg.h</in>
+          <in>rv10.c</in>
+          <in>rv10enc.c</in>
+          <in>rv20enc.c</in>
+          <in>rv30.c</in>
+          <in>rv30data.h</in>
+          <in>rv30dsp.c</in>
+          <in>rv34.c</in>
+          <in>rv34.h</in>
+          <in>rv34_parser.c</in>
+          <in>rv34data.h</in>
+          <in>rv34dsp.c</in>
+          <in>rv34dsp.h</in>
+          <in>rv34vlc.h</in>
+          <in>rv40.c</in>
+          <in>rv40data.h</in>
+          <in>rv40dsp.c</in>
+          <in>rv40vlc2.h</in>
+          <in>s302m.c</in>
+          <in>s3tc.c</in>
+          <in>s3tc.h</in>
+          <in>sbr.h</in>
+          <in>sbrdsp.c</in>
+          <in>sbrdsp.h</in>
+          <in>sgi.h</in>
+          <in>sgidec.c</in>
+          <in>sgienc.c</in>
+          <in>shorten.c</in>
+          <in>simple_idct.c</in>
+          <in>simple_idct.h</in>
+          <in>simple_idct_template.c</in>
+          <in>sinewin.c</in>
+          <in>sinewin.h</in>
+          <in>sinewin_tablegen.c</in>
+          <in>sinewin_tablegen.h</in>
+          <in>sipr.c</in>
+          <in>sipr.h</in>
+          <in>sipr16k.c</in>
+          <in>sipr16kdata.h</in>
+          <in>siprdata.h</in>
+          <in>smacker.c</in>
+          <in>smc.c</in>
+          <in>snow.c</in>
+          <in>snow.h</in>
+          <in>snowdata.h</in>
+          <in>snowdec.c</in>
+          <in>snowenc.c</in>
+          <in>sonic.c</in>
+          <in>sp5x.h</in>
+          <in>sp5xdec.c</in>
+          <in>srtdec.c</in>
+          <in>srtenc.c</in>
+          <in>sunrast.c</in>
+          <in>sunrast.h</in>
+          <in>sunrastenc.c</in>
+          <in>svq1.c</in>
+          <in>svq1.h</in>
+          <in>svq1_cb.h</in>
+          <in>svq1_vlc.h</in>
+          <in>svq1dec.c</in>
+          <in>svq1enc.c</in>
+          <in>svq1enc_cb.h</in>
+          <in>svq3.c</in>
+          <in>synth_filter.c</in>
+          <in>synth_filter.h</in>
+          <in>tableprint.h</in>
+          <in>targa.c</in>
+          <in>targa.h</in>
+          <in>targaenc.c</in>
+          <in>thread.h</in>
+          <in>tiertexseqv.c</in>
+          <in>tiff.c</in>
+          <in>tiff.h</in>
+          <in>tiffenc.c</in>
+          <in>timecode.c</in>
+          <in>timecode.h</in>
+          <in>tmv.c</in>
+          <in>truemotion1.c</in>
+          <in>truemotion1data.h</in>
+          <in>truemotion2.c</in>
+          <in>truespeech.c</in>
+          <in>truespeech_data.h</in>
+          <in>tscc.c</in>
+          <in>tta.c</in>
+          <in>twinvq.c</in>
+          <in>twinvq_data.h</in>
+          <in>txd.c</in>
+          <in>ulti.c</in>
+          <in>ulti_cb.h</in>
+          <in>unary.h</in>
+          <in>utils.c</in>
+          <in>utvideo.c</in>
+          <in>v210dec.c</in>
+          <in>v210dec.h</in>
+          <in>v210enc.c</in>
+          <in>v210x.c</in>
+          <in>v308dec.c</in>
+          <in>v308enc.c</in>
+          <in>v408dec.c</in>
+          <in>v408enc.c</in>
+          <in>v410dec.c</in>
+          <in>v410enc.c</in>
+          <in>vaapi.c</in>
+          <in>vaapi.h</in>
+          <in>vaapi_h264.c</in>
+          <in>vaapi_internal.h</in>
+          <in>vaapi_mpeg2.c</in>
+          <in>vaapi_mpeg4.c</in>
+          <in>vaapi_vc1.c</in>
+          <in>vb.c</in>
+          <in>vble.c</in>
+          <in>vc1.c</in>
+          <in>vc1.h</in>
+          <in>vc1_parser.c</in>
+          <in>vc1acdata.h</in>
+          <in>vc1data.c</in>
+          <in>vc1data.h</in>
+          <in>vc1dec.c</in>
+          <in>vc1dsp.c</in>
+          <in>vc1dsp.h</in>
+          <in>vcr1.c</in>
+          <in>vda.c</in>
+          <in>vda.h</in>
+          <in>vda_h264.c</in>
+          <in>vda_internal.h</in>
+          <in>vdpau.c</in>
+          <in>vdpau.h</in>
+          <in>vdpau_internal.h</in>
+          <in>version.h</in>
+          <in>vmdav.c</in>
+          <in>vmnc.c</in>
+          <in>vorbis.c</in>
+          <in>vorbis.h</in>
+          <in>vorbis_data.c</in>
+          <in>vorbis_enc_data.h</in>
+          <in>vorbis_parser.c</in>
+          <in>vorbis_parser.h</in>
+          <in>vorbisdec.c</in>
+          <in>vorbisenc.c</in>
+          <in>vp3.c</in>
+          <in>vp3_parser.c</in>
+          <in>vp3data.h</in>
+          <in>vp3dsp.c</in>
+          <in>vp5.c</in>
+          <in>vp56.c</in>
+          <in>vp56.h</in>
+          <in>vp56data.c</in>
+          <in>vp56data.h</in>
+          <in>vp56dsp.c</in>
+          <in>vp56dsp.h</in>
+          <in>vp56rac.c</in>
+          <in>vp5data.h</in>
+          <in>vp6.c</in>
+          <in>vp6data.h</in>
+          <in>vp6dsp.c</in>
+          <in>vp8.c</in>
+          <in>vp8.h</in>
+          <in>vp8_parser.c</in>
+          <in>vp8data.h</in>
+          <in>vp8dsp.c</in>
+          <in>vp8dsp.h</in>
+          <in>vqavideo.c</in>
+          <in>w32pthreads.h</in>
+          <in>wavpack.c</in>
+          <in>wma.c</in>
+          <in>wma.h</in>
+          <in>wma_common.c</in>
+          <in>wma_common.h</in>
+          <in>wmadata.h</in>
+          <in>wmadec.c</in>
+          <in>wmaenc.c</in>
+          <in>wmalosslessdec.c</in>
+          <in>wmaprodata.h</in>
+          <in>wmaprodec.c</in>
+          <in>wmavoice.c</in>
+          <in>wmavoice_data.h</in>
+          <in>wmv2.c</in>
+          <in>wmv2.h</in>
+          <in>wmv2dec.c</in>
+          <in>wmv2enc.c</in>
+          <in>wnv1.c</in>
+          <in>ws-snd1.c</in>
+          <in>xan.c</in>
+          <in>xbmdec.c</in>
+          <in>xbmenc.c</in>
+          <in>xiph.c</in>
+          <in>xiph.h</in>
+          <in>xl.c</in>
+          <in>xsubdec.c</in>
+          <in>xsubenc.c</in>
+          <in>xvmc.h</in>
+          <in>xvmc_internal.h</in>
+          <in>xwd.h</in>
+          <in>xwddec.c</in>
+          <in>xwdenc.c</in>
+          <in>xxan.c</in>
+          <in>y41pdec.c</in>
+          <in>y41penc.c</in>
+          <in>yop.c</in>
+          <in>yuv4dec.c</in>
+          <in>yuv4enc.c</in>
+          <in>zerocodec.c</in>
+          <in>zmbv.c</in>
+          <in>zmbvenc.c</in>
+        </df>
+        <df name="libavdevice">
+          <in>alldevices.c</in>
+          <in>alsa-audio-common.c</in>
+          <in>alsa-audio-dec.c</in>
+          <in>alsa-audio-enc.c</in>
+          <in>alsa-audio.h</in>
+          <in>avdevice.c</in>
+          <in>avdevice.h</in>
+          <in>bktr.c</in>
+          <in>dshow.c</in>
+          <in>dshow.h</in>
+          <in>dshow_common.c</in>
+          <in>dshow_enummediatypes.c</in>
+          <in>dshow_enumpins.c</in>
+          <in>dshow_filter.c</in>
+          <in>dshow_pin.c</in>
+          <in>dv1394.c</in>
+          <in>dv1394.h</in>
+          <in>fbdev.c</in>
+          <in>jack_audio.c</in>
+          <in>lavfi.c</in>
+          <in>libcdio.c</in>
+          <in>libdc1394.c</in>
+          <in>openal-dec.c</in>
+          <in>oss_audio.c</in>
+          <in>pulse.c</in>
+          <in>sdl.c</in>
+          <in>sndio_common.c</in>
+          <in>sndio_common.h</in>
+          <in>sndio_dec.c</in>
+          <in>sndio_enc.c</in>
+          <in>timefilter.c</in>
+          <in>timefilter.h</in>
+          <in>v4l.c</in>
+          <in>v4l2.c</in>
+          <in>vfwcap.c</in>
+          <in>x11grab.c</in>
+        </df>
+        <df name="libavfilter">
+          <df name="libmpcodecs">
+            <df name="libvo">
+              <in>fastmemcpy.h</in>
+              <in>video_out.h</in>
+            </df>
+            <in>cpudetect.h</in>
+            <in>help_mp.h</in>
+            <in>img_format.c</in>
+            <in>img_format.h</in>
+            <in>mp_image.c</in>
+            <in>mp_image.h</in>
+            <in>mp_msg.h</in>
+            <in>mpbswap.h</in>
+            <in>mpc_info.h</in>
+            <in>pullup.c</in>
+            <in>pullup.h</in>
+            <in>vd_ffmpeg.h</in>
+            <in>vf.h</in>
+            <in>vf_2xsai.c</in>
+            <in>vf_decimate.c</in>
+            <in>vf_denoise3d.c</in>
+            <in>vf_detc.c</in>
+            <in>vf_dint.c</in>
+            <in>vf_divtc.c</in>
+            <in>vf_down3dright.c</in>
+            <in>vf_dsize.c</in>
+            <in>vf_eq.c</in>
+            <in>vf_eq2.c</in>
+            <in>vf_field.c</in>
+            <in>vf_fil.c</in>
+            <in>vf_filmdint.c</in>
+            <in>vf_fixpts.c</in>
+            <in>vf_framestep.c</in>
+            <in>vf_fspp.c</in>
+            <in>vf_geq.c</in>
+            <in>vf_harddup.c</in>
+            <in>vf_hqdn3d.c</in>
+            <in>vf_hue.c</in>
+            <in>vf_il.c</in>
+            <in>vf_ilpack.c</in>
+            <in>vf_ivtc.c</in>
+            <in>vf_kerndeint.c</in>
+            <in>vf_mcdeint.c</in>
+            <in>vf_mirror.c</in>
+            <in>vf_noise.c</in>
+            <in>vf_ow.c</in>
+            <in>vf_palette.c</in>
+            <in>vf_perspective.c</in>
+            <in>vf_phase.c</in>
+            <in>vf_pp.c</in>
+            <in>vf_pp7.c</in>
+            <in>vf_pullup.c</in>
+            <in>vf_qp.c</in>
+            <in>vf_rectangle.c</in>
+            <in>vf_rotate.c</in>
+            <in>vf_sab.c</in>
+            <in>vf_scale.h</in>
+            <in>vf_screenshot.c</in>
+            <in>vf_smartblur.c</in>
+            <in>vf_softpulldown.c</in>
+            <in>vf_softskip.c</in>
+            <in>vf_spp.c</in>
+            <in>vf_stereo3d.c</in>
+            <in>vf_telecine.c</in>
+            <in>vf_tile.c</in>
+            <in>vf_tinterlace.c</in>
+            <in>vf_unsharp.c</in>
+            <in>vf_uspp.c</in>
+            <in>vf_yuvcsp.c</in>
+            <in>vf_yvu9.c</in>
+            <in>vfcap.h</in>
+          </df>
+          <df name="x86">
+            <in>gradfun.c</in>
+            <in>yadif.c</in>
+            <in>yadif_template.c</in>
+          </df>
+          <in>af_aconvert.c</in>
+          <in>af_aformat.c</in>
+          <in>af_amerge.c</in>
+          <in>af_anull.c</in>
+          <in>af_aresample.c</in>
+          <in>af_ashowinfo.c</in>
+          <in>af_asplit.c</in>
+          <in>af_astreamsync.c</in>
+          <in>af_earwax.c</in>
+          <in>af_pan.c</in>
+          <in>af_silencedetect.c</in>
+          <in>af_volume.c</in>
+          <in>all_channel_layouts.h</in>
+          <in>allfilters.c</in>
+          <in>asink_anullsink.c</in>
+          <in>asrc_abuffer.c</in>
+          <in>asrc_abuffer.h</in>
+          <in>asrc_aevalsrc.c</in>
+          <in>asrc_anullsrc.c</in>
+          <in>avcodec.c</in>
+          <in>avcodec.h</in>
+          <in>avfilter.c</in>
+          <in>avfilter.h</in>
+          <in>avfiltergraph.c</in>
+          <in>avfiltergraph.h</in>
+          <in>bbox.c</in>
+          <in>bbox.h</in>
+          <in>buffersink.h</in>
+          <in>buffersrc.h</in>
+          <in>defaults.c</in>
+          <in>drawutils.c</in>
+          <in>drawutils.h</in>
+          <in>formats.c</in>
+          <in>gradfun.h</in>
+          <in>graphdump.c</in>
+          <in>graphparser.c</in>
+          <in>internal.h</in>
+          <in>lavfutils.c</in>
+          <in>lavfutils.h</in>
+          <in>lswsutils.c</in>
+          <in>lswsutils.h</in>
+          <in>sink_buffer.c</in>
+          <in>src_movie.c</in>
+          <in>transform.c</in>
+          <in>transform.h</in>
+          <in>version.h</in>
+          <in>vf_aspect.c</in>
+          <in>vf_ass.c</in>
+          <in>vf_bbox.c</in>
+          <in>vf_blackdetect.c</in>
+          <in>vf_blackframe.c</in>
+          <in>vf_boxblur.c</in>
+          <in>vf_colormatrix.c</in>
+          <in>vf_copy.c</in>
+          <in>vf_crop.c</in>
+          <in>vf_cropdetect.c</in>
+          <in>vf_delogo.c</in>
+          <in>vf_deshake.c</in>
+          <in>vf_drawbox.c</in>
+          <in>vf_drawtext.c</in>
+          <in>vf_fade.c</in>
+          <in>vf_fieldorder.c</in>
+          <in>vf_fifo.c</in>
+          <in>vf_format.c</in>
+          <in>vf_frei0r.c</in>
+          <in>vf_gradfun.c</in>
+          <in>vf_hflip.c</in>
+          <in>vf_hqdn3d.c</in>
+          <in>vf_idet.c</in>
+          <in>vf_libopencv.c</in>
+          <in>vf_lut.c</in>
+          <in>vf_mp.c</in>
+          <in>vf_null.c</in>
+          <in>vf_overlay.c</in>
+          <in>vf_pad.c</in>
+          <in>vf_pixdesctest.c</in>
+          <in>vf_removelogo.c</in>
+          <in>vf_scale.c</in>
+          <in>vf_select.c</in>
+          <in>vf_setfield.c</in>
+          <in>vf_setpts.c</in>
+          <in>vf_settb.c</in>
+          <in>vf_showinfo.c</in>
+          <in>vf_slicify.c</in>
+          <in>vf_split.c</in>
+          <in>vf_swapuv.c</in>
+          <in>vf_thumbnail.c</in>
+          <in>vf_tile.c</in>
+          <in>vf_tinterlace.c</in>
+          <in>vf_transpose.c</in>
+          <in>vf_unsharp.c</in>
+          <in>vf_vflip.c</in>
+          <in>vf_yadif.c</in>
+          <in>vsink_nullsink.c</in>
+          <in>vsrc_buffer.c</in>
+          <in>vsrc_buffer.h</in>
+          <in>vsrc_cellauto.c</in>
+          <in>vsrc_color.c</in>
+          <in>vsrc_life.c</in>
+          <in>vsrc_mandelbrot.c</in>
+          <in>vsrc_mptestsrc.c</in>
+          <in>vsrc_testsrc.c</in>
+          <in>yadif.h</in>
+        </df>
+        <df name="libavformat">
+          <in>4xm.c</in>
+          <in>a64.c</in>
+          <in>aacdec.c</in>
+          <in>ac3dec.c</in>
+          <in>act.c</in>
+          <in>adts.h</in>
+          <in>adtsenc.c</in>
+          <in>adxdec.c</in>
+          <in>aea.c</in>
+          <in>aiff.h</in>
+          <in>aiffdec.c</in>
+          <in>aiffenc.c</in>
+          <in>allformats.c</in>
+          <in>amr.c</in>
+          <in>anm.c</in>
+          <in>apc.c</in>
+          <in>ape.c</in>
+          <in>apetag.c</in>
+          <in>apetag.h</in>
+          <in>asf.c</in>
+          <in>asf.h</in>
+          <in>asfcrypt.c</in>
+          <in>asfcrypt.h</in>
+          <in>asfdec.c</in>
+          <in>asfenc.c</in>
+          <in>assdec.c</in>
+          <in>assenc.c</in>
+          <in>au.c</in>
+          <in>audiointerleave.c</in>
+          <in>audiointerleave.h</in>
+          <in>avc.c</in>
+          <in>avc.h</in>
+          <in>avformat.h</in>
+          <in>avi.h</in>
+          <in>avidec.c</in>
+          <in>avienc.c</in>
+          <in>avio.c</in>
+          <in>avio.h</in>
+          <in>avio_internal.h</in>
+          <in>aviobuf.c</in>
+          <in>avisynth.c</in>
+          <in>avlanguage.c</in>
+          <in>avlanguage.h</in>
+          <in>avs.c</in>
+          <in>bethsoftvid.c</in>
+          <in>bfi.c</in>
+          <in>bink.c</in>
+          <in>bintext.c</in>
+          <in>bit.c</in>
+          <in>bluray.c</in>
+          <in>bmv.c</in>
+          <in>c93.c</in>
+          <in>cache.c</in>
+          <in>caf.c</in>
+          <in>caf.h</in>
+          <in>cafdec.c</in>
+          <in>cafenc.c</in>
+          <in>cavsvideodec.c</in>
+          <in>cdg.c</in>
+          <in>cdxl.c</in>
+          <in>concat.c</in>
+          <in>crcenc.c</in>
+          <in>crypto.c</in>
+          <in>cutils.c</in>
+          <in>daud.c</in>
+          <in>dfa.c</in>
+          <in>diracdec.c</in>
+          <in>dnxhddec.c</in>
+          <in>dsicin.c</in>
+          <in>dtsdec.c</in>
+          <in>dv.c</in>
+          <in>dv.h</in>
+          <in>dvenc.c</in>
+          <in>dxa.c</in>
+          <in>eacdata.c</in>
+          <in>electronicarts.c</in>
+          <in>ffm.h</in>
+          <in>ffmdec.c</in>
+          <in>ffmenc.c</in>
+          <in>ffmeta.h</in>
+          <in>ffmetadec.c</in>
+          <in>ffmetaenc.c</in>
+          <in>file.c</in>
+          <in>filmstripdec.c</in>
+          <in>filmstripenc.c</in>
+          <in>flacdec.c</in>
+          <in>flacenc.c</in>
+          <in>flacenc.h</in>
+          <in>flacenc_header.c</in>
+          <in>flic.c</in>
+          <in>flv.h</in>
+          <in>flvdec.c</in>
+          <in>flvenc.c</in>
+          <in>framecrcenc.c</in>
+          <in>framehash.c</in>
+          <in>g723_1.c</in>
+          <in>g729dec.c</in>
+          <in>gif.c</in>
+          <in>gopher.c</in>
+          <in>gsmdec.c</in>
+          <in>gxf.c</in>
+          <in>gxf.h</in>
+          <in>gxfenc.c</in>
+          <in>h261dec.c</in>
+          <in>h263dec.c</in>
+          <in>h264dec.c</in>
+          <in>hls.c</in>
+          <in>hlsproto.c</in>
+          <in>http.c</in>
+          <in>http.h</in>
+          <in>httpauth.c</in>
+          <in>httpauth.h</in>
+          <in>icodec.c</in>
+          <in>id3v1.c</in>
+          <in>id3v1.h</in>
+          <in>id3v2.c</in>
+          <in>id3v2.h</in>
+          <in>id3v2enc.c</in>
+          <in>idcin.c</in>
+          <in>idroqdec.c</in>
+          <in>idroqenc.c</in>
+          <in>iff.c</in>
+          <in>img2.c</in>
+          <in>img2dec.c</in>
+          <in>img2enc.c</in>
+          <in>ingenientdec.c</in>
+          <in>internal.h</in>
+          <in>ipmovie.c</in>
+          <in>isom.c</in>
+          <in>isom.h</in>
+          <in>iss.c</in>
+          <in>iv8.c</in>
+          <in>ivfdec.c</in>
+          <in>ivfenc.c</in>
+          <in>jvdec.c</in>
+          <in>latmenc.c</in>
+          <in>libmodplug.c</in>
+          <in>libnut.c</in>
+          <in>librtmp.c</in>
+          <in>lmlm4.c</in>
+          <in>loasdec.c</in>
+          <in>lxfdec.c</in>
+          <in>m4vdec.c</in>
+          <in>matroska.c</in>
+          <in>matroska.h</in>
+          <in>matroskadec.c</in>
+          <in>matroskaenc.c</in>
+          <in>md5enc.c</in>
+          <in>md5proto.c</in>
+          <in>metadata.c</in>
+          <in>metadata.h</in>
+          <in>mgsts.c</in>
+          <in>microdvddec.c</in>
+          <in>microdvdenc.c</in>
+          <in>mkvtimestamp_v2.c</in>
+          <in>mm.c</in>
+          <in>mmf.c</in>
+          <in>mms.c</in>
+          <in>mms.h</in>
+          <in>mmsh.c</in>
+          <in>mmst.c</in>
+          <in>mov.c</in>
+          <in>mov_chan.c</in>
+          <in>mov_chan.h</in>
+          <in>movenc.c</in>
+          <in>movenc.h</in>
+          <in>movenchint.c</in>
+          <in>mp3dec.c</in>
+          <in>mp3enc.c</in>
+          <in>mpc.c</in>
+          <in>mpc8.c</in>
+          <in>mpeg.c</in>
+          <in>mpeg.h</in>
+          <in>mpegenc.c</in>
+          <in>mpegts.c</in>
+          <in>mpegts.h</in>
+          <in>mpegtsenc.c</in>
+          <in>mpegvideodec.c</in>
+          <in>mpjpeg.c</in>
+          <in>msnwc_tcp.c</in>
+          <in>mtv.c</in>
+          <in>mvi.c</in>
+          <in>mxf.c</in>
+          <in>mxf.h</in>
+          <in>mxfdec.c</in>
+          <in>mxfenc.c</in>
+          <in>mxg.c</in>
+          <in>ncdec.c</in>
+          <in>network.c</in>
+          <in>network.h</in>
+          <in>nsvdec.c</in>
+          <in>nullenc.c</in>
+          <in>nut.c</in>
+          <in>nut.h</in>
+          <in>nutdec.c</in>
+          <in>nutenc.c</in>
+          <in>nuv.c</in>
+          <in>oggdec.c</in>
+          <in>oggdec.h</in>
+          <in>oggenc.c</in>
+          <in>oggparsecelt.c</in>
+          <in>oggparsedirac.c</in>
+          <in>oggparseflac.c</in>
+          <in>oggparseogm.c</in>
+          <in>oggparseskeleton.c</in>
+          <in>oggparsespeex.c</in>
+          <in>oggparsetheora.c</in>
+          <in>oggparsevorbis.c</in>
+          <in>oma.c</in>
+          <in>oma.h</in>
+          <in>omadec.c</in>
+          <in>omaenc.c</in>
+          <in>options.c</in>
+          <in>options_table.h</in>
+          <in>os_support.c</in>
+          <in>os_support.h</in>
+          <in>pcm.c</in>
+          <in>pcm.h</in>
+          <in>pcmdec.c</in>
+          <in>pcmenc.c</in>
+          <in>pmpdec.c</in>
+          <in>psxstr.c</in>
+          <in>pva.c</in>
+          <in>qcp.c</in>
+          <in>qtpalette.h</in>
+          <in>r3d.c</in>
+          <in>rawdec.c</in>
+          <in>rawdec.h</in>
+          <in>rawenc.c</in>
+          <in>rawenc.h</in>
+          <in>rawvideodec.c</in>
+          <in>rdt.c</in>
+          <in>rdt.h</in>
+          <in>riff.c</in>
+          <in>riff.h</in>
+          <in>rl2.c</in>
+          <in>rm.c</in>
+          <in>rm.h</in>
+          <in>rmdec.c</in>
+          <in>rmenc.c</in>
+          <in>rpl.c</in>
+          <in>rso.c</in>
+          <in>rso.h</in>
+          <in>rsodec.c</in>
+          <in>rsoenc.c</in>
+          <in>rtmp.h</in>
+          <in>rtmppkt.c</in>
+          <in>rtmppkt.h</in>
+          <in>rtmpproto.c</in>
+          <in>rtp.c</in>
+          <in>rtp.h</in>
+          <in>rtpdec.c</in>
+          <in>rtpdec.h</in>
+          <in>rtpdec_amr.c</in>
+          <in>rtpdec_asf.c</in>
+          <in>rtpdec_formats.h</in>
+          <in>rtpdec_g726.c</in>
+          <in>rtpdec_h263.c</in>
+          <in>rtpdec_h263_rfc2190.c</in>
+          <in>rtpdec_h264.c</in>
+          <in>rtpdec_latm.c</in>
+          <in>rtpdec_mpeg4.c</in>
+          <in>rtpdec_qcelp.c</in>
+          <in>rtpdec_qdm2.c</in>
+          <in>rtpdec_qt.c</in>
+          <in>rtpdec_svq3.c</in>
+          <in>rtpdec_vp8.c</in>
+          <in>rtpdec_xiph.c</in>
+          <in>rtpenc.c</in>
+          <in>rtpenc.h</in>
+          <in>rtpenc_aac.c</in>
+          <in>rtpenc_amr.c</in>
+          <in>rtpenc_chain.c</in>
+          <in>rtpenc_chain.h</in>
+          <in>rtpenc_h263.c</in>
+          <in>rtpenc_h263_rfc2190.c</in>
+          <in>rtpenc_h264.c</in>
+          <in>rtpenc_latm.c</in>
+          <in>rtpenc_mpv.c</in>
+          <in>rtpenc_vp8.c</in>
+          <in>rtpenc_xiph.c</in>
+          <in>rtpproto.c</in>
+          <in>rtsp.c</in>
+          <in>rtsp.h</in>
+          <in>rtspcodes.h</in>
+          <in>rtspdec.c</in>
+          <in>rtspenc.c</in>
+          <in>sapdec.c</in>
+          <in>sapenc.c</in>
+          <in>sauce.c</in>
+          <in>sauce.h</in>
+          <in>sbgdec.c</in>
+          <in>sdp.c</in>
+          <in>seek-test.c</in>
+          <in>seek.c</in>
+          <in>seek.h</in>
+          <in>segafilm.c</in>
+          <in>segment.c</in>
+          <in>sierravmd.c</in>
+          <in>siff.c</in>
+          <in>smacker.c</in>
+          <in>smjpeg.c</in>
+          <in>smjpeg.h</in>
+          <in>smjpegdec.c</in>
+          <in>smjpegenc.c</in>
+          <in>sol.c</in>
+          <in>sox.h</in>
+          <in>soxdec.c</in>
+          <in>soxenc.c</in>
+          <in>spdif.c</in>
+          <in>spdif.h</in>
+          <in>spdifdec.c</in>
+          <in>spdifenc.c</in>
+          <in>srtdec.c</in>
+          <in>swf.h</in>
+          <in>swfdec.c</in>
+          <in>swfenc.c</in>
+          <in>tcp.c</in>
+          <in>thp.c</in>
+          <in>tiertexseq.c</in>
+          <in>tls.c</in>
+          <in>tmv.c</in>
+          <in>tta.c</in>
+          <in>tty.c</in>
+          <in>txd.c</in>
+          <in>udp.c</in>
+          <in>url.h</in>
+          <in>utils.c</in>
+          <in>vc1test.c</in>
+          <in>vc1testenc.c</in>
+          <in>version.h</in>
+          <in>voc.c</in>
+          <in>voc.h</in>
+          <in>vocdec.c</in>
+          <in>vocenc.c</in>
+          <in>vorbiscomment.c</in>
+          <in>vorbiscomment.h</in>
+          <in>vqf.c</in>
+          <in>wav.c</in>
+          <in>wc3movie.c</in>
+          <in>westwood_aud.c</in>
+          <in>westwood_vqa.c</in>
+          <in>wtv.c</in>
+          <in>wtv.h</in>
+          <in>wtvdec.c</in>
+          <in>wtvenc.c</in>
+          <in>wv.c</in>
+          <in>xa.c</in>
+          <in>xmv.c</in>
+          <in>xwma.c</in>
+          <in>yop.c</in>
+          <in>yuv4mpeg.c</in>
+        </df>
+        <df name="libavutil">
+          <df name="arm">
+            <in>bswap.h</in>
+            <in>intmath.h</in>
+            <in>intreadwrite.h</in>
+            <in>timer.h</in>
+          </df>
+          <df name="avr32">
+            <in>bswap.h</in>
+            <in>intreadwrite.h</in>
+          </df>
+          <df name="bfin">
+            <in>bswap.h</in>
+            <in>timer.h</in>
+          </df>
+          <df name="mips">
+            <in>intreadwrite.h</in>
+          </df>
+          <df name="ppc">
+            <in>cpu.c</in>
+            <in>intreadwrite.h</in>
+            <in>timer.h</in>
+          </df>
+          <df name="sh4">
+            <in>bswap.h</in>
+          </df>
+          <df name="tomi">
+            <in>intreadwrite.h</in>
+          </df>
+          <df name="x86">
+            <in>bswap.h</in>
+            <in>cpu.c</in>
+            <in>intmath.h</in>
+            <in>intreadwrite.h</in>
+            <in>timer.h</in>
+            <in>w64xmmtest.h</in>
+            <in>x86inc.asm</in>
+            <in>x86util.asm</in>
+          </df>
+          <in>adler32.c</in>
+          <in>adler32.h</in>
+          <in>aes.c</in>
+          <in>aes.h</in>
+          <in>attributes.h</in>
+          <in>audioconvert.c</in>
+          <in>audioconvert.h</in>
+          <in>avassert.h</in>
+          <in>avconfig.h</in>
+          <in>avstring.c</in>
+          <in>avstring.h</in>
+          <in>avutil.h</in>
+          <in>base64.c</in>
+          <in>base64.h</in>
+          <in>bprint.c</in>
+          <in>bprint.h</in>
+          <in>bswap.h</in>
+          <in>colorspace.h</in>
+          <in>common.h</in>
+          <in>cpu.c</in>
+          <in>cpu.h</in>
+          <in>crc.c</in>
+          <in>crc.h</in>
+          <in>crc_data.h</in>
+          <in>des.c</in>
+          <in>des.h</in>
+          <in>dict.c</in>
+          <in>dict.h</in>
+          <in>error.c</in>
+          <in>error.h</in>
+          <in>eval.c</in>
+          <in>eval.h</in>
+          <in>fifo.c</in>
+          <in>fifo.h</in>
+          <in>file.c</in>
+          <in>file.h</in>
+          <in>imgutils.c</in>
+          <in>imgutils.h</in>
+          <in>integer.c</in>
+          <in>integer.h</in>
+          <in>internal.h</in>
+          <in>intfloat.h</in>
+          <in>intfloat_readwrite.c</in>
+          <in>intfloat_readwrite.h</in>
+          <in>intmath.h</in>
+          <in>intreadwrite.h</in>
+          <in>inverse.c</in>
+          <in>lfg.c</in>
+          <in>lfg.h</in>
+          <in>libm.h</in>
+          <in>lls.c</in>
+          <in>lls.h</in>
+          <in>log.c</in>
+          <in>log.h</in>
+          <in>lzo.c</in>
+          <in>lzo.h</in>
+          <in>mathematics.c</in>
+          <in>mathematics.h</in>
+          <in>md5.c</in>
+          <in>md5.h</in>
+          <in>mem.c</in>
+          <in>mem.h</in>
+          <in>opt.c</in>
+          <in>opt.h</in>
+          <in>parseutils.c</in>
+          <in>parseutils.h</in>
+          <in>pca.c</in>
+          <in>pca.h</in>
+          <in>pixdesc.c</in>
+          <in>pixdesc.h</in>
+          <in>pixfmt.h</in>
+          <in>random_seed.c</in>
+          <in>random_seed.h</in>
+          <in>rational.c</in>
+          <in>rational.h</in>
+          <in>rc4.c</in>
+          <in>rc4.h</in>
+          <in>samplefmt.c</in>
+          <in>samplefmt.h</in>
+          <in>sha.c</in>
+          <in>sha.h</in>
+          <in>softfloat.c</in>
+          <in>softfloat.h</in>
+          <in>timecode.c</in>
+          <in>timecode.h</in>
+          <in>timer.h</in>
+          <in>timestamp.h</in>
+          <in>tree.c</in>
+          <in>tree.h</in>
+          <in>utils.c</in>
+          <in>x86_cpu.h</in>
+        </df>
+        <df name="libpostproc">
+          <in>postprocess.c</in>
+          <in>postprocess.h</in>
+          <in>postprocess_altivec_template.c</in>
+          <in>postprocess_internal.h</in>
+          <in>postprocess_template.c</in>
+        </df>
+        <df name="libswresample">
+          <in>audioconvert.c</in>
+          <in>audioconvert.h</in>
+          <in>rematrix.c</in>
+          <in>rematrix_template.c</in>
+          <in>resample.c</in>
+          <in>resample_template.c</in>
+          <in>swresample.c</in>
+          <in>swresample.h</in>
+          <in>swresample_internal.h</in>
+          <in>swresample_test.c</in>
+        </df>
+        <df name="libswscale">
+          <df name="bfin">
+            <in>internal_bfin.S</in>
+            <in>swscale_bfin.c</in>
+            <in>yuv2rgb_bfin.c</in>
+          </df>
+          <df name="ppc">
+            <in>swscale_altivec.c</in>
+            <in>yuv2rgb_altivec.c</in>
+            <in>yuv2rgb_altivec.h</in>
+            <in>yuv2yuv_altivec.c</in>
+          </df>
+          <df name="sparc">
+            <in>yuv2rgb_vis.c</in>
+          </df>
+          <df name="x86">
+            <in>input.asm</in>
+            <in>output.asm</in>
+            <in>rgb2rgb.c</in>
+            <in>rgb2rgb_template.c</in>
+            <in>scale.asm</in>
+            <in>swscale_mmx.c</in>
+            <in>swscale_template.c</in>
+            <in>w64xmmtest.c</in>
+            <in>yuv2rgb_mmx.c</in>
+            <in>yuv2rgb_template.c</in>
+          </df>
+          <in>colorspace-test.c</in>
+          <in>input.c</in>
+          <in>options.c</in>
+          <in>output.c</in>
+          <in>rgb2rgb.c</in>
+          <in>rgb2rgb.h</in>
+          <in>rgb2rgb_template.c</in>
+          <in>swscale-test.c</in>
+          <in>swscale.c</in>
+          <in>swscale.h</in>
+          <in>swscale_internal.h</in>
+          <in>swscale_unscaled.c</in>
+          <in>utils.c</in>
+          <in>yuv2rgb.c</in>
+        </df>
+        <df name="libxenon_miss">
+          <df name="arpa">
+            <in>inet.h</in>
+          </df>
+          <df name="netinet">
+            <in>in.h</in>
+          </df>
+          <df name="sys">
+            <in>ioctl.h</in>
+            <in>kd.h</in>
+            <in>mman.h</in>
+            <in>socket.h</in>
+          </df>
+          <in>netdb.h</in>
+          <in>strings.h</in>
+        </df>
+        <df name="mt-work">
+          <in>yuvcmp.c</in>
+        </df>
+        <df name="presets">
+        </df>
+        <df name="tests">
+          <df name="fate">
+          </df>
+          <df name="ref">
+            <df name="acodec">
+            </df>
+            <df name="fate">
+            </df>
+            <df name="lavf">
+            </df>
+            <df name="lavf-fate">
+            </df>
+            <df name="lavfi">
+            </df>
+            <df name="seek">
+            </df>
+            <df name="vsynth1">
+              <df name="amv">
+              </df>
+            </df>
+            <df name="vsynth2">
+              <df name="amv">
+              </df>
+            </df>
+          </df>
+          <in>audiogen.c</in>
+          <in>base64.c</in>
+          <in>rotozoom.c</in>
+          <in>tiny_psnr.c</in>
+          <in>videogen.c</in>
+        </df>
+        <df name="tools">
+          <in>aviocat.c</in>
+          <in>cws2fws.c</in>
+          <in>enum_options.c</in>
+          <in>ffeval.c</in>
+          <in>graph2dot.c</in>
+          <in>ismindex.c</in>
+          <in>lavfi-showfiltfmts.c</in>
+          <in>pktdumper.c</in>
+          <in>probetest.c</in>
+          <in>qt-faststart.c</in>
+          <in>trasher.c</in>
+        </df>
+        <in>cmdutils.c</in>
+        <in>cmdutils.h</in>
+        <in>cmdutils_common_opts.h</in>
+        <in>config.asm</in>
+        <in>config.h</in>
+        <in>ffmpeg.c</in>
+        <in>ffplay.c</in>
+        <in>ffprobe.c</in>
+        <in>ffserver.c</in>
+        <in>version.h</in>
+      </df>
+      <df name="ffmpeg_old">
+        <df name="doc">
+          <df name="doxy">
+          </df>
+          <df name="examples">
+            <in>decoding_encoding.c</in>
+            <in>filtering_audio.c</in>
+            <in>filtering_video.c</in>
+            <in>metadata.c</in>
+            <in>muxing.c</in>
+          </df>
+          <in>print_options.c</in>
+        </df>
+        <df name="ffpresets">
+        </df>
+        <df name="libavcodec">
+          <df name="alpha">
+            <in>asm.h</in>
+            <in>dsputil_alpha.c</in>
+            <in>dsputil_alpha.h</in>
+            <in>dsputil_alpha_asm.S</in>
+            <in>motion_est_alpha.c</in>
+            <in>motion_est_mvi_asm.S</in>
+            <in>mpegvideo_alpha.c</in>
+            <in>regdef.h</in>
+            <in>simple_idct_alpha.c</in>
+          </df>
+          <df name="arm">
+            <in>aac.h</in>
+            <in>ac3dsp_arm.S</in>
+            <in>ac3dsp_armv6.S</in>
+            <in>ac3dsp_init_arm.c</in>
+            <in>ac3dsp_neon.S</in>
+            <in>asm-offsets.h</in>
+            <in>asm.S</in>
+            <in>dca.h</in>
+            <in>dcadsp_init_arm.c</in>
+            <in>dcadsp_neon.S</in>
+            <in>dsputil_arm.S</in>
+            <in>dsputil_arm.h</in>
+            <in>dsputil_armv6.S</in>
+            <in>dsputil_init_arm.c</in>
+            <in>dsputil_init_armv5te.c</in>
+            <in>dsputil_init_armv6.c</in>
+            <in>dsputil_init_neon.c</in>
+            <in>dsputil_init_vfp.c</in>
+            <in>dsputil_neon.S</in>
+            <in>dsputil_vfp.S</in>
+            <in>fft_fixed_init_arm.c</in>
+            <in>fft_fixed_neon.S</in>
+            <in>fft_init_arm.c</in>
+            <in>fft_neon.S</in>
+            <in>fmtconvert_init_arm.c</in>
+            <in>fmtconvert_neon.S</in>
+            <in>fmtconvert_vfp.S</in>
+            <in>h264cmc_neon.S</in>
+            <in>h264dsp_init_arm.c</in>
+            <in>h264dsp_neon.S</in>
+            <in>h264idct_neon.S</in>
+            <in>h264pred_init_arm.c</in>
+            <in>h264pred_neon.S</in>
+            <in>int_neon.S</in>
+            <in>jrevdct_arm.S</in>
+            <in>mathops.h</in>
+            <in>mdct_fixed_neon.S</in>
+            <in>mdct_neon.S</in>
+            <in>mpegaudiodsp_fixed_armv6.S</in>
+            <in>mpegaudiodsp_init_arm.c</in>
+            <in>mpegvideo_arm.c</in>
+            <in>mpegvideo_arm.h</in>
+            <in>mpegvideo_armv5te.c</in>
+            <in>mpegvideo_armv5te_s.S</in>
+            <in>mpegvideo_neon.S</in>
+            <in>neon.S</in>
+            <in>rdft_neon.S</in>
+            <in>rv34dsp_init_neon.c</in>
+            <in>rv34dsp_neon.S</in>
+            <in>rv40dsp_init_neon.c</in>
+            <in>rv40dsp_neon.S</in>
+            <in>sbrdsp_init_arm.c</in>
+            <in>sbrdsp_neon.S</in>
+            <in>simple_idct_arm.S</in>
+            <in>simple_idct_armv5te.S</in>
+            <in>simple_idct_armv6.S</in>
+            <in>simple_idct_neon.S</in>
+            <in>synth_filter_neon.S</in>
+            <in>vp3dsp_neon.S</in>
+            <in>vp56_arith.h</in>
+            <in>vp56dsp_init_arm.c</in>
+            <in>vp56dsp_neon.S</in>
+            <in>vp8.h</in>
+            <in>vp8_armv6.S</in>
+            <in>vp8dsp_armv6.S</in>
+            <in>vp8dsp_init_arm.c</in>
+            <in>vp8dsp_neon.S</in>
+          </df>
+          <df name="avr32">
+            <in>mathops.h</in>
+          </df>
+          <df name="bfin">
+            <in>config_bfin.h</in>
+            <in>dsputil_bfin.c</in>
+            <in>dsputil_bfin.h</in>
+            <in>fdct_bfin.S</in>
+            <in>idct_bfin.S</in>
+            <in>mathops.h</in>
+            <in>mpegvideo_bfin.c</in>
+            <in>pixels_bfin.S</in>
+            <in>vp3_bfin.c</in>
+            <in>vp3_idct_bfin.S</in>
+          </df>
+          <df name="mips">
+            <in>dsputil_mmi.c</in>
+            <in>idct_mmi.c</in>
+            <in>mathops.h</in>
+            <in>mmi.h</in>
+            <in>mpegvideo_mmi.c</in>
+          </df>
+          <df name="ppc">
+            <in>asm.S</in>
+            <in>dsputil_altivec.c</in>
+            <in>dsputil_altivec.h</in>
+            <in>dsputil_ppc.c</in>
+            <in>fdct_altivec.c</in>
+            <in>fft_altivec.c</in>
+            <in>fft_altivec_s.S</in>
+            <in>float_altivec.c</in>
+            <in>fmtconvert_altivec.c</in>
+            <in>gmc_altivec.c</in>
+            <in>h264_altivec.c</in>
+            <in>h264_template_altivec.c</in>
+            <in>idct_altivec.c</in>
+            <in>int_altivec.c</in>
+            <in>mathops.h</in>
+            <in>mpegaudiodec_altivec.c</in>
+            <in>mpegvideo_altivec.c</in>
+            <in>regs.h</in>
+            <in>types_altivec.h</in>
+            <in>util_altivec.h</in>
+            <in>vc1dsp_altivec.c</in>
+            <in>vp3dsp_altivec.c</in>
+            <in>vp8dsp_altivec.c</in>
+          </df>
+          <df name="sh4">
+            <in>dsputil_align.c</in>
+            <in>dsputil_sh4.c</in>
+            <in>dsputil_sh4.h</in>
+            <in>idct_sh4.c</in>
+            <in>qpel.c</in>
+            <in>sh4.h</in>
+          </df>
+          <df name="sparc">
+            <in>dsputil_vis.c</in>
+            <in>dsputil_vis.h</in>
+            <in>simple_idct_vis.c</in>
+            <in>vis.h</in>
+          </df>
+          <df name="x86">
+            <in>ac3dsp.asm</in>
+            <in>ac3dsp_mmx.c</in>
+            <in>cabac.h</in>
+            <in>cavsdsp_mmx.c</in>
+            <in>dct32_sse.asm</in>
+            <in>deinterlace.asm</in>
+            <in>diracdsp_mmx.c</in>
+            <in>diracdsp_mmx.h</in>
+            <in>diracdsp_yasm.asm</in>
+            <in>dnxhd_mmx.c</in>
+            <in>dsputil_mmx.c</in>
+            <in>dsputil_mmx.h</in>
+            <in>dsputil_mmx_avg_template.c</in>
+            <in>dsputil_mmx_qns_template.c</in>
+            <in>dsputil_mmx_rnd_template.c</in>
+            <in>dsputil_yasm.asm</in>
+            <in>dsputilenc_mmx.c</in>
+            <in>dsputilenc_yasm.asm</in>
+            <in>dwt.c</in>
+            <in>dwt.h</in>
+            <in>dwt_yasm.asm</in>
+            <in>fdct_mmx.c</in>
+            <in>fft.c</in>
+            <in>fft.h</in>
+            <in>fft_3dn.c</in>
+            <in>fft_3dn2.c</in>
+            <in>fft_mmx.asm</in>
+            <in>fft_sse.c</in>
+            <in>fmtconvert.asm</in>
+            <in>fmtconvert_mmx.c</in>
+            <in>h264_chromamc.asm</in>
+            <in>h264_chromamc_10bit.asm</in>
+            <in>h264_deblock.asm</in>
+            <in>h264_deblock_10bit.asm</in>
+            <in>h264_i386.h</in>
+            <in>h264_idct.asm</in>
+            <in>h264_idct_10bit.asm</in>
+            <in>h264_intrapred.asm</in>
+            <in>h264_intrapred_10bit.asm</in>
+            <in>h264_intrapred_init.c</in>
+            <in>h264_qpel_10bit.asm</in>
+            <in>h264_qpel_mmx.c</in>
+            <in>h264_weight.asm</in>
+            <in>h264_weight_10bit.asm</in>
+            <in>h264dsp_mmx.c</in>
+            <in>idct_mmx.c</in>
+            <in>idct_mmx_xvid.c</in>
+            <in>idct_sse2_xvid.c</in>
+            <in>idct_xvid.h</in>
+            <in>imdct36_sse.asm</in>
+            <in>lpc_mmx.c</in>
+            <in>mathops.h</in>
+            <in>mlpdsp.c</in>
+            <in>motion_est_mmx.c</in>
+            <in>mpegaudiodec_mmx.c</in>
+            <in>mpegvideo_mmx.c</in>
+            <in>mpegvideo_mmx_template.c</in>
+            <in>pngdsp-init.c</in>
+            <in>pngdsp.asm</in>
+            <in>proresdsp-init.c</in>
+            <in>proresdsp.asm</in>
+            <in>rv34dsp.asm</in>
+            <in>rv34dsp_init.c</in>
+            <in>rv40dsp.asm</in>
+            <in>rv40dsp_init.c</in>
+            <in>sbrdsp.asm</in>
+            <in>sbrdsp_init.c</in>
+            <in>simple_idct_mmx.c</in>
+            <in>snowdsp_mmx.c</in>
+            <in>v210-init.c</in>
+            <in>v210.asm</in>
             <in>vc1dsp_mmx.c</in>
             <in>vc1dsp_yasm.asm</in>
             <in>vp3dsp.asm</in>
@@ -387,9 +2310,10 @@
           <in>anm.c</in>
           <in>ansi.c</in>
           <in>apedec.c</in>
-          <in>api-example.c</in>
           <in>ass.c</in>
           <in>ass.h</in>
+          <in>ass_split.c</in>
+          <in>ass_split.h</in>
           <in>assdec.c</in>
           <in>assenc.c</in>
           <in>asv1.c</in>
@@ -419,6 +2343,8 @@
           <in>binkdata.h</in>
           <in>binkdsp.c</in>
           <in>binkdsp.h</in>
+          <in>bintext.c</in>
+          <in>bintext.h</in>
           <in>bit_depth_template.c</in>
           <in>bitstream.c</in>
           <in>bitstream_filter.c</in>
@@ -452,11 +2378,13 @@
           <in>chomp_bsf.c</in>
           <in>cinepak.c</in>
           <in>cljr.c</in>
+          <in>codec_names.h</in>
           <in>cook.c</in>
           <in>cookdata.h</in>
           <in>cos_fixed_tables.c</in>
           <in>cos_tablegen.c</in>
           <in>cos_tables.c</in>
+          <in>crystalhd.c</in>
           <in>cscd.c</in>
           <in>cyuv.c</in>
           <in>dca.c</in>
@@ -466,6 +2394,8 @@
           <in>dcadata.h</in>
           <in>dcadsp.c</in>
           <in>dcadsp.h</in>
+          <in>dcaenc.c</in>
+          <in>dcaenc.h</in>
           <in>dcahuff.h</in>
           <in>dct-test.c</in>
           <in>dct.c</in>
@@ -479,7 +2409,12 @@
           <in>dfa.c</in>
           <in>dirac.c</in>
           <in>dirac.h</in>
+          <in>dirac_arith.c</in>
+          <in>dirac_arith.h</in>
           <in>dirac_parser.c</in>
+          <in>diracdec.c</in>
+          <in>diracdsp.c</in>
+          <in>diracdsp.h</in>
           <in>dnxhd_parser.c</in>
           <in>dnxhddata.c</in>
           <in>dnxhddata.h</in>
@@ -534,6 +2469,8 @@
           <in>elbg.h</in>
           <in>error_resilience.c</in>
           <in>escape124.c</in>
+          <in>escape130.c</in>
+          <in>exr.c</in>
           <in>faandct.c</in>
           <in>faandct.h</in>
           <in>faanidct.c</in>
@@ -548,6 +2485,7 @@
           <in>fft_fixed.c</in>
           <in>fft_float.c</in>
           <in>ffv1.c</in>
+          <in>ffwavesynth.c</in>
           <in>flac.c</in>
           <in>flac.h</in>
           <in>flac_parser.c</in>
@@ -556,6 +2494,7 @@
           <in>flacdec.c</in>
           <in>flacenc.c</in>
           <in>flashsv.c</in>
+          <in>flashsv2enc.c</in>
           <in>flashsvenc.c</in>
           <in>flicvideo.c</in>
           <in>flv.h</in>
@@ -569,7 +2508,14 @@
           <in>g722.h</in>
           <in>g722dec.c</in>
           <in>g722enc.c</in>
+          <in>g723_1.c</in>
+          <in>g723_1_data.h</in>
           <in>g726.c</in>
+          <in>g729.h</in>
+          <in>g729data.h</in>
+          <in>g729dec.c</in>
+          <in>g729postfilter.c</in>
+          <in>g729postfilter.h</in>
           <in>get_bits.h</in>
           <in>gif.c</in>
           <in>gifdec.c</in>
@@ -649,6 +2595,12 @@
           <in>ivi_common.h</in>
           <in>ivi_dsp.c</in>
           <in>ivi_dsp.h</in>
+          <in>j2k.c</in>
+          <in>j2k.h</in>
+          <in>j2k_dwt.c</in>
+          <in>j2k_dwt.h</in>
+          <in>j2kdec.c</in>
+          <in>j2kenc.c</in>
           <in>jfdctfst.c</in>
           <in>jfdctint.c</in>
           <in>jfdctint_template.c</in>
@@ -670,6 +2622,8 @@
           <in>lcl.h</in>
           <in>lcldec.c</in>
           <in>lclenc.c</in>
+          <in>libaacplus.c</in>
+          <in>libcelt_dec.c</in>
           <in>libdirac.h</in>
           <in>libdirac_libschro.c</in>
           <in>libdirac_libschro.h</in>
@@ -678,14 +2632,19 @@
           <in>libgsm.c</in>
           <in>libmp3lame.c</in>
           <in>libopencore-amr.c</in>
-          <in>libopenjpeg.c</in>
+          <in>libopenjpegdec.c</in>
+          <in>libopenjpegenc.c</in>
           <in>libschroedinger.c</in>
           <in>libschroedinger.h</in>
           <in>libschroedingerdec.c</in>
           <in>libschroedingerenc.c</in>
           <in>libspeexdec.c</in>
           <in>libspeexenc.c</in>
+          <in>libstagefright.cpp</in>
           <in>libtheoraenc.c</in>
+          <in>libutvideo.h</in>
+          <in>libutvideodec.cpp</in>
+          <in>libutvideoenc.cpp</in>
           <in>libvo-aacenc.c</in>
           <in>libvo-amrwbenc.c</in>
           <in>libvorbis.c</in>
@@ -788,6 +2747,10 @@
           <in>mpegvideo_enc.c</in>
           <in>mpegvideo_parser.c</in>
           <in>mpegvideo_xvmc.c</in>
+          <in>mqc.c</in>
+          <in>mqc.h</in>
+          <in>mqcdec.c</in>
+          <in>mqcenc.c</in>
           <in>msgsmdec.c</in>
           <in>msgsmdec.h</in>
           <in>msmpeg4.c</in>
@@ -799,6 +2762,7 @@
           <in>msrledec.c</in>
           <in>msrledec.h</in>
           <in>msvideo1.c</in>
+          <in>msvideo1enc.c</in>
           <in>mxpegdec.c</in>
           <in>nellymoser.c</in>
           <in>nellymoser.h</in>
@@ -808,6 +2772,7 @@
           <in>nuv.c</in>
           <in>options.c</in>
           <in>options_table.h</in>
+          <in>os2threads.h</in>
           <in>pamenc.c</in>
           <in>parser.c</in>
           <in>parser.h</in>
@@ -833,10 +2798,13 @@
           <in>pnmenc.c</in>
           <in>proresdata.c</in>
           <in>proresdata.h</in>
-          <in>proresdec.c</in>
+          <in>proresdec.h</in>
+          <in>proresdec2.c</in>
+          <in>proresdec_lgpl.c</in>
           <in>proresdsp.c</in>
           <in>proresdsp.h</in>
-          <in>proresenc.c</in>
+          <in>proresenc_anatoliy.c</in>
+          <in>proresenc_kostya.c</in>
           <in>psymodel.c</in>
           <in>psymodel.h</in>
           <in>pthread.c</in>
@@ -854,6 +2822,7 @@
           <in>qtrle.c</in>
           <in>qtrleenc.c</in>
           <in>r210dec.c</in>
+          <in>r210enc.c</in>
           <in>ra144.c</in>
           <in>ra144.h</in>
           <in>ra144dec.c</in>
@@ -936,9 +2905,11 @@
           <in>snowdata.h</in>
           <in>snowdec.c</in>
           <in>snowenc.c</in>
+          <in>sonic.c</in>
           <in>sp5x.h</in>
           <in>sp5xdec.c</in>
           <in>srtdec.c</in>
+          <in>srtenc.c</in>
           <in>sunrast.c</in>
           <in>sunrast.h</in>
           <in>sunrastenc.c</in>
@@ -961,6 +2932,8 @@
           <in>tiff.c</in>
           <in>tiff.h</in>
           <in>tiffenc.c</in>
+          <in>timecode.c</in>
+          <in>timecode.h</in>
           <in>tmv.c</in>
           <in>truemotion1.c</in>
           <in>truemotion1data.h</in>
@@ -978,8 +2951,13 @@
           <in>utils.c</in>
           <in>utvideo.c</in>
           <in>v210dec.c</in>
+          <in>v210dec.h</in>
           <in>v210enc.c</in>
           <in>v210x.c</in>
+          <in>v308dec.c</in>
+          <in>v308enc.c</in>
+          <in>v408dec.c</in>
+          <in>v408enc.c</in>
           <in>v410dec.c</in>
           <in>v410enc.c</in>
           <in>vaapi.c</in>
@@ -1063,6 +3041,7 @@
           <in>wnv1.c</in>
           <in>ws-snd1.c</in>
           <in>xan.c</in>
+          <in>xbmdec.c</in>
           <in>xbmenc.c</in>
           <in>xiph.c</in>
           <in>xiph.h</in>
@@ -1075,7 +3054,11 @@
           <in>xwddec.c</in>
           <in>xwdenc.c</in>
           <in>xxan.c</in>
+          <in>y41pdec.c</in>
+          <in>y41penc.c</in>
           <in>yop.c</in>
+          <in>yuv4dec.c</in>
+          <in>yuv4enc.c</in>
           <in>zerocodec.c</in>
           <in>zmbv.c</in>
           <in>zmbvenc.c</in>
@@ -1089,54 +3072,171 @@
           <in>avdevice.c</in>
           <in>avdevice.h</in>
           <in>bktr.c</in>
+          <in>dshow.c</in>
+          <in>dshow.h</in>
+          <in>dshow_common.c</in>
+          <in>dshow_enummediatypes.c</in>
+          <in>dshow_enumpins.c</in>
+          <in>dshow_filter.c</in>
+          <in>dshow_pin.c</in>
           <in>dv1394.c</in>
           <in>dv1394.h</in>
           <in>fbdev.c</in>
           <in>jack_audio.c</in>
+          <in>lavfi.c</in>
           <in>libcdio.c</in>
           <in>libdc1394.c</in>
+          <in>openal-dec.c</in>
           <in>oss_audio.c</in>
           <in>pulse.c</in>
+          <in>sdl.c</in>
           <in>sndio_common.c</in>
           <in>sndio_common.h</in>
           <in>sndio_dec.c</in>
           <in>sndio_enc.c</in>
           <in>timefilter.c</in>
           <in>timefilter.h</in>
+          <in>v4l.c</in>
           <in>v4l2.c</in>
           <in>vfwcap.c</in>
           <in>x11grab.c</in>
         </df>
         <df name="libavfilter">
+          <df name="libmpcodecs">
+            <df name="libvo">
+              <in>fastmemcpy.h</in>
+              <in>video_out.h</in>
+            </df>
+            <in>cpudetect.h</in>
+            <in>help_mp.h</in>
+            <in>img_format.c</in>
+            <in>img_format.h</in>
+            <in>mp_image.c</in>
+            <in>mp_image.h</in>
+            <in>mp_msg.h</in>
+            <in>mpbswap.h</in>
+            <in>mpc_info.h</in>
+            <in>pullup.c</in>
+            <in>pullup.h</in>
+            <in>vd_ffmpeg.h</in>
+            <in>vf.h</in>
+            <in>vf_2xsai.c</in>
+            <in>vf_decimate.c</in>
+            <in>vf_denoise3d.c</in>
+            <in>vf_detc.c</in>
+            <in>vf_dint.c</in>
+            <in>vf_divtc.c</in>
+            <in>vf_down3dright.c</in>
+            <in>vf_dsize.c</in>
+            <in>vf_eq.c</in>
+            <in>vf_eq2.c</in>
+            <in>vf_field.c</in>
+            <in>vf_fil.c</in>
+            <in>vf_filmdint.c</in>
+            <in>vf_fixpts.c</in>
+            <in>vf_framestep.c</in>
+            <in>vf_fspp.c</in>
+            <in>vf_geq.c</in>
+            <in>vf_harddup.c</in>
+            <in>vf_hqdn3d.c</in>
+            <in>vf_hue.c</in>
+            <in>vf_il.c</in>
+            <in>vf_ilpack.c</in>
+            <in>vf_ivtc.c</in>
+            <in>vf_kerndeint.c</in>
+            <in>vf_mcdeint.c</in>
+            <in>vf_mirror.c</in>
+            <in>vf_noise.c</in>
+            <in>vf_ow.c</in>
+            <in>vf_palette.c</in>
+            <in>vf_perspective.c</in>
+            <in>vf_phase.c</in>
+            <in>vf_pp.c</in>
+            <in>vf_pp7.c</in>
+            <in>vf_pullup.c</in>
+            <in>vf_qp.c</in>
+            <in>vf_rectangle.c</in>
+            <in>vf_rotate.c</in>
+            <in>vf_sab.c</in>
+            <in>vf_scale.h</in>
+            <in>vf_screenshot.c</in>
+            <in>vf_smartblur.c</in>
+            <in>vf_softpulldown.c</in>
+            <in>vf_softskip.c</in>
+            <in>vf_spp.c</in>
+            <in>vf_stereo3d.c</in>
+            <in>vf_telecine.c</in>
+            <in>vf_tile.c</in>
+            <in>vf_tinterlace.c</in>
+            <in>vf_unsharp.c</in>
+            <in>vf_uspp.c</in>
+            <in>vf_yuvcsp.c</in>
+            <in>vf_yvu9.c</in>
+            <in>vfcap.h</in>
+          </df>
           <df name="x86">
             <in>gradfun.c</in>
             <in>yadif.c</in>
             <in>yadif_template.c</in>
           </df>
+          <in>af_aconvert.c</in>
+          <in>af_aformat.c</in>
+          <in>af_amerge.c</in>
           <in>af_anull.c</in>
+          <in>af_aresample.c</in>
+          <in>af_ashowinfo.c</in>
+          <in>af_asplit.c</in>
+          <in>af_astreamsync.c</in>
+          <in>af_earwax.c</in>
+          <in>af_pan.c</in>
+          <in>af_silencedetect.c</in>
+          <in>af_volume.c</in>
+          <in>all_channel_layouts.h</in>
           <in>allfilters.c</in>
           <in>asink_anullsink.c</in>
+          <in>asrc_abuffer.c</in>
+          <in>asrc_abuffer.h</in>
+          <in>asrc_aevalsrc.c</in>
           <in>asrc_anullsrc.c</in>
+          <in>avcodec.c</in>
+          <in>avcodec.h</in>
           <in>avfilter.c</in>
           <in>avfilter.h</in>
           <in>avfiltergraph.c</in>
           <in>avfiltergraph.h</in>
+          <in>bbox.c</in>
+          <in>bbox.h</in>
+          <in>buffersink.h</in>
           <in>buffersrc.h</in>
           <in>defaults.c</in>
           <in>drawutils.c</in>
           <in>drawutils.h</in>
           <in>formats.c</in>
           <in>gradfun.h</in>
+          <in>graphdump.c</in>
           <in>graphparser.c</in>
           <in>internal.h</in>
+          <in>lavfutils.c</in>
+          <in>lavfutils.h</in>
+          <in>lswsutils.c</in>
+          <in>lswsutils.h</in>
+          <in>sink_buffer.c</in>
+          <in>src_movie.c</in>
+          <in>transform.c</in>
+          <in>transform.h</in>
           <in>version.h</in>
           <in>vf_aspect.c</in>
+          <in>vf_ass.c</in>
+          <in>vf_bbox.c</in>
+          <in>vf_blackdetect.c</in>
           <in>vf_blackframe.c</in>
           <in>vf_boxblur.c</in>
+          <in>vf_colormatrix.c</in>
           <in>vf_copy.c</in>
           <in>vf_crop.c</in>
           <in>vf_cropdetect.c</in>
           <in>vf_delogo.c</in>
+          <in>vf_deshake.c</in>
           <in>vf_drawbox.c</in>
           <in>vf_drawtext.c</in>
           <in>vf_fade.c</in>
@@ -1147,19 +3247,27 @@
           <in>vf_gradfun.c</in>
           <in>vf_hflip.c</in>
           <in>vf_hqdn3d.c</in>
+          <in>vf_idet.c</in>
           <in>vf_libopencv.c</in>
           <in>vf_lut.c</in>
+          <in>vf_mp.c</in>
           <in>vf_null.c</in>
           <in>vf_overlay.c</in>
           <in>vf_pad.c</in>
           <in>vf_pixdesctest.c</in>
+          <in>vf_removelogo.c</in>
           <in>vf_scale.c</in>
           <in>vf_select.c</in>
+          <in>vf_setfield.c</in>
           <in>vf_setpts.c</in>
           <in>vf_settb.c</in>
           <in>vf_showinfo.c</in>
           <in>vf_slicify.c</in>
           <in>vf_split.c</in>
+          <in>vf_swapuv.c</in>
+          <in>vf_thumbnail.c</in>
+          <in>vf_tile.c</in>
+          <in>vf_tinterlace.c</in>
           <in>vf_transpose.c</in>
           <in>vf_unsharp.c</in>
           <in>vf_vflip.c</in>
@@ -1167,9 +3275,11 @@
           <in>vsink_nullsink.c</in>
           <in>vsrc_buffer.c</in>
           <in>vsrc_buffer.h</in>
+          <in>vsrc_cellauto.c</in>
           <in>vsrc_color.c</in>
-          <in>vsrc_movie.c</in>
-          <in>vsrc_nullsrc.c</in>
+          <in>vsrc_life.c</in>
+          <in>vsrc_mandelbrot.c</in>
+          <in>vsrc_mptestsrc.c</in>
           <in>vsrc_testsrc.c</in>
           <in>yadif.h</in>
         </df>
@@ -1178,6 +3288,7 @@
           <in>a64.c</in>
           <in>aacdec.c</in>
           <in>ac3dec.c</in>
+          <in>act.c</in>
           <in>adts.h</in>
           <in>adtsenc.c</in>
           <in>adxdec.c</in>
@@ -1220,11 +3331,16 @@
           <in>bethsoftvid.c</in>
           <in>bfi.c</in>
           <in>bink.c</in>
+          <in>bintext.c</in>
+          <in>bit.c</in>
+          <in>bluray.c</in>
           <in>bmv.c</in>
           <in>c93.c</in>
+          <in>cache.c</in>
           <in>caf.c</in>
           <in>caf.h</in>
           <in>cafdec.c</in>
+          <in>cafenc.c</in>
           <in>cavsvideodec.c</in>
           <in>cdg.c</in>
           <in>cdxl.c</in>
@@ -1263,6 +3379,8 @@
           <in>flvenc.c</in>
           <in>framecrcenc.c</in>
           <in>framehash.c</in>
+          <in>g723_1.c</in>
+          <in>g729dec.c</in>
           <in>gif.c</in>
           <in>gopher.c</in>
           <in>gsmdec.c</in>
@@ -1278,6 +3396,7 @@
           <in>http.h</in>
           <in>httpauth.c</in>
           <in>httpauth.h</in>
+          <in>icodec.c</in>
           <in>id3v1.c</in>
           <in>id3v1.h</in>
           <in>id3v2.c</in>
@@ -1301,9 +3420,11 @@
           <in>ivfenc.c</in>
           <in>jvdec.c</in>
           <in>latmenc.c</in>
+          <in>libmodplug.c</in>
           <in>libnut.c</in>
           <in>librtmp.c</in>
           <in>lmlm4.c</in>
+          <in>loasdec.c</in>
           <in>lxfdec.c</in>
           <in>m4vdec.c</in>
           <in>matroska.c</in>
@@ -1312,9 +3433,12 @@
           <in>matroskaenc.c</in>
           <in>md5enc.c</in>
           <in>md5proto.c</in>
-          <in>metadata-example.c</in>
           <in>metadata.c</in>
           <in>metadata.h</in>
+          <in>mgsts.c</in>
+          <in>microdvddec.c</in>
+          <in>microdvdenc.c</in>
+          <in>mkvtimestamp_v2.c</in>
           <in>mm.c</in>
           <in>mmf.c</in>
           <in>mms.c</in>
@@ -1376,7 +3500,6 @@
           <in>options_table.h</in>
           <in>os_support.c</in>
           <in>os_support.h</in>
-          <in>output-example.c</in>
           <in>pcm.c</in>
           <in>pcm.h</in>
           <in>pcmdec.c</in>
@@ -1452,6 +3575,7 @@
           <in>sapenc.c</in>
           <in>sauce.c</in>
           <in>sauce.h</in>
+          <in>sbgdec.c</in>
           <in>sdp.c</in>
           <in>seek-test.c</in>
           <in>seek.c</in>
@@ -1503,6 +3627,9 @@
           <in>westwood_aud.c</in>
           <in>westwood_vqa.c</in>
           <in>wtv.c</in>
+          <in>wtv.h</in>
+          <in>wtvdec.c</in>
+          <in>wtvenc.c</in>
           <in>wv.c</in>
           <in>xa.c</in>
           <in>xmv.c</in>
@@ -1563,6 +3690,8 @@
           <in>avutil.h</in>
           <in>base64.c</in>
           <in>base64.h</in>
+          <in>bprint.c</in>
+          <in>bprint.h</in>
           <in>bswap.h</in>
           <in>colorspace.h</in>
           <in>common.h</in>
@@ -1585,6 +3714,8 @@
           <in>file.h</in>
           <in>imgutils.c</in>
           <in>imgutils.h</in>
+          <in>integer.c</in>
+          <in>integer.h</in>
           <in>internal.h</in>
           <in>intfloat.h</in>
           <in>intfloat_readwrite.c</in>
@@ -1611,6 +3742,8 @@
           <in>opt.h</in>
           <in>parseutils.c</in>
           <in>parseutils.h</in>
+          <in>pca.c</in>
+          <in>pca.h</in>
           <in>pixdesc.c</in>
           <in>pixdesc.h</in>
           <in>pixfmt.h</in>
@@ -1624,11 +3757,34 @@
           <in>samplefmt.h</in>
           <in>sha.c</in>
           <in>sha.h</in>
+          <in>softfloat.c</in>
+          <in>softfloat.h</in>
+          <in>timecode.c</in>
+          <in>timecode.h</in>
           <in>timer.h</in>
+          <in>timestamp.h</in>
           <in>tree.c</in>
           <in>tree.h</in>
           <in>utils.c</in>
           <in>x86_cpu.h</in>
+        </df>
+        <df name="libpostproc">
+          <in>postprocess.c</in>
+          <in>postprocess.h</in>
+          <in>postprocess_altivec_template.c</in>
+          <in>postprocess_internal.h</in>
+          <in>postprocess_template.c</in>
+        </df>
+        <df name="libswresample">
+          <in>audioconvert.c</in>
+          <in>audioconvert.h</in>
+          <in>rematrix.c</in>
+          <in>rematrix_template.c</in>
+          <in>resample.c</in>
+          <in>swresample.c</in>
+          <in>swresample.h</in>
+          <in>swresample_internal.h</in>
+          <in>swresample_test.c</in>
         </df>
         <df name="libswscale">
           <df name="bfin">
@@ -1676,6 +3832,9 @@
           <in>miss.h</in>
           <in>strings.h</in>
         </df>
+        <df name="mt-work">
+          <in>yuvcmp.c</in>
+        </df>
         <df name="presets">
         </df>
         <df name="tests">
@@ -1688,13 +3847,19 @@
             </df>
             <df name="lavf">
             </df>
+            <df name="lavf-fate">
+            </df>
             <df name="lavfi">
             </df>
             <df name="seek">
             </df>
             <df name="vsynth1">
+              <df name="amv">
+              </df>
             </df>
             <df name="vsynth2">
+              <df name="amv">
+              </df>
             </df>
           </df>
           <in>audiogen.c</in>
@@ -1706,6 +3871,8 @@
         <df name="tools">
           <in>aviocat.c</in>
           <in>cws2fws.c</in>
+          <in>enum_options.c</in>
+          <in>ffeval.c</in>
           <in>graph2dot.c</in>
           <in>ismindex.c</in>
           <in>lavfi-showfiltfmts.c</in>
@@ -1714,15 +3881,14 @@
           <in>qt-faststart.c</in>
           <in>trasher.c</in>
         </df>
-        <in>avconv.c</in>
-        <in>avplay.c</in>
-        <in>avprobe.c</in>
-        <in>avserver.c</in>
         <in>cmdutils.c</in>
         <in>cmdutils.h</in>
         <in>cmdutils_common_opts.h</in>
-        <in>config.asm</in>
         <in>config.h</in>
+        <in>ffmpeg.c</in>
+        <in>ffplay.c</in>
+        <in>ffprobe.c</in>
+        <in>ffserver.c</in>
         <in>version.h</in>
       </df>
       <df name="gui">
@@ -2491,6 +4657,22 @@
         <in>x11_common.c</in>
         <in>x11_common.h</in>
       </df>
+      <df name="libxenon_miss">
+        <df name="arpa">
+          <in>inet.h</in>
+        </df>
+        <df name="netinet">
+          <in>in.h</in>
+        </df>
+        <df name="sys">
+          <in>ioctl.h</in>
+          <in>kd.h</in>
+          <in>mman.h</in>
+          <in>socket.h</in>
+        </df>
+        <in>netdb.h</in>
+        <in>strings.h</in>
+      </df>
       <df name="loader">
         <df name="dmo">
           <in>DMO_AudioDecoder.c</in>
@@ -2623,9 +4805,9 @@
         <in>test2.c</in>
       </df>
       <df name="osdep">
-        <in>getch-xenon.c</in>
         <in>getch2-os2.c</in>
         <in>getch2-win.c</in>
+        <in>getch2-xenon.c</in>
         <in>getch2.c</in>
         <in>getch2.h</in>
         <in>gettimeofday.c</in>
@@ -3343,581 +5525,6 @@
       <item path="/home/cc/xenon/mplayer_xenon/etc/inttypes.h"
             ex="true"
             tool="3"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/config.asm"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/aacpsy.h"
-            ex="true"
-            tool="3"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/alpha/dsputil_alpha_asm.S"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/alpha/motion_est_mvi_asm.S"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/alpha/regdef.h"
-            ex="true"
-            tool="3"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/aac.h"
-            ex="true"
-            tool="3"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/ac3dsp_arm.S"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/ac3dsp_armv6.S"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/ac3dsp_neon.S"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/asm.S"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/dca.h"
-            ex="true"
-            tool="3"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/dcadsp_neon.S"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/dsputil_arm.S"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/dsputil_armv6.S"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/dsputil_neon.S"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/dsputil_vfp.S"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/fft_fixed_neon.S"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/fft_neon.S"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/fmtconvert_neon.S"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/fmtconvert_vfp.S"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/h264cmc_neon.S"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/h264dsp_neon.S"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/h264idct_neon.S"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/h264pred_neon.S"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/int_neon.S"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/jrevdct_arm.S"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/mathops.h"
-            ex="true"
-            tool="3"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/mdct_fixed_neon.S"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/mdct_neon.S"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/mpegaudiodsp_fixed_armv6.S"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/mpegvideo_armv5te_s.S"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/mpegvideo_neon.S"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/neon.S"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/rdft_neon.S"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/rv34dsp_neon.S"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/rv40dsp_neon.S"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/sbrdsp_neon.S"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/simple_idct_arm.S"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/simple_idct_armv5te.S"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/simple_idct_armv6.S"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/simple_idct_neon.S"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/synth_filter_neon.S"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/vp3dsp_neon.S"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/vp56_arith.h"
-            ex="true"
-            tool="3"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/vp56dsp_neon.S"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/vp8.h"
-            ex="true"
-            tool="3"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/vp8_armv6.S"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/arm/vp8dsp_neon.S"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/avr32/mathops.h"
-            ex="true"
-            tool="3"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/bfin/config_bfin.h"
-            ex="true"
-            tool="3"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/bfin/fdct_bfin.S"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/bfin/idct_bfin.S"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/bfin/mathops.h"
-            ex="true"
-            tool="3"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/bfin/pixels_bfin.S"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/bfin/vp3_idct_bfin.S"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/mips/mathops.h"
-            ex="true"
-            tool="3"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/ppc/asm.S"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/ppc/fft_altivec_s.S"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/ppc/regs.h"
-            ex="true"
-            tool="3"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/version.h"
-            ex="true"
-            tool="3"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/w32pthreads.h"
-            ex="true"
-            tool="3"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/ac3dsp.asm"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/cabac.h"
-            ex="true"
-            tool="3"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/dct32_sse.asm"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/deinterlace.asm"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/dsputil_yasm.asm"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/dsputilenc_yasm.asm"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/fft_mmx.asm"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/fmtconvert.asm"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/h264_chromamc.asm"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/h264_chromamc_10bit.asm"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/h264_deblock.asm"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/h264_deblock_10bit.asm"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/h264_i386.h"
-            ex="true"
-            tool="3"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/h264_idct.asm"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/h264_idct_10bit.asm"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/h264_intrapred.asm"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/h264_intrapred_10bit.asm"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/h264_qpel_10bit.asm"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/h264_weight.asm"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/h264_weight_10bit.asm"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/imdct36_sse.asm"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/mathops.h"
-            ex="true"
-            tool="3"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/pngdsp.asm"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/proresdsp.asm"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/rv34dsp.asm"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/rv40dsp.asm"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/sbrdsp.asm"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/vc1dsp_yasm.asm"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/vp3dsp.asm"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/vp56_arith.h"
-            ex="true"
-            tool="3"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/vp56dsp.asm"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavcodec/x86/vp8dsp.asm"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavutil/arm/bswap.h"
-            ex="true"
-            tool="3"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavutil/arm/intmath.h"
-            ex="true"
-            tool="3"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavutil/arm/intreadwrite.h"
-            ex="true"
-            tool="3"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavutil/arm/timer.h"
-            ex="true"
-            tool="3"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavutil/avr32/bswap.h"
-            ex="true"
-            tool="3"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavutil/avr32/intreadwrite.h"
-            ex="true"
-            tool="3"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavutil/bfin/bswap.h"
-            ex="true"
-            tool="3"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavutil/bfin/timer.h"
-            ex="true"
-            tool="3"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavutil/intfloat.h"
-            ex="true"
-            tool="3"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavutil/mips/intreadwrite.h"
-            ex="true"
-            tool="3"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavutil/sh4/bswap.h"
-            ex="true"
-            tool="3"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavutil/tomi/intreadwrite.h"
-            ex="true"
-            tool="3"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavutil/x86/bswap.h"
-            ex="true"
-            tool="3"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavutil/x86/intmath.h"
-            ex="true"
-            tool="3"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavutil/x86/intreadwrite.h"
-            ex="true"
-            tool="3"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavutil/x86/timer.h"
-            ex="true"
-            tool="3"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavutil/x86/x86inc.asm"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libavutil/x86/x86util.asm"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libswscale/bfin/internal_bfin.S"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libswscale/x86/input.asm"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libswscale/x86/output.asm"
-            ex="true"
-            tool="4"
-            flavor="0">
-      </item>
-      <item path="/home/cc/xenon/mplayer_xenon/ffmpeg/libswscale/x86/scale.asm"
-            ex="true"
-            tool="4"
             flavor="0">
       </item>
       <item path="/home/cc/xenon/mplayer_xenon/fmt-conversion.c"
@@ -6761,27 +8368,6 @@
             <pElem>/usr/include/valgrind</pElem>
           </incDir>
         </cTool>
-      </item>
-      <item path="ffmpeg/libavcodec/aac_tables.h" ex="true" tool="3" flavor="0">
-      </item>
-      <item path="ffmpeg/libavcodec/aacps_tables.h" ex="true" tool="3" flavor="0">
-      </item>
-      <item path="ffmpeg/libavcodec/cbrt_tables.h" ex="true" tool="3" flavor="0">
-      </item>
-      <item path="ffmpeg/libavcodec/dv_tables.h" ex="true" tool="3" flavor="0">
-      </item>
-      <item path="ffmpeg/libavcodec/motionpixels_tables.h"
-            ex="true"
-            tool="3"
-            flavor="0">
-      </item>
-      <item path="ffmpeg/libavcodec/mpegaudio_tables.h" ex="true" tool="3" flavor="0">
-      </item>
-      <item path="ffmpeg/libavcodec/pcm_tables.h" ex="true" tool="3" flavor="0">
-      </item>
-      <item path="ffmpeg/libavcodec/qdm2_tables.h" ex="true" tool="3" flavor="0">
-      </item>
-      <item path="ffmpeg/libavcodec/sinewin_tables.h" ex="true" tool="3" flavor="0">
       </item>
     </conf>
   </confs>

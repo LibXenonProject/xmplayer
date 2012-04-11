@@ -483,7 +483,7 @@ int common_init(void)
 
     if (codec_path)
         set_codec_path(codec_path);
-#if 1
+#if 0
 	 load_builtin_codecs();
 #else
     /* Check codecs.conf. */
