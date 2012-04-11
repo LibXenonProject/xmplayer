@@ -4,5 +4,6 @@
 *.dll
 *.elf
 *.elf32
+ffmpeg_old
 ffmpeg
 
