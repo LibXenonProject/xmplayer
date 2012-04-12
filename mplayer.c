@@ -2760,8 +2760,9 @@ void main(){
 		//"-v",
 		//"-nosound",
 		//"-vfm","xvid",
-		"-ao","null",
-		"usb:/video.avi"
+		//"-ao","null",
+		//"usb:/video.avi"
+		"usb:/dbz.avi"
 		//"usb:/video.m2ts"
 		//"usb:/video2.mp4"
 		//"usb:/trailer.mkv"
@@ -3000,7 +3001,6 @@ int mplayer_main(int argc, char *argv[])
 #endif
 
 // ========== Init keyboard FIFO (connection to libvo) ============
-	TR;
     // Init input system
     current_module = "init_input";
     mp_input_init();
@@ -3038,8 +3038,6 @@ int mplayer_main(int argc, char *argv[])
         }
     }
 #endif
-
-	TR;
 	
     initialized_flags |= INITIALIZED_INPUT;
     current_module     = NULL;

@@ -31,8 +31,8 @@ INSTALL = install
 INSTALLSTRIP = -s
 WINDRES = windres
 
-CFLAGS   = -g -Wundef -Wall -Wno-switch -Wno-parentheses -Wpointer-arith -Wredundant-decls -Wstrict-prototypes -Wmissing-prototypes -Wdisabled-optimization -Wno-pointer-sign -Wdeclaration-after-statement -std=gnu99 -Werror-implicit-function-declaration -O4   -pipe -ffast-math -fomit-frame-pointer -fno-tree-vectorize -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE -I. -Iffmpeg -m32 -fno-pic -mpowerpc64 -I/usr/local/xenon/usr/include/ -Wall -Ilibxenon_miss -I/usr/local/xenon/usr/include/freetype2 -I/usr/local/xenon/usr/include
-CXXFLAGS = -g -Wundef -Wall -Wno-switch -Wno-parentheses -Wpointer-arith -Wredundant-decls  -O4   -pipe -ffast-math -fomit-frame-pointer -fno-tree-vectorize -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -I. -Iffmpeg -m32 -fno-pic -mpowerpc64 -I/usr/local/xenon/usr/include/ -Wall -Ilibxenon_miss -I/usr/local/xenon/usr/include/freetype2 -I/usr/local/xenon/usr/include 
+CFLAGS   = -g -Wundef -Wall -Wno-switch -Wno-parentheses -Wpointer-arith -Wredundant-decls -Wstrict-prototypes -Wmissing-prototypes -Wdisabled-optimization -Wno-pointer-sign -Wdeclaration-after-statement -std=gnu99 -Werror-implicit-function-declaration -O2   -pipe -ffast-math -fomit-frame-pointer -fno-tree-vectorize -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE -I. -Iffmpeg -m32 -fno-pic -mpowerpc64 -I/usr/local/xenon/usr/include/ -Wall -Ilibxenon_miss -I/usr/local/xenon/usr/include/freetype2 -I/usr/local/xenon/usr/include
+CXXFLAGS = -g -Wundef -Wall -Wno-switch -Wno-parentheses -Wpointer-arith -Wredundant-decls  -O2   -pipe -ffast-math -fomit-frame-pointer -fno-tree-vectorize -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -I. -Iffmpeg -m32 -fno-pic -mpowerpc64 -I/usr/local/xenon/usr/include/ -Wall -Ilibxenon_miss -I/usr/local/xenon/usr/include/freetype2 -I/usr/local/xenon/usr/include 
 CC_DEPFLAGS = -MD -MP
 
 CFLAGS_DHAHELPER         = 

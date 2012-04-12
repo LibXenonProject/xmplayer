@@ -88,6 +88,8 @@
 #include <math.h>
 #include <stdio.h>
 
+#define HAVE_PTHREADS 0
+
 #if HAVE_PTHREADS
 // pthreads are needed for async updates from v4l(2)
 // FIXME: try to avoid using pthread calls when running only a single

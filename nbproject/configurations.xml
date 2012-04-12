@@ -1924,6 +1924,7 @@
             <in>socket.h</in>
           </df>
           <in>netdb.h</in>
+          <in>pthread.h</in>
           <in>strings.h</in>
         </df>
         <df name="mt-work">

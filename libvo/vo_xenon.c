@@ -355,14 +355,14 @@ static void ShowFPS(void) {
 }
 
 static void flip_page(void) {
+	
 	if (g_pTexture == NULL)
 		return;
 
 	ShowFPS();
-
 	//while (!Xe_IsVBlank(g_pVideoDevice));
 	// Sync gpu
-	//Xe_Sync(g_pVideoDevice);
+	Xe_Sync(g_pVideoDevice);
 
 	// refresh texture cache
 	video_lock_yuvsurf(g_pTexture);
@@ -371,7 +371,7 @@ static void flip_page(void) {
 
 	// Reset states
 	Xe_InvalidateState(g_pVideoDevice);
-	Xe_SetClearColor(g_pVideoDevice, 0x88888888);
+	Xe_SetClearColor(g_pVideoDevice, 0xFF000000);
 
 	Xe_SetBlendOp(g_pVideoDevice, XE_BLENDOP_ADD);
 	Xe_SetSrcBlend(g_pVideoDevice, XE_BLEND_ONE);
@@ -406,8 +406,8 @@ static void flip_page(void) {
 	// Resolve
 	Xe_Resolve(g_pVideoDevice);
 	// Render in background
-	//Xe_Execute(g_pVideoDevice);
-	Xe_Sync(g_pVideoDevice);
+	Xe_Execute(g_pVideoDevice);
+	//Xe_Sync(g_pVideoDevice);
 }
 
 static int
@@ -423,8 +423,23 @@ static int query_format(uint32_t format) {
 			| VFCAP_OSD | VFCAP_HWSCALE_UP | VFCAP_HWSCALE_DOWN);
 }
 
+static void create_xenon_texture(){
+	g_pTexture = video_create_yuvsurf(image_width, image_height);
+	g_pOsdSurf = Xe_CreateTexture(g_pVideoDevice, osd_texture_width, osd_texture_height, 1, XE_FMT_8, 0);
+
+	memset(g_pOsdSurf->base, 0, g_pOsdSurf->wpitch * g_pOsdSurf->hpitch);
+}
+
+static void destroy_xenon_texture(){
+	if (g_pTexture)
+		video_delete_yuvsurf(g_pTexture);
+
+	if (g_pOsdSurf)
+		Xe_DestroyTexture(g_pVideoDevice, g_pOsdSurf);
+}
+
 static int config(uint32_t width, uint32_t height, uint32_t d_width, uint32_t d_height, uint32_t flags, char *title, uint32_t format) {
-	verticeFormats *Rect = NULL;
+	
 
 	image_width = width;
 	image_height = height;
@@ -457,31 +472,10 @@ static int config(uint32_t width, uint32_t height, uint32_t d_width, uint32_t d_
 	}
 
 	// Destroy surface
-	if (g_pTexture)
-		video_delete_yuvsurf(g_pTexture);
-
-	if (g_pOsdSurf)
-		Xe_DestroyTexture(g_pVideoDevice, g_pOsdSurf);
+	destroy_xenon_texture();
 
 	// Create surface
-	g_pTexture = video_create_yuvsurf(width, height);
-	g_pOsdSurf = Xe_CreateTexture(g_pVideoDevice, osd_texture_width, osd_texture_height, 1, XE_FMT_8, 0);
-
-	memset(g_pOsdSurf->base, 0, g_pOsdSurf->wpitch * g_pOsdSurf->hpitch);
-
-
-	// update uv
-	/*
-		Rect = Xe_VB_Lock(g_pVideoDevice, vb, 0, 6 * sizeof (verticeFormats), XE_LOCK_WRITE);
-		{
-			//update osd
-			Rect[4].v = (float)osd_height/osd_texture_height;;
-			Rect[6].u = (float)osd_width/osd_texture_width;
-		}
-		Xe_VB_Unlock(g_pVideoDevice, vb);
-	 */
-
-
+	create_xenon_texture();
 
 	printf("width:%d\r\n", width);
 	printf("height:%d\r\n", height);
@@ -501,7 +495,96 @@ static int config(uint32_t width, uint32_t height, uint32_t d_width, uint32_t d_
 
 	// update vb with correct aspect ratio
 	calc_fs_rect();
+	
+	/*
+		Rect = Xe_VB_Lock(g_pVideoDevice, vb, 0, 6 * sizeof (verticeFormats), XE_LOCK_WRITE);
+		{
+			//update osd
+			Rect[4].v = (float)osd_height/osd_texture_height;
+			Rect[6].u = (float)osd_width/osd_texture_width;
+		}
+		Xe_VB_Unlock(g_pVideoDevice, vb);
+	 */
+	
+	float screenAspectRatio = (float)max_width/max_height;
+	float videoAspectRatio = (float)image_width/image_height;
 
+	printf("screenAspectRatio : %f\r\n",screenAspectRatio);
+	printf("videoAspectRatio : %f\r\n",videoAspectRatio);
+	
+	verticeFormats Rect[3];
+	
+	//if(screenAspectRatio!=videoAspectRatio)
+	{
+		
+		if(screenAspectRatio>videoAspectRatio){
+			//float w = (float)screenAspectRatio/videoAspectRatio;
+			float w = (float)videoAspectRatio/screenAspectRatio;
+			// scale the w
+			Rect[0].x = -w;
+			Rect[0].y = 1;
+			Rect[0].u = 0;
+			Rect[0].v = 0;
+			Rect[0].z = 0.0;
+			Rect[0].w = 1.0;
+
+			// bottom left
+			Rect[1].x = -w;
+			Rect[1].y = -1;
+			Rect[1].u = 0;
+			Rect[1].v = 1;
+			Rect[1].z = 0.0;
+			Rect[1].w = 1.0;
+
+			// top right
+			Rect[2].x = w;
+			Rect[2].y = 1;
+			Rect[2].u = 1;
+			Rect[2].v = 0;
+			Rect[2].z = 0.0;
+			Rect[2].w = 1.0;
+			
+		}else{
+			float h = (float)videoAspectRatio/screenAspectRatio;
+			// scale the h
+			Rect[0].x = -1;
+			Rect[0].y = h;
+			Rect[0].u = 0;
+			Rect[0].v = 0;
+			Rect[0].z = 0.0;
+			Rect[0].w = 1.0;
+
+			// bottom left
+			Rect[1].x = -1;
+			Rect[1].y = -h;
+			Rect[1].u = 0;
+			Rect[1].v = 1;
+			Rect[1].z = 0.0;
+			Rect[1].w = 1.0;
+
+			// top right
+			Rect[2].x = 1;
+			Rect[2].y = h;
+			Rect[2].u = 1;
+			Rect[2].v = 0;
+			Rect[2].z = 0.0;
+			Rect[2].w = 1.0;
+		}
+	}
+	
+	void *v = Xe_VB_Lock(g_pVideoDevice, vb, 0, 3 * sizeof (verticeFormats), XE_LOCK_WRITE);
+	memcpy(v,Rect,3 * sizeof (verticeFormats));
+	Xe_VB_Unlock(g_pVideoDevice, vb);
+	
+/*
+	
+	int i=0;
+	for(i=0;i<3;i++){
+		printf("%d.x => %f\n",i,Rect[i].x);
+		printf("%d.y => %f\n",i,Rect[i].y);
+	}
+*/
+	
 	return 0;
 }
 
@@ -510,7 +593,7 @@ uninit(void) {
 }
 
 static void check_events(void) {
-	TR;
+	//TR;
 }
 
 static int preinit(const char *arg) {
