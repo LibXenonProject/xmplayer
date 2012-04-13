@@ -442,10 +442,10 @@ extern char MPLAYER_LIBDIR[100];
 #define CONFIG_PIC 0
 #define HAVE_POLL_H 0
 #define HAVE_POSIX_MEMALIGN 0
-#define HAVE_PTHREADS 0
+#define HAVE_PTHREADS 1
 #define HAVE_ROUND 1
 #define HAVE_ROUNDF 1
-#define HAVE_THREADS 0
+#define HAVE_THREADS 1
 #define HAVE_TRUNC 1
 #define HAVE_TRUNCF 1
 

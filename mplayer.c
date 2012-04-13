@@ -2755,6 +2755,9 @@ void main(){
         "mplayer.xenon",
 		//"-demux mkv",
 		"-menu",//"-menu-startup",
+		//"-lavdopts","skiploopfilter=all:threads=3",
+		"-lavdopts","skiploopfilter=all",
+		//"-novideo",
 		//"-vo","null",
 		//"-vc","ffmpeg4",
 		//"-v",
@@ -2762,10 +2765,10 @@ void main(){
 		//"-vfm","xvid",
 		//"-ao","null",
 		//"usb:/video.avi"
-		"usb:/dbz.avi"
+		//"usb:/dbz.avi"
 		//"usb:/video.m2ts"
 		//"usb:/video2.mp4"
-		//"usb:/trailer.mkv"
+		"usb:/trailer.mkv"
     };
 	int argc = sizeof(argv) / sizeof(char *);
 	mplayer_main(argc,argv);

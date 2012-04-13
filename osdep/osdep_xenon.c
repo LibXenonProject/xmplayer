@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include <usb/usbmain.h>
 #include <ppc/timebase.h>
+#include <threads/threads.h>
 #include <xetypes.h>
 #include <xenon_soc/xenon_power.h>
 #include <xenon_smc/xenon_smc.h>
@@ -53,6 +54,8 @@ char MPLAYER_LIBDIR[100];
 
 void init_xenon(){
 	xenon_make_it_faster(XENON_SPEED_FULL);
+	
+	threading_init();
 	
 	xenos_init(VIDEO_MODE_AUTO);
 	console_init();

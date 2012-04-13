@@ -222,6 +222,10 @@
             <in>vp3dsp_altivec.c</in>
             <in>vp8dsp_altivec.c</in>
           </df>
+          <df name="ppc_1">
+          </df>
+          <df name="ppc_1">
+          </df>
           <df name="sh4">
             <in>dsputil_align.c</in>
             <in>dsputil_sh4.c</in>
@@ -317,6 +321,34 @@
             <in>vp8dsp-init.c</in>
             <in>vp8dsp.asm</in>
             <in>w64xmmtest.c</in>
+          </df>
+          <df name="xenon">
+            <in>Makefile</in>
+            <in>asm.S</in>
+            <in>dsputil_ppc.c</in>
+            <in>dsputil_vmx.c</in>
+            <in>dsputil_vmx.h</in>
+            <in>fdct_altivec.c</in>
+            <in>fft_altivec.c</in>
+            <in>fft_altivec_s.S</in>
+            <in>float_altivec.c</in>
+            <in>fmtconvert_vmx.c</in>
+            <in>gmc_altivec.c</in>
+            <in>h264_altivec.c</in>
+            <in>h264_template_altivec.c</in>
+            <in>h264_template_vmx.c</in>
+            <in>h264_vmx.c</in>
+            <in>idct_altivec.c</in>
+            <in>int_altivec.c</in>
+            <in>mathops.h</in>
+            <in>mpegaudiodec_altivec.c</in>
+            <in>mpegvideo_altivec.c</in>
+            <in>regs.h</in>
+            <in>types_altivec.h</in>
+            <in>util_altivec.h</in>
+            <in>vc1dsp_altivec.c</in>
+            <in>vp3dsp_altivec.c</in>
+            <in>vp8dsp_altivec.c</in>
           </df>
           <in>4xm.c</in>
           <in>8bps.c</in>
@@ -1924,6 +1956,7 @@
             <in>socket.h</in>
           </df>
           <in>netdb.h</in>
+          <in>pthread.c</in>
           <in>pthread.h</in>
           <in>strings.h</in>
         </df>
@@ -4673,6 +4706,7 @@
         </df>
         <in>netdb.h</in>
         <in>strings.h</in>
+        <in>xenon_pthread.c</in>
       </df>
       <df name="loader">
         <df name="dmo">

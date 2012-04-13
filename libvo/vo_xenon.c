@@ -470,6 +470,12 @@ static int config(uint32_t width, uint32_t height, uint32_t d_width, uint32_t d_
 		osd_texture_width >>= 1;
 		osd_texture_height >>= 1;
 	}
+	
+	// hack
+/*
+	osd_width = osd_texture_width = 1024;
+	osd_height = osd_texture_height = 1024;
+*/
 
 	// Destroy surface
 	destroy_xenon_texture();
@@ -545,7 +551,7 @@ static int config(uint32_t width, uint32_t height, uint32_t d_width, uint32_t d_
 			Rect[2].w = 1.0;
 			
 		}else{
-			float h = (float)videoAspectRatio/screenAspectRatio;
+			float h = (float)screenAspectRatio/videoAspectRatio;
 			// scale the h
 			Rect[0].x = -1;
 			Rect[0].y = h;
