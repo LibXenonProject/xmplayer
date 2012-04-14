@@ -222,10 +222,6 @@
             <in>vp3dsp_altivec.c</in>
             <in>vp8dsp_altivec.c</in>
           </df>
-          <df name="ppc_1">
-          </df>
-          <df name="ppc_1">
-          </df>
           <df name="sh4">
             <in>dsputil_align.c</in>
             <in>dsputil_sh4.c</in>
@@ -323,7 +319,6 @@
             <in>w64xmmtest.c</in>
           </df>
           <df name="xenon">
-            <in>Makefile</in>
             <in>asm.S</in>
             <in>dsputil_ppc.c</in>
             <in>dsputil_vmx.c</in>
@@ -1956,9 +1951,9 @@
             <in>socket.h</in>
           </df>
           <in>netdb.h</in>
-          <in>pthread.c</in>
           <in>pthread.h</in>
           <in>strings.h</in>
+          <in>xenon_pthread.c</in>
         </df>
         <df name="mt-work">
           <in>yuvcmp.c</in>

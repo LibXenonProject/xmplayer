@@ -32,7 +32,6 @@
 #include <sys/time.h>
 #include <sys/types.h>
 
-
 ///xenon
 #include <xenos/xenos.h>
 #include <console/console.h>mai
@@ -2755,8 +2754,9 @@ void main(){
         "mplayer.xenon",
 		//"-demux mkv",
 		"-menu",//"-menu-startup",
-		//"-lavdopts","skiploopfilter=all:threads=3",
-		"-lavdopts","skiploopfilter=all",
+		//"-lavdopts","skiploopfilter=all:threads=2",
+		"-lavdopts","skiploopfilter=all:threads=4",
+		//"-lavdopts","skiploopfilter=all",
 		//"-novideo",
 		//"-vo","null",
 		//"-vc","ffmpeg4",
@@ -2764,11 +2764,11 @@ void main(){
 		//"-nosound",
 		//"-vfm","xvid",
 		//"-ao","null",
-		//"usb:/video.avi"
-		//"usb:/dbz.avi"
-		//"usb:/video.m2ts"
-		//"usb:/video2.mp4"
-		"usb:/trailer.mkv"
+		//"uda:/video.avi"
+		//"uda:/dbz.avi"
+		//"uda:/video.m2ts"
+		//"uda:/video2.mp4"
+		"uda:/trailer.mkv"
     };
 	int argc = sizeof(argv) / sizeof(char *);
 	mplayer_main(argc,argv);

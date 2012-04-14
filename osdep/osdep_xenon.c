@@ -16,7 +16,6 @@
 #include <ppc/timebase.h>
 #include <threads/threads.h>
 #include <xetypes.h>
-#include <xenon_soc/xenon_power.h>
 #include <xenon_smc/xenon_smc.h>
 #include <console/console.h>
 #include <sys/time.h>
@@ -41,29 +40,36 @@
 #include <sys/time.h>
 #include <time/time.h>
 #include <xenon_smc/xenon_smc.h>
+#include <threads/gdb.h>
 
 #include <diskio/ata.h>
 
 #include <libfat/fat.h>
 
 #include <math.h>
+#include <network/network.h>
 
 char MPLAYER_DATADIR[100]; 
 char MPLAYER_CONFDIR[100]; 
 char MPLAYER_LIBDIR[100];
 
+void pthread_init();
+
 void init_xenon(){
-	xenon_make_it_faster(XENON_SPEED_FULL);
+	pthread_init();	
 	
-	threading_init();
+/*
+	network_init_sys();	
+	gdb_init();
+*/
 	
 	xenos_init(VIDEO_MODE_AUTO);
 	console_init();
 	
-	setenv("HOME","usb:",1);
-	strcpy(MPLAYER_DATADIR,"usb:/mplayer");
-	strcpy(MPLAYER_CONFDIR,"usb:/mplayer");
-	strcpy(MPLAYER_LIBDIR,"usb:/mplayer");
+	setenv("HOME","uda:",1);
+	strcpy(MPLAYER_DATADIR,"uda:/mplayer");
+	strcpy(MPLAYER_CONFDIR,"uda:/mplayer");
+	strcpy(MPLAYER_LIBDIR,"uda:/mplayer");
 	
 	usb_init();
 	usb_do_poll();
