@@ -5423,6 +5423,7 @@
       <in>mpcommon.h</in>
       <in>mplayer.c</in>
       <in>mplayer.h</in>
+      <in>mplayer.s</in>
       <in>parser-cfg.c</in>
       <in>parser-cfg.h</in>
       <in>parser-mecmd.c</in>
@@ -5468,7 +5469,7 @@
           <buildCommandWorkingDir>/home/cc/xenon/mplayer_xenon</buildCommandWorkingDir>
           <buildCommand>${MAKE} -f Makefile run</buildCommand>
           <cleanCommand>${MAKE} -f Makefile clean</cleanCommand>
-          <executablePath></executablePath>
+          <executablePath>/home/cc/xenon/mplayer_xenon/mplayer.elf32</executablePath>
           <ccTool>
             <incDir>
               <pElem>/usr/include/valgrind</pElem>

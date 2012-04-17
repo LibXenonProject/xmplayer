@@ -2755,7 +2755,7 @@ void main(){
 		//"-demux mkv",
 		"-menu",//"-menu-startup",
 		//"-lavdopts","skiploopfilter=all:threads=2",
-		"-lavdopts","skiploopfilter=all:threads=4",
+		"-lavdopts","skiploopfilter=all:threads=5",
 		//"-lavdopts","skiploopfilter=all",
 		//"-novideo",
 		//"-vo","null",
@@ -2767,8 +2767,9 @@ void main(){
 		//"uda:/video.avi"
 		//"uda:/dbz.avi"
 		//"uda:/video.m2ts"
-		//"uda:/video2.mp4"
-		"uda:/trailer.mkv"
+		"uda:/video2.mp4"
+		//"uda:/trailer.mkv"
+		//"uda:/lockout-tlr1_h1080p.mov"
     };
 	int argc = sizeof(argv) / sizeof(char *);
 	mplayer_main(argc,argv);

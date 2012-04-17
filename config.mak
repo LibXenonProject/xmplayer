@@ -31,8 +31,11 @@ INSTALL = install
 INSTALLSTRIP = -s
 WINDRES = windres
 
-CFLAGS   = -g -Wundef -Wall -Wno-switch -Wno-parentheses -Wpointer-arith -Wredundant-decls -Wstrict-prototypes -Wmissing-prototypes -Wdisabled-optimization -Wno-pointer-sign -Wdeclaration-after-statement -std=gnu99 -Werror-implicit-function-declaration -Ofast   -pipe -ffast-math -fomit-frame-pointer -fno-tree-vectorize -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE -I. -Iffmpeg -m32 -fno-pic -mpowerpc64 -I/usr/local/xenon/usr/include/ -Wall -Ilibxenon_miss -I/usr/local/xenon/usr/include/freetype2 -I/usr/local/xenon/usr/include
-CXXFLAGS = -g -Wundef -Wall -Wno-switch -Wno-parentheses -Wpointer-arith -Wredundant-decls  -Ofast   -pipe -ffast-math -fomit-frame-pointer -fno-tree-vectorize -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -I. -Iffmpeg -m32 -fno-pic -mpowerpc64 -I/usr/local/xenon/usr/include/ -Wall -Ilibxenon_miss -I/usr/local/xenon/usr/include/freetype2 -I/usr/local/xenon/usr/include 
+#OPTIFLAGS =  -Ofast -flto -fuse-linker-plugin -mcpu=cell -mtune=cell -fno-tree-vectorize -fno-tree-slp-vectorize -ftree-vectorizer-verbose=1 
+OPTIFLAGS =  -O4 -mcpu=cell -mtune=cell -fno-tree-vectorize -fno-tree-slp-vectorize -ftree-vectorizer-verbose=1 
+
+CFLAGS   = $(OPTIFLAGS) -g -Wundef -Wall -Wno-switch -Wno-parentheses -Wpointer-arith -Wredundant-decls -Wstrict-prototypes -Wmissing-prototypes -Wdisabled-optimization -Wno-pointer-sign -Wdeclaration-after-statement -std=gnu99 -Werror-implicit-function-declaration -pipe -ffast-math -fomit-frame-pointer -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE -I. -Iffmpeg -m32 -fno-pic -mpowerpc64 -I/usr/local/xenon/usr/include/ -Wall -Ilibxenon_miss -I/usr/local/xenon/usr/include/freetype2 -I/usr/local/xenon/usr/include
+CXXFLAGS = $(OPTIFLAGS) -g -Wundef -Wall -Wno-switch -Wno-parentheses -Wpointer-arith -Wredundant-decls -pipe -ffast-math -fomit-frame-pointer -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -I. -Iffmpeg -m32 -fno-pic -mpowerpc64 -I/usr/local/xenon/usr/include/ -Wall -Ilibxenon_miss -I/usr/local/xenon/usr/include/freetype2 -I/usr/local/xenon/usr/include 
 CC_DEPFLAGS = -MD -MP
 
 CFLAGS_DHAHELPER         = 
@@ -44,7 +47,7 @@ CFLAGS_STACKREALIGN      =
 CFLAGS_SVGALIB_HELPER    = 
 CFLAGS_TREMOR_LOW        = 
 
-EXTRALIBS          = -lxenon -lfat -Wl,-z,noexecstack -lm -m32 -maltivec -fno-pic -mpowerpc64 -L/usr/local/xenon/usr/lib/ -L/usr/local/xenon/xenon/lib/32/ -T/usr/local/xenon/app.lds -u read -u _start -u exc_base -ffast-math -liconv -L/usr/local/xenon/usr/lib -lfreetype -lz -lbz2 -lfribidi -lz -lbz2    -static 
+EXTRALIBS          = $(OPTIFLAGS) -lxenon -lfat -Wl,-z,noexecstack -lm -m32 -maltivec -fno-pic -mpowerpc64 -L/usr/local/xenon/usr/lib/ -L/usr/local/xenon/xenon/lib/32/ -T/usr/local/xenon/app.lds -u read -u _start -u exc_base -ffast-math -liconv -L/usr/local/xenon/usr/lib -lfreetype -lz -lbz2 -lfribidi -lz -lbz2    -static 
 EXTRALIBS_MPLAYER  = 
 EXTRALIBS_MENCODER = 
 
