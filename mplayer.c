@@ -2764,12 +2764,13 @@ void main(){
 		//"-nosound",
 		//"-vfm","xvid",
 		//"-ao","null",
-		//"uda:/video.avi"
-		//"uda:/dbz.avi"
-		//"uda:/video.m2ts"
-		"uda:/video2.mp4"
-		//"uda:/trailer.mkv"
-		//"uda:/lockout-tlr1_h1080p.mov"
+		"uda:/video.avi",
+		//"uda:/dbz.avi",
+		//"uda:/video.m2ts",
+		"uda:/video2.mp4",
+		//"dvd://1"
+		"uda:/trailer.mkv",
+		"uda:/lockout-tlr1_h1080p.mov"
     };
 	int argc = sizeof(argv) / sizeof(char *);
 	mplayer_main(argc,argv);

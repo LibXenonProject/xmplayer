@@ -244,9 +244,9 @@ static void thread_runner(void){
 int pthread_create(pthread_t *thread, void *u,
     void *(*start_routine)(void*), void *arg){
 #ifdef STABLE
-	static int last_thread_id = 1;
+	static int last_thread_id = 2;
 	if(last_thread_id>=NB_THREAD){
-		last_thread_id = 1;
+		last_thread_id = 2;
 	}
 #else
 	static int last_thread_id = 1;

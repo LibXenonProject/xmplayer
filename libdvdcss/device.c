@@ -75,6 +75,8 @@
 
 #include "dvdcss/dvdcss.h"
 
+#define PATH_MAX 1024
+
 #include "common.h"
 #include "css.h"
 #include "libdvdcss.h"
@@ -84,10 +86,16 @@
 /*****************************************************************************
  * Device reading prototypes
  *****************************************************************************/
+
 static int libc_open  ( dvdcss_t, char const * );
 static int libc_seek  ( dvdcss_t, int );
 static int libc_read  ( dvdcss_t, void *, int );
 static int libc_readv ( dvdcss_t, struct iovec *, int );
+
+static int xenon_open  ( dvdcss_t, char const * );
+static int xenon_seek  ( dvdcss_t, int );
+static int xenon_read  ( dvdcss_t, void *, int );
+static int xenon_readv ( dvdcss_t, struct iovec *, int );
 
 #ifdef WIN32
 static int win2k_open ( dvdcss_t, char const * );
@@ -134,6 +142,8 @@ int _dvdcss_use_ioctls( dvdcss_t dvdcss )
         return 1;
 
     return 0;
+#elif defined(XENON)
+	return 0;
 #else
     struct stat fileinfo;
     int ret;
@@ -316,6 +326,10 @@ void _dvdcss_check ( dvdcss_t dvdcss )
     }
 
     IOObjectRelease( media_iterator );
+#elif defined(xenon)
+	free( dvdcss->psz_device );
+    dvdcss->psz_device = strdup(DEFAULT_DVD_DEVICE);
+    print_debug( dvdcss, "defaulting to drive `%s'", dvdcss->psz_device );
 #elif defined( SYS_OS2 )
     for( i = 0; i < 26; i++ )
     {
@@ -404,6 +418,16 @@ int _dvdcss_open ( dvdcss_t dvdcss )
         dvdcss->pf_read  = os2_read;
         dvdcss->pf_readv = os2_readv;
         return os2_open( dvdcss, psz_device );
+    }
+    else
+#elif defined( XENON )
+	if ( !strcmp(psz_device, DEFAULT_DVD_DEVICE) )
+    {
+        print_debug( dvdcss, "using xenon API for access" );
+        dvdcss->pf_seek  = xenon_seek;
+        dvdcss->pf_read  = xenon_read;
+        dvdcss->pf_readv = xenon_readv;
+        return xenon_open( dvdcss, psz_device );
     }
     else
 #endif
@@ -859,7 +883,7 @@ static int aspi_read ( dvdcss_t dvdcss, void *p_buffer, int i_blocks )
  *****************************************************************************/
 static int libc_readv ( dvdcss_t dvdcss, struct iovec *p_iovec, int i_blocks )
 {
-#if defined( WIN32 )
+#if defined( WIN32 ) || defined ( XENON )
     int i_index, i_len, i_total = 0;
     unsigned char *p_base;
     int i_bytes;
@@ -1088,3 +1112,131 @@ static int aspi_read_internal( int i_fd, void *p_data, int i_blocks )
 }
 #endif
 
+#include <diskio/ata.h>
+#include <xenon_smc/xenon_smc.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <diskio/disc_io.h>
+#include <debug.h>
+
+extern DISC_INTERFACE xenon_atapi_ops;
+
+void *memalign(size_t blocksize, size_t bytes);
+
+static int xenon_open  ( dvdcss_t dvdcss, char const * psz_device){
+	int retry = 20 * 5;
+	if (strcmp(psz_device, DEFAULT_DVD_DEVICE)) {
+		printf("DI: unknown device '%s'\r\n", psz_device);
+		return -1;
+	}
+	xenon_atapi_init();
+	xenon_smc_close_tray();
+
+	printf("DI: initializing dvd...\r\n");
+
+	printf("DI: waiting for device to become ready...\r\n");
+
+	while (retry > 0) {
+		int status = xenon_smc_get_tray_state();
+		
+		printf("%d\r\n",status);
+
+		if (status & 2)//closed
+			break;
+
+		retry--;
+
+		usleep (200 * 1000);
+	}
+	
+	printf("Dvd Ready\r\n");
+
+	dvdcss->i_pos = 0;
+	return 0;
+};
+static int xenon_seek  ( dvdcss_t dvdcss, int i_blocks){
+	if (dvdcss->i_pos == i_blocks )
+		return i_blocks;
+
+	//TODO check this against the disc's max lba
+	dvdcss->i_pos = i_blocks;
+	return dvdcss->i_pos;
+};
+
+static int xenon_read(dvdcss_t dvdcss, void *buffer, int blocks) {
+	//void *bfr;
+	int ret;
+	
+	printf("xenon_read %d at %08x\r\n",blocks,dvdcss->i_pos);
+
+/*
+	bfr = memalign(32,blocks * DVDCSS_BLOCK_SIZE);
+	if (bfr == NULL) {
+		printf("DI: can't allocate %d bytes\r\n",
+				blocks * DVDCSS_BLOCK_SIZE);
+		return -1;
+	}
+*/
+	
+	char bfr[DVDCSS_BLOCK_SIZE];
+
+	
+	ret = xenon_atapi_ops.readSectors(dvdcss->i_pos,blocks,bfr);
+	//ret = DI_ReadDVD(bfr, blocks, dvdcss->i_pos);
+
+	if (ret < 0) {
+		printf("DI: read failed with %d\r\n", ret);
+		//free(bfr);
+		return -1;
+	}
+	
+	//buffer_dump(bfr,DVDCSS_BLOCK_SIZE);
+
+	dvdcss->i_pos += blocks;
+	memcpy(buffer, bfr, blocks * DVDCSS_BLOCK_SIZE);
+	//free(bfr);
+	
+	printf("Ok\r\n");
+
+	return blocks;
+};
+
+static int xenon_readv(dvdcss_t dvdcss, struct iovec *iov, int iovcnt) {
+	
+	int len;
+	int i;
+	int ret;
+	void *bfr, *ptr;
+
+	printf("xenon_readv\r\n");
+	
+	len = 0;
+	for (i = 0; i < iovcnt; ++i)
+		len += iov[i].iov_len;
+
+	bfr = memalign(32,len);
+	if (bfr == NULL) {
+		printf("DI: can't allocate %d bytes\r\n",
+				len * DVDCSS_BLOCK_SIZE);
+		return -1;
+	}
+
+	xenon_atapi_ops.readSectors(dvdcss->i_pos,len / DVDCSS_BLOCK_SIZE,bfr);
+	//ret = DI_ReadDVD(bfr, len / DVDCSS_BLOCK_SIZE, dvdcss->i_pos);
+	if (ret < 0) {
+		printf("DI: readv failed with %d\r\n", ret);
+		free(bfr);
+		return -1;
+	}
+
+	ptr = bfr;
+	for (i = 0; i < iovcnt; ++i) {
+		memcpy(iov[i].iov_base, ptr, iov[i].iov_len);
+		ptr += iov[i].iov_len;
+	}
+
+	dvdcss->i_pos += len / DVDCSS_BLOCK_SIZE;
+	free(bfr);
+
+	return len;
+};

@@ -44,6 +44,8 @@
 #include "vm/vm.h"
 #include "dvdnav_internal.h"
 
+#define MAXPATHLEN 255
+
 struct block_s {
     int domain;
     int title;

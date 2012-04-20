@@ -50,7 +50,7 @@ static int control(int cmd, void *arg) {
 }
 
 static void sound_reset(void){
-	// xenon_sound_init();
+	xenon_sound_init();
 }
 
 // open & setup audio device

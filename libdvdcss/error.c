@@ -36,6 +36,8 @@
 
 #include "dvdcss/dvdcss.h"
 
+#define PATH_MAX 1024
+
 #include "common.h"
 #include "css.h"
 #include "libdvdcss.h"

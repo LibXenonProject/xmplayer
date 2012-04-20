@@ -274,7 +274,8 @@ int dvdinput_setup(void)
   void *dvdcss_library = NULL;
   char **dvdcss_version = NULL;
 
-#ifdef HAVE_DVDCSS_DVDCSS_H
+//#ifdef HAVE_DVDCSS_DVDCSS_H
+#if 1
   /* linking to libdvdcss */
   dvdcss_library = &dvdcss_library;  /* Give it some value != NULL */
   /* the DVDcss_* functions have been #defined at the top */

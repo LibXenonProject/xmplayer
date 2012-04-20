@@ -306,6 +306,7 @@ SRCS_XENON  =	osdep/osdep_xenon.c \
 		libao2/ao_xenon.c \
 		osdep/glob-xenon.c \
 		libxenon_miss/xenon_pthread.c \
+		libxenon_miss/basename.c \
 
 
 SRCS_COMMON = asxparser.c \

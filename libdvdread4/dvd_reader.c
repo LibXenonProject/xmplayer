@@ -33,6 +33,8 @@
 #include <limits.h>
 #include <dirent.h>
 
+#include "config.h"
+
 /* misc win32 helpers */
 #ifdef WIN32
 #ifndef HAVE_GETTIMEOFDAY
@@ -377,6 +379,14 @@ dvd_reader_t *DVDOpen( const char *ppath )
                     free(path);
             return ret_val;
     }
+	
+#ifdef XENON
+  if (!strcmp(path, DEFAULT_DVD_DEVICE)) {
+    ret_val = DVDOpenImageFile( path, have_css );
+    free(path);
+    return ret_val;
+  }
+#endif
 
     /* If we can't stat the file, give up */
     fprintf( stderr, "libdvdread: Can't stat %s\n", path );
@@ -416,7 +426,7 @@ dvd_reader_t *DVDOpen( const char *ppath )
     if( !(path_copy = strdup( path ) ) )
       goto DVDOpen_error;
 
-#ifndef WIN32 /* don't have fchdir, and getcwd( NULL, ... ) is strange */
+#if !defined(WIN32) && !defined(XENON) /* don't have fchdir, and getcwd( NULL, ... ) is strange */
               /* Also WIN32 does not have symlinks, so we don't need this bit of code. */
 
     /* Resolve any symlinks and get the absolute dir name. */
@@ -504,7 +514,7 @@ dvd_reader_t *DVDOpen( const char *ppath )
       }
       fclose( mntfile );
     }
-#elif defined(__linux__)
+#elif defined(__linux__) && !defined(XENON)
     mntfile = fopen( _PATH_MOUNTED, "r" );
     if( mntfile ) {
       struct mntent *me;

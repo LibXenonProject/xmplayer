@@ -27,6 +27,7 @@
 #include <sys/cdrio.h>
 #endif
 
+/*
 #ifdef __linux__
 #include <linux/cdrom.h>
 #include <scsi/sg.h>
@@ -34,6 +35,7 @@
 #include <sys/stat.h>
 #include <sys/ioctl.h>
 #endif
+*/
 
 #include "mp_msg.h"
 #include "help_mp.h"

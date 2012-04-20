@@ -53,6 +53,8 @@
 #   include <limits.h>
 #endif
 
+#define PATH_MAX 1024
+
 #include "dvdcss/dvdcss.h"
 
 #include "common.h"
