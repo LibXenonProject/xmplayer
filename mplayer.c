@@ -2764,6 +2764,7 @@ void main(){
 		//"-nosound",
 		//"-vfm","xvid",
 		//"-ao","null",
+		//"-dvd-device","uda:/dvd/THE_SMURFS/","dvd://1",
 		"uda:/video.avi",
 		//"uda:/dbz.avi",
 		//"uda:/video.m2ts",

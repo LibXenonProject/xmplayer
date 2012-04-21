@@ -54,6 +54,7 @@ extern char MPLAYER_LIBDIR[100];
 #define READ_CACHE_TRACE 0
 /* libdvdread */
 #define HAVE_DLFCN_H 1
+#define HAVE_DVDCSS_DVDCSS_H 1
 
 
 
@@ -193,8 +194,8 @@ extern char MPLAYER_LIBDIR[100];
 
 
 #undef DVD_STRUCT_IN_SYS_DVDIO_H
-#undef CONFIG_DVDNAV
-#undef CONFIG_DVDREAD
+#define CONFIG_DVDNAV 1
+#define CONFIG_DVDREAD 1
 
 #undef CONFIG_LIBCDIO
 

@@ -31,19 +31,19 @@ INSTALL = install
 INSTALLSTRIP = -s
 WINDRES = windres
 
-#OPTIFLAGS =  -Ofast -flto -fuse-linker-plugin -mcpu=cell -mtune=cell -fno-tree-vectorize -fno-tree-slp-vectorize -ftree-vectorizer-verbose=1 
+OPTIFLAGS =  -Ofast -flto -fuse-linker-plugin -mcpu=cell -mtune=cell -fno-tree-vectorize -fno-tree-slp-vectorize -ftree-vectorizer-verbose=1 -DXENON
 MACHDEP_LD =  -DXENON -m32 -maltivec -fno-pic -mhard-float -L$(DEVKITXENON)/xenon/lib/32 -u read -u _start -u exc_base
 
-OPTIFLAGS =  -O4 -mcpu=cell -mtune=cell -fno-tree-vectorize -fno-tree-slp-vectorize -ftree-vectorizer-verbose=1 
+#OPTIFLAGS =  -O4 -mcpu=cell -mtune=cell -fno-tree-vectorize -fno-tree-slp-vectorize -ftree-vectorizer-verbose=1 -DXENON
 
-CFLAGS   = $(OPTIFLAGS) -g -Wundef -Wall -Wno-switch -Wno-parentheses -Wpointer-arith -Wredundant-decls -Wstrict-prototypes -Wmissing-prototypes -Wdisabled-optimization -Wno-pointer-sign -Wdeclaration-after-statement -std=gnu99 -Werror-implicit-function-declaration -pipe -ffast-math -fomit-frame-pointer -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE -I. -Iffmpeg -m32 -fno-pic -mpowerpc64 -I/usr/local/xenon/usr/include/ -Wall -Ilibxenon_miss -I/usr/local/xenon/usr/include/freetype2 -I/usr/local/xenon/usr/include
-CXXFLAGS = $(OPTIFLAGS) -g -Wundef -Wall -Wno-switch -Wno-parentheses -Wpointer-arith -Wredundant-decls -pipe -ffast-math -fomit-frame-pointer -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -I. -Iffmpeg -m32 -fno-pic -mpowerpc64 -I/usr/local/xenon/usr/include/ -Wall -Ilibxenon_miss -I/usr/local/xenon/usr/include/freetype2 -I/usr/local/xenon/usr/include 
+CFLAGS   = $(OPTIFLAGS) -g -Wundef -Wall -Wno-switch -Wno-parentheses -Wpointer-arith -Wredundant-decls -Wstrict-prototypes -Wmissing-prototypes -Wdisabled-optimization -Wno-pointer-sign -Wdeclaration-after-statement -std=gnu99 -Werror-implicit-function-declaration -pipe -ffast-math -fomit-frame-pointer -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE -I. -Ilibdvdread4 -Iffmpeg -m32 -fno-pic -mpowerpc64 -I/usr/local/xenon/usr/include/ -Wall -Ilibxenon_miss -I/usr/local/xenon/usr/include/freetype2 -I/usr/local/xenon/usr/include
+CXXFLAGS = $(OPTIFLAGS) -g -Wundef -Wall -Wno-switch -Wno-parentheses -Wpointer-arith -Wredundant-decls -pipe -ffast-math -fomit-frame-pointer -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -I. -Ilibdvdread4 -Iffmpeg -m32 -fno-pic -mpowerpc64 -I/usr/local/xenon/usr/include/ -Wall -Ilibxenon_miss -I/usr/local/xenon/usr/include/freetype2 -I/usr/local/xenon/usr/include 
 CC_DEPFLAGS = -MD -MP
 
 CFLAGS_DHAHELPER         = 
 CFLAGS_LIBDVDCSS         = 
-CFLAGS_LIBDVDCSS_DVDREAD = 
-CFLAGS_LIBDVDNAV         = 
+CFLAGS_LIBDVDCSS_DVDREAD = -Ilibdvdcss
+CFLAGS_LIBDVDNAV         = -Ilibdvdnav
 CFLAGS_NO_OMIT_LEAF_FRAME_POINTER = 
 CFLAGS_STACKREALIGN      = 
 CFLAGS_SVGALIB_HELPER    = 
@@ -98,10 +98,10 @@ DIRECT3D = auto
 DIRECTFB = no
 DIRECTX = auto
 DVBIN = no
-DVDNAV = no
-DVDNAV_INTERNAL = no
-DVDREAD = no
-DVDREAD_INTERNAL = no
+DVDNAV = yes
+DVDNAV_INTERNAL = yes
+DVDREAD = yes
+DVDREAD_INTERNAL = yes
 DXR2 = no
 DXR3 = no
 ESD = no
@@ -138,7 +138,7 @@ LIBBLURAY = no
 LIBBS2B = no
 LIBDCA = no
 LIBDV = no
-LIBDVDCSS_INTERNAL = no
+LIBDVDCSS_INTERNAL = yes
 LIBLZO = no
 LIBMAD = no
 LIBMENU = yes

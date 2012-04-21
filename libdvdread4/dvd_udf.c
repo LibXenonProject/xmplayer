@@ -600,6 +600,9 @@ static int UDFScanDir( dvd_reader_t *device, struct AD Dir, char *FileName,
 
     while( p < Dir.Length ) {
       UDFDescriptor( &cached_dir[ p ], &TagID );
+	  
+	  printf("%s\r\n",filename);
+	  
       if( TagID == 257 ) {
         p += UDFFileIdentifier( &cached_dir[ p ], &filechar,
                                 filename, &tmpICB );
@@ -642,6 +645,8 @@ static int UDFScanDir( dvd_reader_t *device, struct AD Dir, char *FileName,
         return 0;
       }
     }
+	printf("%s\r\n",filename);
+	
     UDFDescriptor( &directory[ p ], &TagID );
     if( TagID == 257 ) {
       p += UDFFileIdentifier( &directory[ p ], &filechar,
