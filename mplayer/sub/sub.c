@@ -1240,7 +1240,7 @@ void vo_init_osd(void){
     }
     if(vo_osd_list) free_osd_list();
     // temp hack, should be moved to mplayer/mencoder later
-    new_osd_obj(OSDTYPE_OSD);
+    //new_osd_obj(OSDTYPE_OSD);
     new_osd_obj(OSDTYPE_SUBTITLE);
     // new_osd_obj(OSDTYPE_PROGBAR);
     new_osd_obj(OSDTYPE_SPU);

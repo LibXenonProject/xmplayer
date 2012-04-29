@@ -4134,3 +4134,7 @@ double playerGetDuration() {
 const char * playerGetFilename() {
 	return get_metadata(META_NAME);
 }
+
+int playerGetStatus(){
+	return mpctx->osd_function;
+}

@@ -164,9 +164,10 @@ static int getch2_internal(void) {
 		if (ctrl[i].lt>100)
 			key = 'L';
 		
-		// kill
+		// kill => next !!!
 		if(ctrl[i].rb&ctrl[i].lb){
-			key = 'q';
+			//key = 'q';
+			key = 'n';
 		}
 
 		lasttime = curtime;
