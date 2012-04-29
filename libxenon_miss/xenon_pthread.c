@@ -25,17 +25,18 @@
 
 #ifdef USE_NAT_THREAD
 
-typedef MUTEX*  pthread_mutex_t;
 
 typedef PTHREAD pthread_t;
 
 void pthread_init(){
 	xenon_make_it_faster(XENON_SPEED_FULL);
 	threading_init();
-	network_init_sys();
-	gdb_init();
+	//network_init_sys();
+	//gdb_init();
 }
+#if 0
 
+typedef MUTEX*  pthread_mutex_t;
 int pthread_mutex_destroy(pthread_mutex_t * mutex){
 	mutex_destroy(mutex[0]);
 	return 0;
@@ -45,9 +46,9 @@ int pthread_mutex_init(pthread_mutex_t * mutex, void * u){
 	return 0;
 }
 int pthread_mutex_lock(pthread_mutex_t *mutex){
-	TR;
+	//TR;
 	mutex_acquire(mutex[0],INFINITE);
-	TR;
+	//TR;
 	return 0;
 };
 int pthread_mutex_trylock(pthread_mutex_t *mutex){
@@ -58,49 +59,12 @@ int pthread_mutex_trylock(pthread_mutex_t *mutex){
 	return 0;
 };
 int pthread_mutex_unlock(pthread_mutex_t *mutex){
-	TR;
+	//TR;
 	mutex_release(mutex[0]);
-	TR;
+	//TR;
 	return 0;
 };
 
-#if 0
-typedef COND* pthread_cond_t;
-
-// cond
-int pthread_cond_broadcast(pthread_cond_t *cond){
-	TR
-	cond_broadcast(cond[0]);
-	TR
-	return 0;
-};
-int pthread_cond_destroy(pthread_cond_t * cond){
-	TR
-	cond_delete(cond[0]);
-	TR
-	return 0;
-};
-int pthread_cond_init(pthread_cond_t * cond, void * u){
-	TR
-	cond[0] = cond_create();
-	TR
-	return 0;
-};
-int pthread_cond_signal(pthread_cond_t * cond){
-	TR
-	cond_signal(cond[0]);
-	TR
-	return 0;
-};
-
-int pthread_cond_wait(pthread_cond_t * cond, pthread_mutex_t * mutex){
-	TR
-	cond_wait(cond[0],mutex[0]);
-	TR
-	return 0;
-};
-
-#else
 typedef MUTEX* pthread_cond_t;
 
 // cond
@@ -129,26 +93,89 @@ int pthread_cond_wait(pthread_cond_t * cond, pthread_mutex_t * mutex){
 	//TR;
 	return 0;
 };
+#else
+
+typedef unsigned int __attribute__ ((aligned (128))) pthread_cond_t;
+typedef unsigned int __attribute__ ((aligned (128))) pthread_mutex_t;
+
+int pthread_mutex_destroy(pthread_mutex_t * mutex){
+	mutex[0]=0;
+	return 0;
+};
+int pthread_mutex_init(pthread_mutex_t * mutex, void * u){
+	//mutex= mutex+0x20000000;
+	mutex[0]=0;
+	return 0;
+}
+
+int pthread_mutex_lock(pthread_mutex_t *mutex){
+	lock((void*)mutex);
+/*
+	while(mutex[0]==1);
+	mutex[0]=1;
+*/
+	return 0;
+};
+
+int pthread_mutex_unlock(pthread_mutex_t *mutex){
+	unlock((void*)mutex);
+/*
+	mutex[0]=0;
+*/
+	return 0;
+};
+
+
+// cond
+int pthread_cond_destroy(pthread_cond_t * cond){
+	//TR;
+	cond[0]=0;
+	return 0;
+};
+int pthread_cond_init(pthread_cond_t * cond, void * u){
+	//TR;
+	cond[0]=0;
+	return 0;
+};
+
+int pthread_cond_broadcast(pthread_cond_t *cond){
+	return 0;
+};
+
+int pthread_cond_signal(pthread_cond_t * cond){
+	return 0;
+};
+
+int pthread_cond_wait(pthread_cond_t * cond, pthread_mutex_t * mutex){	
+	pthread_mutex_unlock(mutex);
+	pthread_mutex_lock(mutex);
+	
+	return 0;
+};
 #endif
 
+static int thread_n[] = {
+	1,2,3,4,5
+};
 
 int pthread_create(pthread_t *thread, void *u,
     void *(*start_routine)(void*), void *arg){
 	
 	PTHREAD curThread = NULL;
 	
-	static int last_thread_id = 0;
+	static int last_thread_id =0;
 	if(last_thread_id>=NB_THREAD){
 		last_thread_id = 0;
 	}
 	
 	curThread = thread_create(start_routine,0,arg,THREAD_FLAG_CREATE_SUSPENDED);
-	thread_set_processor(curThread,last_thread_id);
+	thread_set_processor(curThread,thread_n[last_thread_id]);
+	//thread_set_priority(curThread,15);
 	thread_resume(curThread);
 	
-	printf("New thread on %d\r\n",last_thread_id);
+	printf("New thread on %d\r\n",thread_n[last_thread_id]);
 	
-	last_thread_id+=2;	
+	last_thread_id++;	
 		
 	*thread = curThread;
 		
@@ -161,8 +188,6 @@ int pthread_join(pthread_t thread, void **value_ptr){
 }
 
 #else // CLASSIC THREAD
-
-#define NB_THREAD 6
 
 typedef unsigned int __attribute__ ((aligned (128))) pthread_cond_t;
 typedef unsigned int __attribute__ ((aligned (128))) pthread_mutex_t;

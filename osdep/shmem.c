@@ -57,6 +57,9 @@
 static int shmem_type=0;
 
 void* shmem_alloc(int64_t size){
+#ifdef XENON
+	return malloc(size);
+#else
 void* p;
 static int devzero = -1;
 if (size > SIZE_MAX) {
@@ -113,9 +116,13 @@ while(1){
   }
   ++shmem_type;
 }
+#endif
 }
 
 void shmem_free(void* p,int64_t size){
+#ifdef XENON
+	free(p);
+#else
   switch(shmem_type){
     case 0:
     case 1:
@@ -137,4 +144,5 @@ void shmem_free(void* p,int64_t size){
 #endif
       break;
   }
+#endif
 }

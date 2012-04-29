@@ -32,10 +32,6 @@
 #include <sys/time.h>
 #include <sys/types.h>
 
-///xenon
-#include <xenos/xenos.h>
-#include <console/console.h>mai
-
 #define PATH_MAX 1024
 
 #if defined(__MINGW32__) || defined(__CYGWIN__)
@@ -135,8 +131,6 @@
 #include "osdep/osdep_xenon.h"
 
 #include "udp_sync.h"
-
-#include <debug.h>
 
 #ifdef CONFIG_X11
 #include "libvo/x11_common.h"
@@ -2746,36 +2740,6 @@ static int seek(MPContext *mpctx, double amount, int style)
 /* This preprocessor directive is a hack to generate a mplayer-nomain.o object
  * file for some tools to link against. */
 #ifndef DISABLE_MAIN
-int mplayer_main(int argc, char *argv[]);
-void main(){
-	init_xenon();
-	
-	char * argv[]= {
-        "mplayer.xenon",
-		//"-demux mkv",
-		"-menu",//"-menu-startup",
-		//"-lavdopts","skiploopfilter=all:threads=2",
-		"-lavdopts","skiploopfilter=all:threads=5",
-		//"-lavdopts","skiploopfilter=all",
-		//"-novideo",
-		//"-vo","null",
-		//"-vc","ffmpeg4",
-		//"-v",
-		//"-nosound",
-		//"-vfm","xvid",
-		//"-ao","null",
-		//"-dvd-device","uda:/dvd/THE_SMURFS/","dvd://1",
-		"uda:/video.avi",
-		//"uda:/dbz.avi",
-		//"uda:/video.m2ts",
-		"uda:/video2.mp4",
-		//"dvd://1"
-		"uda:/trailer.mkv",
-		"uda:/lockout-tlr1_h1080p.mov"
-    };
-	int argc = sizeof(argv) / sizeof(char *);
-	mplayer_main(argc,argv);
-}
 int mplayer_main(int argc, char *argv[])
 {
     int opt_exit = 0; // Flag indicating whether MPlayer should exit without playing anything.
@@ -2826,9 +2790,6 @@ int mplayer_main(int argc, char *argv[])
                     mpctx->playtree_iter = NULL;
                 }
                 filename = play_tree_iter_get_file(mpctx->playtree_iter, 1);
-				TR;
-				printf("%s\n",filename);
-				TR;
             }
         }
     }
@@ -2932,17 +2893,14 @@ int mplayer_main(int argc, char *argv[])
         (sub_demuxer_name && strcmp(sub_demuxer_name, "help") == 0)) {
         demuxer_help();
         mp_msg(MSGT_CPLAYER, MSGL_INFO, "\n");
-		TR;
         opt_exit = 1;
     }
     if (list_properties) {
-		TR;
         property_print_help();
         opt_exit = 1;
     }
 
     if (opt_exit){
-		TR;
         exit_player(EXIT_NONE);
 	}
 
@@ -2962,8 +2920,6 @@ int mplayer_main(int argc, char *argv[])
             mp_msg(MSGT_CPLAYER, MSGL_INFO, " '%s'", argv[i]);
         mp_msg(MSGT_CPLAYER, MSGL_INFO, "\n");
     }
-	
-	TR;
 
 //------ load global data first ------
 
@@ -4132,8 +4088,6 @@ goto_next_file:  // don't jump here after ao/vo/getch initialization!
         mpctx->eof = 0;
         goto play_next_file;
     }
-
-	TR;
 	
     exit_player_with_rc(EXIT_EOF, 0);
     return 1;

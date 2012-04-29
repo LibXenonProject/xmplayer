@@ -141,9 +141,9 @@ static int getch2_internal(void) {
 		if (d_ctrl.start)
 			key = KEY_ENTER;
 		if (d_ctrl.select)
-			key = KEY_ESC;
+			key = ' ';
 		if (d_ctrl.logo)
-			key = 'l';
+			key = 'X';
 
 		if (d_ctrl.a)
 			key = 'a';
@@ -155,13 +155,18 @@ static int getch2_internal(void) {
 			key = 'y';
 
 		if (d_ctrl.rb)
-			key = KEY_NEXT;
+			key = 'r';
 		if (d_ctrl.lb)
-			key = KEY_PREV;
+			key = 'l';
+		
+		if (ctrl[i].rt>100)
+			key = 'R';
+		if (ctrl[i].lt>100)
+			key = 'L';
 		
 		// kill
 		if(ctrl[i].rb&ctrl[i].lb){
-			key = KEY_STOP;
+			key = 'q';
 		}
 
 		lasttime = curtime;

@@ -129,3 +129,36 @@ int usleep(useconds_t __useconds){
 }
 
 
+// mplayer.c
+int mplayer_main(int argc, char *argv[]);
+void main(){
+	init_xenon();
+	
+	char * argv[]= {
+        "mplayer.xenon",
+		//"-really-quiet",
+		//"-demux mkv",
+		"-menu","-menu-startup",
+		//"-lavdopts","skiploopfilter=all:threads=2",
+		"-lavdopts","skiploopfilter=all:threads=5",		
+		"uda:/mplayer/loop.mov","-loop","0",
+		//"-lavdopts","skiploopfilter=all",
+		//"-novideo",
+		//"-vo","null",
+		//"-vc","ffmpeg4",
+		//"-v",
+		//"-nosound",
+		//"-vfm","xvid",
+		//"-ao","null",
+		//"-dvd-device","uda:/dvd/THE_SMURFS/","dvd://1",
+		//"uda:/video.avi",
+		//"uda:/dbz.avi",
+		//"uda:/video.m2ts",
+		//"uda:/video2.mp4",
+		//"dvd://1"
+		//"uda:/trailer.mkv",
+		//"uda:/lockout-tlr1_h1080p.mov"
+    };
+	int argc = sizeof(argv) / sizeof(char *);
+	mplayer_main(argc,argv);
+}

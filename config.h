@@ -8,6 +8,11 @@
 #ifndef MPLAYER_CONFIG_H
 #define MPLAYER_CONFIG_H
 
+// disable mplayer msg (could save some lhs issues)
+//#define NO_MPLAYER_LOG
+// disable ffmpeg log (could save some lhs issues)
+//#define NO_FFMPEG_LOG
+
 /* Undefine this if you do not want to select mono audio (left or right)
    with a stereo MPEG layer 2/3 audio stream. The command line option
    -stereo has three possible values (0 for stereo, 1 for left-only, 2 for
@@ -194,8 +199,10 @@ extern char MPLAYER_LIBDIR[100];
 
 
 #undef DVD_STRUCT_IN_SYS_DVDIO_H
-#define CONFIG_DVDNAV 1
-#define CONFIG_DVDREAD 1
+//#define CONFIG_DVDNAV 1
+//#define CONFIG_DVDREAD 1
+#undef CONFIG_DVDNAV
+#undef CONFIG_DVDREAD
 
 #undef CONFIG_LIBCDIO
 
@@ -209,8 +216,10 @@ extern char MPLAYER_LIBDIR[100];
 #undef CONFIG_LIBDCA
 #undef CONFIG_LIBDV095
 #undef CONFIG_LIBLZO
-#define CONFIG_LIBMPEG2 1
-#define CONFIG_LIBMPEG2_INTERNAL 1
+//#define CONFIG_LIBMPEG2 1
+//#define CONFIG_LIBMPEG2_INTERNAL 1
+#undef CONFIG_LIBMPEG2
+#undef CONFIG_LIBMPEG2_INTERNAL
 #undef CONFIG_LIBMAD
 #undef CONFIG_MP3LAME
 #undef CONFIG_MP3LAME_PRESET

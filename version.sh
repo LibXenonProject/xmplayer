@@ -3,19 +3,8 @@
 test "$1" && extra="-$1"
 
 # releases extract the version number from the VERSION file
-version=$(cat VERSION 2> /dev/null)
+version=$(git log -1 --format="%h")
 
-if test -z $version ; then
-# Extract revision number from file used by daily tarball snapshots
-# or from the places different Subversion versions have it.
-svn_revision=$(cat snapshot_version 2> /dev/null)
-test $svn_revision || svn_revision=$(LC_ALL=C svn info 2> /dev/null | grep Revision | cut -d' ' -f2)
-test $svn_revision || svn_revision=$(grep revision .svn/entries 2>/dev/null | cut -d '"' -f2)
-test $svn_revision || svn_revision=$(sed -n -e '/^dir$/{n;p;q;}' .svn/entries 2>/dev/null)
-test $svn_revision && svn_revision=SVN-r$svn_revision
-test $svn_revision || svn_revision=UNKNOWN
-version=$svn_revision
-fi
 
 NEW_REVISION="#define VERSION \"${version}${extra}\""
 OLD_REVISION=$(head -n 1 version.h 2> /dev/null)

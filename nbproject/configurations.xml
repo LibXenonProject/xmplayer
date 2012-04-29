@@ -77,6 +77,8 @@
         <in>tdfx_vid_test.c</in>
       </df>
       <df name="etc">
+        <df name="xbox">
+        </df>
         <in>inttypes.h</in>
       </df>
       <df name="ffmpeg">
@@ -336,7 +338,7 @@
             <in>idct_altivec.c</in>
             <in>int_altivec.c</in>
             <in>mathops.h</in>
-            <in>mpegaudiodec_altivec.c</in>
+            <in>mpegaudiodec_vmx.c</in>
             <in>mpegvideo_altivec.c</in>
             <in>regs.h</in>
             <in>types_altivec.h</in>
@@ -1784,6 +1786,9 @@
             <in>x86inc.asm</in>
             <in>x86util.asm</in>
           </df>
+          <df name="xenon">
+            <in>bswap.h</in>
+          </df>
           <in>adler32.c</in>
           <in>adler32.h</in>
           <in>aes.c</in>
@@ -1949,7 +1954,11 @@
             <in>kd.h</in>
             <in>mman.h</in>
             <in>socket.h</in>
+            <in>uio.h</in>
           </df>
+          <in>basename.c</in>
+          <in>dlfcn.h</in>
+          <in>mntent.h</in>
           <in>netdb.h</in>
           <in>pthread.h</in>
           <in>strings.h</in>
@@ -4045,6 +4054,57 @@
           <in>wsxdnd.c</in>
           <in>wsxdnd.h</in>
         </df>
+        <df name="xenon">
+          <df name="fonts">
+          </df>
+          <df name="gui">
+            <in>gui.h</in>
+            <in>gui_button.cpp</in>
+            <in>gui_element.cpp</in>
+            <in>gui_filebrowser.cpp</in>
+            <in>gui_image.cpp</in>
+            <in>gui_imagedata.cpp</in>
+            <in>gui_keyboard.cpp</in>
+            <in>gui_optionbrowser.cpp</in>
+            <in>gui_savebrowser.cpp</in>
+            <in>gui_sound.cpp</in>
+            <in>gui_text.cpp</in>
+            <in>gui_trigger.cpp</in>
+            <in>gui_window.cpp</in>
+          </df>
+          <df name="images">
+            <df name="psd">
+            </df>
+          </df>
+          <df name="lang">
+          </df>
+          <df name="sounds">
+          </df>
+          <in>FreeTypeGX.cpp</in>
+          <in>FreeTypeGX.h</in>
+          <in>Utils.cpp</in>
+          <in>Vec.h</in>
+          <in>VecMatrix.cpp</in>
+          <in>VecVector.cpp</in>
+          <in>audio.cpp</in>
+          <in>audio.h</in>
+          <in>browser.cpp</in>
+          <in>cfg.cpp</in>
+          <in>cfg.h</in>
+          <in>gettext.cpp</in>
+          <in>gettext.h</in>
+          <in>gui_xenon.h</in>
+          <in>input.cpp</in>
+          <in>input.h</in>
+          <in>main.cpp</in>
+          <in>message.cpp</in>
+          <in>navbar.cpp</in>
+          <in>screencapture.c</in>
+          <in>skin.cpp</in>
+          <in>video.cpp</in>
+          <in>video.h</in>
+          <in>w_input.h</in>
+        </df>
         <in>app.c</in>
         <in>app.h</in>
         <in>cfg.c</in>
@@ -4698,7 +4758,11 @@
           <in>kd.h</in>
           <in>mman.h</in>
           <in>socket.h</in>
+          <in>uio.h</in>
         </df>
+        <in>basename.c</in>
+        <in>dlfcn.h</in>
+        <in>mntent.h</in>
         <in>netdb.h</in>
         <in>strings.h</in>
         <in>xenon_pthread.c</in>
@@ -5423,7 +5487,6 @@
       <in>mpcommon.h</in>
       <in>mplayer.c</in>
       <in>mplayer.h</in>
-      <in>mplayer.s</in>
       <in>parser-cfg.c</in>
       <in>parser-cfg.h</in>
       <in>parser-mecmd.c</in>
@@ -5470,6 +5533,11 @@
           <buildCommand>${MAKE} -f Makefile run</buildCommand>
           <cleanCommand>${MAKE} -f Makefile clean</cleanCommand>
           <executablePath>/home/cc/xenon/mplayer_xenon/mplayer.elf32</executablePath>
+          <cTool>
+            <incDir>
+              <pElem>/usr/local/xenon/usr/include</pElem>
+            </incDir>
+          </cTool>
           <ccTool>
             <incDir>
               <pElem>/usr/include/valgrind</pElem>

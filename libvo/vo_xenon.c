@@ -328,6 +328,7 @@ static void draw_osd(void) {
 		memset(g_pOsdSurf->base, 0, g_pOsdSurf->wpitch * g_pOsdSurf->hpitch);
 
 		//vo_draw_text(g_pOsdSurf->width, g_pOsdSurf->height, draw_alpha);
+		
 		vo_draw_text_ext(osd_width, osd_height,
 				borders.left, borders.top,
 				borders.left, borders.top,
@@ -360,9 +361,13 @@ static void flip_page(void) {
 		return;
 
 	ShowFPS();
-	//while (!Xe_IsVBlank(g_pVideoDevice));
+	
 	// Sync gpu
 	Xe_Sync(g_pVideoDevice);
+	
+	/* vsync - take care slow down video ... */
+	if(vo_vsync)
+		while (!Xe_IsVBlank(g_pVideoDevice));
 
 	// refresh texture cache
 	video_lock_yuvsurf(g_pTexture);
@@ -394,6 +399,7 @@ static void flip_page(void) {
 	Xe_DrawPrimitive(g_pVideoDevice, XE_PRIMTYPE_RECTLIST, 0, 1);
 
 
+	// Draw osd
 	if (is_osd_populated) {
 		Xe_SetShader(g_pVideoDevice, SHADER_TYPE_PIXEL, g_pPixeOsdShader, 0);
 		Xe_SetShader(g_pVideoDevice, SHADER_TYPE_VERTEX, g_pVertexShader, 0);
@@ -410,8 +416,7 @@ static void flip_page(void) {
 	//Xe_Sync(g_pVideoDevice);
 }
 
-static int
-draw_frame(uint8_t *src[]) {
+static int draw_frame(uint8_t *src[]) {
 	TR;
 	return 0;
 }
@@ -479,13 +484,13 @@ static int config(uint32_t width, uint32_t height, uint32_t d_width, uint32_t d_
 
 	// Destroy surface
 	destroy_xenon_texture();
-
+		
 	// Create surface
 	create_xenon_texture();
 
 	printf("width:%d\r\n", width);
 	printf("height:%d\r\n", height);
-
+	
 	printf("osd_width:%d\r\n", osd_width);
 	printf("osd_height:%d\r\n", osd_height);
 
@@ -498,6 +503,7 @@ static int config(uint32_t width, uint32_t height, uint32_t d_width, uint32_t d_
 
 	printf("flags:%08x\r\n", flags);
 	printf("format:%08x\r\n", format);
+	
 
 	// update vb with correct aspect ratio
 	calc_fs_rect();
@@ -594,8 +600,7 @@ static int config(uint32_t width, uint32_t height, uint32_t d_width, uint32_t d_
 	return 0;
 }
 
-static void
-uninit(void) {
+static void uninit(void) {
 }
 
 static void check_events(void) {
