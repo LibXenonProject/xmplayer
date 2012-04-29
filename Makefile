@@ -20,7 +20,7 @@ BUILD		:=	build
 SOURCES		:=	source source/libwiigui
 DATA		:=	data  
 INCLUDES	:=	-I$(LIBXENON_INC)/freetype2
-
+MPLAYER         :=      $(CURDIR)/mplayer
 #---------------------------------------------------------------------------------
 # options for code generation
 #---------------------------------------------------------------------------------
@@ -33,7 +33,7 @@ LDFLAGS	=	-g $(MACHDEP) -Wl,--gc-sections -Wl,-Map,$(notdir $@).map
 #---------------------------------------------------------------------------------
 # any extra libraries we wish to link with the project
 #---------------------------------------------------------------------------------
-LIBS	:=	 -lpng -lz -lxenon -lm  -lfreetype  -lbz2 -lfat
+LIBS	:=	 -lmplayer  -lavformat -lavcodec -lswscale -lavutil -lpostproc -lpng -lz -lxenon -lm  -liconv -lfreetype -lfribidi -lbz2 -lfat  
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
@@ -93,13 +93,21 @@ export INCLUDE	:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
 # build a list of library paths
 #---------------------------------------------------------------------------------
 export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib) \
-					-L$(LIBXENON_LIB)
+					-L$(MPLAYER)/ \
+		                        -L$(MPLAYER)/ffmpeg/libavcodec \
+		                        -L$(MPLAYER)/ffmpeg/libavformat \
+		                        -L$(MPLAYER)/ffmpeg/libavutil \
+					-L$(MPLAYER)/ffmpeg/libpostproc \
+		                        -L$(MPLAYER)/ffmpeg/libswscale \
+					-L$(LIBXENON_LIB) 
 
 export OUTPUT	:=	$(CURDIR)/$(TARGET)
 .PHONY: $(BUILD) clean
 
 #---------------------------------------------------------------------------------
 $(BUILD):
+	@echo build player
+	cd mplayer; $(MAKE) -f Makefile lib; cd ../..
 	@[ -d $@ ] || mkdir -p $@
 	@make --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
 
@@ -107,6 +115,7 @@ $(BUILD):
 clean:
 	@echo clean ...
 	@rm -fr $(BUILD) $(OUTPUT).elf $(OUTPUT).elf32
+	cd mplayer; $(MAKE) -f Makefile clean;
 
 #---------------------------------------------------------------------------------
 else
@@ -127,6 +136,15 @@ $(OUTPUT).elf: $(OFILES)
 %.ttf.o : %.ttf
 	@echo $(notdir $<)
 	$(bin2o)
+%.elf:
+	@echo linking ... $(notdir $@)
+	$(LD)  $^ $(LDFLAGS) $(LIBPATHS) $(LIBS) -n -T $(LDSCRIPT) -o $@
+
+%.elf32: %.elf
+	@echo converting and stripping ... $(notdir $@)
+	$(OBJCOPY) -O elf32-powerpc --adjust-vma 0x80000000 $< $@
+	$(PREFIX)strip $@
+
 
 #---------------------------------------------------------------------------------
 endif

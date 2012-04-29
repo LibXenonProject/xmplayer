@@ -60,6 +60,10 @@
 #include "sub/sub.h"
 
 
+void mplayer_osd_close();
+void mplayer_osd_draw();
+void mplayer_osd_open();
+
 // Parameters:
 //
 //   sampler2D UTexture;
@@ -206,11 +210,13 @@ static YUVSurface * video_create_yuvsurf(int width, int height) {
 
 static void video_delete_yuvsurf(YUVSurface *surf) {
 	if (surf) {
+		TR;
 		Xe_DestroyTexture(g_pVideoDevice, surf->Y.surface);
 		Xe_DestroyTexture(g_pVideoDevice, surf->U.surface);
 		Xe_DestroyTexture(g_pVideoDevice, surf->V.surface);
-
+		TR;
 		free(surf);
+		TR;
 		surf = NULL;
 	}
 }
@@ -328,7 +334,7 @@ static void draw_osd(void) {
 		memset(g_pOsdSurf->base, 0, g_pOsdSurf->wpitch * g_pOsdSurf->hpitch);
 
 		//vo_draw_text(g_pOsdSurf->width, g_pOsdSurf->height, draw_alpha);
-		
+
 		vo_draw_text_ext(osd_width, osd_height,
 				borders.left, borders.top,
 				borders.left, borders.top,
@@ -356,17 +362,17 @@ static void ShowFPS(void) {
 }
 
 static void flip_page(void) {
-	
+
 	if (g_pTexture == NULL)
 		return;
 
 	ShowFPS();
-	
+
 	// Sync gpu
-	Xe_Sync(g_pVideoDevice);
-	
+	//Xe_Sync(g_pVideoDevice);
+
 	/* vsync - take care slow down video ... */
-	if(vo_vsync)
+	if (vo_vsync)
 		while (!Xe_IsVBlank(g_pVideoDevice));
 
 	// refresh texture cache
@@ -400,6 +406,7 @@ static void flip_page(void) {
 
 
 	// Draw osd
+
 	if (is_osd_populated) {
 		Xe_SetShader(g_pVideoDevice, SHADER_TYPE_PIXEL, g_pPixeOsdShader, 0);
 		Xe_SetShader(g_pVideoDevice, SHADER_TYPE_VERTEX, g_pVertexShader, 0);
@@ -408,12 +415,17 @@ static void flip_page(void) {
 
 		Xe_DrawPrimitive(g_pVideoDevice, XE_PRIMTYPE_RECTLIST, 3, 1);
 	}
-
+	extern int osd_level;
+	if (osd_level >= 2){
+		mplayer_osd_draw();
+	}
+	
 	// Resolve
 	Xe_Resolve(g_pVideoDevice);
 	// Render in background
-	Xe_Execute(g_pVideoDevice);
-	//Xe_Sync(g_pVideoDevice);
+	//Xe_Execute(g_pVideoDevice);
+	Xe_Sync(g_pVideoDevice);
+	
 }
 
 static int draw_frame(uint8_t *src[]) {
@@ -428,23 +440,25 @@ static int query_format(uint32_t format) {
 			| VFCAP_OSD | VFCAP_HWSCALE_UP | VFCAP_HWSCALE_DOWN);
 }
 
-static void create_xenon_texture(){
+static void create_xenon_texture() {
 	g_pTexture = video_create_yuvsurf(image_width, image_height);
 	g_pOsdSurf = Xe_CreateTexture(g_pVideoDevice, osd_texture_width, osd_texture_height, 1, XE_FMT_8, 0);
 
 	memset(g_pOsdSurf->base, 0, g_pOsdSurf->wpitch * g_pOsdSurf->hpitch);
 }
 
-static void destroy_xenon_texture(){
+static void destroy_xenon_texture() {
+	TR;
 	if (g_pTexture)
 		video_delete_yuvsurf(g_pTexture);
-
+	TR;
 	if (g_pOsdSurf)
 		Xe_DestroyTexture(g_pVideoDevice, g_pOsdSurf);
+	TR;
 }
 
 static int config(uint32_t width, uint32_t height, uint32_t d_width, uint32_t d_height, uint32_t flags, char *title, uint32_t format) {
-	
+
 
 	image_width = width;
 	image_height = height;
@@ -475,22 +489,22 @@ static int config(uint32_t width, uint32_t height, uint32_t d_width, uint32_t d_
 		osd_texture_width >>= 1;
 		osd_texture_height >>= 1;
 	}
-	
+
 	// hack
-/*
-	osd_width = osd_texture_width = 1024;
-	osd_height = osd_texture_height = 1024;
-*/
+	/*
+		osd_width = osd_texture_width = 1024;
+		osd_height = osd_texture_height = 1024;
+	 */
 
 	// Destroy surface
 	destroy_xenon_texture();
-		
+
 	// Create surface
 	create_xenon_texture();
 
 	printf("width:%d\r\n", width);
 	printf("height:%d\r\n", height);
-	
+
 	printf("osd_width:%d\r\n", osd_width);
 	printf("osd_height:%d\r\n", osd_height);
 
@@ -503,11 +517,11 @@ static int config(uint32_t width, uint32_t height, uint32_t d_width, uint32_t d_
 
 	printf("flags:%08x\r\n", flags);
 	printf("format:%08x\r\n", format);
-	
+
 
 	// update vb with correct aspect ratio
 	calc_fs_rect();
-	
+
 	/*
 		Rect = Xe_VB_Lock(g_pVideoDevice, vb, 0, 6 * sizeof (verticeFormats), XE_LOCK_WRITE);
 		{
@@ -517,21 +531,21 @@ static int config(uint32_t width, uint32_t height, uint32_t d_width, uint32_t d_
 		}
 		Xe_VB_Unlock(g_pVideoDevice, vb);
 	 */
-	
-	float screenAspectRatio = (float)max_width/max_height;
-	float videoAspectRatio = (float)image_width/image_height;
 
-	printf("screenAspectRatio : %f\r\n",screenAspectRatio);
-	printf("videoAspectRatio : %f\r\n",videoAspectRatio);
-	
+	float screenAspectRatio = (float) max_width / max_height;
+	float videoAspectRatio = (float) image_width / image_height;
+
+	printf("screenAspectRatio : %f\r\n", screenAspectRatio);
+	printf("videoAspectRatio : %f\r\n", videoAspectRatio);
+
 	verticeFormats Rect[3];
-	
+
 	//if(screenAspectRatio!=videoAspectRatio)
 	{
-		
-		if(screenAspectRatio>videoAspectRatio){
+
+		if (screenAspectRatio > videoAspectRatio) {
 			//float w = (float)screenAspectRatio/videoAspectRatio;
-			float w = (float)videoAspectRatio/screenAspectRatio;
+			float w = (float) videoAspectRatio / screenAspectRatio;
 			// scale the w
 			Rect[0].x = -w;
 			Rect[0].y = 1;
@@ -555,9 +569,9 @@ static int config(uint32_t width, uint32_t height, uint32_t d_width, uint32_t d_
 			Rect[2].v = 0;
 			Rect[2].z = 0.0;
 			Rect[2].w = 1.0;
-			
-		}else{
-			float h = (float)screenAspectRatio/videoAspectRatio;
+
+		} else {
+			float h = (float) screenAspectRatio / videoAspectRatio;
 			// scale the h
 			Rect[0].x = -1;
 			Rect[0].y = h;
@@ -583,31 +597,45 @@ static int config(uint32_t width, uint32_t height, uint32_t d_width, uint32_t d_
 			Rect[2].w = 1.0;
 		}
 	}
-	
+
 	void *v = Xe_VB_Lock(g_pVideoDevice, vb, 0, 3 * sizeof (verticeFormats), XE_LOCK_WRITE);
-	memcpy(v,Rect,3 * sizeof (verticeFormats));
+	memcpy(v, Rect, 3 * sizeof (verticeFormats));
 	Xe_VB_Unlock(g_pVideoDevice, vb);
+
+	/*
 	
-/*
-	
-	int i=0;
-	for(i=0;i<3;i++){
-		printf("%d.x => %f\n",i,Rect[i].x);
-		printf("%d.y => %f\n",i,Rect[i].y);
-	}
-*/
+		int i=0;
+		for(i=0;i<3;i++){
+			printf("%d.x => %f\n",i,Rect[i].x);
+			printf("%d.y => %f\n",i,Rect[i].y);
+		}
+	 */
+
+	mplayer_osd_open();
 	
 	return 0;
 }
 
 static void uninit(void) {
+/*
+	destroy_xenon_texture();
+	if (vb) {
+		Xe_DestroyVertexBuffer(g_pVideoDevice, vb);
+	}
+*/
+	mplayer_osd_close();
 }
 
 static void check_events(void) {
 	//TR;
 }
 
+// source/video.c
+extern struct XenosDevice * GetVideoDevice();
+struct XenosVertexBuffer * GetSharedVertexBuffer();
+
 static int preinit(const char *arg) {
+	TR;
 	struct XenosVBFFormat vbf = {
 		2,
 		{
@@ -619,9 +647,11 @@ static int preinit(const char *arg) {
 	verticeFormats *Rect = NULL;
 	struct XenosSurface * fb = NULL;
 
-	g_pVideoDevice = &_xe;
+	//g_pVideoDevice = &_xe;
 
-	Xe_Init(g_pVideoDevice);
+	//Xe_Init(g_pVideoDevice);
+
+	g_pVideoDevice = GetVideoDevice();
 
 	fb = Xe_GetFramebufferSurface(g_pVideoDevice);
 
@@ -631,20 +661,27 @@ static int preinit(const char *arg) {
 	Xe_SetRenderTarget(g_pVideoDevice, fb);
 
 	/* create shaders */
-	g_pPixelTexturedShader = Xe_LoadShaderFromMemory(g_pVideoDevice, (void*) ps);
-	Xe_InstantiateShader(g_pVideoDevice, g_pPixelTexturedShader, 0);
+	if (g_pPixelTexturedShader == NULL) {
+		g_pPixelTexturedShader = Xe_LoadShaderFromMemory(g_pVideoDevice, (void*) ps);
+		Xe_InstantiateShader(g_pVideoDevice, g_pPixelTexturedShader, 0);
+	}
 
-	g_pPixeOsdShader = Xe_LoadShaderFromMemory(g_pVideoDevice, (void*) ps_osd);
-	Xe_InstantiateShader(g_pVideoDevice, g_pPixeOsdShader, 0);
+	if (g_pPixeOsdShader == NULL) {
+		g_pPixeOsdShader = Xe_LoadShaderFromMemory(g_pVideoDevice, (void*) ps_osd);
+		Xe_InstantiateShader(g_pVideoDevice, g_pPixeOsdShader, 0);
+	}
 
-	g_pVertexShader = Xe_LoadShaderFromMemory(g_pVideoDevice, (void*) vs);
-	Xe_InstantiateShader(g_pVideoDevice, g_pVertexShader, 0);
-	Xe_ShaderApplyVFetchPatches(g_pVideoDevice, g_pVertexShader, 0, &vbf);
+	if (g_pVertexShader == NULL) {
+		g_pVertexShader = Xe_LoadShaderFromMemory(g_pVideoDevice, (void*) vs);
+		Xe_InstantiateShader(g_pVideoDevice, g_pVertexShader, 0);
+		Xe_ShaderApplyVFetchPatches(g_pVideoDevice, g_pVertexShader, 0, &vbf);
+	}
 
-	edram_init(g_pVideoDevice);
+	//edram_init(g_pVideoDevice);
 
 	/* create vb */
-	vb = Xe_CreateVertexBuffer(g_pVideoDevice, 6 * sizeof (verticeFormats));
+	//vb = Xe_CreateVertexBuffer(g_pVideoDevice, 6 * sizeof (verticeFormats));
+	vb = GetSharedVertexBuffer();
 	Rect = Xe_VB_Lock(g_pVideoDevice, vb, 0, 6 * sizeof (verticeFormats), XE_LOCK_WRITE);
 	{
 		int i = 0;
@@ -683,8 +720,8 @@ static int preinit(const char *arg) {
 	Xe_VB_Unlock(g_pVideoDevice, vb);
 
 	Xe_SetClearColor(g_pVideoDevice, 0);
-
-	console_close();
+	TR;
+	// console_close();
 
 	return 0;
 }

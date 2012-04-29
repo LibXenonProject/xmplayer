@@ -31,7 +31,7 @@
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <sys/types.h>
-
+#include <debug.h>
 #define PATH_MAX 1024
 
 #if defined(__MINGW32__) || defined(__CYGWIN__)
@@ -763,8 +763,10 @@ void exit_player_with_rc(enum exit_reason how, int rc)
     if (mconfig)
         m_config_free(mconfig);
     mconfig = NULL;
-
+// must returrn to gui
+#ifdef _AAAAAA
     exit(rc);
+#endif
 }
 
 void exit_player(enum exit_reason how)
@@ -3047,18 +3049,28 @@ int mplayer_main(int argc, char *argv[])
 // ******************* Now, let's see the per-file stuff ********************
 
 play_next_file:
-
+	TR;
+#ifdef XENON
+	TR;
+	if(!filename){
+		TR;
+		// wait for a new filename to be set
+		extern void mplayer_return_to_gui();
+		mplayer_return_to_gui();
+	}
+	TR;
+#endif
     // init global sub numbers
     mpctx->global_sub_size = 0;
     memset(mpctx->sub_counts, 0, sizeof(mpctx->sub_counts));
-
+#ifdef XENON
     profile_config_loaded = load_profile_config(mconfig, filename);
-
+#endif
     if (video_driver_list)
         load_per_output_config(mconfig, PROFILE_CFG_VO, video_driver_list[0]);
     if (audio_driver_list)
         load_per_output_config(mconfig, PROFILE_CFG_AO, audio_driver_list[0]);
-
+#ifdef XENON
     // We must enable getch2 here to be able to interrupt network connection
     // or cache filling
     if (!noconsolecontrols && !slave_mode) {
@@ -3069,7 +3081,7 @@ play_next_file:
         initialized_flags |= INITIALIZED_GETCH2;
         mp_msg(MSGT_CPLAYER, MSGL_DBG2, "\n[[[init getch2]]]\n");
     }
-
+#endif
 // =================== GUI idle loop (STOP state) ===========================
 #ifdef CONFIG_GUI
     if (use_gui) {
@@ -3150,8 +3162,9 @@ play_next_file:
             filename = play_tree_iter_get_file(mpctx->playtree_iter, 1);
         }
     }
-
+#ifdef XENON
     if (!profile_config_loaded) load_profile_config(mconfig, filename);
+#endif
 //---------------------------------------------------------------------------
 
     if (mpctx->video_out && vo_config_count)
@@ -4082,6 +4095,9 @@ goto_next_file:  // don't jump here after ao/vo/getch initialization!
 #ifdef CONFIG_GUI
         (use_gui && guiInfo.Playing) ||
 #endif
+#ifdef XENON
+		(1)||
+#endif
                                         mpctx->playtree_iter != NULL || player_idle_mode) {
         if (!mpctx->playtree_iter && !use_gui)
             filename = NULL;
@@ -4090,7 +4106,31 @@ goto_next_file:  // don't jump here after ao/vo/getch initialization!
     }
 	
     exit_player_with_rc(EXIT_EOF, 0);
+
     return 1;
 }
 
 #endif /* DISABLE_MAIN */
+
+
+/**
+ * shared with mplayer
+ * use that to load a new file
+ */
+void mplayer_load(char * _filename) 
+{
+	filename = _filename;
+}
+
+
+double playerGetElapsed() {
+	return demuxer_get_current_time(mpctx->demuxer);
+}
+
+double playerGetDuration() {
+	return demuxer_get_time_length(mpctx->demuxer);
+}
+
+const char * playerGetFilename() {
+	return get_metadata(META_NAME);
+}

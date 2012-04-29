@@ -984,6 +984,7 @@ uninstall:
 
 clean:
 	-$(MAKE) -C ffmpeg $@
+	-rm -f libmplayer.a
 	-rm -rf tests/res
 	-rm -f $(call ADD_ALL_DIRS,/*.o /*.a /*.ho /*~)
 	-rm -f $(call ADD_ALL_EXESUFS,mplayer mencoder)
@@ -1195,7 +1196,9 @@ dhahelperclean:
 # so this saves some time on slow systems.
 .SUFFIXES:
 
-
+lib: $(MPLAYER_DEPS) $(COMMON_LIBS)
+	$(AR) rc libmplayer.a $(MPLAYER_DEPS)
+	$(RANLIB) libmplayer.a
 
 
 run: mplayer$(EXESUF)
