@@ -1,3 +1,4 @@
+*.a
 *.o
 *.d
 *.sys
@@ -5,3 +6,6 @@
 *.elf
 *.elf32
 ffmpeg_old
+codec-cfg
+nbproject
+

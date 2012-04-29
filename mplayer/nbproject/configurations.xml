@@ -4055,55 +4055,98 @@
           <in>wsxdnd.h</in>
         </df>
         <df name="xenon">
-          <df name="fonts">
+          <df name="data">
+            <in>browser_folder_icon_f.png</in>
+            <in>browser_list_btn.png</in>
+            <in>browser_music_icon_f.png</in>
+            <in>browser_photo_icon_f.png</in>
+            <in>browser_video_icon_f.png</in>
+            <in>font.ttf</in>
+            <in>home_hdd_sub_icon_n.png</in>
+            <in>home_horizontal_select_bar.png</in>
+            <in>home_left.png</in>
+            <in>home_main_function_frame_bg.png</in>
+            <in>home_music_sm_icon_n.png</in>
+            <in>home_nohdd_sub_icon_n.png</in>
+            <in>home_photo_sm_icon_n.png</in>
+            <in>home_photo_sub_icon_n.png</in>
+            <in>home_settings_sm_icon_n.png</in>
+            <in>home_video_sm_icon_n.png</in>
+            <in>logo.png</in>
+            <in>slideshow_player_time_played_line_mark.png</in>
+            <in>video_control_fastforward_btn.png</in>
+            <in>video_control_frame_bg.png</in>
+            <in>video_control_time_played_line_bg.png</in>
+            <in>video_player_time_played_line_n_01.png</in>
+            <in>welcome_background_bg.png</in>
           </df>
-          <df name="gui">
-            <in>gui.h</in>
-            <in>gui_button.cpp</in>
-            <in>gui_element.cpp</in>
-            <in>gui_filebrowser.cpp</in>
-            <in>gui_image.cpp</in>
-            <in>gui_imagedata.cpp</in>
-            <in>gui_keyboard.cpp</in>
-            <in>gui_optionbrowser.cpp</in>
-            <in>gui_savebrowser.cpp</in>
-            <in>gui_sound.cpp</in>
-            <in>gui_text.cpp</in>
-            <in>gui_trigger.cpp</in>
-            <in>gui_window.cpp</in>
-          </df>
-          <df name="images">
-            <df name="psd">
+          <df name="source">
+            <df name="libwiigui">
+              <in>gui.h</in>
+              <in>gui_button.cpp</in>
+              <in>gui_element.cpp</in>
+              <in>gui_filebrowser.cpp</in>
+              <in>gui_image.cpp</in>
+              <in>gui_imagedata.cpp</in>
+              <in>gui_keyboard.cpp</in>
+              <in>gui_list.cpp</in>
+              <in>gui_list.h</in>
+              <in>gui_optionbrowser.cpp</in>
+              <in>gui_savebrowser.cpp</in>
+              <in>gui_sound.cpp</in>
+              <in>gui_text.cpp</in>
+              <in>gui_trigger.cpp</in>
+              <in>gui_window.cpp</in>
             </df>
+            <df name="old">
+              <in>FreeTypeGX.cpp</in>
+              <in>FreeTypeGX.h</in>
+              <in>Page.cpp</in>
+              <in>Page.h</in>
+              <in>Vec.h</in>
+              <in>VecMatrix.c</in>
+              <in>VecVector.c</in>
+              <in>_pnginfo.h</in>
+              <in>_wchar.c</in>
+              <in>input.c</in>
+              <in>input.h</in>
+              <in>menu.h</in>
+              <in>newmain.cpp</in>
+              <in>utils.c</in>
+              <in>video.c</in>
+              <in>video.h</in>
+              <in>w_input.h</in>
+            </df>
+            <df name="shader">
+              <in>compile.bat</in>
+              <in>libwiigui.hlsl</in>
+              <in>ps.c.h</in>
+              <in>ps.t.h</in>
+              <in>ps.tc.h</in>
+              <in>vs.h</in>
+            </df>
+            <in>FreeTypeGX.cpp</in>
+            <in>FreeTypeGX.h</in>
+            <in>Vec.h</in>
+            <in>VecMatrix.c</in>
+            <in>VecVector.c</in>
+            <in>_pnginfo.h</in>
+            <in>_wchar.c</in>
+            <in>filebrowser.cpp</in>
+            <in>filebrowser.h</in>
+            <in>filelist.h</in>
+            <in>gui_debug.h</in>
+            <in>input.cpp</in>
+            <in>input.h</in>
+            <in>menu.h</in>
+            <in>newmain.cpp</in>
+            <in>oggplayer.h</in>
+            <in>pngu.h</in>
+            <in>utils.c</in>
+            <in>video.c</in>
+            <in>video.h</in>
+            <in>w_input.h</in>
           </df>
-          <df name="lang">
-          </df>
-          <df name="sounds">
-          </df>
-          <in>FreeTypeGX.cpp</in>
-          <in>FreeTypeGX.h</in>
-          <in>Utils.cpp</in>
-          <in>Vec.h</in>
-          <in>VecMatrix.cpp</in>
-          <in>VecVector.cpp</in>
-          <in>audio.cpp</in>
-          <in>audio.h</in>
-          <in>browser.cpp</in>
-          <in>cfg.cpp</in>
-          <in>cfg.h</in>
-          <in>gettext.cpp</in>
-          <in>gettext.h</in>
-          <in>gui_xenon.h</in>
-          <in>input.cpp</in>
-          <in>input.h</in>
-          <in>main.cpp</in>
-          <in>message.cpp</in>
-          <in>navbar.cpp</in>
-          <in>screencapture.c</in>
-          <in>skin.cpp</in>
-          <in>video.cpp</in>
-          <in>video.h</in>
-          <in>w_input.h</in>
         </df>
         <in>app.c</in>
         <in>app.h</in>
