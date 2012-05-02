@@ -21,16 +21,32 @@ extern "C" {
 #define PI 				3.14159265f
 #define PADCAL			50
 
-void SetupPads();
-void UpdatePads();
-void ShutoffRumble();
-void DoRumble(int i);
+	void SetupPads();
+	void UpdatePads();
+	void ShutoffRumble();
+	void DoRumble(int i);
 
-void XenonInputInit();
-uint16_t XenonButtonsDown(int ictrl);
-uint16_t XenonButtonsUp(int ictrl);
-uint16_t XenonButtonsHeld(int ictrl);
-void XenonInputUpdate();
+	void XenonInputInit();
+	uint16_t XenonButtonsDown(int ictrl);
+	uint16_t XenonButtonsUp(int ictrl);
+	uint16_t XenonButtonsHeld(int ictrl);
+	void XenonInputUpdate();
+
+	void PAD_Init();
+	void PAD_Update();
+	uint16_t WPAD_ButtonsDown(int ictrl);
+	uint16_t WPAD_ButtonsUp(int ictrl);
+	uint16_t WPAD_ButtonsHeld(int ictrl);
+	uint16_t PAD_ButtonsDown(int ictrl);
+
+	uint16_t PAD_ButtonsUp(int ictrl);
+	uint16_t PAD_ButtonsHeld(int ictrl);
+	s8 PAD_StickX(int i);
+	s8 PAD_StickY(int i);
+	s8 PAD_SubStickX(int i);
+	s8 PAD_SubStickY(int i);
+	u8 PAD_TriggerL(int i);
+	u8 PAD_TriggerR(int i);
 
 #ifdef __cplusplus
 }

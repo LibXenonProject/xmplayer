@@ -184,6 +184,13 @@ void getch2(void) {
 
 void getch2_enable(void) {
 	TR;
+	usb_do_poll();
+	// hack
+	int i = 0;
+	for(i=0;i<4;i++){
+		struct controller_data_s ctrl_zero = {};
+		set_controller_data(i,&ctrl_zero);
+	}
 	getch2_status = 1;
 }
 

@@ -587,16 +587,15 @@ extern "C" void mplayer_osd_draw(int level) {
 
 		} else {
 			video_osd_infobar->SetVisible(false);
-		}
-
-
-		UpdatePads();
-		Menu_Frame();
-		mainWindow->Draw();
-		//Menu_Render();
-		for (int i = 0; i < 4; i++) {
-			mainWindow->Update(&userInput[i]);
-		}
+		}		
+	}
+	
+	UpdatePads();
+	Menu_Frame();
+	mainWindow->Draw();
+	//Menu_Render();
+	for (int i = 0; i < 4; i++) {
+		mainWindow->Update(&userInput[i]);
 	}
 }
 
