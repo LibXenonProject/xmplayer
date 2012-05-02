@@ -12,7 +12,33 @@
 extern "C" {
 #endif
 	// force to relink if mplayer or ffmpeg changed
-	#include "../mplayer/version.h"
+#include "../mplayer/version.h"
+
+	enum metadata_s {
+		/* common info */
+		META_NAME = 0,
+
+		/* video stream properties */
+		META_VIDEO_CODEC,
+		META_VIDEO_BITRATE,
+		META_VIDEO_RESOLUTION,
+
+		/* audio stream properties */
+		META_AUDIO_CODEC,
+		META_AUDIO_BITRATE,
+		META_AUDIO_SAMPLES,
+
+		/* ID3 tags and other stream infos */
+		META_INFO_TITLE,
+		META_INFO_ARTIST,
+		META_INFO_ALBUM,
+		META_INFO_YEAR,
+		META_INFO_COMMENT,
+		META_INFO_TRACK,
+		META_INFO_GENRE
+	};
+
+	typedef enum metadata_s metadata_t;
 
 	// mplayer_func.c
 	void init_mplayer(void);
@@ -23,19 +49,21 @@ extern "C" {
 	// use that to load a new file
 	// mplayer.c
 	void mplayer_load(char * filename);
-	
+
 	// return to gui - doesn't exit mplayer process
 	// newmain.cpp
 	void mplayer_return_to_gui();
-	
+
 	// return to mplayer
 	// newmain.cpp
 	void mplayer_return_to_player();
-	
-	
-	 void mplayer_osd_close();
-	 void mplayer_osd_draw();
-	 void mplayer_osd_open();
+
+
+	void mplayer_osd_close();
+	void mplayer_osd_draw(int level);
+	void mplayer_osd_open();
+
+	const char * playetGetMetaData(metadata_t type);
 
 #ifdef	__cplusplus
 }

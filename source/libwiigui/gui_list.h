@@ -56,6 +56,8 @@ public:
 	int GetCenter();
 	
 	void SetSelector(GuiImage * );
+	
+	int GetValue();
 protected:
     GuiImage * selector;
 

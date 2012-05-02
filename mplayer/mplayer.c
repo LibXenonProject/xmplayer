@@ -4138,3 +4138,7 @@ const char * playerGetFilename() {
 int playerGetStatus(){
 	return mpctx->osd_function;
 }
+
+const char * playetGetMetaData(metadata_t type){
+	return get_metadata(type);
+}

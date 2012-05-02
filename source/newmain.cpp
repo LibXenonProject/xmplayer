@@ -48,9 +48,18 @@
 #include "../build/video_control_stop_btn_png.h"
 #include "../build/video_control_time_played_line_bg_png.h"
 
+#include "../build/browser_photo_icon_f_png.h"
+#include "../build/browser_video_icon_f_png.h"
+#include "../build/browser_music_icon_f_png.h"
+
+#include "../build/folder_music_icon_png.h"
+#include "../build/folder_photo_icon_png.h"
+#include "../build/browser_video_icon_f_png.h"
+
 #include "filebrowser.h"
 
 #include "mplayer_func.h"
+#include "folder_video_icon_png.h"
 
 enum {
 	MENU_BACK = -1,
@@ -69,31 +78,56 @@ static GuiImage * bgImg = NULL;
 static GuiWindow * mainWindow = NULL;
 static GuiTrigger * trigA;
 
-XenosSurface * logo = NULL;
+static XenosSurface * logo = NULL;
 
-GuiImage * home_left = NULL;
-GuiImage * home_main_function_frame_bg = NULL;
+static GuiImage * home_left = NULL;
+static GuiImage * home_main_function_frame_bg = NULL;
 
-GuiImage * video_osd_progress_bar_front = NULL;
-GuiImage * video_osd_progress_bar_back = NULL;
-GuiImage * video_osd_bg = NULL;
+static GuiImage * video_osd_progress_bar_front = NULL;
+static GuiImage * video_osd_progress_bar_back = NULL;
+static GuiImage * video_osd_bg = NULL;
 
-GuiText * video_osd_info_filename = NULL;
-GuiText * video_osd_info_cur_time = NULL;
-GuiText * video_osd_info_duration = NULL;
+static GuiImageData * browser_photo_icon = NULL;
+static GuiImageData * browser_video_icon = NULL;
+static GuiImageData * browser_music_icon = NULL;
 
-GuiImage * video_osd_play = NULL;
-GuiImage * video_osd_pause = NULL;
-GuiImage * video_osd_stop = NULL;
-GuiImage * video_osd_next = NULL;
-GuiImage * video_osd_prev = NULL;
-GuiImage * video_osd_rewind = NULL;
-GuiImage * video_osd_forward = NULL;
+static GuiImageData * browser_photo_folder_icon = NULL;
+static GuiImageData * browser_video_folder_icon = NULL;
+static GuiImageData * browser_music_folder_icon = NULL;
 
-GuiImage * decoration_state = NULL;
-GuiImage * decoration_keyicon = NULL;
-GuiImage * decoration_keyicon_ex = NULL;
-GuiImage * decoration_wrongkeyicon = NULL;
+static GuiImageData * browser_selector = NULL;
+
+// no image data, pointer to image
+static GuiImageData * browser_folder_icon = NULL;
+static GuiImageData * browser_file_icon = NULL;
+
+
+static GuiText * video_osd_info_filename = NULL;
+static GuiText * video_osd_info_cur_time = NULL;
+static GuiText * video_osd_info_duration = NULL;
+
+static GuiWindow * video_osd_infobar = NULL;
+static GuiText * video_osd_infobar_text_filename = NULL;
+static GuiText * video_osd_infobar_info_filename = NULL;
+static GuiText * video_osd_infobar_text_trackinfo = NULL;
+static GuiText * video_osd_infobar_info_trackinfo = NULL;
+static GuiText * video_osd_infobar_text_resolution = NULL;
+static GuiText * video_osd_infobar_info_resolution = NULL;
+static GuiText * video_osd_infobar_text_bitrate = NULL;
+static GuiText * video_osd_infobar_info_bitrate = NULL;
+
+static GuiImage * video_osd_play = NULL;
+static GuiImage * video_osd_pause = NULL;
+static GuiImage * video_osd_stop = NULL;
+static GuiImage * video_osd_next = NULL;
+static GuiImage * video_osd_prev = NULL;
+static GuiImage * video_osd_rewind = NULL;
+static GuiImage * video_osd_forward = NULL;
+
+static GuiImage * decoration_state = NULL;
+static GuiImage * decoration_keyicon = NULL;
+static GuiImage * decoration_keyicon_ex = NULL;
+static GuiImage * decoration_wrongkeyicon = NULL;
 
 static char mplayer_filename[2048];
 
@@ -122,7 +156,6 @@ static void update() {
 	for (int i = 0; i < 4; i++) {
 		mainWindow->Update(&userInput[i]);
 	}
-	udelay(100);
 }
 
 /** to do **/
@@ -137,6 +170,26 @@ static void loadRessources() {
 	home_main_function_frame_bg = new GuiImage(new GuiImageData(home_main_function_frame_bg_png));
 
 	home_main_function_frame_bg->SetPosition(0, 341);
+
+
+	// Browser
+	browser_photo_icon = new GuiImageData(browser_photo_icon_f_png);
+	browser_video_icon = new GuiImageData(browser_video_icon_f_png);
+	browser_music_icon = new GuiImageData(browser_music_icon_f_png);
+
+	//	browser_photo_folder_icon = new GuiImageData(folder_photo_icon_png);
+	//	browser_video_folder_icon = new GuiImageData(folder_video_icon_png);
+	//	browser_music_folder_icon = new GuiImageData(folder_music_icon_png);
+
+	browser_photo_folder_icon = new GuiImageData(browser_folder_icon_f_png);
+	browser_video_folder_icon = new GuiImageData(browser_folder_icon_f_png);
+	browser_music_folder_icon = new GuiImageData(browser_folder_icon_f_png);
+
+	browser_selector = new GuiImageData(browser_list_btn_png);
+
+	// no image data, pointer to image
+	browser_folder_icon = browser_video_folder_icon;
+	browser_file_icon = browser_video_icon;
 
 	// OSD
 	video_osd_progress_bar_front = new GuiImage(new GuiImageData(video_player_time_played_line_n_01_png));
@@ -163,6 +216,29 @@ static void loadRessources() {
 	video_osd_info_cur_time = new GuiText("info_cur_time", 18, white);
 	video_osd_info_duration = new GuiText("info_duration", 18, blue);
 
+
+	/** video infobar **/
+	video_osd_infobar_text_filename = new GuiText("info_bar_filename", 18, white);
+	video_osd_infobar_info_filename = new GuiText("video_osd_infobar_info_filename", 18, white);
+	video_osd_infobar_text_trackinfo = new GuiText("info_bar_trackinfo", 18, white);
+	video_osd_infobar_info_trackinfo = new GuiText("video_osd_infobar_info_trackinfo", 18, white);
+	video_osd_infobar_text_resolution = new GuiText("info_bar_resolution", 18, white);
+	video_osd_infobar_info_resolution = new GuiText("video_osd_infobar_info_resolution", 18, white);
+	video_osd_infobar_text_bitrate = new GuiText("info_bar_bitrate", 18, white);
+	video_osd_infobar_info_bitrate = new GuiText("video_osd_infobar_info_bitrate", 18, white);
+
+	video_osd_infobar = new GuiWindow(1280, 720);
+	video_osd_infobar->SetPosition(0, 0);
+	video_osd_infobar->Append(video_osd_infobar_text_filename);
+	video_osd_infobar->Append(video_osd_infobar_info_filename);
+	video_osd_infobar->Append(video_osd_infobar_text_trackinfo);
+	video_osd_infobar->Append(video_osd_infobar_info_trackinfo);
+	video_osd_infobar->Append(video_osd_infobar_text_filename);
+	video_osd_infobar->Append(video_osd_infobar_text_resolution);
+	video_osd_infobar->Append(video_osd_infobar_info_resolution);
+	video_osd_infobar->Append(video_osd_infobar_text_bitrate);
+	video_osd_infobar->Append(video_osd_infobar_info_bitrate);
+
 	/** play state **/
 	video_osd_play = new GuiImage(new GuiImageData(video_control_play_btn_png));
 	video_osd_pause = new GuiImage(new GuiImageData(video_control_pause_btn_png));
@@ -171,6 +247,8 @@ static void loadRessources() {
 	video_osd_prev = new GuiImage(new GuiImageData(video_control_previous_btn_png));
 	video_osd_rewind = new GuiImage(new GuiImageData(video_control_rewind_btn_png));
 	video_osd_forward = new GuiImage(new GuiImageData(video_control_fastforward_btn_png));
+
+
 }
 
 static void common_setup() {
@@ -282,8 +360,11 @@ static int osd_duration_bar_width;
 static int osd_show = 0;
 static char osd_duration[10];
 static char osd_cur_time[10];
+static int got_metadata = 0;
 
 extern "C" void mplayer_osd_open() {
+	got_metadata = 0;
+
 	if (osd_show == 0) {
 		// <image image="image/video_control_frame_bg.png" x="149" y="597" w="983" h="73" disable="@@progress_disable" bg="1"/>
 		video_osd_bg->SetPosition(149, 597);
@@ -305,6 +386,39 @@ extern "C" void mplayer_osd_open() {
 		video_osd_info_cur_time->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 		video_osd_info_duration->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 
+		int infobar_x, infobar_y;
+		infobar_x = 140;
+		infobar_y = 360;
+		video_osd_infobar_text_filename->SetPosition(infobar_x, infobar_y);
+		video_osd_infobar_info_filename->SetPosition(infobar_x + 210, infobar_y);
+
+		video_osd_infobar_text_trackinfo->SetPosition(infobar_x, infobar_y + 20);
+		video_osd_infobar_info_trackinfo->SetPosition(infobar_x + 210, infobar_y + 20);
+
+		video_osd_infobar_text_resolution->SetPosition(infobar_x, infobar_y + 40);
+		video_osd_infobar_info_resolution->SetPosition(infobar_x + 210, infobar_y + 40);
+
+		video_osd_infobar_text_bitrate->SetPosition(infobar_x, infobar_y + 60);
+		video_osd_infobar_info_bitrate->SetPosition(infobar_x + 210, infobar_y + 60);
+
+		video_osd_infobar_text_filename->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+		video_osd_infobar_info_filename->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+
+		video_osd_infobar_text_trackinfo->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+		video_osd_infobar_info_trackinfo->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+
+		video_osd_infobar_text_resolution->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+		video_osd_infobar_info_resolution->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+
+		video_osd_infobar_text_bitrate->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+		video_osd_infobar_info_bitrate->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+
+		/** video infobar **/
+		video_osd_infobar_info_filename->SetText(playetGetMetaData(META_NAME));
+		video_osd_infobar_info_trackinfo->SetText(playetGetMetaData(META_VIDEO_CODEC));
+		video_osd_infobar_info_resolution->SetText(playetGetMetaData(META_VIDEO_RESOLUTION));
+		video_osd_infobar_info_bitrate->SetText(playetGetMetaData(META_VIDEO_BITRATE));
+
 
 		//<image x="202" y="613" w="40" h="40" image="@@speed_state"/>
 		//<image image="@@play_state" x="202" y="613" w="40" h="40"/>
@@ -325,6 +439,8 @@ extern "C" void mplayer_osd_open() {
 		video_osd_rewind->SetVisible(false);
 		video_osd_forward->SetVisible(false);
 
+		video_osd_infobar->SetVisible(false);
+
 		// order
 		mainWindow->Append(video_osd_bg);
 		mainWindow->Append(video_osd_progress_bar_back);
@@ -333,6 +449,16 @@ extern "C" void mplayer_osd_open() {
 		mainWindow->Append(video_osd_info_filename);
 		mainWindow->Append(video_osd_info_cur_time);
 		mainWindow->Append(video_osd_info_duration);
+
+		//
+		mainWindow->Append(video_osd_infobar_text_filename);
+		mainWindow->Append(video_osd_infobar_info_filename);
+		mainWindow->Append(video_osd_infobar_text_trackinfo);
+		mainWindow->Append(video_osd_infobar_info_trackinfo);
+		mainWindow->Append(video_osd_infobar_text_resolution);
+		mainWindow->Append(video_osd_infobar_info_resolution);
+		mainWindow->Append(video_osd_infobar_text_bitrate);
+		mainWindow->Append(video_osd_infobar_info_bitrate);
 
 		// 		
 		mainWindow->Append(video_osd_play);
@@ -375,13 +501,31 @@ extern "C" void mplayer_osd_close() {
 		mainWindow->Remove(video_osd_rewind);
 		mainWindow->Remove(video_osd_forward);
 
+		//
+		mainWindow->Remove(video_osd_infobar_text_filename);
+		mainWindow->Remove(video_osd_infobar_info_filename);
+		mainWindow->Remove(video_osd_infobar_text_trackinfo);
+		mainWindow->Remove(video_osd_infobar_info_trackinfo);
+		mainWindow->Remove(video_osd_infobar_text_resolution);
+		mainWindow->Remove(video_osd_infobar_info_resolution);
+		mainWindow->Remove(video_osd_infobar_text_bitrate);
+		mainWindow->Remove(video_osd_infobar_info_bitrate);
+
 		// reapply bg
 		mainWindow->Append(bgImg);
 	}
 	osd_show = 0;
 }
 
-extern "C" void mplayer_osd_draw() {
+static void format_time(char * dest, double time) {
+	div_t hrmin, minsec;
+	minsec = div(time, 60);
+	hrmin = div(minsec.quot, 60);
+
+	sprintf(dest, "%d:%02d:%02d", hrmin.quot, hrmin.rem, minsec.rem);
+}
+
+extern "C" void mplayer_osd_draw(int level) {
 	if (osd_show) {
 
 		double duration = playerGetDuration();
@@ -392,23 +536,8 @@ extern "C" void mplayer_osd_draw() {
 		float width = (float) osd_duration_bar_width * (pourcents / 100.0);
 		img->width = width;
 
-		//		printf("t%d\r\n", playerGetElapsed());
-		//		printf("p%f\r\n", pourcents);
-		//		printf("i%d\r\n", img->width);
-		{
-			div_t hrmin, minsec;
-			minsec = div(duration, 60);
-			hrmin = div(minsec.quot, 60);
-
-			sprintf(osd_duration, "%d:%02d:%02d", hrmin.quot, hrmin.rem, minsec.rem);
-		}
-		{
-			div_t hrmin, minsec;
-			minsec = div(elapsed, 60);
-			hrmin = div(minsec.quot, 60);
-
-			sprintf(osd_cur_time, "%d:%02d:%02d", hrmin.quot, hrmin.rem, minsec.rem);
-		}
+		format_time(osd_duration, duration);
+		format_time(osd_cur_time, elapsed);
 
 		video_osd_info_cur_time->SetText(osd_cur_time);
 		video_osd_info_duration->SetText(osd_duration);
@@ -419,7 +548,7 @@ extern "C" void mplayer_osd_draw() {
 
 		video_osd_play->SetVisible(false);
 		video_osd_pause->SetVisible(false);
-		video_osd_stop->SetVisible(false);		
+		video_osd_stop->SetVisible(false);
 		video_osd_rewind->SetVisible(false);
 		video_osd_forward->SetVisible(false);
 		video_osd_next->SetVisible(false);
@@ -452,6 +581,14 @@ extern "C" void mplayer_osd_draw() {
 				break;
 		}
 
+		if (level == 3) {
+			// show file info
+			video_osd_infobar->SetVisible(true);
+
+		} else {
+			video_osd_infobar->SetVisible(false);
+		}
+
 
 		UpdatePads();
 		Menu_Frame();
@@ -465,7 +602,30 @@ extern "C" void mplayer_osd_draw() {
 
 static void Browser(const char * title, const char * root) {
 	BrowseDevice("", root);
-	GuiFileBrowser gui_browser(980, 500, (u8*) browser_list_btn_png, (u8*) browser_folder_icon_f_png);
+
+	// apply correct icon
+	switch (current_menu) {
+		case BROWSE_AUDIO:
+			browser_folder_icon = browser_music_folder_icon;
+			browser_file_icon = browser_music_icon;
+			break;
+
+		case BROWSE_VIDEO:
+			browser_folder_icon = browser_video_folder_icon;
+			browser_file_icon = browser_video_icon;
+			break;
+		case BROWSE_PICTURE:
+			browser_folder_icon = browser_photo_folder_icon;
+			browser_file_icon = browser_photo_icon;
+			break;
+
+		default:
+			break;
+	}
+
+	GuiFileBrowser gui_browser(980, 500, browser_selector, browser_folder_icon, browser_file_icon);
+
+
 
 	gui_browser.SetPosition(150, 180);
 	gui_browser.SetFontSize(20);
@@ -487,15 +647,15 @@ static void Browser(const char * title, const char * root) {
 	menuBtn.SetEffectGrow();
 
 	mainWindow->Append(&menuBtn);
-	
-	
+
+
 	GuiText browserTxt(title, 64, white);
 	browserTxt.SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	browserTxt.SetPosition(64, 45);
 	browserTxt.SetEffectGrow();
 
 	mainWindow->Append(&browserTxt);
-	
+
 	last_menu = current_menu;
 
 	while (current_menu == last_menu) {
@@ -593,7 +753,7 @@ static void HomePage() {
 
 
 	GuiTrigger trigMenu;
-	trigMenu.SetButtonOnlyTrigger(-1, WPAD_BUTTON_A | WPAD_CLASSIC_BUTTON_A, PAD_BUTTON_A);
+	trigMenu.SetButtonOnlyTrigger(-1, 0, PAD_BUTTON_A);
 
 	GuiText menuBtnTxt("A", 18, white);
 	GuiButton menuBtn(20, 20);
@@ -607,7 +767,20 @@ static void HomePage() {
 
 	while (current_menu == HOME_PAGE) {
 		if (menuBtn.GetState() == STATE_CLICKED) {
-			current_menu = BROWSE_VIDEO;
+			switch (list_v->GetValue()) {
+				case 0:
+					current_menu = BROWSE_VIDEO;
+					break;
+				case 1:
+					current_menu = BROWSE_AUDIO;
+					break;
+				case 2:
+					current_menu = BROWSE_PICTURE;
+					break;
+					//				case 3:
+					//					current_menu = BROWSE_VIDEO;
+					//					break;
+			}
 		}
 		update();
 	}
@@ -668,7 +841,7 @@ static void do_mplayer(char * filename) {
 
 void MenuMplayer() {
 	//sprintf(foldername, "%s/", browser.dir);	
-	printf("filename:%s\r\n", mplayer_filename);		
+	printf("filename:%s\r\n", mplayer_filename);
 	do_mplayer(mplayer_filename);
 }
 
@@ -683,11 +856,12 @@ static void gui_loop() {
 		if (current_menu == HOME_PAGE) {
 			HomePage();
 		} else if (current_menu == BROWSE_VIDEO) {
-			Browser("Videos","uda:/");
-		}else if (current_menu == BROWSE_AUDIO) {
-			Browser("Audio","uda:/");
-		}
-		else if (current_menu == MENU_MPLAYER) {
+			Browser("Videos", "uda:/");
+		} else if (current_menu == BROWSE_AUDIO) {
+			Browser("Audio", "uda:/");
+		} else if (current_menu == BROWSE_PICTURE) {
+			Browser("Photo", "uda:/");
+		} else if (current_menu == MENU_MPLAYER) {
 			MenuMplayer();
 		} else if (current_menu == MENU_BACK) {
 			current_menu = HOME_PAGE;
@@ -749,13 +923,13 @@ int main(int argc, char** argv) {
  */
 extern "C" void mplayer_return_to_gui() {
 	need_gui = 1;
-	
+
 	// make sur to leave the gui
 	mplayer_osd_close();
-	
+
 	current_menu = last_menu;
-	
-	gui_loop();	
+
+	gui_loop();
 }
 
 /**

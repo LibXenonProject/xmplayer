@@ -139,6 +139,7 @@ typedef struct _paddata {
 #define EFFECT_SLIDE_IN				16
 #define EFFECT_SLIDE_OUT			32
 #define EFFECT_FADE					64
+#define EFFECT_FADE_OUT				512
 #define EFFECT_SCALE				128
 #define EFFECT_COLOR_TRANSITION		256
 
@@ -387,6 +388,14 @@ public:
     //!\param y Y coordinate
     //!\return true if contained within, false otherwise
     bool IsInside(int x, int y);
+	
+	//!Checks whether the specified element is within the element's boundaries
+    //!\return true if contained within, false otherwise
+    bool IsInside(GuiElement *e);
+	
+	int GetX();
+	int GetY();
+	
     //!Sets the element's position
     //!\param x X coordinate
     //!\param y Y coordinate
@@ -428,6 +437,11 @@ public:
     virtual void Draw();
     //!Called constantly to redraw the element's tooltip
     virtual void DrawTooltip();
+	
+	
+	virtual void SetAnimation(bool v);
+	virtual void SetAnimationPosition(int final_x_position,int final_y_position);
+	virtual void SetAnimationDuration(int time);
 protected:
     GuiTrigger * trigger[3]; //!< GuiTriggers (input actions) that this element responds to
     UpdateCallback updateCB; //!< Callback function to call when this element is updated
@@ -458,11 +472,22 @@ protected:
     int alignmentVert; //!< Horizontal element alignment, respective to parent element (TOP, BOTTOM, MIDDLE)
     int state; //!< Element state (DEFAULT, SELECTED, CLICKED, DISABLED)
     int stateChan; //!< Which controller channel is responsible for the last change in state
+	
+	int animation_pos_x;
+	int animation_pos_y;
+	int animation_pos_cur_x;
+	int animation_pos_cur_y;
+	int animation_pos_duration;
+	
     bool selectable; //!< Whether or not this element selectable (can change to SELECTED state)
     bool clickable; //!< Whether or not this element is clickable (can change to CLICKED state)
     bool holdable; //!< Whether or not this element is holdable (can change to HELD state)
     bool visible; //!< Visibility of the element. If false, Draw() is skipped
     bool rumble; //!< Wiimote rumble (on/off) - set to on when this element requests a rumble event
+	bool animated; // position change is animated - set to on when actived
+	
+	virtual void UpdateAnimation();
+	
 };
 
 //!Allows GuiElements to be grouped together into a "window"
@@ -948,7 +973,7 @@ protected:
 
 class GuiFileBrowser : public GuiElement {
 public:
-    GuiFileBrowser(int w, int h,u8 * list_bg, u8 * folder_icon );
+    GuiFileBrowser(int w, int h,GuiImageData * list_bg, GuiImageData * folder_icon, GuiImageData * file_icon);
     ~GuiFileBrowser();
     void ResetState();
     void SetFocus(int f);
@@ -967,12 +992,14 @@ protected:
     GuiText ** fileListText;
     GuiImage ** fileListBg;
     GuiImage ** fileListFolder;
+	GuiImage ** fileListFile;
 
     GuiImage ** bgFileSelectionImg;
 
     GuiImageData * bgFileSelection;
     GuiImageData * bgFileSelectionEntry;
     GuiImageData * fileFolder;
+	GuiImageData * fileIcon;
 
     GuiSound * btnSoundOver;
     GuiSound * btnSoundClick;

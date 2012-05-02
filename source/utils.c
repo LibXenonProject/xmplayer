@@ -26,7 +26,7 @@ struct pngMem {
 	int offset; //pour le parcours
 };
 
-int offset = 0;
+static int offset = 0;
 
 static void png_mem_read(png_structp png_ptr, png_bytep data, png_size_t length) {
 	struct file_buffer_t *src = (struct file_buffer_t *) png_get_io_ptr(png_ptr);

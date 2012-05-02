@@ -52,6 +52,8 @@ GuiElement::GuiElement() {
     // default alignment - align to top left
     alignmentVert = ALIGN_TOP;
     alignmentHor = ALIGN_LEFT;
+	
+	animated = false;
 }
 
 /**
@@ -353,6 +355,12 @@ void GuiElement::SetEffect(int eff, int amount, int target) {
         else if (amount < 0)
             alphaDyn = alpha;
     }
+	if (eff & EFFECT_FADE_OUT) {
+//        if (amount > 0)
+//            alphaDyn = 0;
+//        else if (amount < 0)
+//            alphaDyn = alpha;
+    }
 
     effects |= eff;
     effectAmount = amount;
@@ -370,6 +378,9 @@ void GuiElement::SetEffectGrow() {
 }
 
 void GuiElement::UpdateEffects() {
+	
+	UpdateAnimation();
+	
     if (effects & (EFFECT_SLIDE_IN | EFFECT_SLIDE_OUT)) {
         if (effects & EFFECT_SLIDE_IN) {
             if (effects & EFFECT_SLIDE_LEFT) {
@@ -436,6 +447,17 @@ void GuiElement::UpdateEffects() {
             effects = 0; // shut off effect
         }
     }
+	if (effects == EFFECT_FADE_OUT) {
+        alphaDyn += effectAmount;
+
+        if (alphaDyn <= 0) {
+            alphaDyn = 0;
+            effects = 0; // shut off effect
+        } else if (alphaDyn >= alpha) {
+            alphaDyn = alpha;
+            effects = 0; // shut off effect
+        }
+    }
     if (effects & EFFECT_SCALE) {
         scaleDyn += f32(effectAmount)*0.01f;
         f32 effTar100 = f32(effectTarget)*0.01f;
@@ -449,6 +471,7 @@ void GuiElement::UpdateEffects() {
 }
 
 void GuiElement::Update(GuiTrigger * t) {
+	
     if (updateCB)
         updateCB(this);
 }
@@ -480,9 +503,70 @@ void GuiElement::Draw() {
 void GuiElement::DrawTooltip() {
 }
 
+int GuiElement::GetX(){
+	return xoffset;
+}
+int GuiElement::GetY(){
+	return yoffset;
+}
+
+bool GuiElement::IsInside(GuiElement *e){
+	if (this->GetLeft() < e->GetLeft()) return false;
+    if (this->GetTop() < e->GetTop()) return false;
+	
+	if (this->GetLeft() + this->GetWidth() > e->GetLeft() + e->GetWidth()) return false;
+    if (this->GetTop() + this->GetHeight() > e->GetTop() + e->GetHeight()) return false;
+	
+//    if ((e->GetX() + e->GetWidth()) < (this->GetX() + this->GetWidth())) return false;
+//    if ((e->GetY() + e->GetHeight() ) < (this->GetY() + this->GetHeight())) return false;
+	
+	return true;
+}
+
 bool GuiElement::IsInside(int x, int y) {
     if (unsigned(x - this->GetLeft()) < unsigned(width)
             && unsigned(y - this->GetTop()) < unsigned(height))
         return true;
     return false;
+}
+
+
+void GuiElement::SetAnimation(bool v){
+	this->animated = v;
+}
+void GuiElement::SetAnimationPosition(int x,int y){
+	animation_pos_x = x;
+	animation_pos_y = y;
+
+	this->animated = true;
+}
+void GuiElement::SetAnimationDuration(int v){
+	// not used yet
+	animation_pos_duration = v;
+}
+
+void GuiElement::UpdateAnimation(){
+	if(this->animated)
+	{
+		// animation finished nothing to ...
+		if(xoffset==animation_pos_x && yoffset == animation_pos_y){
+			//TR;
+			this->animated = false;
+		}
+		else{
+			// do animation
+			int anim_step = animation_pos_duration;
+			
+			if(xoffset>animation_pos_x)
+				xoffset -= anim_step;
+			else if(xoffset<animation_pos_x)
+				xoffset += anim_step;
+			
+			if(yoffset>animation_pos_y)
+				yoffset -= anim_step;
+			else if(yoffset<animation_pos_y)
+				yoffset += anim_step;
+			
+		}
+	}
 }

@@ -69,6 +69,9 @@ void GuiList::Append(GuiButton* e) {
 		e->SetAlignment(ALIGN_RIGHT, ALIGN_TOP);
 	else
 		e->SetAlignment(ALIGN_LEFT, ALIGN_MIDDLE);
+	
+	e->SetAnimation(true);
+	e->SetAnimationDuration(1);
 }
 
 void GuiList::Insert(GuiButton* e, u32 index) {
@@ -154,17 +157,17 @@ void GuiList::Draw() {
 	}
 
 	//
-	//	// debug 
-	//	XeColor color;
-	//	color.lcol = 0xFF00007F;
-	//
-	//	int currLeft = this->GetLeft();
-	//	int thisTop = this->GetTop();
-	//
-	//	int thisHeight = this->GetHeight();
-	//	int thisWidth = this->GetWidth();
-	//
-	//	Menu_DrawRectangle(currLeft, thisTop, thisWidth, thisHeight, color, 1);
+//		// debug 
+//		XeColor color;
+//		color.lcol = 0xFF00007F;
+//	
+//		int currLeft = this->GetLeft();
+//		int thisTop = this->GetTop();
+//	
+//		int thisHeight = this->GetHeight();
+//		int thisWidth = this->GetWidth();
+//	
+//		Menu_DrawRectangle(currLeft, thisTop, thisWidth, thisHeight, color, 1);
 
 	if (this->selector) {
 		this->selector->Draw();
@@ -231,13 +234,15 @@ void GuiList::Update(GuiTrigger * t) {
 		count--;
 
 	for (u32 i = 0; i < elemSize; ++i) {
-		_elements.at(i)->SetVisible(false);
+		_elements.at(i)->UpdateEffects();
+		//_elements.at(i)->SetVisible(false);
 		_elements.at(i)->SetState(STATE_DISABLED);
 	}
 
 	ystep = this->height / itemCount;
 	xstep = this->width / itemCount;
 
+	/*
 	for (u32 i = start; i < start + count; ++i) {
 
 		if (_elements.at(i)->GetState() == STATE_DISABLED)
@@ -246,10 +251,12 @@ void GuiList::Update(GuiTrigger * t) {
 		_elements.at(i)->SetVisible(true);
 		if (orientation == 'V') {
 			u32 pos = (c + (i - start)) - MIN(selectedItem, c - 1);
-			_elements.at(i)->SetPosition(0, (pos - 1) * ystep);
+			//_elements.at(i)->SetPosition(0, (pos - 1) * ystep);
+			_elements.at(i)->SetAnimationPosition(0, (pos - 1) * ystep);
 		} else {
 			u32 pos = (c + (i - start)) - MIN(selectedItem, c - 1);
-			_elements.at(i)->SetPosition((pos - 1) * xstep, 0);
+			//_elements.at(i)->SetPosition((pos - 1) * xstep, 0);
+			_elements.at(i)->SetAnimationPosition((pos - 1) * xstep, 0);
 		}
 
 		//		if (i == selectedItem) {
@@ -260,19 +267,51 @@ void GuiList::Update(GuiTrigger * t) {
 		//			_elements.at(i)->SetAlpha(0xff);
 		//		}
 	}
+	 */ 
+	
+	
+	for (u32 i = 0; i < elemSize; ++i) {
+		if (_elements.at(i)->GetState() == STATE_DISABLED)
+			_elements.at(i)->SetState(STATE_DEFAULT);
+
+		if (orientation == 'V') {
+			u32 pos = (c + (i - start)) - MIN(selectedItem, c - 1);
+			//_elements.at(i)->SetPosition(0, (pos - 1) * ystep);
+			_elements.at(i)->SetAnimationPosition(0, (pos - 1) * ystep);
+		} else {
+			u32 pos = (c + (i - start)) - MIN(selectedItem, c - 1);
+			//_elements.at(i)->SetPosition((pos - 1) * xstep, 0);
+			_elements.at(i)->SetAnimationPosition((pos - 1) * xstep, 0);
+		}
+		
+		//if(i>=start && i < start + count )
+		if(_elements.at(i)->IsInside(this))
+//		if(
+//				this->IsInside(_elements.at(i)->GetMinX(),_elements.at(i)->GetMinY()) && 
+//				this->IsInside(_elements.at(i)->GetMaxX(),_elements.at(i)->GetMaxY()) 
+//			)
+		{
+			//_elements.at(i)->SetVisible(true);
+			_elements.at(i)->SetEffect(EFFECT_FADE_OUT,1,0);
+		}
+		else{
+			//_elements.at(i)->SetVisible(false);
+			_elements.at(i)->SetEffect(EFFECT_FADE_OUT,-1,0);
+		}
+	}
 
 	if (orientation == 'V') {
-		if (t->Down()) {
+		if (t->Up()) {
 //			_elements.at(selectedItem)->ResetState();
 			selectedItem--;
-		} else if (t->Up()) {
+		} else if (t->Down()) {
 //			_elements.at(selectedItem)->ResetState();
 			selectedItem++;
 		}
 	} else {
-		if (t->Down() || t->Up()) {
-			selectedItem = 0;
-		}
+//		if (t->Down() || t->Up()) {
+//			selectedItem = 0;
+//		}
 		if (t->Right()) {
 //			_elements.at(selectedItem)->ResetState();
 			selectedItem++;
@@ -296,4 +335,9 @@ void GuiList::Update(GuiTrigger * t) {
 
 	if (updateCB)
 		updateCB(this);
+}
+
+
+int GuiList::GetValue(){
+	return selectedItem;
 }

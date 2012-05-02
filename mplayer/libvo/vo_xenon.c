@@ -61,7 +61,7 @@
 
 
 void mplayer_osd_close();
-void mplayer_osd_draw();
+void mplayer_osd_draw(int level);
 void mplayer_osd_open();
 
 // Parameters:
@@ -419,12 +419,12 @@ static void flip_page(void) {
 	if (osd_level) {
 		// display always
 		if(osd_level>=2)
-			mplayer_osd_draw();
+			mplayer_osd_draw(osd_level);
 		else
 		{
 			// only display for a number of frame
 			if(osd_visible)
-				mplayer_osd_draw();			
+				mplayer_osd_draw(2);			
 		}
 	}
 

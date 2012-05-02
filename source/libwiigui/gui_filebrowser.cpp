@@ -18,7 +18,7 @@
 /**
  * Constructor for the GuiFileBrowser class.
  */
-GuiFileBrowser::GuiFileBrowser(int w, int h, u8 * list_bg, u8 * folder_icon) {
+GuiFileBrowser::GuiFileBrowser(int w, int h, GuiImageData * list_bg, GuiImageData * folder_icon, GuiImageData * file_icon) {
 	width = w;
 	height = h;
 	numEntries = 0;
@@ -38,8 +38,9 @@ GuiFileBrowser::GuiFileBrowser(int w, int h, u8 * list_bg, u8 * folder_icon) {
 	//    bgFileSelectionImg->SetParent(this);
 	//    bgFileSelectionImg->SetAlignment(ALIGN_LEFT, ALIGN_MIDDLE);
 
-	bgFileSelectionEntry = new GuiImageData(list_bg);
-	fileFolder = new GuiImageData(folder_icon);
+	bgFileSelectionEntry = list_bg;
+	fileFolder = folder_icon;
+	fileIcon = file_icon;
 	
 	font_size = 20;
 	selected_font_size = 26;
@@ -64,6 +65,7 @@ void GuiFileBrowser::SetPageSize(int size) {
 
 	fileListBg = new GuiImage*[size];
 	fileListFolder = new GuiImage*[size];
+	fileListFile = new GuiImage*[size];
 	bgFileSelectionImg = new GuiImage*[size];
 
 	for (int i = 0; i < size; ++i) {
@@ -77,6 +79,7 @@ void GuiFileBrowser::SetPageSize(int size) {
 
 		fileListBg[i] = new GuiImage(bgFileSelectionEntry);
 		fileListFolder[i] = new GuiImage(fileFolder);
+		fileListFile[i] = new GuiImage(fileIcon);
 
 		fileList[i] = new GuiButton(this->GetWidth(), bgFileSelectionEntry->GetHeight());
 		fileList[i]->SetParent(this);
@@ -96,8 +99,8 @@ GuiFileBrowser::~GuiFileBrowser() {
 	delete bgFileSelectionImg;
 
 	//    delete bgFileSelection;
-	delete bgFileSelectionEntry;
-	delete fileFolder;
+	//delete bgFileSelectionEntry;
+	//delete fileFolder;
 
 	//    delete btnSoundOver;
 	//    delete btnSoundClick;
@@ -108,6 +111,7 @@ GuiFileBrowser::~GuiFileBrowser() {
 		delete fileList[i];
 		delete fileListBg[i];
 		delete fileListFolder[i];
+		delete fileListFile[i];
 	}
 	
 	delete fileListText;
@@ -226,8 +230,8 @@ endNavigation:
 					fileList[i]->SetIcon(fileListFolder[i]);
 					fileListText[i]->SetPosition(fileListFolder[i]->GetWidth(), 0);
 				} else {
-					fileList[i]->SetIcon(NULL);
-					fileListText[i]->SetPosition(10, 0);
+					fileList[i]->SetIcon(fileListFile[i]);
+					fileListText[i]->SetPosition(fileListFile[i]->GetWidth(), 0);
 				}
 			} else {
 				fileList[i]->SetVisible(false);
