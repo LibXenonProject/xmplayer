@@ -857,7 +857,8 @@ static void gui_loop() {
 		} else if (current_menu == BROWSE_VIDEO) {
 			Browser("Videos", "uda:/");
 		} else if (current_menu == BROWSE_AUDIO) {
-			Browser("Audio", "uda:/");
+			//Browser("Audio", "uda:/");
+			Browser("Audio", "xf0:/");
 		} else if (current_menu == BROWSE_PICTURE) {
 			Browser("Photo", "uda:/");
 		} else if (current_menu == MENU_MPLAYER) {
@@ -867,6 +868,8 @@ static void gui_loop() {
 		}
 	}
 }
+
+extern "C" void init_xtaf(); 
 
 int main(int argc, char** argv) {
 	XeColor white;
@@ -896,6 +899,8 @@ int main(int argc, char** argv) {
 	xenon_ata_init();
 	usb_do_poll();
 	fatInitDefault();
+	
+	init_xtaf();
 
 	// pads
 	SetupPads();
