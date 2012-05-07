@@ -1,0 +1,12 @@
+*.a
+*.o
+*.d
+*.exe
+*.ho
+*-example
+*-test
+*_g
+*.def
+*.dll
+*.lib
+*.exp
