@@ -698,6 +698,13 @@ static void Browser(const char * title, const char * root) {
 	mainWindow->Remove(&menuBtn);
 }
 
+
+static char dev_uda[]="uda:/";
+static char dev_xf0[]="xf0:/";
+static char dev_xf1[]="xf1:/";
+
+char * root_dev = NULL;
+
 static void HomePage() {
 	mainWindow->Append(home_left);
 	mainWindow->Append(home_main_function_frame_bg);
@@ -782,6 +789,16 @@ static void HomePage() {
 		}
 		update();
 	}
+	
+	if(list_h->GetValue()==1){
+		root_dev = dev_xf0;
+	}
+	else if(list_h->GetValue()==2){
+		root_dev = dev_xf1;
+	}
+	else{
+		root_dev = dev_uda;
+	}
 
 	mainWindow->Remove(&menuBtn);
 	mainWindow->Remove(list_h);
@@ -846,6 +863,8 @@ void MenuMplayer() {
 static int need_gui = 1;
 
 static void gui_loop() {
+	
+	
 	while (need_gui) {
 		//last_menu = current_menu;
 		if (current_menu == OSD) {
@@ -854,12 +873,11 @@ static void gui_loop() {
 		if (current_menu == HOME_PAGE) {
 			HomePage();
 		} else if (current_menu == BROWSE_VIDEO) {
-			Browser("Videos", "uda:/");
+			Browser("Video", root_dev);
 		} else if (current_menu == BROWSE_AUDIO) {
-			//Browser("Audio", "uda:/");
-			Browser("Audio", "xf0:/");
+			Browser("Audio", root_dev);
 		} else if (current_menu == BROWSE_PICTURE) {
-			Browser("Photo", "uda:/");
+			Browser("Photo", root_dev);
 		} else if (current_menu == MENU_MPLAYER) {
 			MenuMplayer();
 		} else if (current_menu == MENU_BACK) {
@@ -909,6 +927,8 @@ int main(int argc, char** argv) {
 	common_setup();
 
 	current_menu = HOME_PAGE;
+	
+	root_dev = dev_uda;
 
 	//current_menu = OSD;
 	while (1) {
