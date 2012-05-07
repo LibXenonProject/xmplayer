@@ -87,6 +87,7 @@ export INCLUDE	:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
 					$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
 					-I$(LIBXENON_INC)/freetype2/ \
 					-I$(CURDIR)/$(BUILD) \
+					-I$(MPLAYER)/ffmpeg/ \
 					-I$(LIBXENON_INC)
 
 #---------------------------------------------------------------------------------
@@ -99,6 +100,7 @@ export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib) \
 		                        -L$(MPLAYER)/ffmpeg/libavutil \
 					-L$(MPLAYER)/ffmpeg/libpostproc \
 		                        -L$(MPLAYER)/ffmpeg/libswscale \
+		                        -L$(MPLAYER)/ffmpeg/ \
 					-L$(LIBXENON_LIB) 
 
 export OUTPUT	:=	$(CURDIR)/$(TARGET)

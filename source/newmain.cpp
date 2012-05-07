@@ -8,7 +8,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <debug.h>
-#include <fat/fat.h>
 #include <libfat/fat.h>
 #include <usb/usbmain.h>
 #include <diskio/ata.h>
