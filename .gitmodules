@@ -1,3 +1,0 @@
-[submodule "ffmpeg"]
-	path = mplayer/ffmpeg
-	url = git@github.com:Ced2911/ffmpeg.git
