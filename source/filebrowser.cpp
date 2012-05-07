@@ -117,16 +117,16 @@ int UpdateDirName() {
 
         return 1;
     }/* Open a directory */
-    else {
-        /* test new directory namelength */
-        if ((strlen(browser.dir) + 1 + strlen(browserList[browser.selIndex].filename)) < MAXPATHLEN) {
-            /* update current directory name */
-            sprintf(browser.dir, "%s/%s", browser.dir, browserList[browser.selIndex].filename);
-            return 1;
-        } else {
-            return -1;
-        }
-    }
+	else {
+		/* test new directory namelength */
+		if ((strlen(browser.dir) + 1 + strlen(browserList[browser.selIndex].filename)) < MAXPATHLEN) {
+			/* update current directory name */
+			sprintf(browser.dir, "%s/%s", browser.dir, browserList[browser.selIndex].filename);
+			return 1;
+		} else {
+			return -1;
+		}
+	}
 }
 
 /****************************************************************************
@@ -139,48 +139,48 @@ int UpdateDirName() {
  *   <files>
  ***************************************************************************/
 int FileSortCallback(const void *f1, const void *f2) {
-    /* Special case for implicit directories */
-    if (((BROWSERENTRY *) f1)->filename[0] == '.' || ((BROWSERENTRY *) f2)->filename[0] == '.') {
-        if (strcmp(((BROWSERENTRY *) f1)->filename, ".") == 0) {
-            return -1;
-        }
-        if (strcmp(((BROWSERENTRY *) f2)->filename, ".") == 0) {
-            return 1;
-        }
-        if (strcmp(((BROWSERENTRY *) f1)->filename, "..") == 0) {
-            return -1;
-        }
-        if (strcmp(((BROWSERENTRY *) f2)->filename, "..") == 0) {
-            return 1;
-        }
-    }
+	/* Special case for implicit directories */
+	if (((BROWSERENTRY *) f1)->filename[0] == '.' || ((BROWSERENTRY *) f2)->filename[0] == '.') {
+		if (strcmp(((BROWSERENTRY *) f1)->filename, ".") == 0) {
+			return -1;
+		}
+		if (strcmp(((BROWSERENTRY *) f2)->filename, ".") == 0) {
+			return 1;
+		}
+		if (strcmp(((BROWSERENTRY *) f1)->filename, "..") == 0) {
+			return -1;
+		}
+		if (strcmp(((BROWSERENTRY *) f2)->filename, "..") == 0) {
+			return 1;
+		}
+	}
 
-    /* If one is a file and one is a directory the directory is first. */
-    if (((BROWSERENTRY *) f1)->isdir && !(((BROWSERENTRY *) f2)->isdir)) return -1;
-    if (!(((BROWSERENTRY *) f1)->isdir) && ((BROWSERENTRY *) f2)->isdir) return 1;
+	/* If one is a file and one is a directory the directory is first. */
+	if (((BROWSERENTRY *) f1)->isdir && !(((BROWSERENTRY *) f2)->isdir)) return -1;
+	if (!(((BROWSERENTRY *) f1)->isdir) && ((BROWSERENTRY *) f2)->isdir) return 1;
 
-    return stricmp(((BROWSERENTRY *) f1)->filename, ((BROWSERENTRY *) f2)->filename);
+	return stricmp(((BROWSERENTRY *) f1)->filename, ((BROWSERENTRY *) f2)->filename);
 }
 
 int extValid(char * ext) {
-//    if (ext) {
-//        if (stricmp(ext, ".z") == 0) {
-//            return 1;
-//        } else if (stricmp(ext, ".gpz") == 0) {
-//            return 1;
-//        } else if (stricmp(ext, ".cue") == 0) {
-//            return 1;
-//        } else if (stricmp(ext, ".bin") == 0) {
-//            return 1;
-//        } else if (stricmp(ext, ".iso") == 0) {
-//            return 1;
-//        } else if (stricmp(ext, ".nrg") == 0) {
-//            return 1;
-//        }
-//    }
-//
-//    return 0;
-    return 1;
+	//    if (ext) {
+	//        if (stricmp(ext, ".z") == 0) {
+	//            return 1;
+	//        } else if (stricmp(ext, ".gpz") == 0) {
+	//            return 1;
+	//        } else if (stricmp(ext, ".cue") == 0) {
+	//            return 1;
+	//        } else if (stricmp(ext, ".bin") == 0) {
+	//            return 1;
+	//        } else if (stricmp(ext, ".iso") == 0) {
+	//            return 1;
+	//        } else if (stricmp(ext, ".nrg") == 0) {
+	//            return 1;
+	//        }
+	//    }
+	//
+	//    return 0;
+	return 1;
 }
 
 /***************************************************************************
@@ -188,79 +188,89 @@ int extValid(char * ext) {
  **************************************************************************/
 int
 ParseDirectory() {
-    DIR *dir = NULL;
-    char fulldir[MAXPATHLEN];
-    struct dirent *entry;
-    char * ext = NULL;
+	DIR *dir = NULL;
+	char fulldir[MAXPATHLEN];
+	struct dirent *entry;
+	char * ext = NULL;
 
-    // reset browser
-    ResetBrowser();
+	// reset browser
+	ResetBrowser();
 
-    // open the directory
-    sprintf(fulldir, "%s%s", rootdir, browser.dir); // add currentDevice to path
-    dir = opendir(fulldir);
+	// open the directory
+	sprintf(fulldir, "%s%s", rootdir, browser.dir); // add currentDevice to path
+	dir = opendir(fulldir);
 
-    // if we can't open the dir, try opening the root dir
-    if (dir == NULL) {
-        sprintf(browser.dir, "/");
-        dir = opendir(rootdir);
-        if (dir == NULL) {
-            return -1;
-        }
-    }
+	// if we can't open the dir, try opening the root dir
+	if (dir == NULL) {
+		sprintf(browser.dir, "/");
+		dir = opendir(rootdir);
+		if (dir == NULL) {
+			return -1;
+		}
+	}
 
-    // index files/folders
-    int entryNum = 0;
+	// index files/folders
+	int entryNum = 0;
 
-    while ((entry = readdir(dir))) {
-        if (strcmp(entry->d_name, ".") == 0)
-            continue;
+	// always add an .. entry
+	if(1){
+		BROWSERENTRY * newBrowserList = (BROWSERENTRY *) realloc(browserList, (entryNum + 1) * sizeof (BROWSERENTRY));
+		
+		browserList = newBrowserList;
+		
+		memset(&(browserList[entryNum]), 0, sizeof (BROWSERENTRY)); // clear the new entry
 
+		strncpy(browserList[entryNum].filename, "..", MAXJOLIET);
+		
+		sprintf(browserList[entryNum].displayname, "Up One Level");
+		browserList[entryNum].isdir = 1; // flag this as a dir
+		entryNum++;
+	}
 
-        printf("entry->d_name = %s\r\n", entry->d_name);
+	while ((entry = readdir(dir))) {
+		if (strcmp(entry->d_name, ".") == 0)
+			continue;
 
-        BROWSERENTRY * newBrowserList = (BROWSERENTRY *) realloc(browserList, (entryNum + 1) * sizeof (BROWSERENTRY));
+		BROWSERENTRY * newBrowserList = (BROWSERENTRY *) realloc(browserList, (entryNum + 1) * sizeof (BROWSERENTRY));
 
-        if (!newBrowserList) // failed to allocate required memory
-        {
-            ResetBrowser();
-            entryNum = -1;
-            break;
-        } else {
-            browserList = newBrowserList;
-        }
-        memset(&(browserList[entryNum]), 0, sizeof (BROWSERENTRY)); // clear the new entry
+		if (!newBrowserList) // failed to allocate required memory
+		{
+			ResetBrowser();
+			entryNum = -1;
+			break;
+		} else {
+			browserList = newBrowserList;
+		}
+		memset(&(browserList[entryNum]), 0, sizeof (BROWSERENTRY)); // clear the new entry
 
-        strncpy(browserList[entryNum].filename, entry->d_name, MAXJOLIET);
+		strncpy(browserList[entryNum].filename, entry->d_name, MAXJOLIET);
 
-        //
-        ext = strrchr(entry->d_name, '.');
+		//
+		ext = strrchr(entry->d_name, '.');
 
-        if (strcmp(entry->d_name, "..") == 0) {
-            sprintf(browserList[entryNum].displayname, "Up One Level");
-            browserList[entryNum].isdir = 1; // flag this as a dir
-        } else if (extValid(ext) || entry->d_type == DT_DIR) {
-        //}else if(1){
-            strncpy(browserList[entryNum].displayname, entry->d_name, MAXDISPLAY); // crop name for display
+		if (strcmp(entry->d_name, "..") == 0) {
+			
+		} else if (extValid(ext) || entry->d_type == DT_DIR) {
+			//}else if(1){
+			strncpy(browserList[entryNum].displayname, entry->d_name, MAXDISPLAY); // crop name for display
 
-            if (entry->d_type == DT_DIR)
-                browserList[entryNum].isdir = 1; // flag this as a dir
-        } else {
-            continue;
-        }
+			if (entry->d_type == DT_DIR)
+				browserList[entryNum].isdir = 1; // flag this as a dir
+		} else {
+			continue;
+		}
 
+		entryNum++;
+	}
 
-        entryNum++;
-    }
+	// close directory
+	closedir(dir);
 
-    // close directory
-    closedir(dir);
+	// Sort the file list
+	qsort(browserList, entryNum, sizeof (BROWSERENTRY), FileSortCallback);
 
-    // Sort the file list
-    qsort(browserList, entryNum, sizeof (BROWSERENTRY), FileSortCallback);
-
-    browser.numEntries = entryNum;
-    return entryNum;
+	browser.numEntries = entryNum;
+	return entryNum;
 }
 
 /****************************************************************************
@@ -269,12 +279,12 @@ ParseDirectory() {
  * Update current directory and set new entry list if directory has changed
  ***************************************************************************/
 int BrowserChangeFolder() {
-    if (!UpdateDirName())
-        return -1;
+	if (!UpdateDirName())
+		return -1;
 
-    ParseDirectory();
+	ParseDirectory();
 
-    return browser.numEntries;
+	return browser.numEntries;
 }
 
 /****************************************************************************
@@ -282,10 +292,10 @@ int BrowserChangeFolder() {
  * Displays a list of files on the selected device
  ***************************************************************************/
 int BrowseDevice() {
-    sprintf(browser.dir, "/");
-    sprintf(rootdir, "usb:/");
-    ParseDirectory(); // Parse root directory
-    return browser.numEntries;
+	sprintf(browser.dir, "/");
+	sprintf(rootdir, "usb:/");
+	ParseDirectory(); // Parse root directory
+	return browser.numEntries;
 }
 
 /****************************************************************************
@@ -293,8 +303,8 @@ int BrowseDevice() {
  * Displays a list of files on the selected device
  ***************************************************************************/
 int BrowseDevice(const char * dir, const char * root) {
-    sprintf(browser.dir, dir);
-    sprintf(rootdir, root);
-    ParseDirectory(); // Parse root directory
-    return browser.numEntries;
+	sprintf(browser.dir, dir);
+	sprintf(rootdir, root);
+	ParseDirectory(); // Parse root directory
+	return browser.numEntries;
 }

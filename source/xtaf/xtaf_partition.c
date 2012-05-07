@@ -55,10 +55,9 @@ xtaf_partition_table partition_table[3] = {
 
 /** return the size of the file alocation table **/
 static uint32_t getFatSize(xtaf_partition_private *priv) {
-	struct _xtaf_partition_hdr_s * part_hdr = &priv->partition_hdr;
 
-	uint64_t file_system_size = priv->file_system_size;
-	uint32_t spc = part_hdr->sector_per_cluster; /* sectors per cluster */
+	uint64_t file_system_size = priv->numberOfSectors;
+	uint32_t spc = priv->sectorsPerCluster; /* sectors per cluster */
 
 	uint32_t numclusters = (uint32_t) (file_system_size / spc);
 	uint8_t fatmult = numclusters >= 0xfff4 ? sizeof (uint32_t) : sizeof (uint16_t);
@@ -72,19 +71,19 @@ static uint32_t getFatSize(xtaf_partition_private *priv) {
 
 void print_partition_information(struct xtaf_partition_private *partition) {
 	char magic[5];
-	memcpy(magic, (const char*) partition->partition_hdr.magic, 4);
+	memcpy(magic, (const char*) partition->magic, 4);
 	magic[4] = 0;
 
 	printf("\n\nPartition Information :\n");
 	printf("fat_file_size       =	%08x\n", partition->fat_file_size * XENON_DISK_SECTOR_SIZE);
 
 	printf("magic               =	%s\n", magic);
-	printf("id                  =	%08x\n", partition->partition_hdr.id);
-	printf("sector_per_cluster  =	%08x\n", partition->partition_hdr.sector_per_cluster);
+	printf("id                  =	%08x\n", partition->partitionId);
+	printf("sector_per_cluster  =	%08x\n", partition->sectorsPerCluster);
 
 	printf("fat_offset          =	%16lx\n", (partition->fat_offset + partition->partition_start_offset) * XENON_DISK_SECTOR_SIZE);
-	printf("root_cluster        =	%08x\n", partition->partition_hdr.root_cluster);
-	printf("clusters_size       =	%08x\n", partition->clusters_size);
+	printf("root_cluster        =	%08x\n", partition->rootDirCluster);
+	printf("clusters_size       =	%08x\n", partition->bytesPerCluster);
 	printf("root_offset         =	%16lx\n", (partition->root_offset + partition->partition_start_offset) * XENON_DISK_SECTOR_SIZE);
 	
 	
@@ -92,17 +91,21 @@ void print_partition_information(struct xtaf_partition_private *partition) {
 	printf("root_offset s       =%8x\n", (partition->root_offset + partition->partition_start_offset));
 }
 
-int xtaf_init_fs(struct xtaf_partition_private *part_info) {
-	struct _xtaf_partition_hdr_s * part_hdr = &part_info->partition_hdr;
+int xtaf_init_fs(struct xtaf_partition_private *partition) {
 
-	part_info->fat_file_size = getFatSize(part_info);
-	part_info->clusters_size = part_hdr->sector_per_cluster * XENON_DISK_SECTOR_SIZE;
-	part_info->fat_offset = 0x1000 / XENON_DISK_SECTOR_SIZE;
-	part_info->root_offset = part_info->fat_offset + part_info->fat_file_size;
-	part_info->extent_offset = 0;
-	part_info->current_sector = 0;
-
-	print_partition_information(part_info);
+	partition->fat_file_size = getFatSize(partition);
+	partition->bytesPerSector = XENON_DISK_SECTOR_SIZE;
+	partition->bytesPerCluster = partition->sectorsPerCluster* partition->bytesPerSector;
+	partition->fat_offset = 0x1000 / XENON_DISK_SECTOR_SIZE;
+	partition->root_offset = partition->fat_offset + partition->fat_file_size;
+	partition->extent_offset = 0;
+	partition->current_sector = 0;
+	partition->fatStart =  partition->fat_offset +  partition->partition_start_offset;
+	// ???
+	partition->rootDirStart = partition->fat_offset + partition->fat_file_size + partition->partition_start_offset;
+	partition->dataStart = partition->fat_offset + partition->fat_file_size + partition->partition_start_offset;
+	
+	print_partition_information(partition);
 
 	return 0;
 }
@@ -135,11 +138,11 @@ xtaf_partition_private * xtaf_mount(void * disc, uint32_t start_sector, uint32_t
 
 	partition->disc = disc;
 
-	partition->partition_number = partition_nbr;
+	partition->partitionNumber = partition_nbr;
 
 	partition->partition_start_offset = start_sector;
 
-	partition->file_system_size = num_sectors;
+	partition->numberOfSectors = num_sectors;
 
 	// Read the header
 	//err = ioread_sector(partition, sectorBuffer, 0, 1);
@@ -156,13 +159,17 @@ xtaf_partition_private * xtaf_mount(void * disc, uint32_t start_sector, uint32_t
 		
 		struct _xtaf_partition_hdr_s * p = (struct _xtaf_partition_hdr_s*) sectorBuffer;
 
+		
+		memcpy(partition->magic, p->magic, 4);
+		partition->partitionName = partition_table[partition_nbr].name;
+		
 		// Bswap partition header (for little endian cpu)
-		memcpy(partition->partition_hdr.magic, p->magic, 4);
-		partition->partition_hdr.id = host2be32(p->id);
-		partition->partition_hdr.root_cluster = host2be32(p->root_cluster);
-		partition->partition_hdr.sector_per_cluster = host2be32(p->sector_per_cluster);
-		partition->partition_name = partition_table[partition_nbr].name;
+		partition->partitionId = host2be32(p->id);
+		partition->sectorsPerCluster = host2be32(p->sector_per_cluster);
+		partition->rootDirCluster =host2be32(p->root_cluster);
+		
 		partition->found = 1;
+		
 		//return xtaf_init_fs(priv);
 		xtaf_init_fs(partition);
 	} else {

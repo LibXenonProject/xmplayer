@@ -16,21 +16,15 @@
 
 #include "ata.h"
 
-typedef struct {
-	uint32_t cluster;
-	sec_t sector;
-	int32_t byte;
-} FILE_POSITION;
+#define FILE_MAX_SIZE 4294967296
+#define CLUSTER_END 0xFFFFFFF8
 
 static inline uint32_t XTAF_clusterToSector(xtaf_partition_private* partition, uint32_t cluster) {
-	return ((cluster - 1) * partition->clusters_size) + partition->root_offset + partition->partition_start_offset;
+	return ((cluster - 1) * partition->bytesPerCluster) + partition->root_offset + partition->partition_start_offset;
 }
 
 static inline sec_t _clusterToSector(xtaf_partition_private* partition, uint32_t cluster) {
-	// sector = ((cluster - 1) * cluster_size) + partition->root_offset + partition->partition_start_offset;
-	return (cluster >= 1) ?
-			((cluster - 1) * (sec_t) partition->clusters_size) + partition->partition_start_offset + partition->root_offset :
-			partition->partition_start_offset + partition->root_offset;
+	return ((cluster - 1) * (sec_t)partition->sectorsPerCluster) + partition->dataStart;
 }
 
 static xtaf_partition_private* getPartitionFromPath(const char* path) {
@@ -45,290 +39,12 @@ static xtaf_partition_private* getPartitionFromPath(const char* path) {
 	return (xtaf_partition_private*) devops->deviceData;
 }
 
-/** read a file into a buffer **/
-ssize_t ffxtaf_read_r(struct _reent *r, int fd, char *ptr, size_t len) {
-	xtaf_file_private* file = (xtaf_file_private*) fd;
-	xtaf_partition_private * partition = NULL;
-	CACHE* cache;
-	FILE_POSITION position;
-	uint32_t tempNextCluster;
-	uint32_t bytesPerSector = XENON_DISK_SECTOR_SIZE;
-	uint32_t bytesPerCluster;
-	uint32_t sectorsPerCluster;
-	unsigned int tempVar;
-	size_t remain;
-	bool flagNoError = true;
-
-	// Short circuit cases where len is 0 (or less)
-	if (len <= 0) {
-		return 0;
-	}
-
-	// Make sure we can actually read from the file
-	if (file == NULL) {
-		r->_errno = EBADF;
-		return -1;
-	}
-
-	partition = file->partition;
-	sectorsPerCluster = partition->clusters_size;
-	bytesPerCluster = sectorsPerCluster * bytesPerSector;
-	// Don't try to read if the read pointer is past the end of file
-	if (file->pos >= file->finfo.file_size) {
-		r->_errno = EOVERFLOW;
-		return 0;
-	}
-
-	// Don't read past end of file
-	if (len + file->pos > file->finfo.file_size) {
-		r->_errno = EOVERFLOW;
-		len = file->finfo.file_size - file->pos;
-	}
-
-	remain = len;
-	//position.byte = file->pos;
-	
-	position.sector = file->pos / XENON_DISK_SECTOR_SIZE;
-	position.byte  = file->pos % XENON_DISK_SECTOR_SIZE;
-	position.cluster = file->finfo.starting_cluster;
-	
-	cache = file->partition->cache;
-
-	// Align to sector
-	tempVar = bytesPerSector - position.byte;
-	if (tempVar > remain) {
-		tempVar = remain;
-	}
-
-	if ((tempVar < bytesPerSector) && flagNoError) {
-		_XTAF_cache_readPartialSector(cache, ptr, _clusterToSector(partition, position.cluster) + position.sector,
-				position.byte, tempVar);
-
-		remain -= tempVar;
-		ptr += tempVar;
-
-		position.byte += tempVar;
-		if (position.byte >= bytesPerSector) {
-			position.byte = 0;
-			position.sector++;
-		}
-	}
-
-	// align to cluster
-	// tempVar is number of sectors to read
-	if (remain > (sectorsPerCluster - position.sector) * bytesPerSector) {
-		tempVar = sectorsPerCluster - position.sector;
-	} else {
-		tempVar = remain / bytesPerSector;
-	}
-
-	if ((tempVar > 0) && flagNoError) {
-		if (!_XTAF_cache_readSectors(cache, _clusterToSector(partition, position.cluster) + position.sector,
-				tempVar, ptr)) {
-			flagNoError = false;
-			r->_errno = EIO;
-		} else {
-			ptr += tempVar * bytesPerSector;
-			remain -= tempVar * bytesPerSector;
-			position.sector += tempVar;
-		}
-	}
-
-	// Move onto next cluster
-	// It should get to here without reading anything if a cluster is due to be allocated
-	if ((position.sector >= sectorsPerCluster) && flagNoError) {
-		tempNextCluster = xfat_get_next_cluster(partition, position.cluster);
-		/*
-				if ((remain == 0) && (tempNextCluster == CLUSTER_EOF)) {
-					position.sector = sectorsPerCluster;
-				} else if (!_FAT_fat_isValidCluster(partition, tempNextCluster)) {
-					r->_errno = EIO;
-					flagNoError = false;
-				} else {
-		 */
-		position.sector = 0;
-		position.cluster = tempNextCluster;
-		// }
-	}
-
-	// Read in whole clusters, contiguous blocks at a time
-	while ((remain >= bytesPerCluster) && flagNoError) {
-		uint32_t chunkEnd;
-		uint32_t nextChunkStart = position.cluster;
-		size_t chunkSize = 0;
-
-		do {
-			chunkEnd = nextChunkStart;
-			nextChunkStart = xfat_get_next_cluster(partition, chunkEnd);
-			chunkSize += bytesPerCluster;
-		} while ((nextChunkStart == chunkEnd + 1) &&
-#ifdef LIMIT_SECTORS
-				(chunkSize + partition->bytesPerCluster <= LIMIT_SECTORS * partition->bytesPerSector) &&
-#endif
-				(chunkSize + bytesPerCluster <= remain));
-
-		if (!_XTAF_cache_readSectors(cache, _clusterToSector(partition, position.cluster),
-				chunkSize / bytesPerSector, ptr)) {
-			flagNoError = false;
-			r->_errno = EIO;
-			break;
-		}
-		ptr += chunkSize;
-		remain -= chunkSize;
-
-		// Advance to next cluster
-/*
-		if ((remain == 0) && (nextChunkStart == CLUSTER_EOF)) {
-			position.sector = partition->sectorsPerCluster;
-			position.cluster = chunkEnd;
-		} else if (!_FAT_fat_isValidCluster(partition, nextChunkStart)) {
-			r->_errno = EIO;
-			flagNoError = false;
-		} else {
-*/
-			position.sector = 0;
-			position.cluster = nextChunkStart;
-//		}
-	}
-
-	// Read remaining sectors
-	tempVar = remain / bytesPerSector; // Number of sectors left
-	if ((tempVar > 0) && flagNoError) {
-		if (!_XTAF_cache_readSectors(cache, _clusterToSector(partition, position.cluster),
-				tempVar, ptr)) {
-			flagNoError = false;
-			r->_errno = EIO;
-		} else {
-			ptr += tempVar * bytesPerSector;
-			remain -= tempVar * bytesPerSector;
-			position.sector += tempVar;
-		}
-	}
-
-	// Last remaining sector
-	// Check if anything is left
-	if ((remain > 0) && flagNoError) {
-		_XTAF_cache_readPartialSector(cache, ptr,
-				_clusterToSector(partition, position.cluster) + position.sector, 0, remain);
-		position.byte += remain;
-		remain = 0;
-	}
-
-	// Length read is the wanted length minus the stuff not read
-	len = len - remain;
-
-	// Update file information
-	//file->pos = position;
-	file->pos += len;
-	return len;
-}
-
-/** read a file into a buffer **/
-ssize_t xtaf_read_r(struct _reent *r, int fd, char *data, size_t len) {
-	xtaf_file_private* file = (xtaf_file_private*) fd;
-	xtaf_partition_private * partition = NULL;
-
-	uint64_t sector = 0;
-	uint64_t copied = 0;
-	uint64_t cluster_size = 0;
-	uint32_t cluster = 0;
-	uint32_t max = 0;
-	uint32_t seek_sector = 0;
-	uint32_t seek_pos = 0;
-	uint32_t count;
-
-	// Short circuit cases where len is 0 (or less)
-	if (len <= 0) {
-		return 0;
-	}
-	
-	if((len + file->pos )> file->finfo.file_size){
-		len = file->finfo.file_size -  file->pos;
-	}
-
-	// Make sure we can actually read from the file
-	if (file == NULL) {
-		r->_errno = EBADF;
-		return -1;
-	}
-
-	partition = file->partition;
-
-	sector = partition->current_sector + partition->root_offset + partition->partition_start_offset;
-	copied = 0;
-	cluster_size = partition->clusters_size;
-	cluster = file->finfo.starting_cluster;
-
-	max = cluster_size;
-
-	seek_sector = file->pos / XENON_DISK_SECTOR_SIZE;
-	seek_pos = file->pos % XENON_DISK_SECTOR_SIZE;
-
-
-	sector += seek_sector;
-
-	if (data == NULL) {
-
-		return -1;
-	}
-	if (len == 0) {
-		return -1;
-	}
-
-	// Parse each dir entry
-	while (len) {
-		uint32_t n = ((max)<(len) ? (uint32_t) (max) : (len));
-		
-		xprintf("xtaf_read_file - offset : %lx\r\n", (sector * 0x200) + seek_pos);
-
-		if(n == cluster_size && seek_pos == 0){
-			bool read_err;			
-			_XTAF_cache_readSectors(partition->cache, sector, partition->partition_hdr.sector_per_cluster,  data + copied );
-			copied+=cluster_size;
-		}
-		else{
-			// lazy way
-			count = (n / XENON_DISK_SECTOR_SIZE) + 1;
-			
-			while (count) {
-				uint32_t ssize = ((XENON_DISK_SECTOR_SIZE)<(n) ? (uint32_t) (XENON_DISK_SECTOR_SIZE) : (n));
-				bool read_err;
-
-				read_err = _XTAF_cache_readPartialSector(partition->cache, data + copied, sector, seek_pos, ssize);
-				if (read_err == false) {
-					printf("read err\r\n");
-				}
-				count--;
-				sector++;
-				copied += ssize;
-				/* aligned */
-				seek_pos = 0;
-			}
-		}
-
-
-		// for next loop
-		cluster = xfat_get_next_cluster(partition, cluster);
-		sector = ((cluster - 1) * cluster_size) + partition->root_offset + partition->partition_start_offset;
-		//sector = ((cluster - 1) * cluster_size) + partition->root_offset +  partition->partition_start_offset;
-
-		len -= n;
-		file->pos += n;
-
-		xprintf("xtaf_read_file : n %llx\r\n", n);
-	}
-
-	xprintf("xtaf_read_file : red %llx\r\n", copied);
-
-	return copied;
-}
-
 /** build a date time **/
 static inline time_t xtaf_build_time(uint16_t date, uint32_t time) {
 	return 0;
 }
 
-off_t xtaf_seek_r(struct _reent *r, int fd, off_t pos, int dir) {
+off_t ___xtaf_seek_r(struct _reent *r, int fd, off_t pos, int dir) {
 	xtaf_file_private* file = (xtaf_file_private*) fd;
 	off_t newPosition;
 
@@ -343,10 +59,10 @@ off_t xtaf_seek_r(struct _reent *r, int fd, off_t pos, int dir) {
 			newPosition = pos;
 			break;
 		case SEEK_CUR:
-			newPosition = (off_t) file->pos + pos;
+			newPosition = (off_t) file->currentPosition + pos;
 			break;
 		case SEEK_END:
-			newPosition = (off_t) file->pos + pos;
+			newPosition = (off_t) file->currentPosition + pos;
 			break;
 		default:
 			r->_errno = EINVAL;
@@ -359,10 +75,106 @@ off_t xtaf_seek_r(struct _reent *r, int fd, off_t pos, int dir) {
 	}
 
 	// Save position
-	file->pos = newPosition;
+	file->currentPosition = newPosition;
 
 	return newPosition;
 }
+
+
+off_t xtaf_seek_r (struct _reent *r, int fd, off_t pos, int dir) {
+	xtaf_file_private* file = (xtaf_file_private*)  fd;
+	xtaf_partition_private* partition;
+	uint32_t cluster, nextCluster;
+	int clusCount;
+	off_t newPosition;
+	uint32_t position;
+
+	if (file == NULL)	 {
+		// invalid file
+		r->_errno = EBADF;
+		return -1;
+	}
+
+	partition = file->partition;
+
+	switch (dir) {
+		case SEEK_SET:
+			newPosition = pos;
+			break;
+		case SEEK_CUR:
+			newPosition = (off_t)file->currentPosition + pos;
+			break;
+		case SEEK_END:
+			newPosition = (off_t)file->filesize + pos;
+			break;
+		default:
+			r->_errno = EINVAL;
+			return -1;
+	}
+
+	if ((pos > 0) && (newPosition < 0)) {
+		r->_errno = EOVERFLOW;
+		return -1;
+	}
+
+	// newPosition can only be larger than the FILE_MAX_SIZE on platforms where
+	// off_t is larger than 32 bits.
+	if (newPosition < 0 || ((sizeof(newPosition) > 4) && newPosition > (off_t)FILE_MAX_SIZE)) {
+		r->_errno = EINVAL;
+		return -1;
+	}
+
+	position = (uint32_t)newPosition;
+
+	// Only change the read/write position if it is within the bounds of the current filesize,
+	// or at the very edge of the file
+	if (position <= file->filesize) {
+		// Calculate where the correct cluster is
+		// how many clusters from start of file
+		clusCount = position / partition->bytesPerCluster;
+		cluster = file->startCluster;
+		if (position >= file->currentPosition) {
+			// start from current cluster
+			int currentCount = file->currentPosition / partition->bytesPerCluster;
+			if (file->rwPosition.sector == partition->sectorsPerCluster) {
+				currentCount--;
+			}
+			clusCount -= currentCount;
+			cluster = file->rwPosition.cluster;
+		}
+		// Calculate the sector and byte of the current position,
+		// and store them
+		file->rwPosition.sector = (position % partition->bytesPerCluster) / partition->bytesPerSector;
+		file->rwPosition.byte = position % partition->bytesPerSector;
+
+		nextCluster = xfat_get_next_cluster (partition, cluster);
+		while ((clusCount > 0) && (nextCluster != CLUSTER_END)) {
+			clusCount--;
+			cluster = nextCluster;
+			nextCluster = xfat_get_next_cluster (partition, cluster);
+		}
+
+		// Check if ran out of clusters and it needs to allocate a new one
+		if (clusCount > 0) {
+			if ((clusCount == 1) && (file->filesize == position) && (file->rwPosition.sector == 0)) {
+				// Set flag to allocate a new cluster
+				file->rwPosition.sector = partition->sectorsPerCluster;
+				file->rwPosition.byte = 0;
+			} else {
+				r->_errno = EINVAL;
+				return -1;
+			}
+		}
+
+		file->rwPosition.cluster = cluster;
+	}
+
+	// Save position
+	file->currentPosition = position;
+
+	return position;
+}
+
 
 int xtaf_fstat_r(struct _reent *r, int fd, struct stat *st) {
 	xtaf_file_private* file = (xtaf_file_private*) fd;
@@ -376,15 +188,15 @@ int xtaf_fstat_r(struct _reent *r, int fd, struct stat *st) {
 
 	partition = file->partition;
 
-	st->st_ino = (ino_t) (file->first_cluster); // The file serial number is the start cluster
-	st->st_size = file->finfo.file_size;
-	st->st_blksize = partition->clusters_size; // Prefered file I/O block size
-	st->st_blocks = (st->st_size + partition->clusters_size - 1) / partition->clusters_size; // File size in blocks
+	st->st_ino = (ino_t) (file->startCluster); // The file serial number is the start cluster
+	st->st_size = file->filesize;
+	st->st_blksize = partition->bytesPerCluster; // Prefered file I/O block size
+	st->st_blocks = (st->st_size + partition->bytesPerCluster - 1) / partition->bytesPerCluster; // File size in blocks
 
-	st->st_mode = file->finfo.flags;
-	st->st_atime = xtaf_build_time(file->finfo.access_date, file->finfo.access_time);
-	st->st_ctime = xtaf_build_time(file->finfo.creation_date, file->finfo.creation_time);
-	st->st_mtime = xtaf_build_time(file->finfo.update_date, file->finfo.update_time);
+	st->st_mode = file->entryInfo.flags;
+	st->st_atime = xtaf_build_time(file->entryInfo.access_date, file->entryInfo.access_time);
+	st->st_ctime = xtaf_build_time(file->entryInfo.creation_date, file->entryInfo.creation_time);
+	st->st_mtime = xtaf_build_time(file->entryInfo.update_date, file->entryInfo.update_time);
 
 	return 0;
 }
@@ -427,7 +239,7 @@ int xtaf_open_r(struct _reent *r, void * filestruct, const char *name, int flags
 		memset(pCtx->fat_name, 0, 0x2A);
 	 */
 	memset(file_private, 0, sizeof (xtaf_file_private));
-	memset(&file_private->finfo, 0, sizeof (struct _xtaf_directory_s));
+	memset(&file_private->entryInfo, 0, sizeof (struct _xtaf_directory_s));
 
 	file_private->partition = partition;
 
@@ -439,27 +251,25 @@ int xtaf_open_r(struct _reent *r, void * filestruct, const char *name, int flags
 
 	strcpy(tmp_name, name);
 
-	while (1) {
-		err = xtaf_parse(file_private, tmp_name);
-		if (err > 0) {
-			switch (err) {
-				case 2:
-				{
-					// folder found
-					continue;
-				}
-				case 1:
-				{
-					// file found
-					file_private->pos = 0;
-					return file_private;
-				}
-			}
-		} else {
-			break;
+		//err = xtaf_parse(file_private, tmp_name);
+	
+	err = xtaf_directory_entryFromPath(partition,&file_private->entryInfo,name,NULL);
+	if(err==1){
+		if(file_private->entryInfo.flags & XTAF_DIR_FLAGS){
+			r->_errno = EISDIR;
+			return -1;
 		}
+		
+		file_private->filesize = file_private->entryInfo.file_size;
+		file_private->startCluster = file_private->entryInfo.starting_cluster;
+		
+		file_private->currentPosition = 0;
+		file_private->rwPosition.cluster = file_private->startCluster;
+		
+		return (int)file_private;
 	}
-
+		
+	r->_errno = ENOENT;
 	return -1;
 };
 
@@ -495,3 +305,184 @@ int xtaf_link_r(struct _reent *r, const char *existing, const char *newLink) {
 	r->_errno = ENOTSUP;
 	return -1;
 }
+
+ssize_t xtaf_read_r (struct _reent *r, int fd, char *ptr, size_t len) {
+	xtaf_file_private* file = (xtaf_file_private*)  fd;
+	xtaf_partition_private* partition;
+	CACHE* cache;
+	FILE_POSITION position;
+	uint32_t tempNextCluster;
+	unsigned int tempVar;
+	size_t remain;
+	bool flagNoError = true;
+
+	// Short circuit cases where len is 0 (or less)
+	if (len <= 0) {
+		return 0;
+	}
+
+	// Make sure we can actually read from the file
+	if (file == NULL) {
+		r->_errno = EBADF;
+		return -1;
+	}
+
+	partition = file->partition;
+
+	// Don't try to read if the read pointer is past the end of file
+	if (file->currentPosition >= file->filesize) {
+		r->_errno = EOVERFLOW;
+		return 0;
+	}
+
+	// Don't read past end of file
+	if (len + file->currentPosition > file->filesize) {
+		r->_errno = EOVERFLOW;
+		len = file->filesize - file->currentPosition;
+	}
+
+	remain = len;
+	position = file->rwPosition;
+	cache = file->partition->cache;
+
+	// Align to sector
+	tempVar = partition->bytesPerSector - position.byte;
+	if (tempVar > remain) {
+		tempVar = remain;
+	}
+
+	if ((tempVar < partition->bytesPerSector) && flagNoError)
+	{
+		_XTAF_cache_readPartialSector ( cache, ptr, _clusterToSector (partition, position.cluster) + position.sector,
+			position.byte, tempVar);
+
+		remain -= tempVar;
+		ptr += tempVar;
+
+		position.byte += tempVar;
+		if (position.byte >= partition->bytesPerSector) {
+			position.byte = 0;
+			position.sector++;
+		}
+	}
+
+	// align to cluster
+	// tempVar is number of sectors to read
+	if (remain > (partition->sectorsPerCluster - position.sector) * partition->bytesPerSector) {
+		tempVar = partition->sectorsPerCluster - position.sector;
+	} else {
+		tempVar = remain / partition->bytesPerSector;
+	}
+
+	if ((tempVar > 0) && flagNoError) {
+		if (! _XTAF_cache_readSectors (cache, _clusterToSector (partition, position.cluster) + position.sector,
+			tempVar, ptr))
+		{
+			flagNoError = false;
+			r->_errno = EIO;
+		} else {
+			ptr += tempVar * partition->bytesPerSector;
+			remain -= tempVar * partition->bytesPerSector;
+			position.sector += tempVar;
+		}
+	}
+
+	// Move onto next cluster
+	// It should get to here without reading anything if a cluster is due to be allocated
+	if ((position.sector >= partition->sectorsPerCluster) && flagNoError) {
+		tempNextCluster = xfat_get_next_cluster(partition, position.cluster);
+
+		if ((remain == 0) && (tempNextCluster == CLUSTER_END)) {
+			position.sector = partition->sectorsPerCluster;
+		} 
+/*
+		else if (!_FAT_fat_isValidCluster(partition, tempNextCluster)) {
+			r->_errno = EIO;
+			flagNoError = false;
+		} 
+*/
+		else
+		{
+			position.sector = 0;
+			position.cluster = tempNextCluster;
+		}
+	}
+
+	// Read in whole clusters, contiguous blocks at a time
+	while ((remain >= partition->bytesPerCluster) && flagNoError) {
+		uint32_t chunkEnd;
+		uint32_t nextChunkStart = position.cluster;
+		size_t chunkSize = 0;
+
+		do {
+			chunkEnd = nextChunkStart;
+			nextChunkStart = xfat_get_next_cluster (partition, chunkEnd);
+			chunkSize += partition->bytesPerCluster;
+		} while ((nextChunkStart == chunkEnd + 1) &&
+#ifdef LIMIT_SECTORS
+		 	(chunkSize + partition->bytesPerCluster <= LIMIT_SECTORS * partition->bytesPerSector) &&
+#endif
+			(chunkSize + partition->bytesPerCluster <= remain));
+
+		if (!_XTAF_cache_readSectors (cache, _clusterToSector (partition, position.cluster),
+				chunkSize / partition->bytesPerSector, ptr))
+		{
+			flagNoError = false;
+			r->_errno = EIO;
+			break;
+		}
+		ptr += chunkSize;
+		remain -= chunkSize;
+
+		// Advance to next cluster
+		if ((remain == 0) && (nextChunkStart == CLUSTER_END)) {
+			position.sector = partition->sectorsPerCluster;
+			position.cluster = chunkEnd;
+		} 
+/*
+		else if (!_FAT_fat_isValidCluster(partition, nextChunkStart)) {
+			r->_errno = EIO;
+			flagNoError = false;
+		}
+*/
+		else 
+		{
+			position.sector = 0;
+			position.cluster = nextChunkStart;
+		}
+	}
+
+	// Read remaining sectors
+	tempVar = remain / partition->bytesPerSector; // Number of sectors left
+	if ((tempVar > 0) && flagNoError) {
+		if (!_XTAF_cache_readSectors (cache, _clusterToSector (partition, position.cluster),
+			tempVar, ptr))
+		{
+			flagNoError = false;
+			r->_errno = EIO;
+		} else {
+			ptr += tempVar * partition->bytesPerSector;
+			remain -= tempVar * partition->bytesPerSector;
+			position.sector += tempVar;
+		}
+	}
+
+	// Last remaining sector
+	// Check if anything is left
+	if ((remain > 0) && flagNoError) {
+		_XTAF_cache_readPartialSector ( cache, ptr,
+			_clusterToSector (partition, position.cluster) + position.sector, 0, remain);
+		position.byte += remain;
+		remain = 0;
+	}
+
+	// Length read is the wanted length minus the stuff not read
+	len = len - remain;
+
+	// Update file information
+	file->rwPosition = position;
+	file->currentPosition += len;
+
+	return len;
+}
+

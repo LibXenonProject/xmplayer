@@ -150,9 +150,11 @@ bool FILE_FN_MEDIUM_READSECTORS(sec_t sector, sec_t numSectors, void* buffer) {
 
 	fseek(fd, offset, SEEK_SET);
 	fread(buffer, 1, numSectors*XENON_DISK_SECTOR_SIZE, fd);
+/*
 	printf("reading %d sectors at %08x\r\n", numSectors, sector);
 	printf("offset : %16lx\r\n", offset);
 	printf("disk size : %4x\r\n", XENON_DISK_SECTOR_SIZE);
+*/
 	return true;
 };
 

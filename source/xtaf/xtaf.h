@@ -9,12 +9,16 @@
 #define	xprintf(...)
 #endif
 
+#define XTAF_DIR_FLAGS 0x10
+
 //#define xprintf(...) printf(__VA_ARGS__)
 
 #define DEFAULT_CACHE_PAGES 4
 #define DEFAULT_SECTORS_PAGE 64
 
 #define MAX_PARTITION_PER_HDD 4
+
+//#define CLUSTER_EOF 0xFFF
 
 /**
  * Partition header
@@ -56,6 +60,24 @@ struct _xtaf_directory_s {
 	uint16_t update_time;
 };
 
+typedef struct {
+	uint32_t cluster;
+	sec_t    sector;
+	int32_t  offset;
+} DIR_ENTRY_POSITION;
+
+typedef struct {
+	uint32_t   cluster;
+	sec_t sector;
+	int32_t   byte;
+} FILE_POSITION;
+
+typedef struct xtaf_entry{
+	DIR_ENTRY_POSITION dataStart;
+	// @todo remove it...
+	struct _xtaf_directory_s _xtaf_dir;
+} xtaf_entry;
+
 /**
  * stat
  **/
@@ -72,16 +94,14 @@ typedef struct xtaf_stat {
  */
 typedef struct xtaf_partition_private {
 	/* which partition */
-	uint8_t partition_number;
-
-	/* information from hdd */
-	struct _xtaf_partition_hdr_s partition_hdr;
+	uint8_t partitionNumber;
 
 	uint64_t partition_start_offset;
-
-	uint32_t clusters_size;
-
-	uint32_t bytes_per_cluster;
+	sec_t dataStart; // ??
+	sec_t rootDirStart;// same ??
+	
+	sec_t fatStart;
+	
 	uint32_t root_entries;
 	uint32_t clusters;
 
@@ -94,14 +114,23 @@ typedef struct xtaf_partition_private {
 	uint32_t extent_len;
 	uint32_t extent_next_cluster;
 
-	uint64_t file_system_size;
+	uint32_t numberOfSectors;
+	uint32_t sectorsPerCluster;
+	uint32_t bytesPerCluster;
+	uint32_t bytesPerSector;
+	uint32_t rootDirCluster;
+	
+	uint32_t cwdCluster;
+	
+	
+	
+	unsigned char magic[4]; //32
+	
+	uint32_t partitionId;
 	
 	uint32_t current_sector;
 
-	char * partition_name;
-	
-	/** @todo **/
-	void * device;
+	char * partitionName;
 	
 	const DISC_INTERFACE* disc;
 	CACHE*                cache;
@@ -113,7 +142,11 @@ typedef struct xtaf_partition_private {
 
 
 typedef struct{
-	struct _xtaf_directory_s finfo;
+	struct _xtaf_directory_s entryInfo;
+	
+	/* first cluster */
+	uint32_t startCluster;
+	uint32_t filesize;
 	
 	/* which partition */
 	xtaf_partition_private * partition;
@@ -127,13 +160,17 @@ typedef struct xtaf_file_private {
 	xtaf_partition_private * partition;
 
 	/* first cluster */
-	uint32_t first_cluster;
+	uint32_t startCluster;
+	uint32_t filesize;
 
 	/* position in stream */
-	uint64_t pos;
+	uint64_t currentPosition;
 
 	/* information from hdd */
-	struct _xtaf_directory_s finfo;
+	FILE_POSITION        rwPosition;
+	FILE_POSITION        appendPosition;
+	
+	struct _xtaf_directory_s entryInfo;
 
 	/* busy flags*/
 	uint8_t busy;
@@ -189,7 +226,7 @@ ssize_t _xtaf_read_r(struct _reent *r, int fd, unsigned char *data, size_t len);
 int xtaf_close_r (struct _reent *r, int fd);
 int xtaf_stat_r(struct _reent *r, const char *path, struct stat *st);
 
-
+int xtaf_directory_entryFromPath(xtaf_partition_private* partition, struct _xtaf_directory_s * entry,const char* path, const char* pathEnd) ;
 
 DIR_ITER* xtaf_diropen_r(struct _reent *r, DIR_ITER *dirState, const char *path);
 int xtaf_dirnext_r(struct _reent *r, DIR_ITER *dirState, char *filename, struct stat *st) ;
