@@ -680,6 +680,7 @@ public:
     //!\param s Font size
     //!\param c Font color
     GuiText(const char * t, int s, XeColor c);
+    GuiText(const char * t, int s, uint32_t c);
     //!\overload
     //!Assumes SetPresets() has been called to setup preferred text attributes
     //!\param t Text

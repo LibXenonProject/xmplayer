@@ -59,6 +59,37 @@ GuiText::GuiText(const char * t, int s, XeColor c) {
     xe_texture = NULL;
 }
 
+
+GuiText::GuiText(const char * t, int s, uint32_t u32c) {
+XeColor c;
+c.lcol = u32c;
+    origText = NULL;
+    text = NULL;
+    size = s;
+    color = c;
+    alpha = c.a;
+    style = FTGX_JUSTIFY_CENTER | FTGX_ALIGN_MIDDLE;
+    maxWidth = 0;
+    wrap = false;
+    textDynNum = 0;
+    textScroll = SCROLL_NONE;
+    textScrollPos = 0;
+    textScrollInitialDelay = TEXT_SCROLL_INITIAL_DELAY;
+    textScrollDelay = TEXT_SCROLL_DELAY;
+
+    alignmentHor = ALIGN_CENTRE;
+    alignmentVert = ALIGN_MIDDLE;
+
+    if (t) {
+        origText = strdup(t);
+        text = charToWideChar(gettext(t));
+    }
+
+    for (int i = 0; i < 20; i++)
+        textDyn[i] = NULL;
+
+    xe_texture = NULL;
+}
 /**
  * Constructor for the GuiText class, uses presets
  */
