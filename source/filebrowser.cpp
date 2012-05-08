@@ -43,33 +43,6 @@ void CleanupPath(char * path) {
     path[j] = 0;
 }
 
-extern char * getRootDir();
-extern char foldername[1024];
-bool MakeFilePath(char filepath[], int type, char * filename, int filenum) {
-    char file[512];
-    char ext[4];
-    char temppath[MAXPATHLEN];
-    char foldername[512];
-
-    sprintf(foldername,"states");
-    sprintf(ext, "gpz");
-    if (filenum >= -1) {
-        if (filenum == -1)
-            sprintf(file, "%s.%s", filename, ext);
-        else if (filenum == 0)
-            sprintf(file, "%s Auto.%s", filename, ext);
-        else
-            sprintf(file, "%s %i.%s", filename, filenum, ext);
-    } else {
-        sprintf(file, "%s", filename);
-    }
-    sprintf(temppath, "%s/%s/%s",getRootDir(), foldername, file);
-
-    CleanupPath(temppath); // cleanup path
-    snprintf(filepath, MAXPATHLEN, "%s", temppath);
-    return true;
-}
-
 /****************************************************************************
  * ResetBrowser()
  * Clears the file browser memory, and allocates one initial entry
@@ -213,7 +186,8 @@ ParseDirectory() {
 	int entryNum = 0;
 
 	// always add an .. entry
-	if(1){
+	if(strcmp(browser.dir,"/")){
+	
 		BROWSERENTRY * newBrowserList = (BROWSERENTRY *) realloc(browserList, (entryNum + 1) * sizeof (BROWSERENTRY));
 		
 		browserList = newBrowserList;
@@ -228,7 +202,7 @@ ParseDirectory() {
 	}
 
 	while ((entry = readdir(dir))) {
-		if (strcmp(entry->d_name, ".") == 0)
+		if( (strcmp(entry->d_name, ".") == 0) || (strcmp(entry->d_name, "..") == 0))
 			continue;
 
 		BROWSERENTRY * newBrowserList = (BROWSERENTRY *) realloc(browserList, (entryNum + 1) * sizeof (BROWSERENTRY));
@@ -247,16 +221,15 @@ ParseDirectory() {
 
 		//
 		ext = strrchr(entry->d_name, '.');
-
-		if (strcmp(entry->d_name, "..") == 0) {
-			
-		} else if (extValid(ext) || entry->d_type == DT_DIR) {
+		if (extValid(ext) || entry->d_type == DT_DIR) {
 			//}else if(1){
 			strncpy(browserList[entryNum].displayname, entry->d_name, MAXDISPLAY); // crop name for display
 
 			if (entry->d_type == DT_DIR)
 				browserList[entryNum].isdir = 1; // flag this as a dir
-		} else {
+		} 
+		else 
+		{
 			continue;
 		}
 

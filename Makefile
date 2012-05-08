@@ -25,7 +25,9 @@ MPLAYER         :=      $(CURDIR)/mplayer
 # options for code generation
 #---------------------------------------------------------------------------------
 
-OPTIFLAGS =  -O4 -flto -fuse-linker-plugin -mcpu=cell -mtune=cell -fno-tree-vectorize -fno-tree-slp-vectorize -ftree-vectorizer-verbose=1 
+# lto
+#OPTIFLAGS =  -O4 -flto -fuse-linker-plugin -mcpu=cell -mtune=cell -fno-tree-vectorize -fno-tree-slp-vectorize -ftree-vectorizer-verbose=1 
+OPTIFLAGS =  -mcpu=cell -mtune=cell -fno-tree-vectorize -fno-tree-slp-vectorize -ftree-vectorizer-verbose=1 
 
 ASFLAGS	= -Wa,$(INCLUDE) -Wa,-a32
 CFLAGS	= $(OPTIFLAGS) -Wall $(MACHDEP) $(INCLUDE)

@@ -12,6 +12,8 @@
 #include "../w_input.h"
 #include "../gui_debug.h"
 
+#if 0
+
 /**
  * Constructor for the GuiOptionBrowser class.
  */
@@ -276,3 +278,4 @@ void GuiOptionBrowser::Update(GuiTrigger * t) {
     if (updateCB)
         updateCB(this);
 }
+#endif

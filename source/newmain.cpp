@@ -12,6 +12,7 @@
 #include <usb/usbmain.h>
 #include <diskio/ata.h>
 #include <xenon_soc/xenon_power.h>
+#include <sys/iosupport.h>
 
 #include <time/time.h>
 
@@ -60,6 +61,27 @@
 #include "mplayer_func.h"
 #include "folder_video_icon_png.h"
 
+
+#define GuiCreateButton(name,text,_png,_png_over) \
+	GuiImageData image_data_ ## name(_png); \
+	GuiImage image_##name(&image_data_##name); \
+	GuiImageData image_data_ ## name ## _over(_png_over); \
+	GuiImage image_##name##_over(&image_data_##name##_over); \
+	GuiButton button_##name(image_data_##name.GetWidth(), image_data_##name.GetHeight()); \
+	button_##name.SetAlignment(ALIGN_LEFT, ALIGN_MIDDLE); \
+	GuiText txt_##name(text, 26, white); \
+	txt_##name.SetWrap(true, image_data_##name.GetWidth() - 30); \
+	button_##name.SetLabel(&txt_##name); \
+	button_##name.SetImage(&image_##name); \
+	button_##name.SetImageOver(&image_##name##_over); \
+	button_##name.SetEffectGrow(); 
+
+
+char * root_dev = NULL;
+
+static int device_list_size = 0;
+static char device_list[STD_MAX][10];
+
 enum {
 	MENU_BACK = -1,
 	HOME_PAGE = 1,
@@ -78,9 +100,6 @@ static GuiWindow * mainWindow = NULL;
 static GuiTrigger * trigA;
 
 static XenosSurface * logo = NULL;
-
-static GuiImage * home_left = NULL;
-static GuiImage * home_main_function_frame_bg = NULL;
 
 static GuiImage * video_osd_progress_bar_front = NULL;
 static GuiImage * video_osd_progress_bar_back = NULL;
@@ -128,25 +147,35 @@ static GuiImage * decoration_keyicon = NULL;
 static GuiImage * decoration_keyicon_ex = NULL;
 static GuiImage * decoration_wrongkeyicon = NULL;
 
+static GuiList * home_list_v = NULL;
+static GuiList * home_list_h = NULL;
+static GuiImage * home_list_h_selector = NULL;
+static GuiText * home_curitem = NULL;
+static char * home_curitem_text = NULL;
+
+static GuiImage * home_left = NULL;
+static GuiImage * home_main_function_frame_bg = NULL;
+
+static GuiImage * home_hdd_icon[STD_MAX];
+static GuiImage * home_no_hdd_icon[STD_MAX];
+static GuiButton * home_device_btn[STD_MAX];
+
+static GuiButton * home_video_btn = NULL;
+static GuiButton * home_music_btn = NULL;
+static GuiButton * home_photo_btn = NULL;
+static GuiButton * home_setting_btn = NULL;
+
+static GuiImage * home_video_img = NULL;
+static GuiImage * home_music_img = NULL;
+static GuiImage * home_photo_img = NULL;
+static GuiImage * home_setting_img = NULL;
+
+
 static char mplayer_filename[2048];
 
 static int last_menu;
 
 static int current_menu = HOME_PAGE;
-
-#define GuiCreateButton(name,text,_png,_png_over) \
-	GuiImageData image_data_ ## name(_png); \
-	GuiImage image_##name(&image_data_##name); \
-    GuiImageData image_data_ ## name ## _over(_png_over); \
-    GuiImage image_##name##_over(&image_data_##name##_over); \
-    GuiButton button_##name(image_data_##name.GetWidth(), image_data_##name.GetHeight()); \
-    button_##name.SetAlignment(ALIGN_LEFT, ALIGN_MIDDLE); \
-	GuiText txt_##name(text, 26, white); \
-    txt_##name.SetWrap(true, image_data_##name.GetWidth() - 30); \
-    button_##name.SetLabel(&txt_##name); \
-    button_##name.SetImage(&image_##name); \
-    button_##name.SetImageOver(&image_##name##_over); \
-    button_##name.SetEffectGrow(); 
 
 static void update() {
 	UpdatePads();
@@ -169,7 +198,50 @@ static void loadRessources() {
 	home_main_function_frame_bg = new GuiImage(new GuiImageData(home_main_function_frame_bg_png));
 
 	home_main_function_frame_bg->SetPosition(0, 341);
+		
+	home_list_v= new GuiList(200, 440);
+	home_list_v->SetPosition(305, 140);
+	home_list_v->SetCount(4);
+	home_list_v->SetCenter(3);
+	
+	home_list_h = new GuiList(465, 110, 'H');
+	home_list_h->SetPosition(560, 360);
+	home_list_h->SetCount(3);
+	home_list_h->SetCenter(2);
+	
+	
+	home_list_h_selector = new GuiImage(new GuiImageData(home_horizontal_select_bar_png));
+	home_list_h_selector->SetPosition(715, 350);
 
+	// <text text="@@curitem" x="550" y="610" w="650" h="40" align="right" fontsize="32" textcolor="0xffffff"/>
+	home_curitem = new GuiText("@@curitem",32,white);
+	home_curitem->SetPosition(550,610);	
+	home_curitem->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+	
+	for(int i = 0;i<device_list_size;i++){
+		home_hdd_icon[i] = new GuiImage(new GuiImageData(home_hdd_sub_icon_n_png));
+		home_no_hdd_icon[i] = new GuiImage(new GuiImageData(home_nohdd_sub_icon_n_png));
+		
+		home_device_btn[i] = new GuiButton(home_hdd_icon[i]->GetWidth(), home_hdd_icon[i]->GetHeight());
+		home_device_btn[i]->SetIcon(home_hdd_icon[i]);
+		home_device_btn[i]->SetEffectGrow(); 
+	}
+	
+	
+	home_video_img = new GuiImage(new GuiImageData(home_video_sm_icon_n_png));
+	home_music_img = new GuiImage(new GuiImageData(home_music_sm_icon_n_png));
+	home_photo_img = new GuiImage(new GuiImageData(home_photo_sm_icon_n_png));
+	home_setting_img = new GuiImage(new GuiImageData(home_settings_sm_icon_n_png));
+	
+	home_video_btn = new GuiButton(home_video_img->GetWidth(), home_video_img->GetHeight());
+	home_music_btn = new GuiButton(home_music_img->GetWidth(), home_music_img->GetHeight());
+	home_photo_btn = new GuiButton(home_photo_img->GetWidth(), home_photo_img->GetHeight());
+	home_setting_btn = new GuiButton(home_setting_img->GetWidth(), home_setting_img->GetHeight());
+	
+	home_video_btn->SetIcon(home_video_img);
+	home_music_btn->SetIcon(home_music_img);
+	home_photo_btn->SetIcon(home_photo_img);
+	home_setting_btn->SetIcon(home_setting_img);
 
 	// Browser
 	browser_photo_icon = new GuiImageData(browser_photo_icon_f_png);
@@ -267,93 +339,6 @@ extern "C" double playerGetElapsed();
 extern "C" double playerGetDuration();
 extern "C" const char * playerGetFilename();
 extern "C" int playerGetStatus();
-
-static void osd() {
-	// <image image="image/video_control_frame_bg.png" x="149" y="597" w="983" h="73" disable="@@progress_disable" bg="1"/>
-	video_osd_bg->SetPosition(149, 597);
-
-	// <progress_bar name="video_time_bar" x="262" y="652" w="858" h="4" pb_back_img="image/video_control_time_played_line_bg.png" pb_front_img="image/Video_Player_time_played_line_n_01.png" pb_point_img="image/slideshow_player_time_played_line_mark.png" pb_delay="500" disable="@@progress_disable"/>
-	video_osd_progress_bar_front->SetPosition(262, 652);
-	//video_osd_progress_bar_back->SetPosition(262,652);
-	video_osd_progress_bar_back->SetPosition(262, 652);
-
-	//<text text="@@info_filename" x="264" y="621" w="644" h="24" fontsize="22" textcolor="0xffffff" speed="1" delay="2" align="left" auto_translate="1"/>
-	//<text text="@@info_cur_time" x="943" y="625" w="80" h="20" fontsize="18" textcolor="0xffffff" align="left"/>
-	//<text text="@@info_duration" x="1023" y="625" w="95" h="20" fontsize="18" textcolor="0x0096fa" align="left"/>
-
-	XeColor blue;
-	blue.a = 0xff;
-	blue.r = 0x00;
-	blue.g = 0x96;
-	blue.b = 0xfa;
-
-	XeColor white;
-	white.lcol = 0xFFFFFFFF;
-
-	GuiText info_filename("info_filename", 22, white);
-	GuiText info_cur_time("info_cur_time", 18, white);
-	GuiText info_duration("info_duration", 18, blue);
-
-	info_filename.SetPosition(264, 621);
-	info_cur_time.SetPosition(943, 625);
-	info_duration.SetPosition(1023, 625);
-	//	
-	info_filename.SetAlignment(ALIGN_LEFT, ALIGN_TOP);
-	info_cur_time.SetAlignment(ALIGN_LEFT, ALIGN_TOP);
-	info_duration.SetAlignment(ALIGN_LEFT, ALIGN_TOP);
-
-	// order
-	mainWindow->Append(video_osd_bg);
-	mainWindow->Append(video_osd_progress_bar_back);
-	mainWindow->Append(video_osd_progress_bar_front);
-
-	mainWindow->Append(&info_filename);
-	mainWindow->Append(&info_cur_time);
-	mainWindow->Append(&info_duration);
-
-	int bar_width = video_osd_progress_bar_front->GetWidth();
-
-	// change image width
-	struct XenosSurface * img = video_osd_progress_bar_front->GetImage();
-
-	info_filename.SetText(playerGetFilename());
-
-	char duration[10];
-	char cur_time[10];
-
-
-
-	while (1) {
-		float pourcents = (float) (playerGetElapsed()*100) / (float) playerGetDuration();
-		float width = (float) bar_width * (pourcents / 100.0);
-		img->width = width;
-
-		//		printf("t%d\r\n", playerGetElapsed());
-		//		printf("p%f\r\n", pourcents);
-		//		printf("i%d\r\n", img->width);
-		//
-		//		sprintf(duration, "%d", playerGetDuration());
-		//		sprintf(cur_time, "%d", playerGetElapsed());
-
-		info_cur_time.SetText(cur_time);
-		info_duration.SetText(duration);
-
-		video_osd_progress_bar_front->SetImage(img, img->width, img->height);
-
-		update();
-	}
-
-	img->width = bar_width;
-
-	mainWindow->Remove(video_osd_bg);
-	mainWindow->Remove(video_osd_progress_bar_front);
-	mainWindow->Remove(video_osd_progress_bar_back);
-
-
-	mainWindow->Remove(&info_filename);
-	mainWindow->Remove(&info_cur_time);
-	mainWindow->Remove(&info_duration);
-}
 
 static int osd_duration_bar_width;
 static int osd_show = 0;
@@ -698,63 +683,44 @@ static void Browser(const char * title, const char * root) {
 	mainWindow->Remove(&menuBtn);
 }
 
-
-static char dev_uda[]="uda:/";
-static char dev_xf0[]="xf0:/";
-static char dev_xf1[]="xf1:/";
-
-char * root_dev = NULL;
-
 static void HomePage() {
 	mainWindow->Append(home_left);
 	mainWindow->Append(home_main_function_frame_bg);
 
 	// <wgt_mlist name="VERT_MLIST" image="" x="305" y="140" w="200" h="440" fontsize="26" duration="250" motion_type="decrease" textcolor="0xffffff" align="hcenter" direction="vert" itemcount="4" extra_index="3" extra_len="0"/>
 
-	GuiList * list_v = new GuiList(200, 440);
-	list_v->SetPosition(305, 140);
-	list_v->SetCount(4);
-	list_v->SetCenter(3);
+	home_list_v->SetPosition(305, 140);
+	home_list_v->SetCount(4);
+	home_list_v->SetCenter(3);
 
-	GuiCreateButton(video, "", home_video_sm_icon_n_png, home_video_sm_icon_n_png);
-	GuiCreateButton(audio, "", home_music_sm_icon_n_png, home_music_sm_icon_n_png);
-	GuiCreateButton(photo, "", home_photo_sm_icon_n_png, home_photo_sm_icon_n_png);
-	GuiCreateButton(param, "", home_settings_sm_icon_n_png, home_settings_sm_icon_n_png);
+	home_list_v->Append(home_video_btn);
+	home_list_v->Append(home_music_btn);
+	home_list_v->Append(home_photo_btn);
+	home_list_v->Append(home_setting_btn);
 
-	list_v->Append(&button_video);
-	list_v->Append(&button_audio);
-	list_v->Append(&button_photo);
-	list_v->Append(&button_param);
-
-	mainWindow->Append(list_v);
+	mainWindow->Append(home_list_v);
 
 	// <wgt_mlist name="HORI_MLIST" x="560" y="360" w="465" h="110" fontsize="20" duration="250" motion_type="decrease" textcolor="0xffffff" align="hcenter" direction="hori" itemcount="3"/>
 
-	GuiList * list_h = new GuiList(465, 110, 'H');
-	list_h->SetPosition(560, 360);
-	list_h->SetCount(3);
-	list_h->SetCenter(2);
+	home_list_h->SetPosition(560, 360);
+	home_list_h->SetCount(3);
+	home_list_h->SetCenter(2);
+	
+	for(int i = 0;i<device_list_size;i++){		
+		home_list_h->Append(home_device_btn[i]);
+	}
+	
 
-	GuiCreateButton(usb, "", home_hdd_sub_icon_n_png, home_hdd_sub_icon_n_png);
-	GuiCreateButton(more1, "", home_nohdd_sub_icon_n_png, home_nohdd_sub_icon_n_png);
-	GuiCreateButton(more2, "", home_nohdd_sub_icon_n_png, home_nohdd_sub_icon_n_png);
-	GuiCreateButton(more3, "", home_nohdd_sub_icon_n_png, home_nohdd_sub_icon_n_png);
-	GuiCreateButton(more4, "", home_nohdd_sub_icon_n_png, home_nohdd_sub_icon_n_png);
+	home_list_h->SetFocus(1);
 
-	list_h->Append(&button_usb);
-	list_h->Append(&button_more1);
-	list_h->Append(&button_more2);
-	list_h->Append(&button_more3);
-	list_h->Append(&button_more4);
+	home_list_h->SetSelector(home_list_h_selector);
 
-	list_h->SetFocus(1);
-
-	GuiImageData *selector_png = new GuiImageData(home_horizontal_select_bar_png);
-	GuiImage * selector = new GuiImage(selector_png);
-	selector->SetPosition(715, 350);
-	list_h->SetSelector(selector);
-
-	mainWindow->Append(list_h);
+	mainWindow->Append(home_list_h);
+	
+	// <text text="@@curitem" x="550" y="610" w="650" h="40" align="right" fontsize="32" textcolor="0xffffff"/>
+	home_curitem->SetPosition(550,610);
+	
+	//mainWindow->Append(home_curitem);
 
 
 	GuiTrigger trigMenu;
@@ -772,7 +738,7 @@ static void HomePage() {
 
 	while (current_menu == HOME_PAGE) {
 		if (menuBtn.GetState() == STATE_CLICKED) {
-			switch (list_v->GetValue()) {
+			switch (home_list_v->GetValue()) {
 				case 0:
 					current_menu = BROWSE_VIDEO;
 					break;
@@ -790,27 +756,24 @@ static void HomePage() {
 		update();
 	}
 	
-	if(list_h->GetValue()==1){
-		root_dev = dev_xf0;
-	}
-	else if(list_h->GetValue()==2){
-		root_dev = dev_xf1;
-	}
-	else{
-		root_dev = dev_uda;
-	}
-
+	root_dev = device_list[home_list_h->GetValue()];
+	
 	mainWindow->Remove(&menuBtn);
-	mainWindow->Remove(list_h);
-	mainWindow->Remove(list_v);
+	mainWindow->Remove(home_list_h);
+	mainWindow->Remove(home_list_v);
 	mainWindow->Remove(home_left);
 	mainWindow->Remove(home_main_function_frame_bg);
-
-	delete list_v;
-	delete list_h;
-
-	delete selector_png;
-	delete selector;
+	
+	for(int i = 0;i<device_list_size;i++){		
+		home_list_h->Remove(home_device_btn[i]);
+	}
+	
+	home_list_v->Remove(home_video_btn);
+	home_list_v->Remove(home_music_btn);
+	home_list_v->Remove(home_photo_btn);
+	home_list_v->Remove(home_setting_btn);
+	
+	//mainWindow->Remove(home_curitem);
 }
 
 static void do_mplayer(char * filename) {
@@ -862,14 +825,8 @@ void MenuMplayer() {
 
 static int need_gui = 1;
 
-static void gui_loop() {
-	
-	
+static void gui_loop() {	
 	while (need_gui) {
-		//last_menu = current_menu;
-		if (current_menu == OSD) {
-			osd();
-		}
 		if (current_menu == HOME_PAGE) {
 			HomePage();
 		} else if (current_menu == BROWSE_VIDEO) {
@@ -884,6 +841,20 @@ static void gui_loop() {
 			current_menu = HOME_PAGE;
 		}
 	}
+}
+
+static void findDevices()
+{	
+	for(int i = 3;i<STD_MAX;i++){
+		if(devoptab_list[i]->structSize){
+			//strcpy(device_list[device_list_size],devoptab_list[i]->name);			
+			sprintf(device_list[device_list_size],"%s:/",devoptab_list[i]->name);			
+			printf("findDevices : %s\r\n",device_list[device_list_size]);			
+			device_list_size++;
+		}
+	}
+	
+	root_dev = device_list[0];
 }
 
 extern "C" void init_xtaf(); 
@@ -916,8 +887,10 @@ int main(int argc, char** argv) {
 	xenon_ata_init();
 	usb_do_poll();
 	fatInitDefault();
-	
+	// xtaf
 	init_xtaf();
+	
+	findDevices();
 
 	// pads
 	SetupPads();
@@ -928,8 +901,6 @@ int main(int argc, char** argv) {
 
 	current_menu = HOME_PAGE;
 	
-	root_dev = dev_uda;
-
 	//current_menu = OSD;
 	while (1) {
 		// never exit !!	
