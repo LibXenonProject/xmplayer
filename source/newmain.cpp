@@ -56,6 +56,33 @@
 #include "../build/folder_photo_icon_png.h"
 #include "../build/browser_video_icon_f_png.h"
 
+// osd 3
+#include "../build/options_menu_audio_channel_icon_f_png.h"
+#include "../build/options_menu_audio_channel_icon_n_png.h"
+#include "../build/options_menu_bg_x5_png.h"
+#include "../build/options_menu_bg_x6_png.h"
+#include "../build/options_menu_bg_x7_png.h"
+#include "../build/options_menu_info_icon_f_png.h"
+#include "../build/options_menu_info_icon_n_png.h"
+#include "../build/options_menu_pan_icon_d_png.h"
+#include "../build/options_menu_pan_icon_f_png.h"
+#include "../build/options_menu_pan_icon_n_png.h"
+#include "../build/options_menu_repeat_icon_d_png.h"
+#include "../build/options_menu_repeat_icon_f_png.h"
+#include "../build/options_menu_repeat_icon_n_png.h"
+#include "../build/options_menu_subtitle_icon_d_png.h"
+#include "../build/options_menu_subtitle_icon_f_png.h"
+#include "../build/options_menu_subtitle_icon_n_png.h"
+#include "../build/options_menu_zoomin_icon_f_png.h"
+#include "../build/options_menu_zoomin_icon_n_png.h"
+#include "../build/options_menu_zoomout_icon_f_png.h"
+#include "../build/options_menu_zoomout_icon_n_png.h"
+
+#include "../build/options_menu_bg_x5_png.h"
+#include "../build/options_menu_bg_x6_png.h"
+#include "../build/options_menu_bg_x7_png.h"
+
+
 #include "filebrowser.h"
 
 #include "mplayer_func.h"
@@ -66,6 +93,7 @@ char * root_dev = NULL;
 static int device_list_size = 0;
 static char device_list[STD_MAX][10];
 
+// used for osd (from getch2-xenon.c)
 enum {
 	MENU_BACK = -1,
 	HOME_PAGE = 1,
@@ -152,6 +180,46 @@ static GuiImage * home_music_img = NULL;
 static GuiImage * home_photo_img = NULL;
 static GuiImage * home_setting_img = NULL;
 
+// osd level 3
+static GuiWindow * osd_options_window = NULL;
+static GuiImage * osd_options_background = NULL;
+
+static GuiImage * osd_options_bg_x5 = NULL;
+static GuiImage * osd_options_bg_x6 = NULL;
+static GuiImage * osd_options_bg_x7 = NULL;
+
+static GuiImage * osd_options_menu_audio_channel_icon_f = NULL;
+static GuiImage * osd_options_menu_audio_channel_icon_n = NULL;
+
+static GuiImage * options_menu_info_icon_f = NULL;
+static GuiImage * options_menu_info_icon_n = NULL;
+
+static GuiImage * options_menu_pan_icon_f = NULL;
+static GuiImage * options_menu_pan_icon_n = NULL;
+
+static GuiImage * options_menu_repeat_icon_d = NULL;
+static GuiImage * options_menu_repeat_icon_f = NULL;
+static GuiImage * options_menu_repeat_icon_n = NULL;
+
+static GuiImage * options_menu_subtitle_icon_d = NULL;
+static GuiImage * options_menu_subtitle_icon_f = NULL;
+static GuiImage * options_menu_subtitle_icon_n = NULL;
+
+static GuiImage * options_menu_zoomin_icon_f = NULL;
+static GuiImage * options_menu_zoomin_icon_n = NULL;
+
+static GuiImage * options_menu_zoomout_icon_f = NULL;
+static GuiImage * options_menu_zoomout_icon_n = NULL;
+
+static GuiButton * osd_options_menu_audio_channel_btn = NULL;
+static GuiButton * osd_options_menu_info_btn = NULL;
+static GuiButton * osd_options_menu_pan_btn = NULL;
+static GuiButton * osd_options_menu_repeat_btn = NULL;
+static GuiButton * osd_options_menu_subtitle_btn = NULL;
+static GuiButton * osd_options_menu_zoomin_btn = NULL;
+static GuiButton * osd_options_menu_zoomout_btn = NULL;
+
+
 static GuiFileBrowser * gui_browser = NULL;
 static GuiText * gui_browser_title = NULL;
 
@@ -162,12 +230,60 @@ static int last_menu;
 
 static int current_menu = HOME_PAGE;
 
+
 static void update() {
 	UpdatePads();
 	mainWindow->Draw();
 	Menu_Render();
 	for (int i = 0; i < 4; i++) {
 		mainWindow->Update(&userInput[i]);
+	}
+}
+
+// Callback for osd options
+static int osd_display_info = 0;
+
+static void osd_options_pan_callback(void * data){
+	GuiButton *button = (GuiButton *)data;
+	if(button->GetState() == STATE_CLICKED)
+	{
+		playerSwitchFullscreen();
+		button->ResetState();
+	}
+}
+
+static void osd_options_vsync_callback(void * data){
+	GuiButton *button = (GuiButton *)data;
+	if(button->GetState() == STATE_CLICKED)
+	{
+		playerSwitchVsync();
+		button->ResetState();
+	}
+}
+
+static void osd_options_loop_callback(void * data){
+	GuiButton *button = (GuiButton *)data;
+	if(button->GetState() == STATE_CLICKED)
+	{
+		button->ResetState();
+	}
+}
+
+
+static void osd_options_info_callback(void * data){
+	GuiButton *button = (GuiButton *)data;
+	if(button->GetState() == STATE_CLICKED)
+	{
+		osd_display_info=!osd_display_info;
+		button->ResetState();		
+	}
+}
+
+static void osd_options_audio_callback(void * data){
+	GuiButton *button = (GuiButton *)data;
+	if(button->GetState() == STATE_CLICKED)
+	{
+		button->ResetState();		
 	}
 }
 
@@ -271,7 +387,7 @@ static void loadOsdRessources() { // OSD
 
 	video_osd_info_filename = new GuiText("info_filename", 22, 0xffffffff);
 	video_osd_info_cur_time = new GuiText("info_cur_time", 18, 0xffffffff);
-	video_osd_info_duration = new GuiText("info_duration", 18, 0xff0096fa);
+	video_osd_info_duration = new GuiText("info_duration", 18, 0xfffa9600);
 
 	/** video infobar **/
 	video_osd_infobar_text_filename = new GuiText("info_bar_filename", 18, 0xffffffff);
@@ -364,6 +480,106 @@ static void loadOsdRessources() { // OSD
 	video_osd_prev->SetPosition(202, 613);
 	video_osd_rewind->SetPosition(202, 613);
 	video_osd_forward->SetPosition(202, 613);
+	
+	
+	/** osd level 3**/
+	// <image image="image/Video_player_options_menu_bg_x8.png" x="380" y="0" w="520" h="91" bg="1" disable="@@disable-options_bg"/>
+	osd_options_window = new GuiWindow(520,91);
+	osd_options_window->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+	osd_options_window->SetPosition(380,0);
+		
+	osd_options_bg_x5 = new GuiImage(new GuiImageData(options_menu_bg_x5_png));
+	osd_options_bg_x6 = new GuiImage(new GuiImageData(options_menu_bg_x6_png));
+	osd_options_bg_x7 = new GuiImage(new GuiImageData(options_menu_bg_x7_png));
+
+	osd_options_menu_audio_channel_icon_f =  new GuiImage(new GuiImageData(options_menu_audio_channel_icon_f_png));
+	osd_options_menu_audio_channel_icon_n = new GuiImage(new GuiImageData(options_menu_audio_channel_icon_n_png));
+
+	options_menu_info_icon_f = new GuiImage(new GuiImageData(options_menu_info_icon_f_png));
+	options_menu_info_icon_n = new GuiImage(new GuiImageData(options_menu_info_icon_n_png));
+
+	options_menu_pan_icon_f =  new GuiImage(new GuiImageData(options_menu_pan_icon_f_png));
+	options_menu_pan_icon_n =  new GuiImage(new GuiImageData(options_menu_pan_icon_n_png));
+
+	options_menu_repeat_icon_d =  new GuiImage(new GuiImageData(options_menu_repeat_icon_d_png));
+	options_menu_repeat_icon_f =  new GuiImage(new GuiImageData(options_menu_repeat_icon_f_png));
+	options_menu_repeat_icon_n =  new GuiImage(new GuiImageData(options_menu_repeat_icon_n_png));
+
+	options_menu_subtitle_icon_d = new GuiImage(new GuiImageData(options_menu_subtitle_icon_d_png));
+	options_menu_subtitle_icon_f = new GuiImage(new GuiImageData(options_menu_subtitle_icon_f_png));
+	options_menu_subtitle_icon_n = new GuiImage(new GuiImageData(options_menu_subtitle_icon_n_png));
+
+	options_menu_zoomin_icon_f = new GuiImage(new GuiImageData(options_menu_zoomin_icon_f_png));
+	options_menu_zoomin_icon_n = new GuiImage(new GuiImageData(options_menu_zoomin_icon_n_png));
+
+	options_menu_zoomout_icon_f = new GuiImage(new GuiImageData(options_menu_zoomout_icon_f_png));
+	options_menu_zoomout_icon_n = new GuiImage(new GuiImageData(options_menu_zoomout_icon_n_png));
+
+	osd_options_menu_audio_channel_btn = new GuiButton(osd_options_menu_audio_channel_icon_f->GetWidth(),osd_options_menu_audio_channel_icon_f->GetHeight());
+	osd_options_menu_info_btn = new GuiButton(options_menu_info_icon_f->GetWidth(),options_menu_info_icon_f->GetHeight());
+	osd_options_menu_pan_btn = new GuiButton(options_menu_pan_icon_f->GetWidth(),options_menu_pan_icon_f->GetHeight());
+	osd_options_menu_repeat_btn = new GuiButton(options_menu_repeat_icon_d->GetWidth(),options_menu_repeat_icon_d->GetHeight());
+	osd_options_menu_subtitle_btn = new GuiButton(options_menu_subtitle_icon_f->GetWidth(),options_menu_subtitle_icon_f->GetHeight());
+	osd_options_menu_zoomin_btn = new GuiButton(options_menu_zoomin_icon_f->GetWidth(),options_menu_zoomin_icon_f->GetHeight());
+	osd_options_menu_zoomout_btn = new GuiButton(options_menu_zoomout_icon_f->GetWidth(),options_menu_zoomout_icon_f->GetHeight());
+
+	// image
+	osd_options_menu_audio_channel_btn->SetImage(osd_options_menu_audio_channel_icon_n);
+	osd_options_menu_audio_channel_btn->SetImageOver(osd_options_menu_audio_channel_icon_f);
+		
+	osd_options_menu_info_btn->SetImage(options_menu_info_icon_n);
+	osd_options_menu_info_btn->SetImageOver(options_menu_info_icon_f);
+	
+	osd_options_menu_pan_btn->SetImage(options_menu_pan_icon_n);
+	osd_options_menu_pan_btn->SetImageOver(options_menu_pan_icon_f);
+	
+	osd_options_menu_repeat_btn->SetImage(options_menu_repeat_icon_n);
+	osd_options_menu_repeat_btn->SetImageOver(options_menu_repeat_icon_f);
+	
+	osd_options_menu_subtitle_btn->SetImage(options_menu_subtitle_icon_n);
+	osd_options_menu_subtitle_btn->SetImageOver(options_menu_subtitle_icon_f);
+	
+	osd_options_menu_zoomin_btn->SetImage(options_menu_zoomin_icon_n);
+	osd_options_menu_zoomin_btn->SetImageOver(options_menu_zoomin_icon_f);	
+	
+	osd_options_menu_zoomout_btn->SetImage(options_menu_zoomout_icon_n);
+	osd_options_menu_zoomout_btn->SetImageOver(options_menu_zoomout_icon_f);
+	
+	// callback
+	osd_options_menu_info_btn->SetUpdateCallback(osd_options_info_callback);
+	osd_options_menu_pan_btn->SetUpdateCallback(osd_options_pan_callback);
+	osd_options_menu_repeat_btn->SetUpdateCallback(osd_options_loop_callback);
+	osd_options_menu_audio_channel_btn->SetUpdateCallback(osd_options_audio_callback);
+	
+	osd_options_window->Append(osd_options_bg_x7);
+	osd_options_window->Append(osd_options_menu_audio_channel_btn);
+	osd_options_window->Append(osd_options_menu_info_btn);
+	osd_options_window->Append(osd_options_menu_pan_btn);
+	osd_options_window->Append(osd_options_menu_repeat_btn);
+	osd_options_window->Append(osd_options_menu_subtitle_btn);
+	osd_options_window->Append(osd_options_menu_zoomin_btn);
+	osd_options_window->Append(osd_options_menu_zoomout_btn);
+	
+	// position lazy way
+	int nb_options = 8;
+	int options_x = 25;
+	int options_y = 30;
+	int options_w = 470/nb_options;
+	
+	// position
+	for(u32 i = 1;i<osd_options_window->GetSize();i++){
+		// 0 is bg
+		{
+		osd_options_window->GetGuiElementAt(i)->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+		osd_options_window->GetGuiElementAt(i)->SetPosition(options_x,options_y);
+		osd_options_window->GetGuiElementAt(i)->SetTrigger(trigA);
+		osd_options_window->SetSelectable(false);
+		osd_options_window->SetHoldable(false);
+		osd_options_window->SetEffectGrow();
+		options_x+=options_w;
+		}
+	}
+
 }
 
 /** to do **/
@@ -385,11 +601,6 @@ static void common_setup() {
 
 	loadRessources();
 }
-
-extern "C" double playerGetElapsed();
-extern "C" double playerGetDuration();
-extern "C" const char * playerGetFilename();
-extern "C" int playerGetStatus();
 
 static int osd_duration_bar_width;
 static int osd_show = 0;
@@ -444,6 +655,9 @@ extern "C" void mplayer_osd_open() {
 		mainWindow->Append(video_osd_prev);
 		mainWindow->Append(video_osd_rewind);
 		mainWindow->Append(video_osd_forward);
+		
+		//
+		mainWindow->Append(osd_options_window);
 
 		// remove bg
 		mainWindow->Remove(bgImg);
@@ -487,9 +701,12 @@ extern "C" void mplayer_osd_close() {
 		mainWindow->Remove(video_osd_infobar_text_bitrate);
 		mainWindow->Remove(video_osd_infobar_info_bitrate);
 
+		mainWindow->Remove(osd_options_window);
+		
 		// reapply bg
 		mainWindow->Append(bgImg);
 	}
+	osd_display_info = 0;
 	osd_show = 0;
 }
 
@@ -529,7 +746,7 @@ extern "C" void mplayer_osd_draw(int level) {
 		video_osd_forward->SetVisible(false);
 		video_osd_next->SetVisible(false);
 		video_osd_prev->SetVisible(false);
-
+		
 		switch (playerGetStatus()) {
 			case 1:
 				video_osd_play->SetVisible(true);
@@ -556,14 +773,24 @@ extern "C" void mplayer_osd_draw(int level) {
 			default:
 				break;
 		}
-
-		if (level == 3) {
-			// show file info
+		
+		// show file info			
+		if(osd_display_info){
 			video_osd_infobar->SetVisible(true);
-
-		} else {
+		}
+		else{			
 			video_osd_infobar->SetVisible(false);
 		}
+
+		if (level == 3) {
+			osd_options_window->SetVisible(true);
+		} else {
+			osd_options_window->SetVisible(false);
+			osd_display_info = 0;
+		}
+	}
+	else{
+		osd_display_info = 0;
 	}
 
 	UpdatePads();

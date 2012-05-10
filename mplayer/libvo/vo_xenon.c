@@ -361,6 +361,7 @@ static void ShowFPS(void) {
 extern int osd_level;
 extern unsigned int osd_visible;
 static int last_osd_level = 0;
+extern int gui_input_use;
 
 static void flip_page(void) {
 
@@ -424,8 +425,15 @@ static void flip_page(void) {
 		{
 			// only display for a number of frame
 			if(osd_visible)
-				mplayer_osd_draw(2);			
+				mplayer_osd_draw(2);
 		}
+	}
+	
+	if(osd_level==3){
+		gui_input_use = 1;
+	}
+	else{
+		gui_input_use = 0;
 	}
 
 	// Resolve

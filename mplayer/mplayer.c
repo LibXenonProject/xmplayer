@@ -4142,3 +4142,48 @@ int playerGetStatus(){
 const char * playetGetMetaData(metadata_t type){
 	return get_metadata(type);
 }
+
+void playerSwitchAudio(){
+	static int iparam = 1;
+	demuxer_t *demuxer = mpctx_get_demuxer(mpctx);
+	int audio_strem_size = 0;
+	int i;
+	for (i = 0; i < MAX_A_STREAMS; i++){
+		if (demuxer->a_streams[i]) {
+			audio_strem_size++;
+		}
+	}
+
+	 if(iparam>=audio_strem_size)
+		 iparam = 0;
+
+	mp_property_do("switch_audio",M_PROPERTY_SET,&iparam,mpctx);
+}
+
+void playerSwitchSubtitle(){
+	static int iparam = 1;
+	 int global_sub_size = mpctx_get_global_sub_size(mpctx);
+	 
+	 if(iparam>=global_sub_size)
+		 iparam = 0;
+	 
+	mp_property_do("sub",M_PROPERTY_SET,&iparam,mpctx);
+}
+
+void playerSwitchFullscreen(){
+	mpctx->video_out->control(VOCTRL_FULLSCREEN,NULL);
+}
+void playerSwitchVsync(){
+	vo_vsync = !vo_vsync;
+}
+int playerSwitchLoop(){
+	if(mpctx->loop_times<0){
+		// inf
+		mpctx->loop_times=0;
+	}
+	else{
+		// off
+		mpctx->loop_times = -1;
+	}
+}
+

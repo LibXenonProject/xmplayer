@@ -67,6 +67,8 @@ int screen_height = 24;
 char * erase_to_end_of_line = NULL;
 
 static int getch2_status = 0;
+int gui_input_use = 0;
+
 
 void get_screen_size(void) {
 	
@@ -127,48 +129,52 @@ static int getch2_internal(void) {
 		struct controller_data_s d_ctrl;
 
 		get_controller_down(&d_ctrl, i);
+		
+		if(gui_input_use==0){
+			if (d_ctrl.left)
+				key = KEY_LEFT;
+			if (d_ctrl.right)
+				key = KEY_RIGHT;
+			if (d_ctrl.up)
+				key = KEY_UP;
+			if (d_ctrl.down)
+				key = KEY_DOWN;
 
-		if (d_ctrl.left)
-			key = KEY_LEFT;
-		if (d_ctrl.right)
-			key = KEY_RIGHT;
-		if (d_ctrl.up)
-			key = KEY_UP;
-		if (d_ctrl.down)
-			key = KEY_DOWN;
+			if (d_ctrl.start)
+				key = KEY_ENTER;
+			if (d_ctrl.select)
+				key = ' ';
+			if (d_ctrl.logo)
+				key = 'X';
 
+			if (d_ctrl.a)
+				key = 'a';
+			if (d_ctrl.b)
+				key = 'b';
+			if (d_ctrl.x)
+				key = 'x';
 
-		if (d_ctrl.start)
-			key = KEY_ENTER;
-		if (d_ctrl.select)
-			key = ' ';
-		if (d_ctrl.logo)
-			key = 'X';
+			if (d_ctrl.rb)
+				key = 'r';
+			if (d_ctrl.lb)
+				key = 'l';
 
-		if (d_ctrl.a)
-			key = 'a';
-		if (d_ctrl.b)
-			key = 'b';
-		if (d_ctrl.x)
-			key = 'x';
+			if (ctrl[i].rt>100)
+				key = 'R';
+			if (ctrl[i].lt>100)
+				key = 'L';
+
+			// kill => next !!!
+			if(ctrl[i].rb&ctrl[i].lb){
+				//key = 'q';
+				//key = 'n';
+				exit(0);
+			}
+		}
+		
+		// Always
 		if (d_ctrl.y)
 			key = 'y';
-
-		if (d_ctrl.rb)
-			key = 'r';
-		if (d_ctrl.lb)
-			key = 'l';
-		
-		if (ctrl[i].rt>100)
-			key = 'R';
-		if (ctrl[i].lt>100)
-			key = 'L';
-		
-		// kill => next !!!
-		if(ctrl[i].rb&ctrl[i].lb){
-			//key = 'q';
-			key = 'n';
-		}
 
 		lasttime = curtime;
 	}

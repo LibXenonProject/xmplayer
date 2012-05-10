@@ -12,7 +12,7 @@
 extern "C" {
 #endif
 	// force to relink if mplayer or ffmpeg changed
-#include "../mplayer/version.h"
+	#include "../mplayer/version.h"
 
 	enum metadata_s {
 		/* common info */
@@ -57,13 +57,23 @@ extern "C" {
 	// return to mplayer
 	// newmain.cpp
 	void mplayer_return_to_player();
+	
+	void playerSwitchAudio();
+	void playerSwitchSubtitle();
+	void playerSwitchFullscreen();
+	void playerSwitchVsync();
+	
+	double playerGetElapsed();
+	double playerGetDuration();
+	const char * playerGetFilename();
+	int playerGetStatus();
+	
+	const char * playetGetMetaData(metadata_t type);
 
 
 	void mplayer_osd_close();
 	void mplayer_osd_draw(int level);
 	void mplayer_osd_open();
-
-	const char * playetGetMetaData(metadata_t type);
 
 #ifdef	__cplusplus
 }
