@@ -21,13 +21,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/time.h>
-
+#include <malloc.h>
+#include <string.h>
 #include "config.h"
 #include "libaf/af_format.h"
 #include "audio_out.h"
 #include "audio_out_internal.h"
 
 #include <xenon_sound/sound.h>
+#include <pci/io.h>
+#include <ppc/cache.h>
 
 static const ao_info_t info = {
 	"Xenon audio output",
@@ -36,7 +39,11 @@ static const ao_info_t info = {
 	"#libxenon"
 };
 
+#define XENON_BUFFER_SIZE 64*1024
+
 LIBAO_EXTERN(xenon)
+
+static unsigned char * xenon_sound_buffer = NULL;
 
 /*
 // to set/get/query special features/parameters
@@ -57,13 +64,16 @@ static int init(int rate, int channels, int format, int flags) {
 	xenon_sound_init();
 	
 	//ao_data.outburst = BUFFER_SIZE;
-	ao_data.buffersize = 65536;
+	ao_data.buffersize = XENON_BUFFER_SIZE;
 	ao_data.outburst = 2048;
 	ao_data.channels = 2;
 	ao_data.samplerate = 48000;
 	ao_data.format = AF_FORMAT_S16_LE;
 	ao_data.bps = ao_data.channels * ao_data.samplerate * sizeof(signed short);	
 
+	// maybe a bit big ...
+	//xenon_sound_buffer = (unsigned char *)memalign(32, ao_data.buffersize * ao_data.outburst *  ao_data.channels * sizeof(signed short));
+	
 	return 1;
 }
 /*
@@ -112,7 +122,11 @@ static int get_space(void) {
 static int play(void* data, int len, int flags) {
 	if (!(flags & AOPLAY_FINAL_CHUNK))
 		len -= len % ao_data.outburst;
-
+	
+/*
+	unsigned char * dest = xenon_sound_buffer + (xenon_sound_get_unplayed());
+	memcpy(dest,data,len);
+*/
 	xenon_sound_submit(data, len);
 
 	return len;
@@ -122,6 +136,7 @@ static int play(void* data, int len, int flags) {
  * return: delay in seconds between first and last sample in buffer
  */ 
 static float get_delay(void) {
-	return ((float) (ao_data.buffersize - xenon_sound_get_free())) / ((float) ao_data.bps);
+	//return ((float) (ao_data.buffersize - xenon_sound_get_free())) / ((float) ao_data.bps);
+	return ((float) (ao_data.buffersize - xenon_sound_get_unplayed())) / ((float) ao_data.bps);
 }
 
