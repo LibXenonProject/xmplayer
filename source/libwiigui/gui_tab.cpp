@@ -13,6 +13,8 @@ GuiTab::GuiTab(int w, int h) {
 }
 
 void GuiTab::Append(GuiElement* e) {
+	int posX,posY,colW,colH;
+	
 	if (e == NULL)
 		return;
 
@@ -23,16 +25,20 @@ void GuiTab::Append(GuiElement* e) {
 	int elementSize = GetSize();
 	if(e_bg)
 		elementSize--;
+	elementSize--;
 
-	int colW = width / colCount;
-	int colH = height / rowCount;
+	colW = width / colCount;
+	colH = height / rowCount;
 	
-	int posX = (elementSize % colCount) * colW;
-	int posY = (elementSize / rowCount) * colH;
+	posX = (elementSize % colCount) * colW;
+	//if(colCount>1)
+		posY =(elementSize / colCount)  * colH;
+	//else
+	//	posY = 0;
 	
 	// position
-	SetAlignment(ALIGN_LEFT, ALIGN_TOP);
-	SetPosition(posX, posY);
+	e->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+	e->SetPosition(posX, posY);
 };
 
 void GuiTab::setRow(int r) {
@@ -45,7 +51,17 @@ void GuiTab::setCol(int c) {
 
 void GuiTab::SetBackground(GuiElement* e) {
 	e_bg = e;
-	Append(e);
+	
+	if (e == NULL)
+		return;
+	
 	// good position
+	//e->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+	e->SetPosition(e->GetLeft() -GetLeft() ,e->GetTop()-GetTop());
 
+	e->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+	
+	Remove(e);
+	_elements.push_back(e);
+	e->SetParent(this);
 };

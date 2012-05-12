@@ -83,6 +83,7 @@
 #include "../build/options_menu_bg_x6_png.h"
 #include "../build/options_menu_bg_x7_png.h"
 
+#include "../build/video_info_bg_png.h"
 
 #include "filebrowser.h"
 
@@ -136,7 +137,8 @@ static GuiText * video_osd_info_filename = NULL;
 static GuiText * video_osd_info_cur_time = NULL;
 static GuiText * video_osd_info_duration = NULL;
 
-static GuiWindow * video_osd_infobar = NULL;
+static GuiTab * video_osd_infobar = NULL;
+static GuiImage * video_osd_infobar_bg = NULL;
 static GuiText * video_osd_infobar_text_filename = NULL;
 static GuiText * video_osd_infobar_info_filename = NULL;
 static GuiText * video_osd_infobar_text_trackinfo = NULL;
@@ -244,11 +246,20 @@ static void update() {
 // Callback for osd options
 static int osd_display_info = 0;
 
+static void osd_option_default_callback(void * data){
+	GuiButton *button = (GuiButton *) data;
+	if (button->GetState() == STATE_CLICKED) {
+		button->ResetState();
+		button->SetState(STATE_SELECTED);
+	}
+}
+
 static void osd_options_pan_callback(void * data) {
 	GuiButton *button = (GuiButton *) data;
 	if (button->GetState() == STATE_CLICKED) {
 		playerSwitchFullscreen();
 		button->ResetState();
+		button->SetState(STATE_SELECTED);
 	}
 }
 
@@ -257,6 +268,7 @@ static void osd_options_vsync_callback(void * data) {
 	if (button->GetState() == STATE_CLICKED) {
 		playerSwitchVsync();
 		button->ResetState();
+		button->SetState(STATE_SELECTED);
 	}
 }
 
@@ -264,6 +276,7 @@ static void osd_options_loop_callback(void * data) {
 	GuiButton *button = (GuiButton *) data;
 	if (button->GetState() == STATE_CLICKED) {
 		button->ResetState();
+		button->SetState(STATE_SELECTED);
 	}
 }
 
@@ -272,6 +285,7 @@ static void osd_options_info_callback(void * data) {
 	if (button->GetState() == STATE_CLICKED) {
 		osd_display_info = !osd_display_info;
 		button->ResetState();
+		button->SetState(STATE_SELECTED);
 	}
 }
 
@@ -279,6 +293,7 @@ static void osd_options_audio_callback(void * data) {
 	GuiButton *button = (GuiButton *) data;
 	if (button->GetState() == STATE_CLICKED) {
 		button->ResetState();
+		button->SetState(STATE_SELECTED);
 	}
 }
 
@@ -394,41 +409,24 @@ static void loadOsdRessources() { // OSD
 	video_osd_infobar_text_bitrate = new GuiText("@@info_bar_bitrate", 18, 0xffffffff);
 	video_osd_infobar_info_bitrate = new GuiText("@@video_osd_infobar_info_bitrate", 18, 0xffffffff);
 
-
-	int infobar_x, infobar_y;
-	infobar_x = 30;
-	infobar_y = 10;
-	video_osd_infobar_text_filename->SetPosition(infobar_x, infobar_y);
-	video_osd_infobar_info_filename->SetPosition(infobar_x + 210, infobar_y);
-
-	video_osd_infobar_text_trackinfo->SetPosition(infobar_x, infobar_y + 20);
-	video_osd_infobar_info_trackinfo->SetPosition(infobar_x + 210, infobar_y + 20);
-
-	video_osd_infobar_text_resolution->SetPosition(infobar_x, infobar_y + 40);
-	video_osd_infobar_info_resolution->SetPosition(infobar_x + 210, infobar_y + 40);
-
-	video_osd_infobar_text_bitrate->SetPosition(infobar_x, infobar_y + 60);
-	video_osd_infobar_info_bitrate->SetPosition(infobar_x + 210, infobar_y + 60);
-
-	video_osd_infobar_text_filename->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
-	video_osd_infobar_info_filename->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
-
-	video_osd_infobar_text_trackinfo->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
-	video_osd_infobar_info_trackinfo->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
-
-	video_osd_infobar_text_resolution->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
-	video_osd_infobar_info_resolution->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
-
-	video_osd_infobar_text_bitrate->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
-	video_osd_infobar_info_bitrate->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
-
-	video_osd_infobar = new GuiWindow(500, 80);
+	video_osd_infobar_bg = new GuiImage(new GuiImageData(video_info_bg_png));
+	
+	video_osd_infobar_bg->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+	video_osd_infobar_bg->SetPosition(68,240);
+	
+	
+	video_osd_infobar = new GuiTab(500, 80);
 	video_osd_infobar->SetPosition(110, 350);
+	
+	video_osd_infobar->setCol(2);
+	video_osd_infobar->setRow(4);
+	
+	video_osd_infobar->SetBackground(video_osd_infobar_bg);
+		
 	video_osd_infobar->Append(video_osd_infobar_text_filename);
 	video_osd_infobar->Append(video_osd_infobar_info_filename);
 	video_osd_infobar->Append(video_osd_infobar_text_trackinfo);
 	video_osd_infobar->Append(video_osd_infobar_info_trackinfo);
-	video_osd_infobar->Append(video_osd_infobar_text_filename);
 	video_osd_infobar->Append(video_osd_infobar_text_resolution);
 	video_osd_infobar->Append(video_osd_infobar_info_resolution);
 	video_osd_infobar->Append(video_osd_infobar_text_bitrate);
@@ -478,14 +476,23 @@ static void loadOsdRessources() { // OSD
 
 
 	/** osd level 3**/
-	// <image image="image/Video_player_options_menu_bg_x8.png" x="380" y="0" w="520" h="91" bg="1" disable="@@disable-options_bg"/>
-	osd_options_window = new GuiTab(520, 91);
+	// <table x="435" y="30" h="50" w="410" cols="7" align="hcenter" disable="@@disable-options_bg">
+	//osd_options_window = new GuiTab(520, 91);
+	osd_options_window = new GuiTab(410, 50);
 	osd_options_window->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
-	osd_options_window->SetPosition(380, 0);
+	osd_options_window->SetPosition(435, 30);
 
+	osd_options_window->setRow(1);
+	osd_options_window->setCol(7);
+
+
+	// <image image="image/slideshow_options_menu_bg_x7.png" x="410" y="0" w="460" h="91" bg="1" disable="@@disable-options_bg"/>
 	osd_options_bg_x5 = new GuiImage(new GuiImageData(options_menu_bg_x5_png));
 	osd_options_bg_x6 = new GuiImage(new GuiImageData(options_menu_bg_x6_png));
 	osd_options_bg_x7 = new GuiImage(new GuiImageData(options_menu_bg_x7_png));
+
+	osd_options_bg_x7->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+	osd_options_bg_x7->SetPosition(410, 0);
 
 	osd_options_menu_audio_channel_icon_f = new GuiImage(new GuiImageData(options_menu_audio_channel_icon_f_png));
 	osd_options_menu_audio_channel_icon_n = new GuiImage(new GuiImageData(options_menu_audio_channel_icon_n_png));
@@ -540,15 +547,15 @@ static void loadOsdRessources() { // OSD
 	osd_options_menu_zoomout_btn->SetImage(options_menu_zoomout_icon_n);
 	osd_options_menu_zoomout_btn->SetImageOver(options_menu_zoomout_icon_f);
 
-	// callback
+	// callback*
+	
+	osd_options_menu_audio_channel_btn->SetUpdateCallback(osd_options_audio_callback);
 	osd_options_menu_info_btn->SetUpdateCallback(osd_options_info_callback);
 	osd_options_menu_pan_btn->SetUpdateCallback(osd_options_pan_callback);
 	osd_options_menu_repeat_btn->SetUpdateCallback(osd_options_loop_callback);
-	osd_options_menu_audio_channel_btn->SetUpdateCallback(osd_options_audio_callback);
-
-	
-	osd_options_window->setRow(1);
-	osd_options_window->setCol(8);
+	osd_options_menu_subtitle_btn->SetUpdateCallback(osd_option_default_callback);
+	osd_options_menu_zoomin_btn->SetUpdateCallback(osd_option_default_callback);
+	osd_options_menu_zoomout_btn->SetUpdateCallback(osd_option_default_callback);
 	
 	osd_options_window->SetBackground(osd_options_bg_x7);
 	osd_options_window->Append(osd_options_menu_audio_channel_btn);
@@ -558,27 +565,12 @@ static void loadOsdRessources() { // OSD
 	osd_options_window->Append(osd_options_menu_subtitle_btn);
 	osd_options_window->Append(osd_options_menu_zoomin_btn);
 	osd_options_window->Append(osd_options_menu_zoomout_btn);
-	
-	osd_options_menu_audio_channel_btn->SetFocus(1);
 
-	// position lazy way
-	int nb_options = 8;
-	int options_x = 25;
-	int options_y = 30;
-	int options_w = 470 / nb_options;
+	osd_options_menu_audio_channel_btn->SetFocus(1);
 
 	// position
 	for (u32 i = 1; i < osd_options_window->GetSize(); i++) {
-		// 0 is bg
-		{
-//			osd_options_window->GetGuiElementAt(i)->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
-//			osd_options_window->GetGuiElementAt(i)->SetPosition(options_x, options_y);
-			osd_options_window->GetGuiElementAt(i)->SetTrigger(trigA);
-//			osd_options_window->GetGuiElementAt(i)->SetSelectable(false);
-//			osd_options_window->GetGuiElementAt(i)->SetHoldable(false);
-//			osd_options_window->GetGuiElementAt(i)->SetEffectGrow();
-			options_x += options_w;
-		}
+		osd_options_window->GetGuiElementAt(i)->SetTrigger(trigA);
 	}
 }
 
@@ -654,7 +646,7 @@ extern "C" void mplayer_osd_open() {
 
 		// remove bg
 		mainWindow->Remove(bgImg);
-		
+
 		osd_options_window->SetFocus(1);
 
 		struct XenosSurface * img = video_osd_progress_bar_front->GetImage();

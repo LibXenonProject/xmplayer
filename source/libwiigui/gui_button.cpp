@@ -200,43 +200,6 @@ void GuiButton::Update(GuiTrigger * t) {
     else if (parentElement && parentElement->GetState() == STATE_DISABLED)
         return;
 
-    //#ifdef HW_RVL
-#if 0
-    // cursor
-    if (t->wpad->ir.valid && t->chan >= 0) {
-        if (this->IsInside(t->wpad->ir.x, t->wpad->ir.y)) {
-            if (state == STATE_DEFAULT) // we weren't on the button before!
-            {
-                this->SetState(STATE_SELECTED, t->chan);
-
-                if (this->Rumble())
-                    rumbleRequest[t->chan] = 1;
-
-                if (soundOver)
-                    soundOver->Play();
-
-                if (effectsOver && !effects) {
-                    // initiate effects
-                    effects = effectsOver;
-                    effectAmount = effectAmountOver;
-                    effectTarget = effectTargetOver;
-                }
-            }
-        } else {
-            if (state == STATE_SELECTED && (stateChan == t->chan || stateChan == -1))
-                this->ResetState();
-
-            if (effectTarget == effectTargetOver && effectAmount == effectAmountOver) {
-                // initiate effects (in reverse)
-                effects = effectsOver;
-                effectAmount = -effectAmountOver;
-                effectTarget = 100;
-            }
-        }
-    }
-    //#endif
-#endif
-
     // button triggers
     if (this->IsClickable()) {
         s32 wm_btns, wm_btns_trig, cc_btns, cc_btns_trig;

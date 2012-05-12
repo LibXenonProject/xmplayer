@@ -4,18 +4,13 @@
 #include <errno.h>
 //#include "pthread.h"
 
-#include <threads/threads.h>
-#include <threads/mutex.h>
-#include <threads/cond.h>
-
 #include <ppc/atomic.h>
 #include <xetypes.h>
 #include <ppc/register.h>
 #include <ppc/xenonsprs.h>
 
 #include <xenon_soc/xenon_power.h>
-#include <network/network.h>
-#include <threads/gdb.h>
+
 
 #define NB_THREAD 6
 
@@ -24,7 +19,11 @@
 //#define USE_NAT_THREAD
 
 #ifdef USE_NAT_THREAD
-
+#include <threads/threads.h>
+#include <threads/mutex.h>
+#include <threads/cond.h>
+#include <network/network.h>
+#include <threads/gdb.h>
 
 typedef PTHREAD pthread_t;
 
