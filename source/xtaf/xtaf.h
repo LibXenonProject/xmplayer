@@ -13,8 +13,8 @@
 
 //#define xprintf(...) printf(__VA_ARGS__)
 
-#define DEFAULT_CACHE_PAGES 4
-#define DEFAULT_SECTORS_PAGE 64
+#define DEFAULT_CACHE_PAGES 8
+#define DEFAULT_SECTORS_PAGE 128
 
 #define MAX_PARTITION_PER_HDD 4
 
@@ -110,7 +110,7 @@ typedef struct xtaf_partition_private {
 	uint64_t data_offset;
 	uint32_t fat_file_size;
 
-	uint64_t extent_offset;
+	uint32_t extent_offset;
 	uint32_t extent_len;
 	uint32_t extent_next_cluster;
 

@@ -44,43 +44,6 @@ static inline time_t xtaf_build_time(uint16_t date, uint32_t time) {
 	return 0;
 }
 
-off_t ___xtaf_seek_r(struct _reent *r, int fd, off_t pos, int dir) {
-	xtaf_file_private* file = (xtaf_file_private*) fd;
-	off_t newPosition;
-
-	if (file == NULL) {
-		// invalid file
-		r->_errno = EBADF;
-		return -1;
-	}
-
-	switch (dir) {
-		case SEEK_SET:
-			newPosition = pos;
-			break;
-		case SEEK_CUR:
-			newPosition = (off_t) file->currentPosition + pos;
-			break;
-		case SEEK_END:
-			newPosition = (off_t) file->currentPosition + pos;
-			break;
-		default:
-			r->_errno = EINVAL;
-			return -1;
-	}
-
-	if ((pos > 0) && (newPosition < 0)) {
-		r->_errno = EOVERFLOW;
-		return -1;
-	}
-
-	// Save position
-	file->currentPosition = newPosition;
-
-	return newPosition;
-}
-
-
 off_t xtaf_seek_r (struct _reent *r, int fd, off_t pos, int dir) {
 	xtaf_file_private* file = (xtaf_file_private*)  fd;
 	xtaf_partition_private* partition;

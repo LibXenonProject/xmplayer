@@ -137,7 +137,8 @@ int xtaf_directory_entryFromPath(xtaf_partition_private* partition, struct _xtaf
 				xprintf("error : %d\r\n", err);
 				return -1;
 			}
-
+			
+			
 			// check if the wanted file/dir is the same as the found one
 			if (xtaf_check_filename(fat_name, (char*) dir_entry->filename, dir_entry->filename_size) == 0) {
 				if (dir_entry->flags & XTAF_DIR_FLAGS) {
@@ -200,6 +201,13 @@ int xtaf_parse_entry(xtaf_partition_private * priv, struct _xtaf_directory_s * d
 	uint64_t sector = priv->current_sector + priv->root_offset + priv->partition_start_offset;
 
 	//xprintf("parse entry offset : %16lx\r\n", sector*0x200);
+	if(priv->extent_offset>=priv->bytesPerSector)
+	{
+		priv->extent_offset =0;
+		priv->current_sector++;
+		
+		sector++;
+	}
 
 	memset(data, 0, sizeof (struct _xtaf_directory_s));
 
@@ -262,6 +270,7 @@ if (tt[0] == 0) {
 			//int err = xtaf_parse_entry(priv, &pCtx->finfo);
 			//int err = xtaf_parse_entry(file_private->partition, &file_private->finfo);
 			int err = xtaf_parse_entry(file_private->partition, &file_private->entryInfo);
+			
 			if (err == 1) {
 				xprintf("xtaf_parse_entry finished\r\n");
 				return 0;

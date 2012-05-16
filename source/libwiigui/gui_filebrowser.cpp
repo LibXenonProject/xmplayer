@@ -46,7 +46,7 @@ GuiFileBrowser::GuiFileBrowser(int w, int h, GuiImageData * list_bg, GuiImageDat
 	selected_font_size = 26;
 }
 
-int GuiFileBrowser::getPageSize() {
+int GuiFileBrowser::GetPageSize() {
 	return file_pagesize;
 }
 
@@ -56,7 +56,6 @@ void GuiFileBrowser::SetFontSize(int size){
 void GuiFileBrowser::SetSelectedFontSize(int size){
 	selected_font_size = size;
 };
-
 void GuiFileBrowser::SetPageSize(int size) {
 	file_pagesize = size;
 

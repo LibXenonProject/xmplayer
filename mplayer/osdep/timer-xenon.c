@@ -28,7 +28,7 @@
 
 #include <ppc/timebase.h>
 #include <time/time.h>
-
+#if 0
 const char timer_name[] = "Xenon native";
 
 int usec_sleep(int usec_delay)
@@ -71,3 +71,64 @@ void InitTimer(void)
 {
     GetRelativeTime();
 }
+#else
+
+const char timer_name[] =
+#ifdef HAVE_NANOSLEEP
+    "nanosleep()";
+#else
+    "usleep()";
+#endif
+
+int usec_sleep(int usec_delay)
+{
+#ifdef HAVE_NANOSLEEP
+    struct timespec ts;
+    ts.tv_sec  =  usec_delay / 1000000;
+    ts.tv_nsec = (usec_delay % 1000000) * 1000;
+    return nanosleep(&ts, NULL);
+#else
+    return usleep(usec_delay);
+#endif
+}
+
+// Returns current time in microseconds
+unsigned int GetTimer(void)
+{
+    struct timeval tv;
+    //float s;
+    gettimeofday(&tv,NULL);
+    //s = tv.tv_usec; s *= 0.000001; s += tv.tv_sec;
+    return tv.tv_sec * 1000000 + tv.tv_usec;
+}
+
+// Returns current time in milliseconds
+unsigned int GetTimerMS(void)
+{
+    struct timeval tv;
+    //float s;
+    gettimeofday(&tv,NULL);
+    //s = tv.tv_usec; s *= 0.000001; s += tv.tv_sec;
+    return tv.tv_sec * 1000 + tv.tv_usec / 1000;
+}
+
+static unsigned int RelativeTime = 0;
+
+// Returns time spent between now and last call in seconds
+float GetRelativeTime(void)
+{
+    unsigned int t,r;
+    t = GetTimer();
+    //t *= 16; printf("time = %ud\n", t);
+    r = t - RelativeTime;
+    RelativeTime = t;
+    return (float) r * 0.000001F;
+}
+
+// Initialize timer, must be called at least once at start
+void InitTimer(void)
+{
+    GetRelativeTime();
+}
+
+#endif

@@ -141,7 +141,7 @@ void mp_msg_init(void);
 int mp_msg_test(int mod, int lev);
 
 #include "config.h"
-#if 1
+#ifndef NO_MPLAYER_LOG 
 void mp_msg_va(int mod, int lev, const char *format, va_list va);
 #ifdef __GNUC__
 void mp_msg(int mod, int lev, const char *format, ... ) __attribute__ ((format (printf, 3, 4)));

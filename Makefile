@@ -26,7 +26,7 @@ MPLAYER         :=      $(CURDIR)/mplayer
 #---------------------------------------------------------------------------------
 
 # lto
-#OPTIFLAGS =  -O4 -flto -fuse-linker-plugin -mcpu=cell -mtune=cell -fno-tree-vectorize -fno-tree-slp-vectorize -ftree-vectorizer-verbose=1 
+#OPTIFLAGS =  -Ofast -flto -fuse-linker-plugin -mcpu=cell -mtune=cell -fno-tree-vectorize -fno-tree-slp-vectorize -ftree-vectorizer-verbose=1 
 OPTIFLAGS =  -mcpu=cell -mtune=cell -fno-tree-vectorize -fno-tree-slp-vectorize -ftree-vectorizer-verbose=1 
 
 ASFLAGS	= -Wa,$(INCLUDE) -Wa,-a32
@@ -44,7 +44,7 @@ LDFLAGS	= $(MACHDEP_LD) $(OPTIFLAGS) -Wl,-Map,$(notdir $@).map
 #---------------------------------------------------------------------------------
 # any extra libraries we wish to link with the project
 #---------------------------------------------------------------------------------
-LIBS	:=	 -lmplayer  -lavformat -lavcodec -lswscale -lavutil -lpostproc -lpng -lz -lxenon -lm  -liconv -lfreetype -lfribidi -lbz2 -lfat  
+LIBS	:=	 -lmplayer  -lavformat -lavcodec -lswscale -lavutil -lpostproc -lpng -lz -lxenon -lm  -liconv -lfreetype -lfribidi -lbz2 -lfat -lext2fs -lntfs
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing

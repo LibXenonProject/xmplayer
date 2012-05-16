@@ -55,7 +55,6 @@ DIR_ITER* xtaf_diropen_r(struct _reent *r, DIR_ITER *dirState, const char *path)
 	partition->current_sector = 0;
 	partition->extent_offset = 0;
 	partition->extent_next_cluster = 0;
-	partition->extent_offset = 0;
 
 	strcpy(tmp_name, path);
 	
@@ -64,6 +63,9 @@ DIR_ITER* xtaf_diropen_r(struct _reent *r, DIR_ITER *dirState, const char *path)
 	if(err==1){
 		state->filesize = state->entryInfo.file_size;
 		state->startCluster = state->entryInfo.starting_cluster;
+		
+		partition->extent_offset = 0;
+		partition->extent_next_cluster = 0;
 		
 		return dirState;
 	}

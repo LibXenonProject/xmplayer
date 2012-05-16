@@ -9,6 +9,8 @@
 #include <stdlib.h>
 #include <debug.h>
 #include <libfat/fat.h>
+#include <libext2/ext2.h>
+#include <libntfs/ntfs.h>
 #include <usb/usbmain.h>
 #include <diskio/ata.h>
 #include <xenon_soc/xenon_power.h>
@@ -35,6 +37,9 @@
 #include "../build/browser_list_btn_png.h"
 #include "../build/browser_folder_icon_f_png.h"
 
+#include "../build/browser_list_arrow_down_png.h"
+#include "../build/browser_list_arrow_up_png.h"
+
 // osd
 #include "../build/video_control_frame_bg_png.h"
 #include "../build/video_control_time_played_line_bg_png.h"
@@ -52,6 +57,7 @@
 #include "../build/browser_photo_icon_f_png.h"
 #include "../build/browser_video_icon_f_png.h"
 #include "../build/browser_music_icon_f_png.h"
+#include "../build/browser_top_png.h"
 
 #include "../build/folder_music_icon_png.h"
 #include "../build/folder_photo_icon_png.h"
@@ -125,13 +131,15 @@ static GuiImageData * browser_music_icon = NULL;
 static GuiImageData * browser_photo_folder_icon = NULL;
 static GuiImageData * browser_video_folder_icon = NULL;
 static GuiImageData * browser_music_folder_icon = NULL;
-
+static GuiImage * browser_top_bg = NULL;
 static GuiImageData * browser_selector = NULL;
 
 // no image data, pointer to image
 static GuiImageData * browser_folder_icon = NULL;
 static GuiImageData * browser_file_icon = NULL;
 
+static GuiImage * browser_up_icon = NULL;
+static GuiImage * browser_down_icon = NULL;
 
 static GuiText * video_osd_info_filename = NULL;
 static GuiText * video_osd_info_cur_time = NULL;
@@ -366,20 +374,34 @@ static void loadBrowserRessources() {
 	browser_music_folder_icon = new GuiImageData(browser_folder_icon_f_png);
 
 	browser_selector = new GuiImageData(browser_list_btn_png);
-
+	
+	browser_up_icon = new GuiImage(new GuiImageData(browser_list_arrow_up_png));
+	browser_down_icon =  new GuiImage(new GuiImageData(browser_list_arrow_down_png));;
+	
+	// <image image="@@moreprev" x="150" y="650" w="19" h="13"/>
+	// <image image="@@morenext" x="1111" y="650" w="19" h="13"/>
+	browser_up_icon->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+	browser_down_icon->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+	browser_up_icon->SetPosition(150, 650);
+	browser_down_icon->SetPosition(1111, 650);
+	
+	browser_top_bg = new GuiImage(new GuiImageData(browser_top_png));
+	browser_top_bg->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+	browser_top_bg->SetPosition(0, 0);
+	
 	// no image data, pointer to image
 	browser_folder_icon = browser_video_folder_icon;
 	browser_file_icon = browser_video_icon;
 
 	gui_browser = new GuiFileBrowser(980, 500, browser_selector, browser_folder_icon, browser_file_icon);
-	gui_browser->SetPosition(150, 180);
+	gui_browser->SetPosition(150, 131);
 	gui_browser->SetFontSize(20);
 	gui_browser->SetSelectedFontSize(26);
 	gui_browser->SetPageSize(10);
 
-	gui_browser_title = new GuiText("title", 64, 0xffffffff);
+	gui_browser_title = new GuiText("title", 32, 0xfffa9600);
 	gui_browser_title->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
-	gui_browser_title->SetPosition(64, 45);
+	gui_browser_title->SetPosition(100, 40);
 	gui_browser_title->SetEffectGrow();
 }
 
@@ -824,16 +846,35 @@ static void Browser(const char * title, const char * root) {
 	mainWindow->Append(&menuBtn);
 
 	gui_browser_title->SetText(title);
-
+	
+	mainWindow->Append(browser_top_bg);
 	mainWindow->Append(gui_browser_title);
 
+	mainWindow->Append(browser_up_icon);
+	mainWindow->Append(browser_down_icon);
+	
 	last_menu = current_menu;
-
+	
 	while (current_menu == last_menu) {
+		
+		if(browser.pageIndex){
+			// draw prev
+			browser_up_icon->SetVisible(true);
+		}
+		else{
+			browser_up_icon->SetVisible(false);
+		}
+		//if (browser.selIndex<browser.numEntries * ) {
+		if (browser.pageIndex + browser.selIndex +3 < browser.numEntries){
+			browser_down_icon->SetVisible(true);
+		}
+		else{			
+			browser_down_icon->SetVisible(false);
+		}
 
 		// update file browser based on arrow xenon_buttons
 		// set MENU_EXIT if A xenon_button pressed on a file
-		for (int i = 0; i < gui_browser->getPageSize(); i++) {
+		for (int i = 0; i < gui_browser->GetPageSize(); i++) {
 			if (gui_browser->fileList[i]->GetState() == STATE_CLICKED) {
 				gui_browser->fileList[i]->ResetState();
 				// check corresponding browser entry
@@ -865,7 +906,11 @@ static void Browser(const char * title, const char * root) {
 
 		update();
 	}
+	
+	mainWindow->Remove(browser_up_icon);
+	mainWindow->Remove(browser_down_icon);
 
+	mainWindow->Remove(browser_top_bg);
 	mainWindow->Remove(gui_browser_title);
 	mainWindow->Remove(gui_browser);
 	mainWindow->Remove(&menuBtn);
@@ -952,11 +997,12 @@ static void do_mplayer(char * filename) {
 		char * argv[] = {
 			"mplayer.xenon",
 			//"-really-quiet",
-			//"-demux mkv",
+			"-demuxer","mkv",
 			"-menu",
 			//"-menu-startup",
-			//"-lavdopts","skiploopfilter=all:threads=2",
-			"-lavdopts", "skiploopfilter=all:threads=5",
+			"-lavdopts","skiploopfilter=all:threads=5",
+		//	"-lavdopts", "skiploopfilter=all:threads=2",
+			"-vsync",
 			//"uda:/mplayer/loop.mov","-loop","0",
 			//"-lavdopts","skiploopfilter=all",
 			//"-novideo",
@@ -1026,13 +1072,25 @@ static void findDevices() {
 	root_dev = device_list[0];
 }
 
+extern DISC_INTERFACE xenon_ata_ops;
+extern DISC_INTERFACE usb2mass_ops;
+
 extern "C" void init_xtaf();
 
+void mount_all_ext2fs(){
+	sec_t *ext_usb_part;
+	int ret = ext2FindPartitions(&usb2mass_ops,&ext_usb_part);
+	if (ret > 0 && ext_usb_part) {
+		for(int i =0;i<ret;i++){
+			printf("Mount %d %08x\n",i,ext_usb_part[i]);
+			ext2Mount("uda",&usb2mass_ops,ext_usb_part[i],EXT2_CACHE_DEFAULT_PAGE_COUNT,EXT2_CACHE_DEFAULT_PAGE_SIZE,EXT2_FLAG_DEFAULT);
+			printf("Mount ok\n");
+		}
+	}
+}
 int main(int argc, char** argv) {
 	xenon_make_it_faster(XENON_SPEED_FULL);
-
-	init_mplayer();
-
+	
 	// Init Video
 	InitVideo();
 
@@ -1040,7 +1098,7 @@ int main(int argc, char** argv) {
 	logo = loadPNGFromMemory((unsigned char*) logo_png);
 
 	Xe_SetClearColor(g_pVideoDevice, 0xFFFFFFFF);
-
+	
 	Menu_DrawImg(0, 0, 1280, 720, logo, 0, 1, 1, 0xff);
 
 	Menu_Render();
@@ -1052,9 +1110,21 @@ int main(int argc, char** argv) {
 	usb_init();
 	xenon_ata_init();
 	usb_do_poll();
+	
+	// fat
 	fatInitDefault();
+	
+	// ntfs
+	ntfs_md * md;
+	ntfsMountAll(&md,NTFS_READ_ONLY);
+	
+	// ext2fs
+	mount_all_ext2fs();
+	
 	// xtaf
 	init_xtaf();
+	
+	init_mplayer();
 
 	findDevices();
 

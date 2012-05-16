@@ -176,7 +176,7 @@ static void print_msg_module(FILE* stream, int mod)
         fprintf(stream, "\033[0;37m");
     fprintf(stream, ": ");
 }
-
+#ifndef NO_MPLAYER_LOG
 void mp_msg(int mod, int lev, const char *format, ... ){
     va_list va;
     va_start(va, format);
@@ -244,3 +244,4 @@ void mp_msg_va(int mod, int lev, const char *format, va_list va){
         fprintf(stream, "\033[0m");
     fflush(stream);
 }
+#endif

@@ -371,7 +371,7 @@ static void flip_page(void) {
 	ShowFPS();
 
 	// Sync gpu
-	//Xe_Sync(g_pVideoDevice);
+	Xe_Sync(g_pVideoDevice);
 
 	/* vsync - take care slow down video ... */
 	if (vo_vsync)
@@ -439,8 +439,8 @@ static void flip_page(void) {
 	// Resolve
 	Xe_Resolve(g_pVideoDevice);
 	// Render in background
-	//Xe_Execute(g_pVideoDevice);
-	Xe_Sync(g_pVideoDevice);
+	Xe_Execute(g_pVideoDevice);
+	//Xe_Sync(g_pVideoDevice);
 
 }
 
