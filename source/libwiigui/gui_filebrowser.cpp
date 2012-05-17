@@ -166,10 +166,6 @@ void GuiFileBrowser::Update(GuiTrigger * t) {
 	if (state == STATE_DISABLED || !t)
 		return;
 
-	int position = 0;
-	int positionWiimote = 0;
-
-
 	// pad/joystick navigation
 	if (!focus) {
 		goto endNavigation; // skip navigation

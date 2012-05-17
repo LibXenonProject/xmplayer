@@ -114,32 +114,21 @@ enum {
 	OSD = 0x20,
 };
 
+/**
+ * used at loading
+ **/
+static XenosSurface * logo = NULL;
+
 static GuiImage * bgImg = NULL;
 static GuiWindow * mainWindow = NULL;
 static GuiTrigger * trigA;
 
-static XenosSurface * logo = NULL;
-
+/**
+ * video osd
+ **/
 static GuiImage * video_osd_progress_bar_front = NULL;
 static GuiImage * video_osd_progress_bar_back = NULL;
 static GuiImage * video_osd_bg = NULL;
-
-static GuiImageData * browser_photo_icon = NULL;
-static GuiImageData * browser_video_icon = NULL;
-static GuiImageData * browser_music_icon = NULL;
-
-static GuiImageData * browser_photo_folder_icon = NULL;
-static GuiImageData * browser_video_folder_icon = NULL;
-static GuiImageData * browser_music_folder_icon = NULL;
-static GuiImage * browser_top_bg = NULL;
-static GuiImageData * browser_selector = NULL;
-
-// no image data, pointer to image
-static GuiImageData * browser_folder_icon = NULL;
-static GuiImageData * browser_file_icon = NULL;
-
-static GuiImage * browser_up_icon = NULL;
-static GuiImage * browser_down_icon = NULL;
 
 static GuiText * video_osd_info_filename = NULL;
 static GuiText * video_osd_info_cur_time = NULL;
@@ -164,16 +153,41 @@ static GuiImage * video_osd_prev = NULL;
 static GuiImage * video_osd_rewind = NULL;
 static GuiImage * video_osd_forward = NULL;
 
-static GuiImage * decoration_state = NULL;
-static GuiImage * decoration_keyicon = NULL;
-static GuiImage * decoration_keyicon_ex = NULL;
-static GuiImage * decoration_wrongkeyicon = NULL;
+/**
+ * Browser
+ **/
+static GuiFileBrowser * gui_browser = NULL;
 
+static GuiImage * browser_top_bg = NULL;
+
+static GuiText * browser_headline = NULL;
+static GuiText * browser_pagecounter = NULL;
+static GuiText * browser_subheadline = NULL;
+
+static GuiImageData * browser_photo_icon = NULL;
+static GuiImageData * browser_video_icon = NULL;
+static GuiImageData * browser_music_icon = NULL;
+
+static GuiImageData * browser_photo_folder_icon = NULL;
+static GuiImageData * browser_video_folder_icon = NULL;
+static GuiImageData * browser_music_folder_icon = NULL;
+
+static GuiImageData * browser_selector = NULL;
+
+static GuiImage * browser_up_icon = NULL;
+static GuiImage * browser_down_icon = NULL;
+
+// no image data, pointer to image
+static GuiImageData * browser_folder_icon = NULL;
+static GuiImageData * browser_file_icon = NULL;
+
+/**
+ * Home screen
+ **/
 static GuiList * home_list_v = NULL;
 static GuiList * home_list_h = NULL;
 static GuiImage * home_list_h_selector = NULL;
 static GuiText * home_curitem = NULL;
-static char * home_curitem_text = NULL;
 
 static GuiImage * home_left = NULL;
 static GuiImage * home_main_function_frame_bg = NULL;
@@ -192,7 +206,17 @@ static GuiImage * home_music_img = NULL;
 static GuiImage * home_photo_img = NULL;
 static GuiImage * home_setting_img = NULL;
 
-// osd level 3
+/**
+ * Not used yet
+ **/
+static GuiImage * decoration_state = NULL;
+static GuiImage * decoration_keyicon = NULL;
+static GuiImage * decoration_keyicon_ex = NULL;
+static GuiImage * decoration_wrongkeyicon = NULL;
+
+/**
+ * Osd option menu
+ **/
 static GuiTab * osd_options_window = NULL;
 static GuiImage * osd_options_background = NULL;
 
@@ -231,11 +255,6 @@ static GuiButton * osd_options_menu_subtitle_btn = NULL;
 static GuiButton * osd_options_menu_zoomin_btn = NULL;
 static GuiButton * osd_options_menu_zoomout_btn = NULL;
 
-
-static GuiFileBrowser * gui_browser = NULL;
-static GuiText * gui_browser_title = NULL;
-
-
 static char mplayer_filename[2048];
 
 static int last_menu;
@@ -251,7 +270,9 @@ static void update() {
 	}
 }
 
-// Callback for osd options
+/**
+ * Callback for osd option bar
+ **/
 static int osd_display_info = 0;
 
 static void osd_option_default_callback(void * data){
@@ -300,11 +321,24 @@ static void osd_options_info_callback(void * data) {
 static void osd_options_audio_callback(void * data) {
 	GuiButton *button = (GuiButton *) data;
 	if (button->GetState() == STATE_CLICKED) {
+		playerSwitchAudio();
 		button->ResetState();
 		button->SetState(STATE_SELECTED);
 	}
 }
 
+static void osd_options_sub_callback(void * data) {
+	GuiButton *button = (GuiButton *) data;
+	if (button->GetState() == STATE_CLICKED) {
+		playerSwitchSubtitle();
+		button->ResetState();
+		button->SetState(STATE_SELECTED);
+	}
+}
+
+/**
+ * Load ressources
+ **/
 static void loadHomeRessources() {
 
 	//	<image image="image/home_left.png" x="0" y="0" w="522" h="720" bg="1"/>
@@ -375,6 +409,25 @@ static void loadBrowserRessources() {
 
 	browser_selector = new GuiImageData(browser_list_btn_png);
 	
+//	<item id="headline" x="100" y="44" w="300" h="40" align="left"/>
+//	<item id="subheadline" x="100" y="70" w="300" h="30" fontsize="24" align="left"/>
+//	<item id="pagecounter" x="980" y="54" w="200" h="26" fontsize="24" align="right" textcolor="0xffffff"/>
+	
+	browser_pagecounter = new GuiText("@@pagecounter",24,0xFFFFFFFF);		
+	browser_pagecounter->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+	browser_pagecounter->SetPosition(980, 54);
+	browser_pagecounter->SetMaxWidth(200);
+	browser_pagecounter->SetStyle(FTGX_JUSTIFY_RIGHT);
+	
+	browser_subheadline = new GuiText("@@subheadline",24,0xFFFFFFFF);
+	browser_subheadline->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+	browser_subheadline->SetPosition(100, 70);
+
+	browser_headline = new GuiText("@@headline", 32, 0xfffa9600);
+	browser_headline->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+	browser_headline->SetPosition(100, 40);
+	browser_headline->SetEffectGrow();
+	
 	browser_up_icon = new GuiImage(new GuiImageData(browser_list_arrow_up_png));
 	browser_down_icon =  new GuiImage(new GuiImageData(browser_list_arrow_down_png));;
 	
@@ -398,11 +451,6 @@ static void loadBrowserRessources() {
 	gui_browser->SetFontSize(20);
 	gui_browser->SetSelectedFontSize(26);
 	gui_browser->SetPageSize(10);
-
-	gui_browser_title = new GuiText("title", 32, 0xfffa9600);
-	gui_browser_title->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
-	gui_browser_title->SetPosition(100, 40);
-	gui_browser_title->SetEffectGrow();
 }
 
 static void loadOsdRessources() { // OSD
@@ -480,6 +528,9 @@ static void loadOsdRessources() { // OSD
 	video_osd_info_filename->SetPosition(264, 621);
 	video_osd_info_cur_time->SetPosition(943, 625);
 	video_osd_info_duration->SetPosition(1023, 625);
+	
+	video_osd_info_filename->SetMaxWidth(644);
+	video_osd_info_filename->SetScroll(SCROLL_HORIZONTAL);
 	//
 	video_osd_info_filename->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	video_osd_info_cur_time->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
@@ -575,7 +626,7 @@ static void loadOsdRessources() { // OSD
 	osd_options_menu_info_btn->SetUpdateCallback(osd_options_info_callback);
 	osd_options_menu_pan_btn->SetUpdateCallback(osd_options_pan_callback);
 	osd_options_menu_repeat_btn->SetUpdateCallback(osd_options_loop_callback);
-	osd_options_menu_subtitle_btn->SetUpdateCallback(osd_option_default_callback);
+	osd_options_menu_subtitle_btn->SetUpdateCallback(osd_options_sub_callback);
 	osd_options_menu_zoomin_btn->SetUpdateCallback(osd_option_default_callback);
 	osd_options_menu_zoomout_btn->SetUpdateCallback(osd_option_default_callback);
 	
@@ -621,6 +672,8 @@ static int osd_show = 0;
 static char osd_duration[10];
 static char osd_cur_time[10];
 static int got_metadata = 0;
+
+static int last_level = 0;
 
 extern "C" void mplayer_osd_open() {
 	got_metadata = 0;
@@ -675,6 +728,7 @@ extern "C" void mplayer_osd_open() {
 		osd_duration_bar_width = img->width;
 	}
 	osd_show = 1;
+	last_level=-1;
 }
 
 extern "C" void mplayer_osd_close() {
@@ -710,6 +764,7 @@ extern "C" void mplayer_osd_close() {
 	}
 	osd_display_info = 0;
 	osd_show = 0;
+	last_level=-1;
 }
 
 static void format_time(char * dest, double time) {
@@ -737,7 +792,11 @@ extern "C" void mplayer_osd_draw(int level) {
 		video_osd_info_cur_time->SetText(osd_cur_time);
 		video_osd_info_duration->SetText(osd_duration);
 
-		video_osd_info_filename->SetText(playerGetFilename());
+		if(last_level!=level){
+			video_osd_info_filename->SetText(playerGetFilename());
+			video_osd_info_filename->SetMaxWidth(644);
+			video_osd_info_filename->SetScroll(SCROLL_HORIZONTAL);
+		}
 
 		video_osd_progress_bar_front->SetImage(img, img->width, img->height);
 
@@ -796,6 +855,8 @@ extern "C" void mplayer_osd_draw(int level) {
 	} else {
 		osd_display_info = 0;
 	}
+	
+	last_level=level;
 
 	UpdatePads();
 	Menu_Frame();
@@ -845,17 +906,30 @@ static void Browser(const char * title, const char * root) {
 
 	mainWindow->Append(&menuBtn);
 
-	gui_browser_title->SetText(title);
+	browser_headline->SetText(title);
+	browser_subheadline->SetText(rootdir);
 	
 	mainWindow->Append(browser_top_bg);
-	mainWindow->Append(gui_browser_title);
+	mainWindow->Append(browser_headline);
+	mainWindow->Append(browser_subheadline);
+	mainWindow->Append(browser_pagecounter);
 
 	mainWindow->Append(browser_up_icon);
 	mainWindow->Append(browser_down_icon);
 	
 	last_menu = current_menu;
 	
+	int last_sel_item = -1;
+	
+	char tmp[256];
+	
 	while (current_menu == last_menu) {
+		if(last_sel_item!=browser.selIndex){
+			sprintf(tmp,"%d/%d",browser.selIndex+1,browser.numEntries);
+			browser_pagecounter->SetText(tmp);
+		}
+		
+		last_sel_item = browser.selIndex;
 		
 		if(browser.pageIndex){
 			// draw prev
@@ -911,7 +985,9 @@ static void Browser(const char * title, const char * root) {
 	mainWindow->Remove(browser_down_icon);
 
 	mainWindow->Remove(browser_top_bg);
-	mainWindow->Remove(gui_browser_title);
+	mainWindow->Remove(browser_headline);
+	mainWindow->Remove(browser_subheadline);
+	mainWindow->Remove(browser_pagecounter);
 	mainWindow->Remove(gui_browser);
 	mainWindow->Remove(&menuBtn);
 }
@@ -952,7 +1028,18 @@ static void HomePage() {
 
 	mainWindow->Append(&menuBtn);
 
+	static int last_device = -1;
+	
 	while (current_menu == HOME_PAGE) {
+		
+		int h_val = home_list_h->GetValue();
+		
+		if(last_device!=h_val){
+			home_curitem->SetText(device_list[h_val]);
+		}
+		
+		last_device = h_val;
+		
 		if (menuBtn.GetState() == STATE_CLICKED) {
 			switch (home_list_v->GetValue()) {
 				case 0:
@@ -996,8 +1083,8 @@ static void do_mplayer(char * filename) {
 	if (mplayer_need_init) {
 		char * argv[] = {
 			"mplayer.xenon",
-			//"-really-quiet",
-			"-demuxer","mkv",
+			"-really-quiet",
+			//"-demuxer","mkv",
 			"-menu",
 			//"-menu-startup",
 			"-lavdopts","skiploopfilter=all:threads=5",
@@ -1082,12 +1169,11 @@ void mount_all_ext2fs(){
 	int ret = ext2FindPartitions(&usb2mass_ops,&ext_usb_part);
 	if (ret > 0 && ext_usb_part) {
 		for(int i =0;i<ret;i++){
-			printf("Mount %d %08x\n",i,ext_usb_part[i]);
 			ext2Mount("uda",&usb2mass_ops,ext_usb_part[i],EXT2_CACHE_DEFAULT_PAGE_COUNT,EXT2_CACHE_DEFAULT_PAGE_SIZE,EXT2_FLAG_DEFAULT);
-			printf("Mount ok\n");
 		}
 	}
 }
+
 int main(int argc, char** argv) {
 	xenon_make_it_faster(XENON_SPEED_FULL);
 	

@@ -733,6 +733,7 @@ public:
 	void ResetText();
 	//!Constantly called to draw the text
 	void Draw();
+	int GetLeft();
 protected:
 	XeColor color; //!< Font color
 	wchar_t* text; //!< Translated Unicode text value
@@ -747,7 +748,6 @@ protected:
 	int textScrollDelay; //!< Scrolling speed
 	u16 style; //!< FreeTypeGX style attributes
 	bool wrap; //!< Wrapping toggle
-	XenosSurface * xe_texture;
 };
 
 //!Display, manage, and manipulate tooltips in the GUI

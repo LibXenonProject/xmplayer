@@ -465,12 +465,10 @@ uint16_t FreeTypeGX::getWidth(wchar_t *text) {
 		if (glyphData != NULL) {
 			if (this->ftKerningEnabled && (i > 0)) {
 				FT_Get_Kerning(ftFace, this->fontData[text[i - 1]].glyphIndex, glyphData->glyphIndex, FT_KERNING_DEFAULT, &pairDelta);
-				//                strWidth += pairDelta.x >> 6;
 				strWidth += pairDelta.x >> 6;
 			}
 
 			strWidth += glyphData->glyphAdvanceX;
-			//            strWidth += (glyphData->glyphAdvanceX)*2;
 		}
 		++i;
 	}

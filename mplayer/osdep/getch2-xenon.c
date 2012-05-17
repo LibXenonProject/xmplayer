@@ -131,6 +131,7 @@ static int getch2_internal(void) {
 		get_controller_down(&d_ctrl, i);
 		
 		if(gui_input_use==0){
+/*
 			if (d_ctrl.left)
 				key = KEY_LEFT;
 			if (d_ctrl.right)
@@ -158,7 +159,36 @@ static int getch2_internal(void) {
 				key = 'r';
 			if (d_ctrl.lb)
 				key = 'l';
+*/
 
+			if (ctrl[i].left)
+				key = KEY_LEFT;
+			if (ctrl[i].right)
+				key = KEY_RIGHT;
+			if (ctrl[i].up)
+				key = KEY_UP;
+			if (ctrl[i].down)
+				key = KEY_DOWN;
+
+			if (ctrl[i].start)
+				key = KEY_ENTER;
+			if (ctrl[i].select)
+				key = ' ';
+			if (ctrl[i].logo)
+				key = 'X';
+
+			if (ctrl[i].a)
+				key = 'a';
+			if (ctrl[i].b)
+				key = 'b';
+			if (ctrl[i].x)
+				key = 'x';
+
+			if (ctrl[i].rb)
+				key = 'r';
+			if (ctrl[i].lb)
+				key = 'l';
+			
 			if (ctrl[i].rt>100)
 				key = 'R';
 			if (ctrl[i].lt>100)

@@ -55,8 +55,6 @@ GuiText::GuiText(const char * t, int s, XeColor c) {
 
     for (int i = 0; i < 20; i++)
         textDyn[i] = NULL;
-
-    xe_texture = NULL;
 }
 
 
@@ -88,7 +86,6 @@ c.lcol = u32c;
     for (int i = 0; i < 20; i++)
         textDyn[i] = NULL;
 
-    xe_texture = NULL;
 }
 /**
  * Constructor for the GuiText class, uses presets
@@ -118,8 +115,6 @@ GuiText::GuiText(const char * t) {
 
     for (int i = 0; i < 20; i++)
         textDyn[i] = NULL;
-
-    xe_texture = NULL;
 }
 
 /**
@@ -135,11 +130,6 @@ GuiText::~GuiText() {
         for (int i = 0; i < textDynNum; i++)
             if (textDyn[i])
                 delete[] textDyn[i];
-    }
-
-    if (xe_texture) {
-        TR;
-        Xe_DestroyTexture(g_pVideoDevice, xe_texture);
     }
 }
 
@@ -165,11 +155,6 @@ void GuiText::SetText(const char * t) {
         origText = strdup(t);
         text = charToWideChar(gettext(t));
     }
-
-    if (xe_texture) {
-        TR;
-        Xe_DestroyTexture(g_pVideoDevice, xe_texture);
-    }
 }
 
 void GuiText::SetWText(wchar_t * t) {
@@ -192,11 +177,6 @@ void GuiText::SetWText(wchar_t * t) {
 
     if (t)
         text = wcsdup(t);
-
-    if (xe_texture) {
-        TR;
-        Xe_DestroyTexture(g_pVideoDevice, xe_texture);
-    }
 }
 
 int GuiText::GetLength() {
@@ -336,11 +316,15 @@ void GuiText::ResetText() {
 
     textDynNum = 0;
     currentSize = 0;
+}
 
-    if (xe_texture) {
-        TR;
-        Xe_DestroyTexture(g_pVideoDevice, xe_texture);
-    }
+
+int GuiText::GetLeft() {
+	int x = GuiElement::GetLeft();
+	if((style & FTGX_JUSTIFY_RIGHT) && (maxWidth>0)){
+		x = (x + maxWidth) - GetTextWidth();
+	}
+	return x;
 }
 
 /**
@@ -366,16 +350,7 @@ void GuiText::Draw() {
         if (!fontSystem[newSize])
             fontSystem[newSize] = new FreeTypeGX(newSize);
         currentSize = newSize;
-    }
-    
-    if (xe_texture == NULL){
-//        TR;
-//        printf("create\r\n");
-//        printf("this->getWidth(text) = %d\r\n",fontSystem[currentSize]->getWidth(text));
-//        printf("this->getHeight(text) = %d\r\n",fontSystem[currentSize]->getHeight(text));
-//        xe_texture = Xe_CreateTexture(g_pVideoDevice, fontSystem[currentSize]->getWidth(text), fontSystem[currentSize]->getHeight(text), 0, XE_FMT_8888 | XE_FMT_ARGB, 0);
-    }
-    
+    }    
 
     if (maxWidth == 0) {
         fontSystem[currentSize]->drawText(this->GetLeft(), this->GetTop(), text, c, style);
