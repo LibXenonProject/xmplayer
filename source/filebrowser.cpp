@@ -159,8 +159,7 @@ int extValid(char * ext) {
 /***************************************************************************
  * Browse subdirectories
  **************************************************************************/
-int
-ParseDirectory() {
+int ParseDirectory() {
 	DIR *dir = NULL;
 	char fulldir[MAXPATHLEN];
 	struct dirent *entry;

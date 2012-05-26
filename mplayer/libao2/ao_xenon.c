@@ -43,8 +43,6 @@ static const ao_info_t info = {
 
 LIBAO_EXTERN(xenon)
 
-static unsigned char * xenon_sound_buffer = NULL;
-
 /*
 // to set/get/query special features/parameters
 */
@@ -63,16 +61,12 @@ static void sound_reset(void){
 static int init(int rate, int channels, int format, int flags) {
 	xenon_sound_init();
 	
-	//ao_data.outburst = BUFFER_SIZE;
 	ao_data.buffersize = XENON_BUFFER_SIZE;
 	ao_data.outburst = 2048;
 	ao_data.channels = 2;
 	ao_data.samplerate = 48000;
 	ao_data.format = AF_FORMAT_S16_LE;
 	ao_data.bps = ao_data.channels * ao_data.samplerate * sizeof(signed short);	
-
-	// maybe a bit big ...
-	//xenon_sound_buffer = (unsigned char *)memalign(32, ao_data.buffersize * ao_data.outburst *  ao_data.channels * sizeof(signed short));
 	
 	return 1;
 }
@@ -87,7 +81,6 @@ static void uninit(int immed) {
 // stop playing and empty buffers (for seeking/pause)
 */
 static void reset(void) {
-	//	buffer = 0;
 	sound_reset();
 }
 
@@ -95,7 +88,6 @@ static void reset(void) {
 // stop playing, keep buffers (for pause)
 */
 static void audio_pause(void) {
-	// for now, just call reset();
 	reset();
 }
 
@@ -111,7 +103,7 @@ static void audio_resume(void) {
 */
 static int get_space(void) {
 
-	return xenon_sound_get_free();
+	return ao_data.buffersize - xenon_sound_get_unplayed();
 }
 
 /*
@@ -123,10 +115,6 @@ static int play(void* data, int len, int flags) {
 	if (!(flags & AOPLAY_FINAL_CHUNK))
 		len -= len % ao_data.outburst;
 	
-/*
-	unsigned char * dest = xenon_sound_buffer + (xenon_sound_get_unplayed());
-	memcpy(dest,data,len);
-*/
 	xenon_sound_submit(data, len);
 
 	return len;
@@ -136,7 +124,6 @@ static int play(void* data, int len, int flags) {
  * return: delay in seconds between first and last sample in buffer
  */ 
 static float get_delay(void) {
-	//return ((float) (ao_data.buffersize - xenon_sound_get_free())) / ((float) ao_data.bps);
 	return ((float) (ao_data.buffersize - xenon_sound_get_unplayed())) / ((float) ao_data.bps);
 }
 

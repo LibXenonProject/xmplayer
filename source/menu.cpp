@@ -868,7 +868,8 @@ extern "C" void mplayer_osd_draw(int level) {
 }
 
 static void Browser(const char * title, const char * root) {
-	BrowseDevice("", root);
+	ResetBrowser();
+	BrowseDevice("/", root);
 
 	// apply correct icon
 	switch (current_menu) {
@@ -1159,20 +1160,7 @@ static void findDevices() {
 	root_dev = device_list[0];
 }
 
-extern DISC_INTERFACE xenon_ata_ops;
-extern DISC_INTERFACE usb2mass_ops;
-
-extern "C" void init_xtaf();
-
-void mount_all_ext2fs(){
-	sec_t *ext_usb_part;
-	int ret = ext2FindPartitions(&usb2mass_ops,&ext_usb_part);
-	if (ret > 0 && ext_usb_part) {
-		for(int i =0;i<ret;i++){
-			ext2Mount("uda",&usb2mass_ops,ext_usb_part[i],EXT2_CACHE_DEFAULT_PAGE_COUNT,EXT2_CACHE_DEFAULT_PAGE_SIZE,EXT2_FLAG_DEFAULT);
-		}
-	}
-}
+extern "C" void mount_all_devices();
 
 int main(int argc, char** argv) {
 	xenon_make_it_faster(XENON_SPEED_FULL);
@@ -1182,7 +1170,7 @@ int main(int argc, char** argv) {
 
 	/** loool **/
 	logo = loadPNGFromMemory((unsigned char*) logo_png);
-
+	
 	Xe_SetClearColor(g_pVideoDevice, 0xFFFFFFFF);
 	
 	Menu_DrawImg(0, 0, 1280, 720, logo, 0, 1, 1, 0xff);
@@ -1197,18 +1185,7 @@ int main(int argc, char** argv) {
 	xenon_ata_init();
 	usb_do_poll();
 	
-	// fat
-	fatInitDefault();
-	
-	// ntfs
-	ntfs_md * md;
-	ntfsMountAll(&md,NTFS_READ_ONLY);
-	
-	// ext2fs
-	mount_all_ext2fs();
-	
-	// xtaf
-	init_xtaf();
+	mount_all_devices();
 	
 	init_mplayer();
 

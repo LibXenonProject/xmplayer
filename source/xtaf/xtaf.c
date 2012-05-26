@@ -15,7 +15,7 @@
 #include "fakeio.h"
 #include "xtaf.h"
 
-#include "ata.h"
+#include <diskio/ata.h>
 #include "cache.h"
 
 //	http://www.free60.org/FATX
@@ -420,8 +420,8 @@ static const DISC_INTERFACE* get_io_ata(void) {
 }
 #endif
 
-void init_xtaf() {
+int XTATMount() {
 	DISC_INTERFACE* disc = get_io_ata();
 
-	xtaf_init(&ctx, disc);
+	return xtaf_init(&ctx, disc);
 }

@@ -31,24 +31,3 @@ void init_mplayer(){
 	setenv("HOME",MPLAYER_ENV,1);
 }
 
-typedef void *(*xenon_thread_func)(void*);
-static void * args_stack;
-static unsigned char stack[0x10000];
-static xenon_thread_func _func;
-
-static void thread_runner(void){
-	TR;
-	_func(args_stack);
-	TR;
-}
-
-// used by cache
-int xenon_thread_create(int *thread,  void *(*start_routine)(void*), void *arg){
-	TR;
-	// run on thread 5
-	thread[0]=5;
-	args_stack = arg;
-	_func = start_routine;
-	xenon_run_thread_task(5,stack - 0x100,thread_runner);
-	return 5;
-}
