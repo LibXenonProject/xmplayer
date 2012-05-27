@@ -8,14 +8,14 @@
 #include <sys/reent.h>
 #include <diskio/disc_io.h>
 #include <sys/iosupport.h>
-
+#include <diskio/ata.h>
 #include <debug.h>
-#include "fakeio.h"
 #include "xtaf.h"
-#include "ata.h"
 
 #include "xtaf_util.h"
 #include "xtaf_endian.h"
+
+#define FS_MOUNT_NAME "sda"
 
 static const devoptab_t dotab_xtaf = {
 	"xtaf",
@@ -46,9 +46,9 @@ static const devoptab_t dotab_xtaf = {
 };
 
 xtaf_partition_table partition_table[3] = {
-	{"hdd0", 0x120eb0000, 0x10000000}, // Xbox 1 Backwards Compatibility
-	{"hdd1", 0x130eb0000, 0}, // 360
-	{"null", 0, 0}// End
+	{FS_MOUNT_NAME"0", 0x120eb0000, 0x10000000}, // Xbox 1 Backwards Compatibility
+	{FS_MOUNT_NAME"1", 0x130eb0000, 0}, // 360
+	{"", 0, 0}// End
 };
 
 //extern xtaf_context *pCtx;
@@ -74,21 +74,20 @@ void print_partition_information(struct xtaf_partition_private *partition) {
 	memcpy(magic, (const char*) partition->magic, 4);
 	magic[4] = 0;
 
-	printf("\n\nPartition Information :\n");
-	printf("fat_file_size       =	%08x\n", partition->fat_file_size * XENON_DISK_SECTOR_SIZE);
+	xprintf("\n\nPartition Information :\n");
+	xprintf("fat_file_size       =	%08x\n", partition->fat_file_size * XENON_DISK_SECTOR_SIZE);
 
-	printf("magic               =	%s\n", magic);
-	printf("id                  =	%08x\n", partition->partitionId);
-	printf("sector_per_cluster  =	%08x\n", partition->sectorsPerCluster);
+	xprintf("magic               =	%s\n", magic);
+	xprintf("id                  =	%08x\n", partition->partitionId);
+	xprintf("sector_per_cluster  =	%08x\n", partition->sectorsPerCluster);
 
-	printf("fat_offset          =	%16lx\n", (partition->fat_offset + partition->partition_start_offset) * XENON_DISK_SECTOR_SIZE);
-	printf("root_cluster        =	%08x\n", partition->rootDirCluster);
-	printf("clusters_size       =	%08x\n", partition->bytesPerCluster);
-	printf("root_offset         =	%16lx\n", (partition->root_offset + partition->partition_start_offset) * XENON_DISK_SECTOR_SIZE);
-	
-	
-	printf("fat_offset s         =	%8x\n", (partition->fat_offset + partition->partition_start_offset) );
-	printf("root_offset s       =%8x\n", (partition->root_offset + partition->partition_start_offset));
+	xprintf("fat_offset          =	%16lx\n", (partition->fat_offset + partition->partition_start_offset) * XENON_DISK_SECTOR_SIZE);
+	xprintf("root_cluster        =	%08x\n", partition->rootDirCluster);
+	xprintf("clusters_size       =	%08x\n", partition->bytesPerCluster);
+	xprintf("root_offset         =	%16lx\n", (partition->root_offset + partition->partition_start_offset) * XENON_DISK_SECTOR_SIZE);
+		
+	xprintf("fat_offset s         =	%8x\n", (partition->fat_offset + partition->partition_start_offset) );
+	xprintf("root_offset s       =%8x\n", (partition->root_offset + partition->partition_start_offset));
 }
 
 int xtaf_init_fs(struct xtaf_partition_private *partition) {
@@ -131,7 +130,9 @@ xtaf_partition_private * xtaf_mount(void * disc, uint32_t start_sector, uint32_t
 	bool err;
 	static int partition_nbr = 0;
 	devoptab_t* devops;
-	char name[]="xf0";	
+	char * nameCopy;
+	char name[]=FS_MOUNT_NAME;	
+	
 	name[2] = partition_nbr+'0';
 
 	xtaf_partition_private * partition = (xtaf_partition_private*)_XTAF_mem_allocate(sizeof(xtaf_partition_private));
@@ -155,7 +156,7 @@ xtaf_partition_private * xtaf_mount(void * disc, uint32_t start_sector, uint32_t
 	}
 
 	if (memcmp(sectorBuffer, "XTAF", 4) == 0) {
-		printf("found a parition at %08x\n",start_sector);
+		xprintf("found a parition at %08x\n",start_sector);
 		
 		struct _xtaf_partition_hdr_s * p = (struct _xtaf_partition_hdr_s*) sectorBuffer;
 
@@ -185,7 +186,7 @@ xtaf_partition_private * xtaf_mount(void * disc, uint32_t start_sector, uint32_t
 	devops = _XTAF_mem_allocate (sizeof(devoptab_t) + strlen(name) + 1);
 	
 	// Use the space allocated at the end of the devoptab struct for storing the name
-	char * nameCopy = (char*)(devops+1);
+	nameCopy = (char*)(devops+1);
 	
 	// Add an entry for this device to the devoptab table
 	memcpy (devops, &dotab_xtaf, sizeof(dotab_xtaf));
@@ -195,39 +196,33 @@ xtaf_partition_private * xtaf_mount(void * disc, uint32_t start_sector, uint32_t
 
 	err =  AddDevice (devops);
 	
-	printf("err = %d\r\n",err);
+	xprintf("err = %d\r\n",err);
 
 	return partition;
 }
 
 /** xtaf_init init sata, and look for xtaf partition **/
 int xtaf_init(struct xtaf_context *ctx, DISC_INTERFACE * disc) {
-	/*
-		if (pCtx == NULL) {
-			pCtx = ctx;
-		}
-	 */
+	int partition_nbr = 0;
+	int found = 0;
+	uint8_t *sectorBuffer = NULL;
+	int is_devkit_hdd = xtaf_check_hdd_type();
+	
+	
 	ctx->dev = disc;
 	if (disc == NULL) {
 		xprintf("disc is nulll\r\n\r\n");
 	}
 	
 	// start disc
-	disc->startup();
-
-	int err;
-	int partition_nbr = 0;
-
-	int is_devkit_hdd = xtaf_check_hdd_type();
+	disc->startup();	
 
 	if (is_devkit_hdd == 1) {
-		printf("Devkit hdd not supported\r\n");
+		xprintf("Devkit hdd not supported\r\n");
 		return -1;
 	}
 
-	int found = 0;
-
-	uint8_t *sectorBuffer = (uint8_t*) _XTAF_mem_allocate(XENON_DISK_SECTOR_SIZE);
+	sectorBuffer = (uint8_t*) _XTAF_mem_allocate(XENON_DISK_SECTOR_SIZE);
 
 	// use only 1 parition for now ...
 	while (1) {

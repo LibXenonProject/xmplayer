@@ -1,5 +1,7 @@
 #pragma once
 
+//#define XTAF_DEBUG
+
 #include <diskio/disc_io.h>
 #include "cache.h"
 
@@ -10,8 +12,6 @@
 #endif
 
 #define XTAF_DIR_FLAGS 0x10
-
-//#define xprintf(...) printf(__VA_ARGS__)
 
 #define DEFAULT_CACHE_PAGES 8
 #define DEFAULT_SECTORS_PAGE 128
@@ -231,3 +231,6 @@ int xtaf_directory_entryFromPath(xtaf_partition_private* partition, struct _xtaf
 DIR_ITER* xtaf_diropen_r(struct _reent *r, DIR_ITER *dirState, const char *path);
 int xtaf_dirnext_r(struct _reent *r, DIR_ITER *dirState, char *filename, struct stat *st) ;
 int xtaf_dirclose_r(struct _reent *r, DIR_ITER *dirState);
+int xtaf_parse_entry(xtaf_partition_private * priv, struct _xtaf_directory_s * data);
+
+int XTATMount();

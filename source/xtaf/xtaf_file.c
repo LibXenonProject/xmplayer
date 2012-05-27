@@ -8,13 +8,11 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <sys/reent.h>
+#include <diskio/ata.h>
 #include <sys/iosupport.h>
 #include <debug.h>
 
-#include "fakeio.h"
 #include "xtaf.h"
-
-#include "ata.h"
 
 #define FILE_MAX_SIZE 4294967296
 #define CLUSTER_END 0xFFFFFFF8
