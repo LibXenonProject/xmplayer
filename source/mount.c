@@ -4,6 +4,7 @@
  **/
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <debug.h>
 #include <libfat/fat.h>
 #include <libext2/ext2.h>
@@ -485,11 +486,10 @@ extern int XTATMount();
  */
 void mount_all_devices() {
 	FindPartitions(DEVICE_USB);
-/*
+	
 	if (xenon_ata_ops.isInserted()) {
 		if (XTATMount() == 0) {
 			FindPartitions(DEVICE_ATA);
 		}
 	}
-*/
 }
