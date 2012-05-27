@@ -485,11 +485,10 @@ extern int XTATMount();
  */
 void mount_all_devices() {
 	FindPartitions(DEVICE_USB);
-/*
+	
 	if (xenon_ata_ops.isInserted()) {
 		if (XTATMount() == 0) {
 			FindPartitions(DEVICE_ATA);
 		}
 	}
-*/
 }
