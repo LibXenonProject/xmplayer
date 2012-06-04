@@ -58,15 +58,7 @@ uint32_t xfat_get_next_cluster(xtaf_partition_private *partition, uint32_t clust
 
 	uint32_t next;
 
-<<<<<<< HEAD
-	//ioread(priv, (unsigned char*) &next, priv->fat_offset + (cluster_id * fatmult), fatmult);
-
-	err = _XTAF_cache_readPartialSector(partition->cache, &next, sector, seek_pos, fatmult);
-
-	//ioread(priv,&next,(priv->fat_offset + (cluster_id * fatmult))*0x200,fatmult);
-=======
 	_XTAF_cache_readPartialSector(partition->cache, &next, sector, seek_pos, fatmult);
->>>>>>> 903aecb7e06cf25b10d9b6aee1ef274345a15ece
 
 	xprintf("%lx\n", (uint64_t) sector * 0x200);
 
@@ -151,11 +143,6 @@ int xtaf_directory_entryFromPath(xtaf_partition_private* partition, struct _xtaf
 				} else {
 					partition->extent_offset = 0;
 					partition->current_sector = ((dir_entry->starting_cluster - 1) * cluster_size);
-<<<<<<< HEAD
-
-=======
-					
->>>>>>> 903aecb7e06cf25b10d9b6aee1ef274345a15ece
 					found = 1;
 				}
 			}

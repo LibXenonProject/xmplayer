@@ -85,12 +85,7 @@ void print_partition_information(struct xtaf_partition_private *partition) {
 	xprintf("root_cluster        =	%08x\n", partition->rootDirCluster);
 	xprintf("clusters_size       =	%08x\n", partition->bytesPerCluster);
 	xprintf("root_offset         =	%16lx\n", (partition->root_offset + partition->partition_start_offset) * XENON_DISK_SECTOR_SIZE);
-<<<<<<< HEAD
-	
-	
-=======
-		
->>>>>>> 903aecb7e06cf25b10d9b6aee1ef274345a15ece
+
 	xprintf("fat_offset s         =	%8x\n", (partition->fat_offset + partition->partition_start_offset) );
 	xprintf("root_offset s       =%8x\n", (partition->root_offset + partition->partition_start_offset));
 }
