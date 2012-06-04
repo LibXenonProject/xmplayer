@@ -231,3 +231,7 @@ int xtaf_directory_entryFromPath(xtaf_partition_private* partition, struct _xtaf
 DIR_ITER* xtaf_diropen_r(struct _reent *r, DIR_ITER *dirState, const char *path);
 int xtaf_dirnext_r(struct _reent *r, DIR_ITER *dirState, char *filename, struct stat *st) ;
 int xtaf_dirclose_r(struct _reent *r, DIR_ITER *dirState);
+int xtaf_parse_entry(xtaf_partition_private * priv, struct _xtaf_directory_s * data);
+
+
+int XTATMount();

@@ -66,7 +66,7 @@ uint32_t xfat_get_next_cluster(xtaf_partition_private *partition, uint32_t clust
 
 	//ioread(priv, (unsigned char*) &next, priv->fat_offset + (cluster_id * fatmult), fatmult);
 
-	bool read_err = _XTAF_cache_readPartialSector(partition->cache, &next, sector, seek_pos, fatmult);
+	err = _XTAF_cache_readPartialSector(partition->cache, &next, sector, seek_pos, fatmult);
 
 	//ioread(priv,&next,(priv->fat_offset + (cluster_id * fatmult))*0x200,fatmult);
 
@@ -144,8 +144,6 @@ int xtaf_directory_entryFromPath(xtaf_partition_private* partition, struct _xtaf
 				if (dir_entry->flags & XTAF_DIR_FLAGS) {
 					partition->extent_offset = 0;
 					partition->current_sector = ((dir_entry->starting_cluster - 1) * cluster_size);
-
-					xprintf("found a dir %s\r\n", fat_name);
 										
 					if(tt == NULL || tt>=pathEnd){
 						found = 1;
@@ -153,15 +151,9 @@ int xtaf_directory_entryFromPath(xtaf_partition_private* partition, struct _xtaf
 					
 					break;
 				} else {
-					xprintf("found a file %s\r\n", dir_entry->filename);
-					xprintf("size %d\r\n", dir_entry->file_size);
-
 					partition->extent_offset = 0;
 					partition->current_sector = ((dir_entry->starting_cluster - 1) * cluster_size);
 
-					uint64_t offset = ((dir_entry->starting_cluster - 1) * cluster_size) + partition->root_offset + partition->partition_start_offset;
-					xprintf("offset : %16lx\r\n", offset * 0x200);
-					
 					found = 1;
 				}
 			}
@@ -307,9 +299,6 @@ if (tt[0] == 0) {
 					file_private->partition->extent_offset = 0;
 					file_private->partition->current_sector = ((file_private->startCluster - 1) * cluster_size);
 
-					uint64_t offset = ((file_private->startCluster - 1) * cluster_size) + file_private->partition->root_offset + file_private->partition->partition_start_offset;
-					xprintf("offset : %16lx\r\n", offset * 0x200);
-
 					strcpy(name, tt);
 					return 1;
 				}
@@ -391,9 +380,6 @@ if (tt[0] == 0) {
 					entry->partition->extent_offset = 0;
 					entry->partition->current_sector = ((entry->startCluster - 1) * cluster_size);
 
-					uint64_t offset = ((entry->startCluster - 1) * cluster_size) + entry->partition->root_offset + entry->partition->partition_start_offset;
-					xprintf("offset : %16lx\r\n", offset * 0x200);
-
 					strcpy(name, tt);
 					return 1;
 				}
@@ -415,7 +401,7 @@ static struct xtaf_context ctx;
 #ifdef XENON
 extern DISC_INTERFACE xenon_ata_ops;
 
-static const DISC_INTERFACE* get_io_ata(void) {
+static DISC_INTERFACE* get_io_ata(void) {
 	return &xenon_ata_ops;
 }
 #endif

@@ -12,6 +12,8 @@
 #include <diskio/disc_io.h>
 #include <byteswap.h>
 
+#include "../mplayer/mplayerlib.h"
+
 extern DISC_INTERFACE xenon_atapi_ops;
 extern DISC_INTERFACE xenon_ata_ops;
 extern DISC_INTERFACE usb2mass_ops;

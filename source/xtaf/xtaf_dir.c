@@ -106,7 +106,7 @@ int xtaf_dirnext_r(struct _reent *r, DIR_ITER *dirState, char *filename, struct 
 		st->st_ctime = xtaf_build_time(state->entryInfo.creation_date, state->entryInfo.creation_time);
 		st->st_mtime = xtaf_build_time(state->entryInfo.update_date, state->entryInfo.update_time);
 
-		strncpy(filename, state->entryInfo.filename, 0x2A);
+		strncpy(filename, (char*)state->entryInfo.filename, 0x2A);
 
 		return 0;
 	}

@@ -868,6 +868,7 @@ extern "C" void mplayer_osd_draw(int level) {
 }
 
 static void Browser(const char * title, const char * root) {
+	gui_browser->ResetState();
 	ResetBrowser();
 	BrowseDevice("/", root);
 
@@ -891,6 +892,7 @@ static void Browser(const char * title, const char * root) {
 			break;
 	}
 
+	
 	//mainWindow->SetAlignment(ALIGN_CENTRE,ALIGN_MIDDLE);
 	mainWindow->Append(gui_browser);
 

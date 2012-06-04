@@ -74,7 +74,7 @@ void GuiFileBrowser::SetPageSize(int size) {
 		});
 		fileListText[i]->SetAlignment(ALIGN_LEFT, ALIGN_MIDDLE);
 		fileListText[i]->SetPosition(5, 0);
-		fileListText[i]->SetMaxWidth(this->GetWidth());
+		fileListText[i]->SetMaxWidth(this->GetWidth()  - 50);
 
 		fileListBg[i] = new GuiImage(bgFileSelectionEntry);
 		fileListFolder[i] = new GuiImage(fileFolder);

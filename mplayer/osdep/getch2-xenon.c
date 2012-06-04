@@ -131,7 +131,6 @@ static int getch2_internal(void) {
 		get_controller_down(&d_ctrl, i);
 		
 		if(gui_input_use==0){
-/*
 			if (d_ctrl.left)
 				key = KEY_LEFT;
 			if (d_ctrl.right)
@@ -159,8 +158,8 @@ static int getch2_internal(void) {
 				key = 'r';
 			if (d_ctrl.lb)
 				key = 'l';
-*/
 
+/*
 			if (ctrl[i].left)
 				key = KEY_LEFT;
 			if (ctrl[i].right)
@@ -188,6 +187,7 @@ static int getch2_internal(void) {
 				key = 'r';
 			if (ctrl[i].lb)
 				key = 'l';
+ */ 
 			
 			if (ctrl[i].rt>100)
 				key = 'R';

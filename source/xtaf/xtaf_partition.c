@@ -74,21 +74,21 @@ void print_partition_information(struct xtaf_partition_private *partition) {
 	memcpy(magic, (const char*) partition->magic, 4);
 	magic[4] = 0;
 
-	printf("\n\nPartition Information :\n");
-	printf("fat_file_size       =	%08x\n", partition->fat_file_size * XENON_DISK_SECTOR_SIZE);
+	xprintf("\n\nPartition Information :\n");
+	xprintf("fat_file_size       =	%08x\n", partition->fat_file_size * XENON_DISK_SECTOR_SIZE);
 
-	printf("magic               =	%s\n", magic);
-	printf("id                  =	%08x\n", partition->partitionId);
-	printf("sector_per_cluster  =	%08x\n", partition->sectorsPerCluster);
+	xprintf("magic               =	%s\n", magic);
+	xprintf("id                  =	%08x\n", partition->partitionId);
+	xprintf("sector_per_cluster  =	%08x\n", partition->sectorsPerCluster);
 
-	printf("fat_offset          =	%16lx\n", (partition->fat_offset + partition->partition_start_offset) * XENON_DISK_SECTOR_SIZE);
-	printf("root_cluster        =	%08x\n", partition->rootDirCluster);
-	printf("clusters_size       =	%08x\n", partition->bytesPerCluster);
-	printf("root_offset         =	%16lx\n", (partition->root_offset + partition->partition_start_offset) * XENON_DISK_SECTOR_SIZE);
+	xprintf("fat_offset          =	%16lx\n", (partition->fat_offset + partition->partition_start_offset) * XENON_DISK_SECTOR_SIZE);
+	xprintf("root_cluster        =	%08x\n", partition->rootDirCluster);
+	xprintf("clusters_size       =	%08x\n", partition->bytesPerCluster);
+	xprintf("root_offset         =	%16lx\n", (partition->root_offset + partition->partition_start_offset) * XENON_DISK_SECTOR_SIZE);
 	
 	
-	printf("fat_offset s         =	%8x\n", (partition->fat_offset + partition->partition_start_offset) );
-	printf("root_offset s       =%8x\n", (partition->root_offset + partition->partition_start_offset));
+	xprintf("fat_offset s         =	%8x\n", (partition->fat_offset + partition->partition_start_offset) );
+	xprintf("root_offset s       =%8x\n", (partition->root_offset + partition->partition_start_offset));
 }
 
 int xtaf_init_fs(struct xtaf_partition_private *partition) {
@@ -155,7 +155,7 @@ xtaf_partition_private * xtaf_mount(void * disc, uint32_t start_sector, uint32_t
 	}
 
 	if (memcmp(sectorBuffer, "XTAF", 4) == 0) {
-		printf("found a parition at %08x\n",start_sector);
+		xprintf("found a parition at %08x\n",start_sector);
 		
 		struct _xtaf_partition_hdr_s * p = (struct _xtaf_partition_hdr_s*) sectorBuffer;
 
