@@ -4,6 +4,7 @@
  **/
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <debug.h>
 #include <libfat/fat.h>
 #include <libext2/ext2.h>

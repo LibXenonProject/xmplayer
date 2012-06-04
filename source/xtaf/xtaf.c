@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -10,12 +9,10 @@
 #include <sys/stat.h>
 #include <limits.h>
 #include <sys/dirent.h>
-
-#include <debug.h>
-#include "fakeio.h"
-#include "xtaf.h"
-
 #include <diskio/ata.h>
+#include <debug.h>
+
+#include "xtaf.h"
 #include "cache.h"
 
 //	http://www.free60.org/FATX
@@ -45,9 +42,6 @@
 
 /** get next cluster used by the file stream **/
 uint32_t xfat_get_next_cluster(xtaf_partition_private *partition, uint32_t cluster_id) {
-
-	bool err;
-
 	//se position a l'adresse de la fat
 	uint64_t file_system_size = partition->numberOfSectors;
 	uint32_t spc = partition->sectorsPerCluster; /* sectors per cluster */
@@ -64,11 +58,15 @@ uint32_t xfat_get_next_cluster(xtaf_partition_private *partition, uint32_t clust
 
 	uint32_t next;
 
+<<<<<<< HEAD
 	//ioread(priv, (unsigned char*) &next, priv->fat_offset + (cluster_id * fatmult), fatmult);
 
 	err = _XTAF_cache_readPartialSector(partition->cache, &next, sector, seek_pos, fatmult);
 
 	//ioread(priv,&next,(priv->fat_offset + (cluster_id * fatmult))*0x200,fatmult);
+=======
+	_XTAF_cache_readPartialSector(partition->cache, &next, sector, seek_pos, fatmult);
+>>>>>>> 903aecb7e06cf25b10d9b6aee1ef274345a15ece
 
 	xprintf("%lx\n", (uint64_t) sector * 0x200);
 
@@ -153,7 +151,11 @@ int xtaf_directory_entryFromPath(xtaf_partition_private* partition, struct _xtaf
 				} else {
 					partition->extent_offset = 0;
 					partition->current_sector = ((dir_entry->starting_cluster - 1) * cluster_size);
+<<<<<<< HEAD
 
+=======
+					
+>>>>>>> 903aecb7e06cf25b10d9b6aee1ef274345a15ece
 					found = 1;
 				}
 			}
@@ -290,8 +292,8 @@ if (tt[0] == 0) {
 					strcpy(name, tt);
 					return 2;
 				} else {
-					xprintf("found a file %s\r\n", file_private->finfo.filename);
-					xprintf("size %d\r\n", file_private->finfo.file_size);
+					xprintf("found a file %s\r\n", file_private->entryInfo.filename);
+					xprintf("size %d\r\n", file_private->entryInfo.file_size);
 
 					file_private->filesize = file_private->entryInfo.file_size;
 					file_private->startCluster = file_private->entryInfo.starting_cluster;
@@ -330,14 +332,6 @@ int xtaf_get_dir(xtaf_dir_entry * entry, char *name) {
 
 	while (1) {
 		tt = parse_path(fat_name, tt);
-		/*
-if (tt[0] == 0) {
-	xprintf("Dir Found : %s\r\n", name);
-	return 0;
-}
-		 */
-		//printf("parse_path %s\r\n",tt);
-
 
 		while (1) {
 			// browse the fat
@@ -371,8 +365,8 @@ if (tt[0] == 0) {
 					strcpy(name, tt);
 					return 2;
 				} else {
-					xprintf("found a file %s\r\n", file_private->finfo.filename);
-					xprintf("size %d\r\n", file_private->finfo.file_size);
+					xprintf("found a file %s\r\n", entry->entryInfo.filename);
+					xprintf("size %d\r\n", entry->entryInfo.file_size);
 
 					entry->filesize = entry->entryInfo.file_size;
 					entry->startCluster = entry->entryInfo.starting_cluster;
@@ -392,10 +386,6 @@ if (tt[0] == 0) {
 	//can't open
 	return -1;
 }
-
-#define MAX_ALIAS_LENGTH 13
-
-
 
 static struct xtaf_context ctx;
 #ifdef XENON

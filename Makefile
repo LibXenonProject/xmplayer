@@ -9,6 +9,8 @@ endif
 
 include $(DEVKITXENON)/rules
 
+LDSCRIPT := $(CURDIR)/../mplayer.lds
+
 #---------------------------------------------------------------------------------
 # TARGET is the name of the output
 # BUILD is the directory where object files & intermediate files will be placed
