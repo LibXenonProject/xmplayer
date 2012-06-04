@@ -278,7 +278,6 @@ int pthread_create(pthread_t *thread, void *u,
 		last_thread_id = 1;
 	}
 #endif
-	TR;
 	printf("New thread on %d\r\n",last_thread_id);
 	
 	args_stack[last_thread_id]=arg;

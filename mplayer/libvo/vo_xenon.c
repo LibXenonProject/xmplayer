@@ -375,9 +375,11 @@ static void flip_page(void) {
         // Sync gpu
         Xe_Sync(g_pVideoDevice);
 
-        /* vsync - take care slow down video ... */
+        // vsync - take care slow down video ... 
+/*
         if (vo_vsync)
                 while (!Xe_IsVBlank(g_pVideoDevice));
+*/
 
         // refresh texture cache
         video_lock_yuvsurf(g_pTexture);
