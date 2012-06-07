@@ -67,6 +67,7 @@ extern "C" {
 	double playerGetDuration();
 	const char * playerGetFilename();
 	int playerGetStatus();
+	void playerGuiAsked();
 	
 	const char * playetGetMetaData(metadata_t type);
 

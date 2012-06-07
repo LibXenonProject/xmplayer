@@ -36,7 +36,7 @@
 #include "../build/logo_png.h"
 #include "../build/browser_list_btn_png.h"
 #include "../build/browser_folder_icon_f_png.h"
-
+#include "../build/options_menu_btn_png.h"
 #include "../build/browser_list_arrow_down_png.h"
 #include "../build/browser_list_arrow_up_png.h"
 
@@ -84,6 +84,12 @@
 #include "../build/options_menu_zoomin_icon_n_png.h"
 #include "../build/options_menu_zoomout_icon_f_png.h"
 #include "../build/options_menu_zoomout_icon_n_png.h"
+#include "../build/options_menu_gridview_icon_n_png.h"
+#include "../build/options_menu_gridview_icon_f_png.h"
+
+#include "../build/button_blue_png.h"
+#include "../build/button_red_png.h"
+#include "../build/button_green_png.h"
 
 #include "../build/options_menu_bg_x5_png.h"
 #include "../build/options_menu_bg_x6_png.h"
@@ -206,6 +212,11 @@ static GuiImage * home_music_img = NULL;
 static GuiImage * home_photo_img = NULL;
 static GuiImage * home_setting_img = NULL;
 
+static GuiText* home_video_txt = NULL;
+static GuiText * home_music_txt = NULL;
+static GuiText * home_photo_txt = NULL;
+static GuiText * home_setting_txt = NULL;
+
 /**
  * Not used yet
  **/
@@ -227,6 +238,8 @@ static GuiImage * osd_options_bg_x7 = NULL;
 static GuiImage * osd_options_menu_audio_channel_icon_f = NULL;
 static GuiImage * osd_options_menu_audio_channel_icon_n = NULL;
 
+static GuiImage * options_menu_icon_over[8]={NULL};
+
 static GuiImage * options_menu_info_icon_f = NULL;
 static GuiImage * options_menu_info_icon_n = NULL;
 
@@ -247,10 +260,14 @@ static GuiImage * options_menu_zoomin_icon_n = NULL;
 static GuiImage * options_menu_zoomout_icon_f = NULL;
 static GuiImage * options_menu_zoomout_icon_n = NULL;
 
+static GuiImage * options_menu_return_to_gui_f = NULL;
+static GuiImage * options_menu_return_to_gui_n = NULL;
+
 static GuiButton * osd_options_menu_audio_channel_btn = NULL;
 static GuiButton * osd_options_menu_info_btn = NULL;
 static GuiButton * osd_options_menu_pan_btn = NULL;
 static GuiButton * osd_options_menu_repeat_btn = NULL;
+static GuiButton * osd_options_menu_next_btn = NULL;
 static GuiButton * osd_options_menu_subtitle_btn = NULL;
 static GuiButton * osd_options_menu_zoomin_btn = NULL;
 static GuiButton * osd_options_menu_zoomout_btn = NULL;
@@ -297,6 +314,15 @@ static void osd_options_vsync_callback(void * data) {
 	if (button->GetState() == STATE_CLICKED) {
 		playerSwitchVsync();
 		button->ResetState();
+		button->SetState(STATE_SELECTED);
+	}
+}
+
+static void osd_options_next_callback(void * data) {
+	GuiButton *button = (GuiButton *) data;
+	if (button->GetState() == STATE_CLICKED) {
+		button->ResetState();
+		playerGuiAsked();
 		button->SetState(STATE_SELECTED);
 	}
 }
@@ -384,16 +410,26 @@ static void loadHomeRessources() {
 	home_music_img = new GuiImage(new GuiImageData(home_music_sm_icon_n_png));
 	home_photo_img = new GuiImage(new GuiImageData(home_photo_sm_icon_n_png));
 	home_setting_img = new GuiImage(new GuiImageData(home_settings_sm_icon_n_png));
+	
+	home_video_txt = new GuiText("Video",48,0xFFFFFFFF);
+	home_music_txt = new GuiText("Music",48,0xFFFFFFFF);
+	home_photo_txt = new GuiText("Photo",48,0xFFFFFFFF);
+	home_setting_txt = new GuiText("Setting",48,0xFFFFFFFF);
 
 	home_video_btn = new GuiButton(home_video_img->GetWidth(), home_video_img->GetHeight());
 	home_music_btn = new GuiButton(home_music_img->GetWidth(), home_music_img->GetHeight());
 	home_photo_btn = new GuiButton(home_photo_img->GetWidth(), home_photo_img->GetHeight());
 	home_setting_btn = new GuiButton(home_setting_img->GetWidth(), home_setting_img->GetHeight());
 
-	home_video_btn->SetIcon(home_video_img);
-	home_music_btn->SetIcon(home_music_img);
-	home_photo_btn->SetIcon(home_photo_img);
-	home_setting_btn->SetIcon(home_setting_img);
+//	home_video_btn->SetIcon(home_video_img);
+//	home_music_btn->SetIcon(home_music_img);
+//	home_photo_btn->SetIcon(home_photo_img);
+//	home_setting_btn->SetIcon(home_setting_img);
+	
+	home_video_btn->SetLabel(home_video_txt);
+	home_music_btn->SetLabel(home_music_txt);
+	home_photo_btn->SetLabel(home_photo_txt);
+	home_setting_btn->SetLabel(home_setting_txt);
 }
 
 static void loadBrowserRessources() {
@@ -475,7 +511,7 @@ static void loadOsdRessources() { // OSD
 	video_osd_infobar_text_trackinfo = new GuiText("@@info_bar_trackinfo", 18, 0xffffffff);
 	video_osd_infobar_info_trackinfo = new GuiText("@@video_osd_infobar_info_trackinfo", 18, 0xffffffff);
 	video_osd_infobar_text_resolution = new GuiText("@@info_bar_resolution", 18, 0xffffffff);
-	video_osd_infobar_info_resolution = new GuiText("video_osd_infobar_info_resolution", 18, 0xffffffff);
+	video_osd_infobar_info_resolution = new GuiText("@@video_osd_infobar_info_resolution", 18, 0xffffffff);
 	video_osd_infobar_text_bitrate = new GuiText("@@info_bar_bitrate", 18, 0xffffffff);
 	video_osd_infobar_info_bitrate = new GuiText("@@video_osd_infobar_info_bitrate", 18, 0xffffffff);
 
@@ -551,12 +587,12 @@ static void loadOsdRessources() { // OSD
 	/** osd level 3**/
 	// <table x="435" y="30" h="50" w="410" cols="7" align="hcenter" disable="@@disable-options_bg">
 	//osd_options_window = new GuiTab(520, 91);
-	osd_options_window = new GuiTab(410, 50);
+	osd_options_window = new GuiTab(340, 50);
 	osd_options_window->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
-	osd_options_window->SetPosition(435, 30);
+	osd_options_window->SetPosition(480, 30);
 
 	osd_options_window->setRow(1);
-	osd_options_window->setCol(7);
+	osd_options_window->setCol(5);
 
 
 	// <image image="image/slideshow_options_menu_bg_x7.png" x="410" y="0" w="460" h="91" bg="1" disable="@@disable-options_bg"/>
@@ -566,6 +602,9 @@ static void loadOsdRessources() { // OSD
 
 	osd_options_bg_x7->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	osd_options_bg_x7->SetPosition(410, 0);
+	
+	osd_options_bg_x5->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+	osd_options_bg_x5->SetPosition(470, 0);
 
 	osd_options_menu_audio_channel_icon_f = new GuiImage(new GuiImageData(options_menu_audio_channel_icon_f_png));
 	osd_options_menu_audio_channel_icon_n = new GuiImage(new GuiImageData(options_menu_audio_channel_icon_n_png));
@@ -589,6 +628,14 @@ static void loadOsdRessources() { // OSD
 
 	options_menu_zoomout_icon_f = new GuiImage(new GuiImageData(options_menu_zoomout_icon_f_png));
 	options_menu_zoomout_icon_n = new GuiImage(new GuiImageData(options_menu_zoomout_icon_n_png));
+		
+	options_menu_return_to_gui_f = new GuiImage(new GuiImageData(options_menu_gridview_icon_f_png));
+	options_menu_return_to_gui_n = new GuiImage(new GuiImageData(options_menu_gridview_icon_n_png));
+	
+	for(int i=0;i<8;i++){
+		options_menu_icon_over[i] = new GuiImage(new GuiImageData(options_menu_btn_png));
+		options_menu_icon_over[i]->SetPosition(0,-30);
+	}
 
 	osd_options_menu_audio_channel_btn = new GuiButton(osd_options_menu_audio_channel_icon_f->GetWidth(), osd_options_menu_audio_channel_icon_f->GetHeight());
 	osd_options_menu_info_btn = new GuiButton(options_menu_info_icon_f->GetWidth(), options_menu_info_icon_f->GetHeight());
@@ -597,7 +644,8 @@ static void loadOsdRessources() { // OSD
 	osd_options_menu_subtitle_btn = new GuiButton(options_menu_subtitle_icon_f->GetWidth(), options_menu_subtitle_icon_f->GetHeight());
 	osd_options_menu_zoomin_btn = new GuiButton(options_menu_zoomin_icon_f->GetWidth(), options_menu_zoomin_icon_f->GetHeight());
 	osd_options_menu_zoomout_btn = new GuiButton(options_menu_zoomout_icon_f->GetWidth(), options_menu_zoomout_icon_f->GetHeight());
-
+	osd_options_menu_next_btn = new GuiButton(options_menu_return_to_gui_f->GetWidth(), options_menu_return_to_gui_f->GetHeight());
+	
 	// image
 	osd_options_menu_audio_channel_btn->SetImage(osd_options_menu_audio_channel_icon_n);
 	osd_options_menu_audio_channel_btn->SetImageOver(osd_options_menu_audio_channel_icon_f);
@@ -619,25 +667,63 @@ static void loadOsdRessources() { // OSD
 
 	osd_options_menu_zoomout_btn->SetImage(options_menu_zoomout_icon_n);
 	osd_options_menu_zoomout_btn->SetImageOver(options_menu_zoomout_icon_f);
+		
+	osd_options_menu_next_btn->SetImage(options_menu_return_to_gui_n);
+	osd_options_menu_next_btn->SetImageOver(options_menu_return_to_gui_f);
+	
+	osd_options_menu_audio_channel_btn->SetIconOver(options_menu_icon_over[0]);
+	osd_options_menu_info_btn->SetIconOver(options_menu_icon_over[1]);
+	osd_options_menu_pan_btn->SetIconOver(options_menu_icon_over[2]);
+	osd_options_menu_subtitle_btn->SetIconOver(options_menu_icon_over[3]);
+	osd_options_menu_zoomin_btn->SetIconOver(options_menu_icon_over[4]);
+	osd_options_menu_zoomout_btn->SetIconOver(options_menu_icon_over[5]);
+	osd_options_menu_next_btn->SetIconOver(options_menu_icon_over[6]);
+	osd_options_menu_repeat_btn->SetIconOver(options_menu_icon_over[7]);
 
 	// callback*
-	
 	osd_options_menu_audio_channel_btn->SetUpdateCallback(osd_options_audio_callback);
 	osd_options_menu_info_btn->SetUpdateCallback(osd_options_info_callback);
 	osd_options_menu_pan_btn->SetUpdateCallback(osd_options_pan_callback);
+	osd_options_menu_next_btn->SetUpdateCallback(osd_options_next_callback);
 	osd_options_menu_repeat_btn->SetUpdateCallback(osd_options_loop_callback);
 	osd_options_menu_subtitle_btn->SetUpdateCallback(osd_options_sub_callback);
 	osd_options_menu_zoomin_btn->SetUpdateCallback(osd_option_default_callback);
 	osd_options_menu_zoomout_btn->SetUpdateCallback(osd_option_default_callback);
 	
-	osd_options_window->SetBackground(osd_options_bg_x7);
+	GuiText * btn_audio_text = new GuiText("Audio",18, 0xffffffff);
+	GuiText * btn_info_text = new GuiText("Information",18, 0xffffffff);
+	GuiText * btn_fullscreen_text = new GuiText("Fullscreen",18, 0xffffffff);
+	GuiText * btn_subtitle_text = new GuiText("Subtitle",18, 0xffffffff);
+	GuiText * btn_return_text = new GuiText("Return to gui",18, 0xffffffff);
+	
+	btn_audio_text->SetAlignment(ALIGN_CENTRE,ALIGN_TOP);
+	btn_info_text->SetAlignment(ALIGN_CENTRE,ALIGN_TOP);
+	btn_fullscreen_text->SetAlignment(ALIGN_CENTRE,ALIGN_TOP);
+	btn_subtitle_text->SetAlignment(ALIGN_CENTRE,ALIGN_TOP);
+	btn_return_text->SetAlignment(ALIGN_CENTRE,ALIGN_TOP);
+	
+	btn_audio_text->SetPosition(0,-70);
+	btn_info_text->SetPosition(0,-70);
+	btn_fullscreen_text->SetPosition(0,-70);
+	btn_subtitle_text->SetPosition(0,-70);
+	btn_return_text->SetPosition(0,-70);
+	
+//	osd_options_menu_audio_channel_btn->SetLabelOver(btn_audio_text);
+//	osd_options_menu_info_btn->SetLabelOver(btn_info_text);
+//	osd_options_menu_pan_btn->SetLabelOver(btn_fullscreen_text);
+//	osd_options_menu_subtitle_btn->SetLabelOver(btn_subtitle_text);
+//	osd_options_menu_next_btn->SetLabelOver(btn_return_text);
+		
+	//osd_options_window->SetBackground(osd_options_bg_x7);
+	osd_options_window->SetBackground(osd_options_bg_x5);
 	osd_options_window->Append(osd_options_menu_audio_channel_btn);
 	osd_options_window->Append(osd_options_menu_info_btn);
-	osd_options_window->Append(osd_options_menu_pan_btn);
-	osd_options_window->Append(osd_options_menu_repeat_btn);
+	osd_options_window->Append(osd_options_menu_pan_btn);	
 	osd_options_window->Append(osd_options_menu_subtitle_btn);
-	osd_options_window->Append(osd_options_menu_zoomin_btn);
-	osd_options_window->Append(osd_options_menu_zoomout_btn);
+	osd_options_window->Append(osd_options_menu_next_btn);
+//	osd_options_window->Append(osd_options_menu_repeat_btn);
+//	osd_options_window->Append(osd_options_menu_zoomin_btn);
+//	osd_options_window->Append(osd_options_menu_zoomout_btn);
 
 	osd_options_menu_audio_channel_btn->SetFocus(1);
 
@@ -646,6 +732,118 @@ static void loadOsdRessources() { // OSD
 		osd_options_window->GetGuiElementAt(i)->SetTrigger(trigA);
 	}
 }
+
+
+
+/****************************************************************************
+ * WindowPrompt
+ *
+ * Displays a prompt window to user, with information, an error message, or
+ * presenting a user with a choice
+ ***************************************************************************/
+int WindowPrompt(const char *title, const char *msg, const char *btn1Label, const char *btn2Label) {
+	int choice = -1;
+
+	GuiWindow promptWindow(448, 288);
+	promptWindow.SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);
+	promptWindow.SetPosition(0, -10);
+//	GuiSound btnSoundOver(button_over_pcm, button_over_pcm_size, SOUND_PCM);
+//	GuiSound btnSoundClick(button_click_pcm, button_click_pcm_size, SOUND_PCM);
+	GuiImageData btnOutline(button_blue_png);
+	GuiImageData btnOutlineOver(button_green_png);
+
+	GuiImageData dialogBox(dialogue_box_png);
+	GuiImage dialogBoxImg(&dialogBox);
+
+	GuiText titleTxt(title, 26, (XeColor) {
+		255,255, 255, 255
+	});
+	titleTxt.SetAlignment(ALIGN_CENTRE, ALIGN_TOP);
+	titleTxt.SetPosition(0, 14);
+
+	GuiText msgTxt(msg, 26, (XeColor) {
+		255,255, 255, 255
+	});
+	msgTxt.SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);
+	msgTxt.SetPosition(0, -20);
+	msgTxt.SetWrap(true, 430);
+
+	GuiText btn1Txt(btn1Label, 22, (XeColor) {
+		255,255, 255, 255
+	});
+	GuiImage btn1Img(&btnOutline);
+	GuiImage btn1ImgOver(&btnOutlineOver);
+	GuiButton btn1(btnOutline.GetWidth(), btnOutline.GetHeight());
+
+	if (btn2Label) {
+		btn1.SetAlignment(ALIGN_LEFT, ALIGN_BOTTOM);
+		btn1.SetPosition(20, -25);
+	} else {
+		btn1.SetAlignment(ALIGN_CENTRE, ALIGN_BOTTOM);
+		btn1.SetPosition(0, -25);
+	}
+
+	btn1.SetLabel(&btn1Txt);
+	btn1.SetImage(&btn1Img);
+	btn1.SetImageOver(&btn1ImgOver);
+//	btn1.SetSoundOver(&btnSoundOver);
+//	btn1.SetSoundClick(&btnSoundClick);
+	btn1.SetTrigger(trigA);
+	btn1.SetState(STATE_SELECTED);
+	btn1.SetEffectGrow();
+
+	GuiText btn2Txt(btn2Label, 22, (XeColor) {
+		255,0, 0, 0
+	});
+	GuiImage btn2Img(&btnOutline);
+	GuiImage btn2ImgOver(&btnOutlineOver);
+	GuiButton btn2(btnOutline.GetWidth(), btnOutline.GetHeight());
+	btn2.SetAlignment(ALIGN_RIGHT, ALIGN_BOTTOM);
+	btn2.SetPosition(-20, -25);
+	btn2.SetLabel(&btn2Txt);
+	btn2.SetImage(&btn2Img);
+	btn2.SetImageOver(&btn2ImgOver);
+//	btn2.SetSoundOver(&btnSoundOver);
+//	btn2.SetSoundClick(&btnSoundClick);
+	btn2.SetTrigger(trigA);
+	btn2.SetEffectGrow();
+
+	promptWindow.Append(&dialogBoxImg);
+	promptWindow.Append(&titleTxt);
+	promptWindow.Append(&msgTxt);
+	promptWindow.Append(&btn1);
+
+	if (btn2Label)
+		promptWindow.Append(&btn2);
+
+	promptWindow.SetEffect(EFFECT_SLIDE_TOP | EFFECT_SLIDE_IN, 50);
+
+	mainWindow->SetState(STATE_DISABLED);
+	mainWindow->Append(&promptWindow);
+	mainWindow->ChangeFocus(&promptWindow);
+	
+	if (btn2Label) {
+		btn1.ResetState();
+		btn2.SetState(STATE_SELECTED);
+	}
+
+	while (choice == -1) {
+		update();
+		if (btn1.GetState() == STATE_CLICKED)
+			choice = 1;
+		else if (btn2.GetState() == STATE_CLICKED)
+			choice = 0;
+	}
+
+	promptWindow.SetEffect(EFFECT_SLIDE_TOP | EFFECT_SLIDE_OUT, 50);
+	while (promptWindow.GetEffect() > 0) {
+		update();
+	}
+	mainWindow->Remove(&promptWindow);
+	mainWindow->SetState(STATE_DEFAULT);
+	return choice;
+}
+
 
 /** to do **/
 static void loadRessources() {
@@ -899,11 +1097,11 @@ static void Browser(const char * title, const char * root) {
 	GuiTrigger trigMenu;
 	trigMenu.SetButtonOnlyTrigger(-1, 0, PAD_BUTTON_B);
 
-	GuiText menuBtnTxt("B", 18, 0xffffffff);
+	//GuiText menuBtnTxt("B", 18, 0xffffffff);
 	GuiButton menuBtn(20, 20);
 	menuBtn.SetAlignment(ALIGN_LEFT, ALIGN_BOTTOM);
 	menuBtn.SetPosition(50, -35);
-	menuBtn.SetLabel(&menuBtnTxt);
+	//menuBtn.SetLabel(&menuBtnTxt);
 	menuBtn.SetTrigger(&trigMenu);
 	menuBtn.SetEffectGrow();
 
@@ -1021,11 +1219,11 @@ static void HomePage() {
 	GuiTrigger trigMenu;
 	trigMenu.SetButtonOnlyTrigger(-1, 0, PAD_BUTTON_A);
 
-	GuiText menuBtnTxt("A", 18, 0xffffffff);
+	//GuiText menuBtnTxt("A", 18, 0xffffffff);
 	GuiButton menuBtn(20, 20);
 	menuBtn.SetAlignment(ALIGN_LEFT, ALIGN_BOTTOM);
 	menuBtn.SetPosition(50, -35);
-	menuBtn.SetLabel(&menuBtnTxt);
+	//menuBtn.SetLabel(&menuBtnTxt);
 	menuBtn.SetTrigger(&trigMenu);
 	menuBtn.SetEffectGrow();
 
@@ -1048,15 +1246,15 @@ static void HomePage() {
 				case 0:
 					current_menu = BROWSE_VIDEO;
 					break;
-				case 1:
-					current_menu = BROWSE_AUDIO;
+//				case 1:
+//					current_menu = BROWSE_AUDIO;
+//					break;
+//				case 2:
+//					current_menu = BROWSE_PICTURE;
+//					break;
+				default:
+					WindowPrompt("Not made","Not implemented yet","Ok",NULL);
 					break;
-				case 2:
-					current_menu = BROWSE_PICTURE;
-					break;
-					//				case 3:
-					//					current_menu = BROWSE_VIDEO;
-					//					break;
 			}
 		}
 		update();
@@ -1089,27 +1287,9 @@ static void do_mplayer(char * filename) {
 			"-really-quiet",
 			//"-demuxer","mkv",
 			"-menu",
-			//"-menu-startup",
 			"-lavdopts","skiploopfilter=all:threads=5",
-		//	"-lavdopts", "skiploopfilter=all:threads=2",
-			"-vsync",
-			//"uda:/mplayer/loop.mov","-loop","0",
-			//"-lavdopts","skiploopfilter=all",
-			//"-novideo",
-			//"-vo","null",
-			//"-vc","ffmpeg4",
-			//"-v",
-			//"-nosound",
-			//"-vfm","xvid",
-			//"-ao","null",
-			//"-dvd-device","uda:/dvd/THE_SMURFS/","dvd://1",
-			//			"uda:/video.avi",
-			//			"uda:/dbz.avi",
-			//"uda:/video.m2ts",
-			//"uda:/video2.mp4",
-			//"dvd://1"
-			//"uda:/trailer.mkv",
-			//"uda:/lockout-tlr1_h1080p.mov"
+			//"-vsync",
+
 			filename,
 		};
 		mplayer_need_init = 0;

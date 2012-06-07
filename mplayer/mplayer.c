@@ -4187,3 +4187,15 @@ int playerSwitchLoop(){
 	}
 }
 
+
+// try to play next file to go to gui
+void playerGuiAsked(){
+//        mp_input_parse_and_queue_cmds("pt_step 1");
+/*
+        mp_cmd_t * cmd = calloc( 1,sizeof( *cmd ) );
+        cmd->id=MP_CMD_QUIT;
+        cmd->name=strdup("quit");
+        mp_input_queue_cmd(cmd);
+*/
+        mpctx->eof=1;
+}

@@ -1197,7 +1197,6 @@ dhahelperclean:
 .SUFFIXES:
 
 lib: $(MPLAYER_DEPS) $(COMMON_LIBS)
-	echo "// build `date`" >> mplayerlib.h
 	$(AR) rc libmplayer.a $(MPLAYER_DEPS)
 	$(RANLIB) libmplayer.a
 

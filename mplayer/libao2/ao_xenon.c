@@ -124,6 +124,7 @@ static int play(void* data, int len, int flags) {
  * return: delay in seconds between first and last sample in buffer
  */ 
 static float get_delay(void) {
-	return ((float) (ao_data.buffersize - xenon_sound_get_unplayed())) / ((float) ao_data.bps);
+	//return ((float) (ao_data.buffersize - xenon_sound_get_unplayed())) / ((float) ao_data.bps);
+        return 0.f;
 }
 
