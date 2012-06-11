@@ -12,8 +12,9 @@
 #include <sys/iosupport.h>
 #include <diskio/disc_io.h>
 #include <byteswap.h>
+#include "iso9660.h"
 
-#include "../mplayer/mplayerlib.h"
+//#include "../mplayer/mplayerlib.h"
 
 extern DISC_INTERFACE xenon_atapi_ops;
 extern DISC_INTERFACE xenon_ata_ops;
@@ -130,7 +131,7 @@ typedef struct {
 	sec_t sector;
 } DEVICE_STRUCT;
 
-#define DEBUG_MOUNTALL
+//#define DEBUG_MOUNTALL
 
 #ifdef DEBUG_MOUNTALL
 #define debug_printf(fmt, args...) \
@@ -162,6 +163,9 @@ static void AddPartition(sec_t sector, int device, int type, int *devnum) {
 
 	if (device == DEVICE_USB)
 		disc = (DISC_INTERFACE *) & usb2mass_ops;
+	
+	else if(device == DEVICE_ATAPI)
+		disc = (DISC_INTERFACE *) & xenon_atapi_ops;
 
 	char mount[10];
 	sprintf(mount, "%s%i", prefix[device], *devnum);
@@ -195,7 +199,6 @@ static void AddPartition(sec_t sector, int device, int type, int *devnum) {
 			else
 				part[device][*devnum].name[0] = 0;
 			break;
-			/*
 		case T_ISO9660:
 			if (!ISO9660_Mount(mount, disc))
 				return;
@@ -207,7 +210,6 @@ static void AddPartition(sec_t sector, int device, int type, int *devnum) {
 			else
 				strcpy(part[device][*devnum].name, "DVD");
 			break;
-			 */
 	}
 
 	int c = strlen(part[device][*devnum].name) - 1;
@@ -236,8 +238,8 @@ static int FindPartitions(int device) {
 	}
 
 	DISC_INTERFACE *interface;
-	
-	switch(device){		
+
+	switch(device){
 		case DEVICE_ATAPI:
 			interface = (DISC_INTERFACE *) & xenon_atapi_ops;
 			break;
@@ -248,7 +250,7 @@ static int FindPartitions(int device) {
 			interface = (DISC_INTERFACE *) & usb2mass_ops;
 			break;
 	}
-		
+
 
 	MASTER_BOOT_RECORD mbr;
 	PARTITION_RECORD *partition = NULL;
@@ -343,155 +345,156 @@ static int FindPartitions(int device) {
 									debug_printf("Partition : type ext2/3/4 found\n");
 									AddPartition(part_lba, device, T_EXT2, &devnum);
 								}// Check if this partition has a valid NTFS boot record
-                                                                else if (interface->readSectors(part_lba, 1, &sector)) {
-                                                                        if (sector.boot.oem_id == NTFS_OEM_ID) {
-                                                                                debug_printf(
-                                                                                        "Logical Partition @ %d: Valid NTFS boot sector found\n",
-                                                                                        part_lba);
-                                                                                if (sector.ebr.partition.type
-                                                                                        != PARTITION_TYPE_NTFS) {
-                                                                                        debug_printf(
-                                                                                                "Logical Partition @ %d: Is NTFS but type is 0x%x; 0x%x was expected\n",
-                                                                                                part_lba,
-                                                                                                sector.ebr.partition.type,
-                                                                                                PARTITION_TYPE_NTFS);
-                                                                                }
-                                                                                AddPartition(part_lba, device, T_NTFS, &devnum);
-                                                                        } else if (!memcmp(sector.buffer
-                                                                                + BPB_FAT16_fileSysType, FAT_SIG,
-                                                                                sizeof (FAT_SIG)) || !memcmp(
-                                                                                sector.buffer
-                                                                                + BPB_FAT32_fileSysType,
-                                                                                FAT_SIG, sizeof (FAT_SIG))) {
-                                                                                debug_printf("Partition : Valid FAT boot sector found\n");
-                                                                                AddPartition(part_lba, device, T_FAT, &devnum);
-                                                                        }
-                                                                }
-                                                        } else {
-                                                                next_erb_lba = 0;
-                                                        }
-                                                }
-                                        } while (next_erb_lba);
-                                        break;
-                                }
-                                case PARTITION_TYPE_LINUX:
-                                {
-                                        debug_printf("Partition %i: Claims to be LINUX\n", i + 1);
+								else if (interface->readSectors(part_lba, 1, &sector)) {
+									if (sector.boot.oem_id == NTFS_OEM_ID) {
+										debug_printf(
+												"Logical Partition @ %d: Valid NTFS boot sector found\n",
+												part_lba);
+										if (sector.ebr.partition.type
+												!= PARTITION_TYPE_NTFS) {
+											debug_printf(
+													"Logical Partition @ %d: Is NTFS but type is 0x%x; 0x%x was expected\n",
+													part_lba,
+													sector.ebr.partition.type,
+													PARTITION_TYPE_NTFS);
+										}
+										AddPartition(part_lba, device, T_NTFS, &devnum);
+									} else if (!memcmp(sector.buffer
+											+ BPB_FAT16_fileSysType, FAT_SIG,
+											sizeof (FAT_SIG)) || !memcmp(
+											sector.buffer
+											+ BPB_FAT32_fileSysType,
+											FAT_SIG, sizeof (FAT_SIG))) {
+										debug_printf("Partition : Valid FAT boot sector found\n");
+										AddPartition(part_lba, device, T_FAT, &devnum);
+									}
+								}
+							} else {
+								next_erb_lba = 0;
+							}
+						}
+					} while (next_erb_lba);
+					break;
+				}
+				case PARTITION_TYPE_LINUX:
+				{
+					debug_printf("Partition %i: Claims to be LINUX\n", i + 1);
 
-                                        // Read and validate the EXT2 partition
-                                        AddPartition(part_lba, device, T_EXT2, &devnum);
-                                        break;
-                                }
-                                        // Ignore empty partitions
-                                case PARTITION_TYPE_EMPTY:
-                                        debug_printf("Partition %i: Claims to be empty\n", i + 1);
-                                        // Unknown or unsupported partition type
-                                default:
-                                {
-                                        // Check if this partition has a valid NTFS boot record anyway,
-                                        // it might be misrepresented due to a lazy partition editor
-                                        if (interface->readSectors(part_lba, 1, &sector)) {
-                                                if (sector.boot.oem_id == NTFS_OEM_ID) {
-                                                        debug_printf("Partition %i: Valid NTFS boot sector found\n", i + 1);
-                                                        if (partition->type != PARTITION_TYPE_NTFS) {
-                                                                debug_printf(
-                                                                        "Partition %i: Is NTFS but type is 0x%x; 0x%x was expected\n",
-                                                                        i + 1, partition->type,
-                                                                        PARTITION_TYPE_NTFS);
-                                                        }
-                                                        AddPartition(part_lba, device, T_NTFS, &devnum);
-                                                } else if (!memcmp(sector.buffer + BPB_FAT16_fileSysType,
-                                                        FAT_SIG, sizeof (FAT_SIG)) || !memcmp(
-                                                        sector.buffer + BPB_FAT32_fileSysType, FAT_SIG,
-                                                        sizeof (FAT_SIG))) {
-                                                        debug_printf("Partition : Valid FAT boot sector found\n");
-                                                        AddPartition(part_lba, device, T_FAT, &devnum);
-                                                } else {
-                                                        debug_printf("Trying : ext partition\n");
-                                                        AddPartition(part_lba, device, T_EXT2, &devnum);
-                                                }
-                                        }
-                                        break;
-                                }
-                        }
-                }
-        }
-        if (devnum == 0) // it is assumed this device has no master boot record or no partitions found
-        {
-                debug_printf("No Master Boot Record was found or no partitions found!\n");
+					// Read and validate the EXT2 partition
+					AddPartition(part_lba, device, T_EXT2, &devnum);
+					break;
+				}
+					// Ignore empty partitions
+				case PARTITION_TYPE_EMPTY:
+					debug_printf("Partition %i: Claims to be empty\n", i + 1);
+					// Unknown or unsupported partition type
+				default:
+				{
+					// Check if this partition has a valid NTFS boot record anyway,
+					// it might be misrepresented due to a lazy partition editor
+					if (interface->readSectors(part_lba, 1, &sector)) {
+						if (sector.boot.oem_id == NTFS_OEM_ID) {
+							debug_printf("Partition %i: Valid NTFS boot sector found\n", i + 1);
+							if (partition->type != PARTITION_TYPE_NTFS) {
+								debug_printf(
+										"Partition %i: Is NTFS but type is 0x%x; 0x%x was expected\n",
+										i + 1, partition->type,
+										PARTITION_TYPE_NTFS);
+							}
+							AddPartition(part_lba, device, T_NTFS, &devnum);
+						} else if (!memcmp(sector.buffer + BPB_FAT16_fileSysType,
+								FAT_SIG, sizeof (FAT_SIG)) || !memcmp(
+								sector.buffer + BPB_FAT32_fileSysType, FAT_SIG,
+								sizeof (FAT_SIG))) {
+							debug_printf("Partition : Valid FAT boot sector found\n");
+							AddPartition(part_lba, device, T_FAT, &devnum);
+						} else {
+							debug_printf("Trying : ext partition\n");
+							AddPartition(part_lba, device, T_EXT2, &devnum);
+						}
+					}
+					break;
+				}
+			}
+		}
+	}
+	if (devnum == 0) // it is assumed this device has no master boot record or no partitions found
+	{
+		debug_printf("No Master Boot Record was found or no partitions found!\n");
 
-                // As a last-ditched effort, search the first 64 sectors of the device for stray NTFS/FAT partitions
-                for (i = 0; i < 64; i++) {
-                        if (interface->readSectors(i, 1, &sector)) {
-                                if (sector.boot.oem_id == NTFS_OEM_ID) {
-                                        debug_printf("Valid NTFS boot sector found at sector %d!\n", i);
-                                        AddPartition(i, device, T_NTFS, &devnum);
-                                        break;
-                                } else if (!memcmp(sector.buffer + BPB_FAT16_fileSysType, FAT_SIG,
-                                        sizeof (FAT_SIG)) || !memcmp(sector.buffer
-                                        + BPB_FAT32_fileSysType, FAT_SIG, sizeof (FAT_SIG))) {
-                                        debug_printf("Partition : Valid FAT boot sector found\n");
-                                        AddPartition(i, device, T_FAT, &devnum);
-                                        break;
-                                } else {
-                                        debug_printf("Trying : ext partition\n");
-                                        AddPartition(part_lba, device, T_EXT2, &devnum);
-                                }
-                        }
-                }
-        }
-        return devnum;
+		// As a last-ditched effort, search the first 64 sectors of the device for stray NTFS/FAT partitions
+		for (i = 0; i < 64; i++) {
+			if (interface->readSectors(i, 1, &sector)) {
+				if (sector.boot.oem_id == NTFS_OEM_ID) {
+					debug_printf("Valid NTFS boot sector found at sector %d!\n", i);
+					AddPartition(i, device, T_NTFS, &devnum);
+					break;
+				} else if (!memcmp(sector.buffer + BPB_FAT16_fileSysType, FAT_SIG,
+						sizeof (FAT_SIG)) || !memcmp(sector.buffer
+						+ BPB_FAT32_fileSysType, FAT_SIG, sizeof (FAT_SIG))) {
+					debug_printf("Partition : Valid FAT boot sector found\n");
+					AddPartition(i, device, T_FAT, &devnum);
+					break;
+				} else {
+					debug_printf("Trying : ext partition\n");
+					AddPartition(part_lba, device, T_EXT2, &devnum);
+				}
+			}
+		}
+	}
+	return devnum;
 }
 
 static void UnmountPartitions(int device) {
-        char mount[11];
-        int i;
-        for (i = 0; i < MAX_DEVICES; i++) {
-                switch (part[device][i].type) {
-                        case T_FAT:
-                                part[device][i].type = 0;
-                                sprintf(mount, "%s:", part[device][i].mount);
-                                fatUnmount(mount);
-                                break;
-                        case T_NTFS:
-                                part[device][i].type = 0;
-                                ntfsUnmount(part[device][i].mount, false);
-                                break;
-                        case T_EXT2:
-                                part[device][i].type = 0;
-                                ext2Unmount(part[device][i].mount);
-                                break;
-                                /*	
-                                case T_ISO9660:
-                                        part[device][i].type = 0;
-                                        sprintf(mount, "%s:", part[device][i].mount);
-                                        ISO9660_Unmount(mount);
-                                        if (dvdcss) {
-                                                dvdcss_close(dvdcss);
-                                                dvdcss = NULL;
-                                        }
-                                        break;
-                                 */
-                }
-                part[device][i].name[0] = 0;
-                part[device][i].mount[0] = 0;
-                part[device][i].sector = 0;
-                part[device][i].interface = NULL;
-        }
+	char mount[11];
+	int i;
+	for (i = 0; i < MAX_DEVICES; i++) {
+		switch (part[device][i].type) {
+			case T_FAT:
+				part[device][i].type = 0;
+				sprintf(mount, "%s:", part[device][i].mount);
+				fatUnmount(mount);
+				break;
+			case T_NTFS:
+				part[device][i].type = 0;
+				ntfsUnmount(part[device][i].mount, false);
+				break;
+			case T_EXT2:
+				part[device][i].type = 0;
+				ext2Unmount(part[device][i].mount);
+				break;
+
+			case T_ISO9660:
+				part[device][i].type = 0;
+				sprintf(mount, "%s:", part[device][i].mount);
+				ISO9660_Unmount(mount);
+				break;
+		}
+		part[device][i].name[0] = 0;
+		part[device][i].mount[0] = 0;
+		part[device][i].sector = 0;
+		part[device][i].interface = NULL;
+	}
 }
 
 
 extern int XTAFMount();
 
+void sleep(int i) {
+	delay(i);
+}
+
 /**
  * Parse mbr for filesystem
  */
 void mount_all_devices() {
-        FindPartitions(DEVICE_USB);
-
-        if (xenon_ata_ops.isInserted()) {
-                if (XTAFMount() == 0) {
-                        FindPartitions(DEVICE_ATA);
-                }
-        }
+	FindPartitions(DEVICE_USB);
+	if (xenon_ata_ops.isInserted()) {
+		if (XTAFMount() == 0) {
+			FindPartitions(DEVICE_ATA);
+		}
+	}
+	if (xenon_atapi_ops.isInserted()) {
+		FindPartitions(DEVICE_ATAPI);
+	}
 }

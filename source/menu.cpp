@@ -1464,6 +1464,7 @@ int main(int argc, char** argv) {
 	// Init devices
 	usb_init();
 	xenon_ata_init();
+	xenon_atapi_init();
 	usb_do_poll();
 	
 	// fs
