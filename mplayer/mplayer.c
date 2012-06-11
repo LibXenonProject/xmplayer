@@ -4161,13 +4161,8 @@ void playerSwitchAudio(){
 }
 
 void playerSwitchSubtitle(){
-	static int iparam = 1;
-	 int global_sub_size = mpctx_get_global_sub_size(mpctx);
-	 
-	 if(iparam>=global_sub_size)
-		 iparam = 0;
-	 
-	mp_property_do("sub",M_PROPERTY_SET,&iparam,mpctx);
+        // cycle
+        mp_input_queue_cmd(mp_input_parse_cmd("sub_select"));
 }
 
 void playerSwitchFullscreen(){

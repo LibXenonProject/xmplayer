@@ -935,7 +935,7 @@ typedef struct _optionlist {
 
 class GuiOptionBrowser : public GuiElement {
 public:
-	GuiOptionBrowser(int w, int h, OptionList * l);
+	GuiOptionBrowser(int w, int h, GuiImageData * bg_entry, OptionList * l);
 	~GuiOptionBrowser();
 	void SetCol1Position(int x);
 	void SetCol2Position(int x);
@@ -958,13 +958,13 @@ protected:
 	int listOffset;
 	OptionList * options;
 
-	GuiImage * bgOptionsImg;
+//	GuiImage * bgOptionsImg;
 
 	GuiImageData * bgOptions;
 	GuiImageData * bgOptionsEntry;
 
-	GuiSound * btnSoundOver;
-	GuiSound * btnSoundClick;
+//	GuiSound * btnSoundOver;
+//	GuiSound * btnSoundClick;
 	GuiTrigger * trigA;
 	GuiTrigger * trig2;
 

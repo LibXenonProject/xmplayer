@@ -84,10 +84,13 @@ void GuiFileBrowser::SetPageSize(int size) {
 		fileList[i]->SetParent(this);
 		fileList[i]->SetLabel(fileListText[i]);
 		fileList[i]->SetImageOver(fileListBg[i]);
-		fileList[i]->SetPosition(2, bgFileSelectionEntry->GetHeight() * i + 3);
+		fileList[i]->SetPosition(2, bgFileSelectionEntry->GetHeight() * i + 5);
 		fileList[i]->SetTrigger(trigA);
 		//        fileList[i]->SetTrigger(trig2);
 		//        fileList[i]->SetSoundClick(btnSoundClick);
+		
+		fileListFolder[i]->SetAlignment(ALIGN_LEFT, ALIGN_MIDDLE);
+		fileListFile[i]->SetAlignment(ALIGN_LEFT, ALIGN_MIDDLE);
 	}
 }
 

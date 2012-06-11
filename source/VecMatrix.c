@@ -51,28 +51,28 @@ matrix4x4 * matrixScaling(matrix4x4 * m, float x, float y, float z) {
  */
 matrix4x4 * matrixRotationX(matrix4x4 * m, float angle) {
     matrixLoadIdentity(m);
-    m->f[1][1] = cos(angle);
-    m->f[2][2] = cos(angle);
-    m->f[1][2] = sin(angle);
-    m->f[2][1] = -sin(angle);
+    m->f[1][1] = cosf(angle);
+    m->f[2][2] = cosf(angle);
+    m->f[1][2] = sinf(angle);
+    m->f[2][1] = -sinf(angle);
     return m;
 }
 
 matrix4x4 * matrixRotationY(matrix4x4 * m, float angle) {
     matrixLoadIdentity(m);
-    m->f[0][0] = cos(angle);
-    m->f[2][2] = cos(angle);
-    m->f[0][2] = -sin(angle);
-    m->f[2][0] = sin(angle);
+    m->f[0][0] = cosf(angle);
+    m->f[2][2] = cosf(angle);
+    m->f[0][2] = -sinf(angle);
+    m->f[2][0] = sinf(angle);
     return m;
 }
 
 matrix4x4 * matrixRotationZ(matrix4x4 * m, float angle) {
     matrixLoadIdentity(m);
-    m->f[0][0] = cos(angle);
-    m->f[1][1] = cos(angle);
-    m->f[0][1] = sin(angle);
-    m->f[1][0] = -sin(angle);
+    m->f[0][0] = cosf(angle);
+    m->f[1][1] = cosf(angle);
+    m->f[0][1] = sinf(angle);
+    m->f[1][0] = -sinf(angle);
     return m;
 }
 

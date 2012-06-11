@@ -15,12 +15,21 @@
 #include <diskio/ata.h>
 #include <xenon_soc/xenon_power.h>
 #include <sys/iosupport.h>
-
+#include <ppc/atomic.h>
+#include <network/network.h>
 #include <time/time.h>
+
+//#include "http_client.h"
 
 #include "libwiigui/gui.h"
 #include "libwiigui/gui_list.h"
 #include "libwiigui/gui_tab.h"
+
+#include "../build/logo_png.h"
+#include "../build/loading_0_png.h"
+#include "../build/loading_1_png.h"
+#include "../build/loading_2_png.h"
+#include "../build/loading_3_png.h"
 
 #include "../build/home_left_png.h"
 #include "../build/home_main_function_frame_bg_png.h"
@@ -33,7 +42,7 @@
 #include "../build/home_nohdd_sub_icon_n_png.h"
 #include "../build/home_horizontal_select_bar_png.h"
 #include "../build/font_ttf.h"
-#include "../build/logo_png.h"
+
 #include "../build/browser_list_btn_png.h"
 #include "../build/browser_folder_icon_f_png.h"
 #include "../build/options_menu_btn_png.h"
@@ -124,6 +133,7 @@ enum {
  * used at loading
  **/
 static XenosSurface * logo = NULL;
+static XenosSurface * loading[4] ={ NULL};
 
 static GuiImage * bgImg = NULL;
 static GuiWindow * mainWindow = NULL;
@@ -140,16 +150,12 @@ static GuiText * video_osd_info_filename = NULL;
 static GuiText * video_osd_info_cur_time = NULL;
 static GuiText * video_osd_info_duration = NULL;
 
-static GuiTab * video_osd_infobar = NULL;
+static GuiWindow * video_osd_infobar = NULL;
 static GuiImage * video_osd_infobar_bg = NULL;
 static GuiText * video_osd_infobar_text_filename = NULL;
-static GuiText * video_osd_infobar_info_filename = NULL;
 static GuiText * video_osd_infobar_text_trackinfo = NULL;
-static GuiText * video_osd_infobar_info_trackinfo = NULL;
 static GuiText * video_osd_infobar_text_resolution = NULL;
-static GuiText * video_osd_infobar_info_resolution = NULL;
 static GuiText * video_osd_infobar_text_bitrate = NULL;
-static GuiText * video_osd_infobar_info_bitrate = NULL;
 
 static GuiImage * video_osd_play = NULL;
 static GuiImage * video_osd_pause = NULL;
@@ -272,6 +278,16 @@ static GuiButton * osd_options_menu_subtitle_btn = NULL;
 static GuiButton * osd_options_menu_zoomin_btn = NULL;
 static GuiButton * osd_options_menu_zoomout_btn = NULL;
 
+/**
+ * Osd option subtitles
+ */
+static GuiImageData * osd_options_bg_entry = NULL;
+static GuiWindow * osd_options_subtitle_window = NULL;
+static GuiOptionBrowser * osd_options_subtitle = NULL;
+static OptionList subtitle_option_list;
+
+static OptionList audio_option_list;
+
 static char mplayer_filename[2048];
 
 static int last_menu;
@@ -291,6 +307,8 @@ static void update() {
  * Callback for osd option bar
  **/
 static int osd_display_info = 0;
+static int osd_display_option_audio = 0;
+static int osd_display_option_subtitle = 0;
 
 static void osd_option_default_callback(void * data){
 	GuiButton *button = (GuiButton *) data;
@@ -348,6 +366,7 @@ static void osd_options_audio_callback(void * data) {
 	GuiButton *button = (GuiButton *) data;
 	if (button->GetState() == STATE_CLICKED) {
 		playerSwitchAudio();
+		//osd_display_option_audio = 1; 
 		button->ResetState();
 		button->SetState(STATE_SELECTED);
 	}
@@ -357,6 +376,9 @@ static void osd_options_sub_callback(void * data) {
 	GuiButton *button = (GuiButton *) data;
 	if (button->GetState() == STATE_CLICKED) {
 		playerSwitchSubtitle();
+//		osd_display_option_subtitle = 1;
+//		osd_options_subtitle_window->SetVisible(true);
+//		osd_options_subtitle_window->SetFocus(1);
 		button->ResetState();
 		button->SetState(STATE_SELECTED);
 	}
@@ -506,37 +528,37 @@ static void loadOsdRessources() { // OSD
 	video_osd_info_duration = new GuiText("@@info_duration", 18, 0xfffa9600);
 
 	/** video infobar **/
-	video_osd_infobar_text_filename = new GuiText("@@info_bar_filename", 18, 0xffffffff);
-	video_osd_infobar_info_filename = new GuiText("@@video_osd_infobar_info_filename", 18, 0xffffffff);
-	video_osd_infobar_text_trackinfo = new GuiText("@@info_bar_trackinfo", 18, 0xffffffff);
-	video_osd_infobar_info_trackinfo = new GuiText("@@video_osd_infobar_info_trackinfo", 18, 0xffffffff);
-	video_osd_infobar_text_resolution = new GuiText("@@info_bar_resolution", 18, 0xffffffff);
-	video_osd_infobar_info_resolution = new GuiText("@@video_osd_infobar_info_resolution", 18, 0xffffffff);
-	video_osd_infobar_text_bitrate = new GuiText("@@info_bar_bitrate", 18, 0xffffffff);
-	video_osd_infobar_info_bitrate = new GuiText("@@video_osd_infobar_info_bitrate", 18, 0xffffffff);
+	video_osd_infobar_text_filename = new GuiText("Filename", 22, 0xffffffff);
+	video_osd_infobar_text_trackinfo = new GuiText("Codec", 22, 0xffffffff);
+	video_osd_infobar_text_resolution = new GuiText("Resolution", 22, 0xffffffff);
+	video_osd_infobar_text_bitrate = new GuiText("Bitrate", 22, 0xffffffff);
 
 	video_osd_infobar_bg = new GuiImage(new GuiImageData(video_info_bg_png));
 	
-	video_osd_infobar_bg->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
-	video_osd_infobar_bg->SetPosition(68,240);
+	video_osd_infobar_bg->SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);
+	//video_osd_infobar_bg->SetPosition(68,240);
 	
 	
-	video_osd_infobar = new GuiTab(500, 80);
-	video_osd_infobar->SetPosition(110, 350);
-	
-	video_osd_infobar->setCol(2);
-	video_osd_infobar->setRow(4);
-	
-	video_osd_infobar->SetBackground(video_osd_infobar_bg);
+	video_osd_infobar = new GuiWindow(1144, 240);
+	//video_osd_infobar->SetPosition(110, 350);
+	video_osd_infobar->SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);
+		
+	video_osd_infobar->Append(video_osd_infobar_bg);
 		
 	video_osd_infobar->Append(video_osd_infobar_text_filename);
-	video_osd_infobar->Append(video_osd_infobar_info_filename);
 	video_osd_infobar->Append(video_osd_infobar_text_trackinfo);
-	video_osd_infobar->Append(video_osd_infobar_info_trackinfo);
 	video_osd_infobar->Append(video_osd_infobar_text_resolution);
-	video_osd_infobar->Append(video_osd_infobar_info_resolution);
-	video_osd_infobar->Append(video_osd_infobar_text_bitrate);
-	video_osd_infobar->Append(video_osd_infobar_info_bitrate);
+	video_osd_infobar->Append(video_osd_infobar_text_bitrate);	
+	
+	video_osd_infobar_text_filename->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+	video_osd_infobar_text_trackinfo->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+	video_osd_infobar_text_resolution->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+	video_osd_infobar_text_bitrate->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+	
+	video_osd_infobar_text_filename->SetPosition(20,20);
+	video_osd_infobar_text_trackinfo->SetPosition(20,50);
+	video_osd_infobar_text_resolution->SetPosition(20,80);
+	video_osd_infobar_text_bitrate->SetPosition(20,110);
 
 	/** play state **/
 	video_osd_play = new GuiImage(new GuiImageData(video_control_play_btn_png));
@@ -731,7 +753,37 @@ static void loadOsdRessources() { // OSD
 	for (u32 i = 1; i < osd_options_window->GetSize(); i++) {
 		osd_options_window->GetGuiElementAt(i)->SetTrigger(trigA);
 	}
+	
+	
+	/**
+	* Osd Subtiles window
+	*/ 
+	int i = 0;
+	sprintf(subtitle_option_list.name[i++], "Subtitles");
+	sprintf(subtitle_option_list.name[i++], "Visibility");
+	sprintf(subtitle_option_list.name[i++], "Position");
+	sprintf(subtitle_option_list.name[i++], "Delay");
+	sprintf(subtitle_option_list.name[i++], "Scale");
+	subtitle_option_list.length = i;
+	
+	for (i = 0; i < subtitle_option_list.length; i++)
+		subtitle_option_list.value[i][0] = 0;
+	
+	osd_options_subtitle_window = new GuiWindow(1142,240);
+	osd_options_subtitle = new GuiOptionBrowser(1122,220,new GuiImageData(browser_list_btn_png),&subtitle_option_list);
+	osd_options_subtitle->SetPosition(20,20);
+	
+	osd_options_subtitle_window->SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);		
+	
+	
+	osd_options_subtitle_window->Append(new GuiImage(new GuiImageData(video_info_bg_png)));
+	osd_options_subtitle_window->Append(osd_options_subtitle);
 }
+
+
+extern "C" int sub_pos;
+extern "C" int sub_visibility;
+extern "C" float sub_delay;
 
 /****************************************************************************
  * WindowPrompt
@@ -871,15 +923,26 @@ static int got_metadata = 0;
 
 static int last_level = 0;
 
+#define _(x)	x
+
+static char tmpbuff[1024];
+
 extern "C" void mplayer_osd_open() {
 	got_metadata = 0;
 
 	if (osd_show == 0) {
 		/** video infobar **/
-		video_osd_infobar_info_filename->SetText(playetGetMetaData(META_NAME));
-		video_osd_infobar_info_trackinfo->SetText(playetGetMetaData(META_VIDEO_CODEC));
-		video_osd_infobar_info_resolution->SetText(playetGetMetaData(META_VIDEO_RESOLUTION));
-		video_osd_infobar_info_bitrate->SetText(playetGetMetaData(META_VIDEO_BITRATE));
+		sprintf(tmpbuff,"%s %s",_("Filename:"),playetGetMetaData(META_NAME));
+		video_osd_infobar_text_filename->SetText(tmpbuff);
+		
+		sprintf(tmpbuff,"%s %s",_("Codec:"),playetGetMetaData(META_VIDEO_CODEC));
+		video_osd_infobar_text_trackinfo->SetText(tmpbuff);
+		
+		sprintf(tmpbuff,"%s %s",_("Resolution:"),playetGetMetaData(META_VIDEO_RESOLUTION));
+		video_osd_infobar_text_resolution->SetText(tmpbuff);
+		
+		sprintf(tmpbuff,"%s %s",_("Bitrate:"),playetGetMetaData(META_VIDEO_BITRATE));
+		video_osd_infobar_text_bitrate->SetText(tmpbuff);
 
 		video_osd_infobar->SetVisible(false);
 
@@ -914,6 +977,9 @@ extern "C" void mplayer_osd_open() {
 
 		//
 		mainWindow->Append(osd_options_window);
+		
+		mainWindow->Append(osd_options_subtitle_window);
+		osd_options_subtitle_window->SetVisible(false);
 
 		// remove bg
 		mainWindow->Remove(bgImg);
@@ -1029,6 +1095,14 @@ extern "C" void mplayer_osd_draw(int level) {
 
 			default:
 				break;
+		}
+		
+		if(osd_display_option_subtitle){
+			TR;
+			int ret =  osd_options_subtitle->GetClickedOption();
+			switch(ret){
+				
+			}
 		}
 
 		// show file info
@@ -1251,7 +1325,7 @@ static void HomePage() {
 //					current_menu = BROWSE_PICTURE;
 //					break;
 				default:
-					WindowPrompt("Not made","Not implemented yet","Ok",NULL);
+					WindowPrompt("Warning","Not implemented yet","Ok",NULL);
 					break;
 			}
 		}
@@ -1342,45 +1416,78 @@ static void findDevices() {
 
 extern "C" void mount_all_devices();
 
+
+static int loading_thread_finished = 0;
+static int end_loading_thread = 0;
+static unsigned char thread_stack[6][0x10000];
+static unsigned int loadingThreadLock = 0;
+
+void loadingThread(){
+	int i = 0;
+	logo = loadPNGFromMemory((unsigned char*) logo_png);
+	loading[0] = loadPNGFromMemory((unsigned char*) loading_0_png);
+	loading[1] = loadPNGFromMemory((unsigned char*) loading_1_png);
+	loading[2] = loadPNGFromMemory((unsigned char*) loading_2_png);
+	loading[3] = loadPNGFromMemory((unsigned char*) loading_3_png);
+	
+	while(end_loading_thread==0){
+		lock(&loadingThreadLock);
+		Xe_SetClearColor(g_pVideoDevice, 0xFFFFFFFF);
+		Menu_DrawImg(0, 0, 1280, 720, logo, 0, 1, 1, 0xff);
+		Menu_DrawImg(640-55, 500, 110, 110, loading[i], 0, 1, 1, 0xff);
+		Menu_Render();
+		unlock(&loadingThreadLock);
+		
+		mdelay(60);
+		
+		i++;
+		if(i>=4)
+			i=0;
+	}
+	lock(&loadingThreadLock);
+	loading_thread_finished = 1;
+	unlock(&loadingThreadLock);
+}
+
 int main(int argc, char** argv) {
 	xenon_make_it_faster(XENON_SPEED_FULL);
-	
+//	
 	// Init Video
 	InitVideo();
 
-	/** loool **/
-	logo = loadPNGFromMemory((unsigned char*) logo_png);
+	/** loading **/
+	end_loading_thread = 0;
 	
-	Xe_SetClearColor(g_pVideoDevice, 0xFFFFFFFF);
+	// run in a thread ....
+	xenon_run_thread_task(2,thread_stack[2],(void*)loadingThread);
 	
-	Menu_DrawImg(0, 0, 1280, 720, logo, 0, 1, 1, 0xff);
-
-	Menu_Render();
-
-	// Init Freetype
-	InitFreeType((u8*) font_ttf, font_ttf_size);
-
-	// usb
+	// Init devices
 	usb_init();
 	xenon_ata_init();
 	usb_do_poll();
 	
-	mount_all_devices();
-	
+	// fs
+	mount_all_devices();	
 	init_mplayer();
-
 	findDevices();
 
-	// pads
+	// Init gui
+	InitFreeType((u8*) font_ttf, font_ttf_size);
 	SetupPads();
-
 	ChangeFontSize(26);
-
 	common_setup();
-
+	
+	// signal end of loading thread
+	lock(&loadingThreadLock);
+	end_loading_thread = 1;
+	unlock(&loadingThreadLock);
+	while(loading_thread_finished==0){
+		lock(&loadingThreadLock);
+		udelay(25);
+		unlock(&loadingThreadLock);
+	}
+	
 	current_menu = HOME_PAGE;
-
-	//current_menu = OSD;
 	while (1) {
 		// never exit !!
 		need_gui = 1;

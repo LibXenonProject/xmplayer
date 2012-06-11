@@ -12,12 +12,10 @@
 #include "../w_input.h"
 #include "../gui_debug.h"
 
-#if 0
-
 /**
  * Constructor for the GuiOptionBrowser class.
  */
-GuiOptionBrowser::GuiOptionBrowser(int w, int h, OptionList * l) {
+GuiOptionBrowser::GuiOptionBrowser(int w, int h, GuiImageData * bg_entry, OptionList * l) {
     width = w;
     height = h;
     options = l;
@@ -34,27 +32,23 @@ GuiOptionBrowser::GuiOptionBrowser(int w, int h, OptionList * l) {
     //	trig2->SetSimpleTrigger(-1, WPAD_BUTTON_2, 0);
     trig2->SetSimpleTrigger(-1, 0, 0);
 
-    btnSoundOver = new GuiSound(button_over_pcm, button_over_pcm_size, SOUND_PCM);
-    btnSoundClick = new GuiSound(button_click_pcm, button_click_pcm_size, SOUND_PCM);
+    //btnSoundOver = new GuiSound(button_over_pcm, button_over_pcm_size, SOUND_PCM);
+    //btnSoundClick = new GuiSound(button_click_pcm, button_click_pcm_size, SOUND_PCM);
 
-    bgOptions = new GuiImageData(xenon_filebrowser_png);
-    bgOptionsImg = new GuiImage(bgOptions);
-    bgOptionsImg->SetParent(this);
-    bgOptionsImg->SetAlignment(ALIGN_LEFT, ALIGN_MIDDLE);
+//    bgOptions = new GuiImageData(xenon_filebrowser_png);
+//    bgOptionsImg = new GuiImage(bgOptions);
+//    bgOptionsImg->SetParent(this);
+//    bgOptionsImg->SetAlignment(ALIGN_LEFT, ALIGN_MIDDLE);
 
-    bgOptionsEntry = new GuiImageData(xenon_bg_file_selection_entry_png);
+    bgOptionsEntry = bg_entry;
 
     for (int i = 0; i < PAGESIZE; i++) {
 
-        optionTxt[i] = new GuiText(NULL, 20, (XeColor) {
-            0xff, 0xff, 0xff, 0xff
-        });
+        optionTxt[i] = new GuiText(NULL, 20, 0xFFFFFFFF);
         optionTxt[i]->SetAlignment(ALIGN_LEFT, ALIGN_MIDDLE);
         optionTxt[i]->SetPosition(8, 0);
 
-        optionVal[i] = new GuiText(NULL, 20, (XeColor) {
-            0xff, 0xff, 0xff, 0xff
-        });
+        optionVal[i] = new GuiText(NULL, 20, 0xFFFFFFFF);
         optionVal[i]->SetAlignment(ALIGN_LEFT, ALIGN_MIDDLE);
         optionVal[i]->SetPosition(500, 0);
 
@@ -68,7 +62,7 @@ GuiOptionBrowser::GuiOptionBrowser(int w, int h, OptionList * l) {
         optionBtn[i]->SetPosition(2, 30 * i + 3);
         optionBtn[i]->SetTrigger(trigA);
         optionBtn[i]->SetTrigger(trig2);
-        optionBtn[i]->SetSoundClick(btnSoundClick);
+        //optionBtn[i]->SetSoundClick(btnSoundClick);
     }
 }
 
@@ -77,15 +71,15 @@ GuiOptionBrowser::GuiOptionBrowser(int w, int h, OptionList * l) {
  */
 GuiOptionBrowser::~GuiOptionBrowser() {
 
-    delete bgOptionsImg;
-
-    delete bgOptions;
+//    delete bgOptionsImg;
+//
+//    delete bgOptions;
     delete bgOptionsEntry;
 
     delete trigA;
     delete trig2;
-    delete btnSoundOver;
-    delete btnSoundClick;
+    //delete btnSoundOver;
+    //delete btnSoundClick;
 
     for (int i = 0; i < PAGESIZE; i++) {
         delete optionTxt[i];
@@ -163,7 +157,7 @@ void GuiOptionBrowser::Draw() {
     if (!this->IsVisible())
         return;
 
-    bgOptionsImg->Draw();
+//    bgOptionsImg->Draw();
 
     int next = listOffset;
 
@@ -278,4 +272,4 @@ void GuiOptionBrowser::Update(GuiTrigger * t) {
     if (updateCB)
         updateCB(this);
 }
-#endif
+

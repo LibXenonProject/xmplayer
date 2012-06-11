@@ -176,7 +176,7 @@ struct XenosVertexBuffer * GetSharedVertexBuffer() {
  ***************************************************************************/
 void InitVideo() {
         xenos_init(VIDEO_MODE_AUTO);
-        //console_init();
+       console_init();
 
         g_pVideoDevice = &_xe;
 
@@ -221,6 +221,8 @@ void InitVideo() {
         //    LoadTextureFromFile("uda:/1.png", &g_pTexture);
 
         Xe_InvalidateState(g_pVideoDevice);
+        
+        console_close();
 
         ResetVideo_Menu();
 }
@@ -308,11 +310,9 @@ static void UpdatesMatrices(f32 xpos, f32 ypos, f32 width, f32 height, f32 degre
  ***************************************************************************/
 void Menu_DrawImg(f32 xpos, f32 ypos, u16 width, u16 height, struct XenosSurface * data,
         f32 degrees, f32 scaleX, f32 scaleY, u8 alpha) {
+
         if (data == NULL)
                 return;
-
-        //    width >>= 1;
-        //    height >>= 1;
 
         XeColor color;
         float x, y, w, h;
@@ -329,17 +329,6 @@ void Menu_DrawImg(f32 xpos, f32 ypos, u16 width, u16 height, struct XenosSurface
 
         w = (float) w / ((float) screenwidth);
         h = (float) h / ((float) screenheight);
-
-
-        /*
-                printf("x = %f\r\n", x);
-                printf("y = %f\r\n", y);
-                printf("w = %f\r\n", w);
-                printf("h = %f\r\n", h);
-                printf("\r\n");
-         */
-
-
 
         color.a = alpha;
         color.r = 0xFF;
@@ -361,6 +350,8 @@ void Menu_DrawImg(f32 xpos, f32 ypos, u16 width, u16 height, struct XenosSurface
         Xe_SetShader(g_pVideoDevice, SHADER_TYPE_VERTEX, g_pVertexShader, 0);
 
         Draw();
+        
+        
 }
 
 /****************************************************************************
