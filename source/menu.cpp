@@ -126,6 +126,7 @@ enum {
 	BROWSE_VIDEO,
 	BROWSE_AUDIO,
 	BROWSE_PICTURE,
+	BROWSE_ALL,
 	OSD = 0x20,
 };
 
@@ -209,6 +210,7 @@ static GuiImage * home_no_hdd_icon[STD_MAX];
 static GuiButton * home_device_btn[STD_MAX];
 
 static GuiButton * home_video_btn = NULL;
+static GuiButton * home_all_btn = NULL;
 static GuiButton * home_music_btn = NULL;
 static GuiButton * home_photo_btn = NULL;
 static GuiButton * home_setting_btn = NULL;
@@ -219,6 +221,7 @@ static GuiImage * home_photo_img = NULL;
 static GuiImage * home_setting_img = NULL;
 
 static GuiText* home_video_txt = NULL;
+static GuiText * home_all_txt = NULL;
 static GuiText * home_music_txt = NULL;
 static GuiText * home_photo_txt = NULL;
 static GuiText * home_setting_txt = NULL;
@@ -434,11 +437,13 @@ static void loadHomeRessources() {
 	home_setting_img = new GuiImage(new GuiImageData(home_settings_sm_icon_n_png));
 	
 	home_video_txt = new GuiText("Video",48,0xFFFFFFFF);
+	home_all_txt = new GuiText("All",48,0xFFFFFFFF);
 	home_music_txt = new GuiText("Music",48,0xFFFFFFFF);
 	home_photo_txt = new GuiText("Photo",48,0xFFFFFFFF);
 	home_setting_txt = new GuiText("Setting",48,0xFFFFFFFF);
 
 	home_video_btn = new GuiButton(home_video_img->GetWidth(), home_video_img->GetHeight());
+	home_all_btn = new GuiButton(home_video_img->GetWidth(), home_video_img->GetHeight());
 	home_music_btn = new GuiButton(home_music_img->GetWidth(), home_music_img->GetHeight());
 	home_photo_btn = new GuiButton(home_photo_img->GetWidth(), home_photo_img->GetHeight());
 	home_setting_btn = new GuiButton(home_setting_img->GetWidth(), home_setting_img->GetHeight());
@@ -449,6 +454,7 @@ static void loadHomeRessources() {
 //	home_setting_btn->SetIcon(home_setting_img);
 	
 	home_video_btn->SetLabel(home_video_txt);
+	home_all_btn->SetLabel(home_all_txt);
 	home_music_btn->SetLabel(home_music_txt);
 	home_photo_btn->SetLabel(home_photo_txt);
 	home_setting_btn->SetLabel(home_setting_txt);
@@ -1138,9 +1144,11 @@ extern "C" void mplayer_osd_draw(int level) {
 }
 
 static void Browser(const char * title, const char * root) {
-	gui_browser->ResetState();
 	ResetBrowser();
 	BrowseDevice("/", root);
+	
+	gui_browser->ResetState();
+	gui_browser->TriggerUpdate();
 
 	// apply correct icon
 	switch (current_menu) {
@@ -1148,7 +1156,6 @@ static void Browser(const char * title, const char * root) {
 			browser_folder_icon = browser_music_folder_icon;
 			browser_file_icon = browser_music_icon;
 			break;
-
 		case BROWSE_VIDEO:
 			browser_folder_icon = browser_video_folder_icon;
 			browser_file_icon = browser_video_icon;
@@ -1157,7 +1164,6 @@ static void Browser(const char * title, const char * root) {
 			browser_folder_icon = browser_photo_folder_icon;
 			browser_file_icon = browser_photo_icon;
 			break;
-
 		default:
 			break;
 	}
@@ -1270,10 +1276,13 @@ static void HomePage() {
 	mainWindow->Append(home_main_function_frame_bg);
 
 
-	home_list_v->Append(home_video_btn);
+	home_list_v->Append(home_all_btn);
+	home_list_v->Append(home_video_btn);	
 	home_list_v->Append(home_music_btn);
 	home_list_v->Append(home_photo_btn);
 	home_list_v->Append(home_setting_btn);
+	
+	home_list_v->SetSelected(1);// Video
 
 	mainWindow->Append(home_list_v);
 
@@ -1316,12 +1325,15 @@ static void HomePage() {
 		if (menuBtn.GetState() == STATE_CLICKED) {
 			switch (home_list_v->GetValue()) {
 				case 0:
+					current_menu = BROWSE_ALL;
+					break;
+				case 1:
 					current_menu = BROWSE_VIDEO;
 					break;
-//				case 1:
+//				case 2:
 //					current_menu = BROWSE_AUDIO;
 //					break;
-//				case 2:
+//				case 3:
 //					current_menu = BROWSE_PICTURE;
 //					break;
 				default:
@@ -1393,6 +1405,8 @@ static void gui_loop() {
 			Browser("Audio", root_dev);
 		} else if (current_menu == BROWSE_PICTURE) {
 			Browser("Photo", root_dev);
+		}else if (current_menu == BROWSE_ALL) {
+			Browser("All", root_dev);
 		} else if (current_menu == MENU_MPLAYER) {
 			MenuMplayer();
 		} else if (current_menu == MENU_BACK) {

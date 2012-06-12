@@ -135,6 +135,17 @@ int FileSortCallback(const void *f1, const void *f2) {
 	return stricmp(((BROWSERENTRY *) f1)->filename, ((BROWSERENTRY *) f2)->filename);
 }
 
+
+static char * video_extensions[] = {
+	".mkv", ".mov", ".mp4", ".mp4v", ".divx",
+	".avi", ".asf", ".wmv", ".vc1",
+	".tivo",
+	".mpg", ".mpeg", ".mpeg2", ".ts", ".m2ts",
+	".ogv", ".ogx", ".vp3", ".vp6", ".vp7",
+	".flv", ".264", ".x264", ".h264",
+	".3gp", ".3g2",
+};
+
 int extValid(char * ext) {
 	//    if (ext) {
 	//        if (stricmp(ext, ".z") == 0) {
@@ -153,7 +164,17 @@ int extValid(char * ext) {
 	//    }
 	//
 	//    return 0;
-	return 1;
+	if (ext && ext[0] && ext[1]) {
+		printf("%s\n", ext);
+		int i = 0;
+		int extnumber = sizeof (video_extensions) / sizeof (char *);
+		for (i = 0; i < extnumber; i++) {
+			if (stricmp(ext, video_extensions[i]) == 0)
+				return 1;
+		}
+	}
+
+	return 0;
 }
 
 /***************************************************************************
@@ -185,23 +206,23 @@ int ParseDirectory() {
 	int entryNum = 0;
 
 	// always add an .. entry
-	if(strcmp(browser.dir,"/")){
-	
+	if (strcmp(browser.dir, "/")) {
+
 		BROWSERENTRY * newBrowserList = (BROWSERENTRY *) realloc(browserList, (entryNum + 1) * sizeof (BROWSERENTRY));
-		
+
 		browserList = newBrowserList;
-		
+
 		memset(&(browserList[entryNum]), 0, sizeof (BROWSERENTRY)); // clear the new entry
 
 		strncpy(browserList[entryNum].filename, "..", MAXJOLIET);
-		
+
 		sprintf(browserList[entryNum].displayname, "Up One Level");
 		browserList[entryNum].isdir = 1; // flag this as a dir
 		entryNum++;
 	}
 
 	while ((entry = readdir(dir))) {
-		if( (strcmp(entry->d_name, ".") == 0) || (strcmp(entry->d_name, "..") == 0))
+		if ((strcmp(entry->d_name, ".") == 0) || (strcmp(entry->d_name, "..") == 0))
 			continue;
 
 		BROWSERENTRY * newBrowserList = (BROWSERENTRY *) realloc(browserList, (entryNum + 1) * sizeof (BROWSERENTRY));
@@ -226,9 +247,7 @@ int ParseDirectory() {
 
 			if (entry->d_type == DT_DIR)
 				browserList[entryNum].isdir = 1; // flag this as a dir
-		} 
-		else 
-		{
+		} else {
 			continue;
 		}
 
@@ -265,7 +284,7 @@ int BrowserChangeFolder() {
  ***************************************************************************/
 int BrowseDevice() {
 	sprintf(browser.dir, "/");
-	sprintf(rootdir, "usb:/");
+	//sprintf(rootdir, "usb:/");
 	ParseDirectory(); // Parse root directory
 	return browser.numEntries;
 }
