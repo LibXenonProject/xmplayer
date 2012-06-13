@@ -975,7 +975,7 @@ protected:
 
 class GuiFileBrowser : public GuiElement {
 public:
-	GuiFileBrowser(int w, int h, GuiImageData * list_bg, GuiImageData * folder_icon, GuiImageData * file_icon);
+	GuiFileBrowser(int w, int h, GuiImageData * list_bg, GuiImageData * folder_icon, GuiImageData ** file_icon);
 	~GuiFileBrowser();
 	void ResetState();
 	void SetFocus(int f);
@@ -1001,7 +1001,7 @@ protected:
 	GuiImageData * bgFileSelection;
 	GuiImageData * bgFileSelectionEntry;
 	GuiImageData * fileFolder;
-	GuiImageData * fileIcon;
+	GuiImageData ** fileIcon;
 
 	GuiSound * btnSoundOver;
 	GuiSound * btnSoundClick;

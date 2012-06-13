@@ -15,6 +15,7 @@
 //#include <wiiuse/wpad.h>
 //#include <sys/dir.h>
 #include <malloc.h>
+#include <debug.h>
 
 #include "filebrowser.h"
 
@@ -146,26 +147,16 @@ static char * video_extensions[] = {
 	".3gp", ".3g2",
 };
 
-int extValid(char * ext) {
-	//    if (ext) {
-	//        if (stricmp(ext, ".z") == 0) {
-	//            return 1;
-	//        } else if (stricmp(ext, ".gpz") == 0) {
-	//            return 1;
-	//        } else if (stricmp(ext, ".cue") == 0) {
-	//            return 1;
-	//        } else if (stricmp(ext, ".bin") == 0) {
-	//            return 1;
-	//        } else if (stricmp(ext, ".iso") == 0) {
-	//            return 1;
-	//        } else if (stricmp(ext, ".nrg") == 0) {
-	//            return 1;
-	//        }
-	//    }
-	//
-	//    return 0;
+static char * audio_extensions[] = {
+	".mp3", ".mp4", ".ogg", ".aac", ".ac3",
+};
+
+static char * picture_extensions[] = {
+	".jpg", ".png", ".jpeg", ".bmp",
+};
+
+int extIsValidVideoExt(char * ext) {
 	if (ext && ext[0] && ext[1]) {
-		printf("%s\n", ext);
 		int i = 0;
 		int extnumber = sizeof (video_extensions) / sizeof (char *);
 		for (i = 0; i < extnumber; i++) {
@@ -173,9 +164,60 @@ int extValid(char * ext) {
 				return 1;
 		}
 	}
-
 	return 0;
 }
+
+int extIsValidAudioExt(char * ext) {
+	if (ext && ext[0] && ext[1]) {
+		int i = 0;
+		int extnumber = sizeof (audio_extensions) / sizeof (char *);
+		for (i = 0; i < extnumber; i++) {
+			if (stricmp(ext, audio_extensions[i]) == 0)
+				return 1;
+		}
+	}
+	return 0;
+}
+
+int extIsValidPictureExt(char * ext) {
+	if (ext && ext[0] && ext[1]) {
+		int i = 0;
+		int extnumber = sizeof (picture_extensions) / sizeof (char *);
+		for (i = 0; i < extnumber; i++) {
+			if (stricmp(ext, picture_extensions[i]) == 0)
+				return 1;
+		}
+	}
+	return 0;
+}
+
+// get filetype based on extention
+
+BROWSER_TYPE file_type(const char * filename) {
+	char * ext = strrchr(filename, '.');
+	if (ext && ext[0] && ext[1]) {
+		if (extIsValidVideoExt(ext))
+			return BROWSER_TYPE_VIDEO;
+		else if (extIsValidAudioExt(ext))
+			return BROWSER_TYPE_AUDIO;
+		else if (extIsValidPictureExt(ext))
+			return BROWSER_TYPE_PICTURE;
+		if (ext[2] && ext[3]) {
+			if (stricmp(ext, ".elf") == 0)
+				return BROWSER_TYPE_ELF;
+			else if (stricmp(ext, ".bin") == 0)
+				return BROWSER_TYPE_NAND;
+		}
+	}
+
+	return BROWSER_TYPE_UNKNOW;
+}
+
+int extAlwaysValid(char *ext) {
+	return 1;
+}
+
+int (*extValid)(char * ext) = NULL;
 
 /***************************************************************************
  * Browse subdirectories
@@ -185,6 +227,9 @@ int ParseDirectory() {
 	char fulldir[MAXPATHLEN];
 	struct dirent *entry;
 	char * ext = NULL;
+
+	if (extValid == NULL)
+		extValid = extAlwaysValid;
 
 	// reset browser
 	ResetBrowser();
@@ -225,6 +270,8 @@ int ParseDirectory() {
 		if ((strcmp(entry->d_name, ".") == 0) || (strcmp(entry->d_name, "..") == 0))
 			continue;
 
+		printf("%s\n", entry->d_name);
+
 		BROWSERENTRY * newBrowserList = (BROWSERENTRY *) realloc(browserList, (entryNum + 1) * sizeof (BROWSERENTRY));
 
 		if (!newBrowserList) // failed to allocate required memory
@@ -242,7 +289,10 @@ int ParseDirectory() {
 		//
 		ext = strrchr(entry->d_name, '.');
 		if (extValid(ext) || entry->d_type == DT_DIR) {
-			//}else if(1){
+
+			if (entry->d_type != DT_DIR)
+				browserList[entryNum].type = file_type(entry->d_name);
+
 			strncpy(browserList[entryNum].displayname, entry->d_name, MAXDISPLAY); // crop name for display
 
 			if (entry->d_type == DT_DIR)

@@ -18,6 +18,7 @@
 #include <ppc/atomic.h>
 #include <network/network.h>
 #include <time/time.h>
+#include <elf/elf.h>
 
 //#include "http_client.h"
 
@@ -66,6 +67,8 @@
 #include "../build/browser_photo_icon_f_png.h"
 #include "../build/browser_video_icon_f_png.h"
 #include "../build/browser_music_icon_f_png.h"
+#include "../build/browser_elf_icon_f_png.h"
+#include "../build/browser_file_icon_f_png.h"
 #include "../build/browser_top_png.h"
 
 #include "../build/folder_music_icon_png.h"
@@ -122,6 +125,7 @@ enum {
 	MENU_BACK = -1,
 	HOME_PAGE = 1,
 	MENU_MPLAYER,
+	MENU_ELF,
 	BROWSE = 0x10,
 	BROWSE_VIDEO,
 	BROWSE_AUDIO,
@@ -192,7 +196,7 @@ static GuiImage * browser_down_icon = NULL;
 
 // no image data, pointer to image
 static GuiImageData * browser_folder_icon = NULL;
-static GuiImageData * browser_file_icon = NULL;
+static GuiImageData * browser_files_icon[BROWSER_TYPE_MAX] = {NULL};
 
 /**
  * Home screen
@@ -508,9 +512,17 @@ static void loadBrowserRessources() {
 	
 	// no image data, pointer to image
 	browser_folder_icon = browser_video_folder_icon;
-	browser_file_icon = browser_video_icon;
+	
+	browser_files_icon[BROWSER_TYPE_UNKNOW] = new GuiImageData(browser_file_icon_f_png);
+	browser_files_icon[BROWSER_TYPE_VIDEO] = new GuiImageData(browser_video_icon_f_png);
+	browser_files_icon[BROWSER_TYPE_AUDIO] = new GuiImageData(browser_music_icon_f_png);
+	browser_files_icon[BROWSER_TYPE_PICTURE] = new GuiImageData(browser_photo_icon_f_png);
+	browser_files_icon[BROWSER_TYPE_ELF] = new GuiImageData(browser_elf_icon_f_png);
+	browser_files_icon[BROWSER_TYPE_NAND] = new GuiImageData(browser_file_icon_f_png);
+	
+//	browser_file_icon = browser_video_icon;
 
-	gui_browser = new GuiFileBrowser(980, 500, browser_selector, browser_folder_icon, browser_file_icon);
+	gui_browser = new GuiFileBrowser(980, 500, browser_selector, browser_folder_icon, browser_files_icon);
 	gui_browser->SetPosition(150, 131);
 	gui_browser->SetFontSize(20);
 	gui_browser->SetSelectedFontSize(26);
@@ -1144,30 +1156,31 @@ extern "C" void mplayer_osd_draw(int level) {
 }
 
 static void Browser(const char * title, const char * root) {
+	// apply correct icon
+	switch (current_menu) {
+		case BROWSE_AUDIO:
+			browser_folder_icon = browser_music_folder_icon;
+			//browser_file_icon = browser_music_icon;
+			break;
+		case BROWSE_VIDEO:
+			browser_folder_icon = browser_video_folder_icon;
+			//browser_file_icon = browser_video_icon;
+			extValid = extIsValidVideoExt;
+			break;
+		case BROWSE_PICTURE:
+			browser_folder_icon = browser_photo_folder_icon;
+			//browser_file_icon = browser_photo_icon;
+			break;
+		default:
+			extValid = extAlwaysValid;
+			break;
+	}
+	
 	ResetBrowser();
 	BrowseDevice("/", root);
 	
 	gui_browser->ResetState();
 	gui_browser->TriggerUpdate();
-
-	// apply correct icon
-	switch (current_menu) {
-		case BROWSE_AUDIO:
-			browser_folder_icon = browser_music_folder_icon;
-			browser_file_icon = browser_music_icon;
-			break;
-		case BROWSE_VIDEO:
-			browser_folder_icon = browser_video_folder_icon;
-			browser_file_icon = browser_video_icon;
-			break;
-		case BROWSE_PICTURE:
-			browser_folder_icon = browser_photo_folder_icon;
-			browser_file_icon = browser_photo_icon;
-			break;
-		default:
-			break;
-	}
-
 	
 	//mainWindow->SetAlignment(ALIGN_CENTRE,ALIGN_MIDDLE);
 	mainWindow->Append(gui_browser);
@@ -1240,15 +1253,18 @@ static void Browser(const char * title, const char * root) {
 						break;
 					}
 				} else {
-					current_menu = MENU_MPLAYER;
-					//mplayer_main(NULL,NULL);
-
 					sprintf(mplayer_filename, "%s/%s/%s", rootdir, browser.dir, browserList[browser.selIndex].filename);
-
 					CleanupPath(mplayer_filename);
 
 					ShutoffRumble();
 					gui_browser->ResetState();
+					
+					if(file_type(mplayer_filename)==BROWSER_TYPE_ELF){
+						current_menu = MENU_ELF;
+					}
+					else{
+						current_menu = MENU_MPLAYER;
+					}
 				}
 			}
 		}
@@ -1393,6 +1409,17 @@ void MenuMplayer() {
 	do_mplayer(mplayer_filename);
 }
 
+void ElfLoader(){
+	printf("Load Elf:%s\r\n", mplayer_filename);
+	char * argv[]={
+		"mplayer.elf",mplayer_filename
+	};
+	int argc = sizeof (argv) / sizeof (char *);
+	
+	elf_setArgcArgv(argc, argv);
+	elf_runFromDisk(mplayer_filename);
+}
+
 static int need_gui = 1;
 
 static void gui_loop() {
@@ -1411,6 +1438,8 @@ static void gui_loop() {
 			MenuMplayer();
 		} else if (current_menu == MENU_BACK) {
 			current_menu = HOME_PAGE;
+		} else if (current_menu == MENU_ELF) {
+			ElfLoader();
 		}
 	}
 }

@@ -18,7 +18,7 @@
 /**
  * Constructor for the GuiFileBrowser class.
  */
-GuiFileBrowser::GuiFileBrowser(int w, int h, GuiImageData * list_bg, GuiImageData * folder_icon, GuiImageData * file_icon) {
+GuiFileBrowser::GuiFileBrowser(int w, int h, GuiImageData * list_bg, GuiImageData * folder_icon, GuiImageData ** file_icon) {
 	width = w;
 	height = h;
 	numEntries = 0;
@@ -77,8 +77,12 @@ void GuiFileBrowser::SetPageSize(int size) {
 		fileListText[i]->SetMaxWidth(this->GetWidth()  - 50);
 
 		fileListBg[i] = new GuiImage(bgFileSelectionEntry);
-		fileListFolder[i] = new GuiImage(fileFolder);
-		fileListFile[i] = new GuiImage(fileIcon);
+		
+		fileListFolder[i] = new GuiImage(fileFolder);		
+		fileListFolder[i]->SetAlignment(ALIGN_LEFT, ALIGN_MIDDLE);
+		
+		fileListFile[i] = new GuiImage(fileIcon[BROWSER_TYPE_UNKNOW]);			
+		fileListFile[i]->SetAlignment(ALIGN_LEFT, ALIGN_MIDDLE);
 
 		fileList[i] = new GuiButton(this->GetWidth(), bgFileSelectionEntry->GetHeight());
 		fileList[i]->SetParent(this);
@@ -89,8 +93,6 @@ void GuiFileBrowser::SetPageSize(int size) {
 		//        fileList[i]->SetTrigger(trig2);
 		//        fileList[i]->SetSoundClick(btnSoundClick);
 		
-		fileListFolder[i]->SetAlignment(ALIGN_LEFT, ALIGN_MIDDLE);
-		fileListFile[i]->SetAlignment(ALIGN_LEFT, ALIGN_MIDDLE);
 	}
 }
 
@@ -112,7 +114,7 @@ GuiFileBrowser::~GuiFileBrowser() {
 		delete fileListText[i];
 		delete fileList[i];
 		delete fileListBg[i];
-		delete fileListFolder[i];
+		delete fileListFolder[i];	
 		delete fileListFile[i];
 	}
 	
@@ -228,6 +230,7 @@ endNavigation:
 					fileList[i]->SetIcon(fileListFolder[i]);
 					fileListText[i]->SetPosition(fileListFolder[i]->GetWidth(), 0);
 				} else {
+					fileListFile[i]->SetImage(fileIcon[browserList[browser.pageIndex + i].type]);
 					fileList[i]->SetIcon(fileListFile[i]);
 					fileListText[i]->SetPosition(fileListFile[i]->GetWidth(), 0);
 				}
