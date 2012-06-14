@@ -9,8 +9,6 @@ endif
 
 include $(DEVKITXENON)/rules
 
-LDSCRIPT := $(CURDIR)/../mplayer.lds
-
 #---------------------------------------------------------------------------------
 # TARGET is the name of the output
 # BUILD is the directory where object files & intermediate files will be placed
@@ -20,23 +18,23 @@ LDSCRIPT := $(CURDIR)/../mplayer.lds
 TARGET		:=	$(notdir $(CURDIR))
 BUILD		:=	build
 SOURCES		:=	source source/libwiigui source/xtaf
-DATA		:=	data  
-INCLUDES	:=	-I$(LIBXENON_INC)/freetype2
-MPLAYER         :=      $(CURDIR)/mplayer
+DATA		:=	data
+INCLUDES		:=	-I$(LIBXENON_INC)/freetype2
+MPLAYER		:=	$(CURDIR)/mplayer
 #---------------------------------------------------------------------------------
 # options for code generation
 #---------------------------------------------------------------------------------
 
 # lto
-OPTIFLAGS =  -Ofast -flto -fuse-linker-plugin -mcpu=cell -mtune=cell -fno-tree-vectorize -fno-tree-slp-vectorize -ftree-vectorizer-verbose=1 
-#OPTIFLAGS =  -mcpu=cell -mtune=cell -fno-tree-vectorize -fno-tree-slp-vectorize -ftree-vectorizer-verbose=1 
+OPTIFLAGS	=	-Ofast -flto -fuse-linker-plugin -mcpu=cell -mtune=cell -fno-tree-vectorize -fno-tree-slp-vectorize -ftree-vectorizer-verbose=1
+#OPTIFLAGS =  -mcpu=cell -mtune=cell -fno-tree-vectorize -fno-tree-slp-vectorize -ftree-vectorizer-verbose=1
 
-ASFLAGS	= -Wa,$(INCLUDE) -Wa,-a32
-CFLAGS	= -g $(OPTIFLAGS) -Wall $(MACHDEP) $(INCLUDE)
-CXXFLAGS	=	$(CFLAGS)
+ASFLAGS		=	Wa,$(INCLUDE) -Wa,-a32
+CFLAGS		=	-g $(OPTIFLAGS) -Wall $(MACHDEP) $(INCLUDE)
+CXXFLAGS		=	$(CFLAGS)
 
-MACHDEP_LD =  -DXENON -m32 -maltivec -fno-pic -mhard-float -L$(DEVKITXENON)/xenon/lib/32 -u read -u _start -u exc_base
-LDFLAGS	= $(MACHDEP_LD) $(OPTIFLAGS) -Wl,-Map,$(notdir $@).map 
+MACHDEP_LD	=	-DXENON -m32 -maltivec -fno-pic -mhard-float -L$(DEVKITXENON)/xenon/lib/32 -u read -u _start -u exc_base
+LDFLAGS		=	-g $(MACHDEP_LD) $(OPTIFLAGS) -Wl,-Map,$(notdir $@).map
 
 #CFLAGS	= -ffunction-sections -fdata-sections -g -O2 -Wall $(MACHDEP) $(INCLUDE)
 #CXXFLAGS	=	$(CFLAGS)
@@ -46,13 +44,13 @@ LDFLAGS	= $(MACHDEP_LD) $(OPTIFLAGS) -Wl,-Map,$(notdir $@).map
 #---------------------------------------------------------------------------------
 # any extra libraries we wish to link with the project
 #---------------------------------------------------------------------------------
-LIBS	:=	 -lmplayer  -lavformat -lavcodec -lswscale -lavutil -lpostproc -lpng -lz -lxenon -lm  -liconv -lfreetype -lfribidi -lbz2 -lfat -lext2fs -lntfs -lxtaf
+LIBS		:=	 -lmplayer  -lavformat -lavcodec -lswscale -lavutil -lpostproc -lpng -lz -lxenon -lm  -liconv -lfreetype -lfribidi -lbz2 -lfat -lext2fs -lntfs -lxtaf
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
 # include and lib
 #---------------------------------------------------------------------------------
-LIBDIRS	:=
+LIBDIRS		:=
 
 #---------------------------------------------------------------------------------
 # no real need to edit anything past this point unless you need to add additional
@@ -72,13 +70,12 @@ export DEPSDIR	:=	$(CURDIR)/$(BUILD)
 # automatically build a list of object files for our project
 #---------------------------------------------------------------------------------
 CFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.c)))
-CPPFILES	:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.cpp)))
+CPPFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.cpp)))
 sFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.s)))
 SFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.S)))
-BINFILES	:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.*)))
-	
-PNGFILES        :=      $(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.png)))
-TTFFILES	:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.ttf)))
+BINFILES		:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.*)))
+PNGFILES		:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.png)))
+TTFFILES		:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.ttf)))
 
 #---------------------------------------------------------------------------------
 # use CXX for linking C++ projects, CC for standard C
@@ -107,14 +104,14 @@ export INCLUDE	:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
 # build a list of library paths
 #---------------------------------------------------------------------------------
 export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib) \
-					-L$(MPLAYER)/ \
-		                        -L$(MPLAYER)/ffmpeg/libavcodec \
-		                        -L$(MPLAYER)/ffmpeg/libavformat \
-		                        -L$(MPLAYER)/ffmpeg/libavutil \
-					-L$(MPLAYER)/ffmpeg/libpostproc \
-		                        -L$(MPLAYER)/ffmpeg/libswscale \
-		                        -L$(MPLAYER)/ffmpeg/ \
-					-L$(LIBXENON_LIB) 
+			-L$(MPLAYER)/ \
+			-L$(MPLAYER)/ffmpeg/libavcodec \
+			-L$(MPLAYER)/ffmpeg/libavformat \
+			-L$(MPLAYER)/ffmpeg/libavutil \
+			-L$(MPLAYER)/ffmpeg/libpostproc \
+			-L$(MPLAYER)/ffmpeg/libswscale \
+			-L$(MPLAYER)/ffmpeg/ \
+			-L$(LIBXENON_LIB)
 
 export OUTPUT	:=	$(CURDIR)/$(TARGET)
 .PHONY: $(BUILD) clean

@@ -270,8 +270,6 @@ int ParseDirectory() {
 		if ((strcmp(entry->d_name, ".") == 0) || (strcmp(entry->d_name, "..") == 0))
 			continue;
 
-		printf("%s\n", entry->d_name);
-
 		BROWSERENTRY * newBrowserList = (BROWSERENTRY *) realloc(browserList, (entryNum + 1) * sizeof (BROWSERENTRY));
 
 		if (!newBrowserList) // failed to allocate required memory
