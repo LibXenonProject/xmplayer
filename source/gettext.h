@@ -1,7 +1,7 @@
 #ifndef _GETTEXT_H_
 #define _GETTEXT_H_
 
-bool LoadLanguage();
+bool LoadLanguage(char * file, int size);
 
 /*
  * input msg = a text in ASCII

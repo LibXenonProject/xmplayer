@@ -60,31 +60,42 @@ void ClearFontData() {
 	}
 }
 
-/**
- * Convert a short char string to a wide char string.
- *
- * This routine converts a supplied shot character string into a wide character string.
- * Note that it is the user's responsibility to clear the returned buffer once it is no longer needed.
- *
- * @param strChar	Character string to be converted.
- * @return Wide character representation of supplied character string.
- */
+static wchar_t *UTF8_to_UNICODE(wchar_t *unicode, const char *utf8, int len) {
+        int i, j;
+        wchar_t ch;
+
+        for (i = 0, j = 0; i < len; ++i, ++j) {
+                ch = ((const unsigned char *) utf8)[i];
+                if (ch >= 0xF0) {
+                        ch = (wchar_t) (utf8[i]&0x07) << 18;
+                        ch |= (wchar_t) (utf8[++i]&0x3F) << 12;
+                        ch |= (wchar_t) (utf8[++i]&0x3F) << 6;
+                        ch |= (wchar_t) (utf8[++i]&0x3F);
+                } else
+                        if (ch >= 0xE0) {
+                        ch = (wchar_t) (utf8[i]&0x0F) << 12;
+                        ch |= (wchar_t) (utf8[++i]&0x3F) << 6;
+                        ch |= (wchar_t) (utf8[++i]&0x3F);
+                } else
+                        if (ch >= 0xC0) {
+                        ch = (wchar_t) (utf8[i]&0x1F) << 6;
+                        ch |= (wchar_t) (utf8[++i]&0x3F);
+                }
+                unicode[j] = ch;
+        }
+        unicode[j] = 0;
+
+        return unicode;
+}
 
 wchar_t* charToWideChar(const char* strChar) {
-	wchar_t *strWChar = new wchar_t[strlen(strChar) + 1];
-	if (!strWChar)
-		return NULL;
+        wchar_t *strWChar = new wchar_t[strlen(strChar) + 1];
+        if (!strWChar)
+                return NULL;
+        
+        UTF8_to_UNICODE(strWChar,strChar,strlen(strChar));
 
-	int bt = mbstowcs(strWChar, strChar, strlen(strChar));
-	if (bt > 0) {
-		strWChar[bt] = (wchar_t)'\0';
-		return strWChar;
-	}
-
-	wchar_t *tempDest = strWChar;
-	while ((*tempDest++ = *strChar++));
-
-	return strWChar;
+        return strWChar;
 }
 
 uint8_t * glyphData = NULL; //tmp buffer

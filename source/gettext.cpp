@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <unistd.h>
+#include <xetypes.h>
+#include "../build/fr_lang.h"
 
 #include "gettext.h"
 
@@ -197,8 +199,9 @@ static MSG *findMSG(uint32_t id)
 	MSG *msg;
 	for (msg = baseMSG; msg; msg = msg->next)
 	{
-		if (msg->id == id)
+		if (msg->id == id){
 			return msg;
+		}
 	}
 	return NULL;
 }
@@ -255,10 +258,11 @@ static char * memfgets(char * dst, int maxlen, char * src)
 	return ++newline;
 }
 
-bool LoadLanguage(char * file, char * eof)
+bool LoadLanguage(char * file, int size)
 {
 	char line[200];
 	char *lastID = NULL;
+	char * eof = file + size;
 		
 	gettextCleanUp();
 
@@ -306,6 +310,8 @@ bool LoadLanguage(char * file, char * eof)
 			free(lastID);
 			lastID = NULL;
 		}
+		
+		
 	}
 	return true;
 }

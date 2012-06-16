@@ -16,11 +16,13 @@
 #include <xenon_soc/xenon_power.h>
 #include <sys/iosupport.h>
 #include <ppc/atomic.h>
-#include <network/network.h>
+//#include <network/network.h>
 #include <time/time.h>
 #include <elf/elf.h>
 
 //#include "http_client.h"
+
+#include "gettext.h"
 
 #include "libwiigui/gui.h"
 #include "libwiigui/gui_list.h"
@@ -109,10 +111,15 @@
 
 #include "../build/video_info_bg_png.h"
 
+#include "../build/fr_lang.h"
+
 #include "filebrowser.h"
 
 #include "mplayer_func.h"
 #include "folder_video_icon_png.h"
+
+
+#define _(x)	gettext(x)
 
 char * root_dev = NULL;
 
@@ -941,8 +948,6 @@ static int got_metadata = 0;
 
 static int last_level = 0;
 
-#define _(x)	x
-
 static char tmpbuff[1024];
 
 extern "C" void mplayer_osd_open() {
@@ -1288,6 +1293,8 @@ static void Browser(const char * title, const char * root) {
 }
 
 static void HomePage() {
+	static int last_selected_value = 1; // Video
+	
 	mainWindow->Append(home_left);
 	mainWindow->Append(home_main_function_frame_bg);
 
@@ -1298,7 +1305,7 @@ static void HomePage() {
 	home_list_v->Append(home_photo_btn);
 	home_list_v->Append(home_setting_btn);
 	
-	home_list_v->SetSelected(1);// Video
+	home_list_v->SetSelected(last_selected_value);
 
 	mainWindow->Append(home_list_v);
 
@@ -1356,6 +1363,8 @@ static void HomePage() {
 					WindowPrompt("Warning","Not implemented yet","Ok",NULL);
 					break;
 			}
+			
+			last_selected_value = home_list_v->GetValue();
 		}
 		update();
 	}
@@ -1516,10 +1525,15 @@ int main(int argc, char** argv) {
 	findDevices();
 
 	// Init gui
+	// french langage
+	LoadLanguage((char*)fr_lang,fr_lang_size);
 	InitFreeType((u8*) font_ttf, font_ttf_size);
+	
 	SetupPads();
 	ChangeFontSize(26);
 	common_setup();
+	
+
 	
 	// signal end of loading thread
 	lock(&loadingThreadLock);

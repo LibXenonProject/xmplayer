@@ -17,7 +17,7 @@ include $(DEVKITXENON)/rules
 #---------------------------------------------------------------------------------
 TARGET		:=	$(notdir $(CURDIR))
 BUILD		:=	build
-SOURCES		:=	source source/libwiigui source/xtaf
+SOURCES		:=	source source/libwiigui source/xtaf source/lang
 DATA		:=	data
 INCLUDES		:=	-I$(LIBXENON_INC)/freetype2
 MPLAYER		:=	$(CURDIR)/mplayer
@@ -76,6 +76,7 @@ SFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.S)))
 BINFILES		:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.*)))
 PNGFILES		:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.png)))
 TTFFILES		:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.ttf)))
+LANGFILES	:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.lang)))
 
 #---------------------------------------------------------------------------------
 # use CXX for linking C++ projects, CC for standard C
@@ -87,18 +88,19 @@ else
 endif
 
 export OFILES	:=	$(addsuffix .o,$(BINFILES)) \
-					$(CPPFILES:.cpp=.o) $(CFILES:.c=.o) \
-					$(sFILES:.s=.o) $(SFILES:.S=.o)
+			$(CPPFILES:.cpp=.o) $(CFILES:.c=.o) \
+			$(sFILES:.s=.o) $(SFILES:.S=.o) \
+			$(LANGFILES:.lang=.lang.o)
 
 #---------------------------------------------------------------------------------
 # build a list of include paths
 #---------------------------------------------------------------------------------
 export INCLUDE	:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
-					$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
-					-I$(LIBXENON_INC)/freetype2/ \
-					-I$(CURDIR)/$(BUILD) \
-					-I$(MPLAYER)/ffmpeg/ \
-					-I$(LIBXENON_INC)
+			$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
+			-I$(LIBXENON_INC)/freetype2/ \
+			-I$(CURDIR)/$(BUILD) \
+			-I$(MPLAYER)/ffmpeg/ \
+			-I$(LIBXENON_INC)
 
 #---------------------------------------------------------------------------------
 # build a list of library paths
@@ -146,6 +148,9 @@ $(OUTPUT).elf: $(OFILES)
 	@echo $(notdir $<)
 	@$(bin2o)
 %.ttf.o : %.ttf
+	@echo $(notdir $<)
+	$(bin2o)
+%.lang.o : %.lang
 	@echo $(notdir $<)
 	$(bin2o)
 %.elf:
