@@ -26,18 +26,12 @@ GuiList::GuiList(int w, int h, int orientation) {
 	focus = 0; // allow focus
 
 	trigA = new GuiTrigger;
-	//	trigA->SetSimpleTrigger(-1, WPAD_BUTTON_A | WPAD_CLASSIC_BUTTON_A, PAD_BUTTON_A);
 	trigA->SetSimpleTrigger(-1, 0, PAD_BUTTON_A);
 	trig2 = new GuiTrigger;
-	//	trig2->SetSimpleTrigger(-1, WPAD_BUTTON_2, 0);
 	trig2->SetSimpleTrigger(-1, 0, 0);
 
 	trigHeldA = new GuiTrigger;
-	//	trigHeldA->SetHeldTrigger(-1, WPAD_BUTTON_A | WPAD_CLASSIC_BUTTON_A, PAD_BUTTON_A);
 	trigHeldA->SetHeldTrigger(-1, 0, PAD_BUTTON_A);
-
-	//	btnSoundOver = new GuiSound(button_over_pcm, button_over_pcm_size, SOUND_PCM);
-	//	btnSoundClick = new GuiSound(button_click_pcm, button_click_pcm_size, SOUND_PCM);
 
 	this->orientation = orientation;
 
@@ -50,8 +44,6 @@ GuiList::GuiList(int w, int h, int orientation) {
  * Destructor for the GuiFileBrowser class.
  */
 GuiList::~GuiList() {
-	//	delete btnSoundOver;
-	//	delete btnSoundClick;
 	delete trigHeldA;
 	delete trigA;
 	delete trig2;
@@ -65,10 +57,10 @@ void GuiList::Append(GuiButton* e) {
 	Remove(e);
 	_elements.push_back(e);
 	e->SetParent(this);
-	if (orientation == 'V')
-		e->SetAlignment(ALIGN_RIGHT, ALIGN_TOP);
-	else
-		e->SetAlignment(ALIGN_LEFT, ALIGN_MIDDLE);
+//	if (orientation == 'V')
+//		e->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+//	else
+//		e->SetAlignment(ALIGN_LEFT, ALIGN_MIDDLE);
 
 	e->SetAnimation(true);
 	e->SetAnimationDuration(1);
@@ -94,6 +86,28 @@ void GuiList::Remove(GuiButton* e) {
 			break;
 		}
 	}
+}
+
+bool GuiList::IsInside(GuiElement *parent,GuiElement *child) {
+
+	if (orientation == 'V') {
+		if (child->GetTop() < parent->GetTop()) {
+			return false;
+		}
+		if (child->GetTop() + child->GetHeight() > parent->GetTop() + parent->GetHeight()) {
+			return false;
+		}
+	} else {
+		if (child->GetLeft() < parent->GetLeft()) {
+//			printf("%d < %d\n",child->GetLeft() , parent->GetLeft());
+			return false;
+		}
+		if (child->GetLeft() + child->GetWidth() > parent->GetLeft() + parent->GetWidth()) {
+			return false;
+		}
+	}
+
+	return true;
 }
 
 void GuiList::RemoveAll() {
@@ -156,19 +170,6 @@ void GuiList::Draw() {
 		return;
 	}
 
-	//
-	//		// debug
-	//		XeColor color;
-	//		color.lcol = 0xFF00007F;
-	//
-	//		int currLeft = this->GetLeft();
-	//		int thisTop = this->GetTop();
-	//
-	//		int thisHeight = this->GetHeight();
-	//		int thisWidth = this->GetWidth();
-	//
-	//		Menu_DrawRectangle(currLeft, thisTop, thisWidth, thisHeight, color, 1);
-
 	if (this->selector) {
 		this->selector->Draw();
 	}
@@ -177,6 +178,7 @@ void GuiList::Draw() {
 	for (u32 i = 0; i < elemSize; ++i) {
 		_elements.at(i)->Draw();
 	}
+
 
 	this->UpdateEffects();
 }
@@ -198,9 +200,6 @@ int GuiList::GetCenter() {
 
 void GuiList::SetSelector(GuiImage * img) {
 	this->selector = img;
-	//img->SetParent(this);
-	//img->SetAlignment(ALIGN_CENTRE,ALIGN_MIDDLE);
-	//img->SetPosition(this->GetLeft(),this->GetTop());
 }
 
 #define MAX(a,b) (((a)>(b))?(a):(b))
@@ -215,12 +214,9 @@ void GuiList::Update(GuiTrigger * t) {
 		return;
 
 	int c = this->listCenter;
-	//int c = 3;
 
 	u32 elemSize = _elements.size();
 
-	//start = MAX(0, selectedItem - itemCount / 2);
-	//start = MAX(0, selectedItem - itemCount);
 	if (selectedItem > c)
 		start = (c - 1) - selectedItem;
 	else
@@ -235,40 +231,11 @@ void GuiList::Update(GuiTrigger * t) {
 
 	for (u32 i = 0; i < elemSize; ++i) {
 		_elements.at(i)->UpdateEffects();
-		//_elements.at(i)->SetVisible(false);
 		_elements.at(i)->SetState(STATE_DISABLED);
 	}
 
 	ystep = this->height / itemCount;
 	xstep = this->width / itemCount;
-
-	/*
-	for (u32 i = start; i < start + count; ++i) {
-
-		if (_elements.at(i)->GetState() == STATE_DISABLED)
-			_elements.at(i)->SetState(STATE_DEFAULT);
-
-		_elements.at(i)->SetVisible(true);
-		if (orientation == 'V') {
-			u32 pos = (c + (i - start)) - MIN(selectedItem, c - 1);
-			//_elements.at(i)->SetPosition(0, (pos - 1) * ystep);
-			_elements.at(i)->SetAnimationPosition(0, (pos - 1) * ystep);
-		} else {
-			u32 pos = (c + (i - start)) - MIN(selectedItem, c - 1);
-			//_elements.at(i)->SetPosition((pos - 1) * xstep, 0);
-			_elements.at(i)->SetAnimationPosition((pos - 1) * xstep, 0);
-		}
-
-		//		if (i == selectedItem) {
-		//			_elements.at(i)->SetAlpha(0x7f);
-		//			_elements.at(i)->SetScale(1.2);
-		//		} else {
-		//			_elements.at(i)->SetScale(1);
-		//			_elements.at(i)->SetAlpha(0xff);
-		//		}
-	}
-	 */
-
 
 	for (u32 i = 0; i < elemSize; ++i) {
 		if (_elements.at(i)->GetState() == STATE_DISABLED)
@@ -276,46 +243,31 @@ void GuiList::Update(GuiTrigger * t) {
 
 		if (orientation == 'V') {
 			u32 pos = (c + (i - start)) - MIN(selectedItem, c - 1);
-			//_elements.at(i)->SetPosition(0, (pos - 1) * ystep);
 			_elements.at(i)->SetAnimationPosition(0, (pos - 1) * ystep);
+			//			_elements.at(i)->SetPosition(0, (pos - 1) * ystep);
 		} else {
 			u32 pos = (c + (i - start)) - MIN(selectedItem, c - 1);
-			//_elements.at(i)->SetPosition((pos - 1) * xstep, 0);
 			_elements.at(i)->SetAnimationPosition((pos - 1) * xstep, 0);
+			//			_elements.at(i)->SetPosition((pos - 1) * xstep, 0);
 		}
 
-		//if(i>=start && i < start + count )
-		if (_elements.at(i)->IsInside(this))
-			//		if(
-			//				this->IsInside(_elements.at(i)->GetMinX(),_elements.at(i)->GetMinY()) &&
-			//				this->IsInside(_elements.at(i)->GetMaxX(),_elements.at(i)->GetMaxY())
-			//			)
-		{
-			//_elements.at(i)->SetVisible(true);
+		if (IsInside(this,_elements.at(i))) {
 			_elements.at(i)->SetEffect(EFFECT_FADE_OUT, 1, 0);
 		} else {
-			//_elements.at(i)->SetVisible(false);
 			_elements.at(i)->SetEffect(EFFECT_FADE_OUT, -1, 0);
 		}
 	}
 
 	if (orientation == 'V') {
 		if (t->Up()) {
-			//			_elements.at(selectedItem)->ResetState();
 			selectedItem--;
 		} else if (t->Down()) {
-			//			_elements.at(selectedItem)->ResetState();
 			selectedItem++;
 		}
 	} else {
-		//		if (t->Down() || t->Up()) {
-		//			selectedItem = 0;
-		//		}
 		if (t->Right()) {
-			//			_elements.at(selectedItem)->ResetState();
 			selectedItem++;
 		} else if (t->Left()) {
-			//			_elements.at(selectedItem)->ResetState();
 			selectedItem--;
 		}
 	}
@@ -326,12 +278,6 @@ void GuiList::Update(GuiTrigger * t) {
 	if (selectedItem >= elemSize - 1)
 		selectedItem = elemSize - 1;
 
-	//_elements.at(selectedItem)->SetState(STATE_SELECTED,t->chan);
-
-	//	for (u32 i = 0; i < elemSize; ++i) {
-	//		_elements.at(i)->Update(t);
-	//	}
-
 	if (updateCB)
 		updateCB(this);
 }
@@ -340,6 +286,6 @@ int GuiList::GetValue() {
 	return selectedItem;
 }
 
-void GuiList::SetSelected(int c){
+void GuiList::SetSelected(int c) {
 	selectedItem = c;
 }

@@ -31,10 +31,7 @@ void GuiTab::Append(GuiElement* e) {
 	colH = height / rowCount;
 	
 	posX = (elementSize % colCount) * colW;
-	//if(colCount>1)
-		posY =(elementSize / colCount)  * colH;
-	//else
-	//	posY = 0;
+	posY =(elementSize / colCount)  * colH;
 	
 	// position
 	e->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
@@ -56,7 +53,6 @@ void GuiTab::SetBackground(GuiElement* e) {
 		return;
 	
 	// good position
-	//e->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	e->SetPosition(e->GetLeft() -GetLeft() ,e->GetTop()-GetTop());
 
 	e->SetAlignment(ALIGN_LEFT, ALIGN_TOP);

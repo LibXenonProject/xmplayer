@@ -54,12 +54,12 @@ GuiOptionBrowser::GuiOptionBrowser(int w, int h, GuiImageData * bg_entry, Option
 
         optionBg[i] = new GuiImage(bgOptionsEntry);
 
-        optionBtn[i] = new GuiButton(512, 30);
+        optionBtn[i] = new GuiButton(this->GetWidth(), bg_entry->GetHeight());
         optionBtn[i]->SetParent(this);
         optionBtn[i]->SetLabel(optionTxt[i], 0);
         optionBtn[i]->SetLabel(optionVal[i], 1);
         optionBtn[i]->SetImageOver(optionBg[i]);
-        optionBtn[i]->SetPosition(2, 30 * i + 3);
+        optionBtn[i]->SetPosition(2, bg_entry->GetHeight() * i );
         optionBtn[i]->SetTrigger(trigA);
         optionBtn[i]->SetTrigger(trig2);
         //optionBtn[i]->SetSoundClick(btnSoundClick);

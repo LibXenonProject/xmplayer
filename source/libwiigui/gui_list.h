@@ -55,6 +55,10 @@ public:
 	void SetCenter(int c);
 	int GetCenter();
 	void SetSelected(int c);
+	
+		//!Checks whether the specified element is within the element's boundaries
+	//!\return true if contained within, false otherwise
+	bool IsInside(GuiElement *parent,GuiElement *child);
 
 	void SetSelector(GuiImage *);
 

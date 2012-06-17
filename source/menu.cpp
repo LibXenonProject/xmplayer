@@ -23,6 +23,7 @@
 //#include "http_client.h"
 
 #include "gettext.h"
+#include "preferences.h"
 
 #include "libwiigui/gui.h"
 #include "libwiigui/gui_list.h"
@@ -126,8 +127,6 @@ char * root_dev = NULL;
 static int device_list_size = 0;
 static char device_list[STD_MAX][10];
 
-// used for osd (from getch2-xenon.c)
-
 enum {
 	MENU_BACK = -1,
 	HOME_PAGE = 1,
@@ -138,6 +137,7 @@ enum {
 	BROWSE_AUDIO,
 	BROWSE_PICTURE,
 	BROWSE_ALL,
+	SETTINGS,
 	OSD = 0x20,
 };
 
@@ -145,7 +145,7 @@ enum {
  * used at loading
  **/
 static XenosSurface * logo = NULL;
-static XenosSurface * loading[4] ={ NULL};
+static XenosSurface * loading[4] = {NULL};
 
 static GuiImage * bgImg = NULL;
 static GuiWindow * mainWindow = NULL;
@@ -258,7 +258,7 @@ static GuiImage * osd_options_bg_x7 = NULL;
 static GuiImage * osd_options_menu_audio_channel_icon_f = NULL;
 static GuiImage * osd_options_menu_audio_channel_icon_n = NULL;
 
-static GuiImage * options_menu_icon_over[8]={NULL};
+static GuiImage * options_menu_icon_over[8] = {NULL};
 
 static GuiImage * options_menu_info_icon_f = NULL;
 static GuiImage * options_menu_info_icon_n = NULL;
@@ -324,7 +324,7 @@ static int osd_display_info = 0;
 static int osd_display_option_audio = 0;
 static int osd_display_option_subtitle = 0;
 
-static void osd_option_default_callback(void * data){
+static void osd_option_default_callback(void * data) {
 	GuiButton *button = (GuiButton *) data;
 	if (button->GetState() == STATE_CLICKED) {
 		button->ResetState();
@@ -390,9 +390,9 @@ static void osd_options_sub_callback(void * data) {
 	GuiButton *button = (GuiButton *) data;
 	if (button->GetState() == STATE_CLICKED) {
 		playerSwitchSubtitle();
-//		osd_display_option_subtitle = 1;
-//		osd_options_subtitle_window->SetVisible(true);
-//		osd_options_subtitle_window->SetFocus(1);
+		//		osd_display_option_subtitle = 1;
+		//		osd_options_subtitle_window->SetVisible(true);
+		//		osd_options_subtitle_window->SetFocus(1);
 		button->ResetState();
 		button->SetState(STATE_SELECTED);
 	}
@@ -410,15 +410,19 @@ static void loadHomeRessources() {
 
 	home_main_function_frame_bg->SetPosition(0, 341);
 
-	home_list_v = new GuiList(200, 440);
-	home_list_h = new GuiList(465, 110, 'H');
-
 	// <wgt_mlist name="VERT_MLIST" image="" x="305" y="140" w="200" h="440" fontsize="26" duration="250" motion_type="decrease" textcolor="0xffffff" align="hcenter" direction="vert" itemcount="4" extra_index="3" extra_len="0"/>
-	home_list_v->SetPosition(305, 140);
+	home_list_v = new GuiList(200, 440);
+
+	home_list_v->SetPosition(290, 140);
 	home_list_v->SetCount(4);
 	home_list_v->SetCenter(3);
 
+
+	home_list_v->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+
 	// <wgt_mlist name="HORI_MLIST" x="560" y="360" w="465" h="110" fontsize="20" duration="250" motion_type="decrease" textcolor="0xffffff" align="hcenter" direction="hori" itemcount="3"/>
+	home_list_h = new GuiList(465, 110, 'H');
+
 	home_list_h->SetPosition(560, 360);
 	home_list_h->SetCount(3);
 	home_list_h->SetCenter(2);
@@ -435,7 +439,6 @@ static void loadHomeRessources() {
 	for (int i = 0; i < device_list_size; i++) {
 		home_hdd_icon[i] = new GuiImage(new GuiImageData(home_hdd_sub_icon_n_png));
 		home_no_hdd_icon[i] = new GuiImage(new GuiImageData(home_nohdd_sub_icon_n_png));
-
 		home_device_btn[i] = new GuiButton(home_hdd_icon[i]->GetWidth(), home_hdd_icon[i]->GetHeight());
 		home_device_btn[i]->SetIcon(home_hdd_icon[i]);
 		home_device_btn[i]->SetEffectGrow();
@@ -446,12 +449,12 @@ static void loadHomeRessources() {
 	home_music_img = new GuiImage(new GuiImageData(home_music_sm_icon_n_png));
 	home_photo_img = new GuiImage(new GuiImageData(home_photo_sm_icon_n_png));
 	home_setting_img = new GuiImage(new GuiImageData(home_settings_sm_icon_n_png));
-	
-	home_video_txt = new GuiText("Video",48,0xFFFFFFFF);
-	home_all_txt = new GuiText("All",48,0xFFFFFFFF);
-	home_music_txt = new GuiText("Music",48,0xFFFFFFFF);
-	home_photo_txt = new GuiText("Photo",48,0xFFFFFFFF);
-	home_setting_txt = new GuiText("Setting",48,0xFFFFFFFF);
+
+	home_video_txt = new GuiText("Videos", 48, 0xFFFFFFFF);
+	home_all_txt = new GuiText("All", 48, 0xFFFFFFFF);
+	home_music_txt = new GuiText("Musics", 48, 0xFFFFFFFF);
+	home_photo_txt = new GuiText("Photos", 48, 0xFFFFFFFF);
+	home_setting_txt = new GuiText("Settings", 48, 0xFFFFFFFF);
 
 	home_video_btn = new GuiButton(home_video_img->GetWidth(), home_video_img->GetHeight());
 	home_all_btn = new GuiButton(home_video_img->GetWidth(), home_video_img->GetHeight());
@@ -459,11 +462,11 @@ static void loadHomeRessources() {
 	home_photo_btn = new GuiButton(home_photo_img->GetWidth(), home_photo_img->GetHeight());
 	home_setting_btn = new GuiButton(home_setting_img->GetWidth(), home_setting_img->GetHeight());
 
-//	home_video_btn->SetIcon(home_video_img);
-//	home_music_btn->SetIcon(home_music_img);
-//	home_photo_btn->SetIcon(home_photo_img);
-//	home_setting_btn->SetIcon(home_setting_img);
-	
+	//	home_video_btn->SetIcon(home_video_img);
+	//	home_music_btn->SetIcon(home_music_img);
+	//	home_photo_btn->SetIcon(home_photo_img);
+	//	home_setting_btn->SetIcon(home_setting_img);
+
 	home_video_btn->SetLabel(home_video_txt);
 	home_all_btn->SetLabel(home_all_txt);
 	home_music_btn->SetLabel(home_music_txt);
@@ -483,18 +486,18 @@ static void loadBrowserRessources() {
 	browser_music_folder_icon = new GuiImageData(browser_folder_icon_f_png);
 
 	browser_selector = new GuiImageData(browser_list_btn_png);
-	
-//	<item id="headline" x="100" y="44" w="300" h="40" align="left"/>
-//	<item id="subheadline" x="100" y="70" w="300" h="30" fontsize="24" align="left"/>
-//	<item id="pagecounter" x="980" y="54" w="200" h="26" fontsize="24" align="right" textcolor="0xffffff"/>
-	
-	browser_pagecounter = new GuiText("@@pagecounter",24,0xFFFFFFFF);		
+
+	//	<item id="headline" x="100" y="44" w="300" h="40" align="left"/>
+	//	<item id="subheadline" x="100" y="70" w="300" h="30" fontsize="24" align="left"/>
+	//	<item id="pagecounter" x="980" y="54" w="200" h="26" fontsize="24" align="right" textcolor="0xffffff"/>
+
+	browser_pagecounter = new GuiText("@@pagecounter", 24, 0xFFFFFFFF);
 	browser_pagecounter->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	browser_pagecounter->SetPosition(980, 54);
 	browser_pagecounter->SetMaxWidth(200);
 	browser_pagecounter->SetStyle(FTGX_JUSTIFY_RIGHT);
-	
-	browser_subheadline = new GuiText("@@subheadline",24,0xFFFFFFFF);
+
+	browser_subheadline = new GuiText("@@subheadline", 24, 0xFFFFFFFF);
 	browser_subheadline->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	browser_subheadline->SetPosition(100, 70);
 
@@ -502,32 +505,33 @@ static void loadBrowserRessources() {
 	browser_headline->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	browser_headline->SetPosition(100, 40);
 	browser_headline->SetEffectGrow();
-	
+
 	browser_up_icon = new GuiImage(new GuiImageData(browser_list_arrow_up_png));
-	browser_down_icon =  new GuiImage(new GuiImageData(browser_list_arrow_down_png));;
-	
+	browser_down_icon = new GuiImage(new GuiImageData(browser_list_arrow_down_png));
+	;
+
 	// <image image="@@moreprev" x="150" y="650" w="19" h="13"/>
 	// <image image="@@morenext" x="1111" y="650" w="19" h="13"/>
 	browser_up_icon->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	browser_down_icon->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
-	browser_up_icon->SetPosition(150, 650);
-	browser_down_icon->SetPosition(1111, 650);
-	
+	browser_up_icon->SetPosition(120, 650);
+	browser_down_icon->SetPosition(1141, 650);
+
 	browser_top_bg = new GuiImage(new GuiImageData(browser_top_png));
 	browser_top_bg->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	browser_top_bg->SetPosition(0, 0);
-	
+
 	// no image data, pointer to image
 	browser_folder_icon = browser_video_folder_icon;
-	
+
 	browser_files_icon[BROWSER_TYPE_UNKNOW] = new GuiImageData(browser_file_icon_f_png);
 	browser_files_icon[BROWSER_TYPE_VIDEO] = new GuiImageData(browser_video_icon_f_png);
 	browser_files_icon[BROWSER_TYPE_AUDIO] = new GuiImageData(browser_music_icon_f_png);
 	browser_files_icon[BROWSER_TYPE_PICTURE] = new GuiImageData(browser_photo_icon_f_png);
 	browser_files_icon[BROWSER_TYPE_ELF] = new GuiImageData(browser_elf_icon_f_png);
 	browser_files_icon[BROWSER_TYPE_NAND] = new GuiImageData(browser_file_icon_f_png);
-	
-//	browser_file_icon = browser_video_icon;
+
+	//	browser_file_icon = browser_video_icon;
 
 	gui_browser = new GuiFileBrowser(980, 500, browser_selector, browser_folder_icon, browser_files_icon);
 	gui_browser->SetPosition(150, 131);
@@ -559,31 +563,31 @@ static void loadOsdRessources() { // OSD
 	video_osd_infobar_text_bitrate = new GuiText("Bitrate", 22, 0xffffffff);
 
 	video_osd_infobar_bg = new GuiImage(new GuiImageData(video_info_bg_png));
-	
+
 	video_osd_infobar_bg->SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);
 	//video_osd_infobar_bg->SetPosition(68,240);
-	
-	
+
+
 	video_osd_infobar = new GuiWindow(1144, 240);
 	//video_osd_infobar->SetPosition(110, 350);
 	video_osd_infobar->SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);
-		
+
 	video_osd_infobar->Append(video_osd_infobar_bg);
-		
+
 	video_osd_infobar->Append(video_osd_infobar_text_filename);
 	video_osd_infobar->Append(video_osd_infobar_text_trackinfo);
 	video_osd_infobar->Append(video_osd_infobar_text_resolution);
-	video_osd_infobar->Append(video_osd_infobar_text_bitrate);	
-	
+	video_osd_infobar->Append(video_osd_infobar_text_bitrate);
+
 	video_osd_infobar_text_filename->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	video_osd_infobar_text_trackinfo->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	video_osd_infobar_text_resolution->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	video_osd_infobar_text_bitrate->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
-	
-	video_osd_infobar_text_filename->SetPosition(20,20);
-	video_osd_infobar_text_trackinfo->SetPosition(20,50);
-	video_osd_infobar_text_resolution->SetPosition(20,80);
-	video_osd_infobar_text_bitrate->SetPosition(20,110);
+
+	video_osd_infobar_text_filename->SetPosition(20, 20);
+	video_osd_infobar_text_trackinfo->SetPosition(20, 50);
+	video_osd_infobar_text_resolution->SetPosition(20, 80);
+	video_osd_infobar_text_bitrate->SetPosition(20, 110);
 
 	/** play state **/
 	video_osd_play = new GuiImage(new GuiImageData(video_control_play_btn_png));
@@ -611,7 +615,7 @@ static void loadOsdRessources() { // OSD
 	video_osd_info_filename->SetPosition(264, 621);
 	video_osd_info_cur_time->SetPosition(943, 625);
 	video_osd_info_duration->SetPosition(1023, 625);
-	
+
 	video_osd_info_filename->SetMaxWidth(644);
 	video_osd_info_filename->SetScroll(SCROLL_HORIZONTAL);
 	//
@@ -649,7 +653,7 @@ static void loadOsdRessources() { // OSD
 
 	osd_options_bg_x7->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	osd_options_bg_x7->SetPosition(410, 0);
-	
+
 	osd_options_bg_x5->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	osd_options_bg_x5->SetPosition(470, 0);
 
@@ -675,13 +679,13 @@ static void loadOsdRessources() { // OSD
 
 	options_menu_zoomout_icon_f = new GuiImage(new GuiImageData(options_menu_zoomout_icon_f_png));
 	options_menu_zoomout_icon_n = new GuiImage(new GuiImageData(options_menu_zoomout_icon_n_png));
-		
+
 	options_menu_return_to_gui_f = new GuiImage(new GuiImageData(options_menu_gridview_icon_f_png));
 	options_menu_return_to_gui_n = new GuiImage(new GuiImageData(options_menu_gridview_icon_n_png));
-	
-	for(int i=0;i<8;i++){
+
+	for (int i = 0; i < 8; i++) {
 		options_menu_icon_over[i] = new GuiImage(new GuiImageData(options_menu_btn_png));
-		options_menu_icon_over[i]->SetPosition(0,-30);
+		options_menu_icon_over[i]->SetPosition(0, -30);
 	}
 
 	osd_options_menu_audio_channel_btn = new GuiButton(osd_options_menu_audio_channel_icon_f->GetWidth(), osd_options_menu_audio_channel_icon_f->GetHeight());
@@ -692,7 +696,7 @@ static void loadOsdRessources() { // OSD
 	osd_options_menu_zoomin_btn = new GuiButton(options_menu_zoomin_icon_f->GetWidth(), options_menu_zoomin_icon_f->GetHeight());
 	osd_options_menu_zoomout_btn = new GuiButton(options_menu_zoomout_icon_f->GetWidth(), options_menu_zoomout_icon_f->GetHeight());
 	osd_options_menu_next_btn = new GuiButton(options_menu_return_to_gui_f->GetWidth(), options_menu_return_to_gui_f->GetHeight());
-	
+
 	// image
 	osd_options_menu_audio_channel_btn->SetImage(osd_options_menu_audio_channel_icon_n);
 	osd_options_menu_audio_channel_btn->SetImageOver(osd_options_menu_audio_channel_icon_f);
@@ -714,10 +718,10 @@ static void loadOsdRessources() { // OSD
 
 	osd_options_menu_zoomout_btn->SetImage(options_menu_zoomout_icon_n);
 	osd_options_menu_zoomout_btn->SetImageOver(options_menu_zoomout_icon_f);
-		
+
 	osd_options_menu_next_btn->SetImage(options_menu_return_to_gui_n);
 	osd_options_menu_next_btn->SetImageOver(options_menu_return_to_gui_f);
-	
+
 	osd_options_menu_audio_channel_btn->SetIconOver(options_menu_icon_over[0]);
 	osd_options_menu_info_btn->SetIconOver(options_menu_icon_over[1]);
 	osd_options_menu_pan_btn->SetIconOver(options_menu_icon_over[2]);
@@ -736,41 +740,41 @@ static void loadOsdRessources() { // OSD
 	osd_options_menu_subtitle_btn->SetUpdateCallback(osd_options_sub_callback);
 	osd_options_menu_zoomin_btn->SetUpdateCallback(osd_option_default_callback);
 	osd_options_menu_zoomout_btn->SetUpdateCallback(osd_option_default_callback);
-	
-	GuiText * btn_audio_text = new GuiText("Audio",18, 0xffffffff);
-	GuiText * btn_info_text = new GuiText("Information",18, 0xffffffff);
-	GuiText * btn_fullscreen_text = new GuiText("Fullscreen",18, 0xffffffff);
-	GuiText * btn_subtitle_text = new GuiText("Subtitle",18, 0xffffffff);
-	GuiText * btn_return_text = new GuiText("Return to gui",18, 0xffffffff);
-	
-	btn_audio_text->SetAlignment(ALIGN_CENTRE,ALIGN_TOP);
-	btn_info_text->SetAlignment(ALIGN_CENTRE,ALIGN_TOP);
-	btn_fullscreen_text->SetAlignment(ALIGN_CENTRE,ALIGN_TOP);
-	btn_subtitle_text->SetAlignment(ALIGN_CENTRE,ALIGN_TOP);
-	btn_return_text->SetAlignment(ALIGN_CENTRE,ALIGN_TOP);
-	
-	btn_audio_text->SetPosition(0,-70);
-	btn_info_text->SetPosition(0,-70);
-	btn_fullscreen_text->SetPosition(0,-70);
-	btn_subtitle_text->SetPosition(0,-70);
-	btn_return_text->SetPosition(0,-70);
-	
-//	osd_options_menu_audio_channel_btn->SetLabelOver(btn_audio_text);
-//	osd_options_menu_info_btn->SetLabelOver(btn_info_text);
-//	osd_options_menu_pan_btn->SetLabelOver(btn_fullscreen_text);
-//	osd_options_menu_subtitle_btn->SetLabelOver(btn_subtitle_text);
-//	osd_options_menu_next_btn->SetLabelOver(btn_return_text);
-		
+
+	GuiText * btn_audio_text = new GuiText("Audio", 18, 0xffffffff);
+	GuiText * btn_info_text = new GuiText("Information", 18, 0xffffffff);
+	GuiText * btn_fullscreen_text = new GuiText("Fullscreen", 18, 0xffffffff);
+	GuiText * btn_subtitle_text = new GuiText("Subtitle", 18, 0xffffffff);
+	GuiText * btn_return_text = new GuiText("Return to gui", 18, 0xffffffff);
+
+	btn_audio_text->SetAlignment(ALIGN_CENTRE, ALIGN_TOP);
+	btn_info_text->SetAlignment(ALIGN_CENTRE, ALIGN_TOP);
+	btn_fullscreen_text->SetAlignment(ALIGN_CENTRE, ALIGN_TOP);
+	btn_subtitle_text->SetAlignment(ALIGN_CENTRE, ALIGN_TOP);
+	btn_return_text->SetAlignment(ALIGN_CENTRE, ALIGN_TOP);
+
+	btn_audio_text->SetPosition(0, -70);
+	btn_info_text->SetPosition(0, -70);
+	btn_fullscreen_text->SetPosition(0, -70);
+	btn_subtitle_text->SetPosition(0, -70);
+	btn_return_text->SetPosition(0, -70);
+
+	//	osd_options_menu_audio_channel_btn->SetLabelOver(btn_audio_text);
+	//	osd_options_menu_info_btn->SetLabelOver(btn_info_text);
+	//	osd_options_menu_pan_btn->SetLabelOver(btn_fullscreen_text);
+	//	osd_options_menu_subtitle_btn->SetLabelOver(btn_subtitle_text);
+	//	osd_options_menu_next_btn->SetLabelOver(btn_return_text);
+
 	//osd_options_window->SetBackground(osd_options_bg_x7);
 	osd_options_window->SetBackground(osd_options_bg_x5);
 	osd_options_window->Append(osd_options_menu_audio_channel_btn);
 	osd_options_window->Append(osd_options_menu_info_btn);
-	osd_options_window->Append(osd_options_menu_pan_btn);	
+	osd_options_window->Append(osd_options_menu_pan_btn);
 	osd_options_window->Append(osd_options_menu_subtitle_btn);
 	osd_options_window->Append(osd_options_menu_next_btn);
-//	osd_options_window->Append(osd_options_menu_repeat_btn);
-//	osd_options_window->Append(osd_options_menu_zoomin_btn);
-//	osd_options_window->Append(osd_options_menu_zoomout_btn);
+	//	osd_options_window->Append(osd_options_menu_repeat_btn);
+	//	osd_options_window->Append(osd_options_menu_zoomin_btn);
+	//	osd_options_window->Append(osd_options_menu_zoomout_btn);
 
 	osd_options_menu_audio_channel_btn->SetFocus(1);
 
@@ -778,11 +782,11 @@ static void loadOsdRessources() { // OSD
 	for (u32 i = 1; i < osd_options_window->GetSize(); i++) {
 		osd_options_window->GetGuiElementAt(i)->SetTrigger(trigA);
 	}
-	
-	
+
+
 	/**
-	* Osd Subtiles window
-	*/ 
+	 * Osd Subtiles window
+	 */
 	int i = 0;
 	sprintf(subtitle_option_list.name[i++], "Subtitles");
 	sprintf(subtitle_option_list.name[i++], "Visibility");
@@ -790,17 +794,17 @@ static void loadOsdRessources() { // OSD
 	sprintf(subtitle_option_list.name[i++], "Delay");
 	sprintf(subtitle_option_list.name[i++], "Scale");
 	subtitle_option_list.length = i;
-	
+
 	for (i = 0; i < subtitle_option_list.length; i++)
 		subtitle_option_list.value[i][0] = 0;
-	
-	osd_options_subtitle_window = new GuiWindow(1142,240);
-	osd_options_subtitle = new GuiOptionBrowser(1122,220,new GuiImageData(browser_list_btn_png),&subtitle_option_list);
-	osd_options_subtitle->SetPosition(20,20);
-	
-	osd_options_subtitle_window->SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);		
-	
-	
+
+	osd_options_subtitle_window = new GuiWindow(1142, 240);
+	osd_options_subtitle = new GuiOptionBrowser(1122, 220, new GuiImageData(browser_list_btn_png), &subtitle_option_list);
+	osd_options_subtitle->SetPosition(20, 20);
+
+	osd_options_subtitle_window->SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);
+
+
 	osd_options_subtitle_window->Append(new GuiImage(new GuiImageData(video_info_bg_png)));
 	osd_options_subtitle_window->Append(osd_options_subtitle);
 }
@@ -822,8 +826,8 @@ int WindowPrompt(const char *title, const char *msg, const char *btn1Label, cons
 	GuiWindow promptWindow(448, 288);
 	promptWindow.SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);
 	promptWindow.SetPosition(0, -10);
-//	GuiSound btnSoundOver(button_over_pcm, button_over_pcm_size, SOUND_PCM);
-//	GuiSound btnSoundClick(button_click_pcm, button_click_pcm_size, SOUND_PCM);
+	//	GuiSound btnSoundOver(button_over_pcm, button_over_pcm_size, SOUND_PCM);
+	//	GuiSound btnSoundClick(button_click_pcm, button_click_pcm_size, SOUND_PCM);
 	GuiImageData btnOutline(button_blue_png);
 	GuiImageData btnOutlineOver(button_green_png);
 
@@ -831,20 +835,20 @@ int WindowPrompt(const char *title, const char *msg, const char *btn1Label, cons
 	GuiImage dialogBoxImg(&dialogBox);
 
 	GuiText titleTxt(title, 26, (XeColor) {
-		255,255, 255, 255
+		255, 255, 255, 255
 	});
 	titleTxt.SetAlignment(ALIGN_CENTRE, ALIGN_TOP);
 	titleTxt.SetPosition(0, 14);
 
 	GuiText msgTxt(msg, 26, (XeColor) {
-		255,255, 255, 255
+		255, 255, 255, 255
 	});
 	msgTxt.SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);
 	msgTxt.SetPosition(0, -20);
 	msgTxt.SetWrap(true, 430);
 
 	GuiText btn1Txt(btn1Label, 22, (XeColor) {
-		255,255, 255, 255
+		255, 255, 255, 255
 	});
 	GuiImage btn1Img(&btnOutline);
 	GuiImage btn1ImgOver(&btnOutlineOver);
@@ -861,14 +865,14 @@ int WindowPrompt(const char *title, const char *msg, const char *btn1Label, cons
 	btn1.SetLabel(&btn1Txt);
 	btn1.SetImage(&btn1Img);
 	btn1.SetImageOver(&btn1ImgOver);
-//	btn1.SetSoundOver(&btnSoundOver);
-//	btn1.SetSoundClick(&btnSoundClick);
+	//	btn1.SetSoundOver(&btnSoundOver);
+	//	btn1.SetSoundClick(&btnSoundClick);
 	btn1.SetTrigger(trigA);
 	btn1.SetState(STATE_SELECTED);
 	btn1.SetEffectGrow();
 
 	GuiText btn2Txt(btn2Label, 22, (XeColor) {
-		255,0, 0, 0
+		255, 0, 0, 0
 	});
 	GuiImage btn2Img(&btnOutline);
 	GuiImage btn2ImgOver(&btnOutlineOver);
@@ -878,8 +882,8 @@ int WindowPrompt(const char *title, const char *msg, const char *btn1Label, cons
 	btn2.SetLabel(&btn2Txt);
 	btn2.SetImage(&btn2Img);
 	btn2.SetImageOver(&btn2ImgOver);
-//	btn2.SetSoundOver(&btnSoundOver);
-//	btn2.SetSoundClick(&btnSoundClick);
+	//	btn2.SetSoundOver(&btnSoundOver);
+	//	btn2.SetSoundClick(&btnSoundClick);
 	btn2.SetTrigger(trigA);
 	btn2.SetEffectGrow();
 
@@ -896,7 +900,7 @@ int WindowPrompt(const char *title, const char *msg, const char *btn1Label, cons
 	mainWindow->SetState(STATE_DISABLED);
 	mainWindow->Append(&promptWindow);
 	mainWindow->ChangeFocus(&promptWindow);
-	
+
 	if (btn2Label) {
 		btn1.ResetState();
 		btn2.SetState(STATE_SELECTED);
@@ -918,7 +922,6 @@ int WindowPrompt(const char *title, const char *msg, const char *btn1Label, cons
 	mainWindow->SetState(STATE_DEFAULT);
 	return choice;
 }
-
 
 /** to do **/
 static void loadRessources() {
@@ -955,16 +958,16 @@ extern "C" void mplayer_osd_open() {
 
 	if (osd_show == 0) {
 		/** video infobar **/
-		sprintf(tmpbuff,"%s %s",_("Filename:"),playetGetMetaData(META_NAME));
+		sprintf(tmpbuff, "%s %s", _("Filename:"), playetGetMetaData(META_NAME));
 		video_osd_infobar_text_filename->SetText(tmpbuff);
-		
-		sprintf(tmpbuff,"%s %s",_("Codec:"),playetGetMetaData(META_VIDEO_CODEC));
+
+		sprintf(tmpbuff, "%s %s", _("Codec:"), playetGetMetaData(META_VIDEO_CODEC));
 		video_osd_infobar_text_trackinfo->SetText(tmpbuff);
-		
-		sprintf(tmpbuff,"%s %s",_("Resolution:"),playetGetMetaData(META_VIDEO_RESOLUTION));
+
+		sprintf(tmpbuff, "%s %s", _("Resolution:"), playetGetMetaData(META_VIDEO_RESOLUTION));
 		video_osd_infobar_text_resolution->SetText(tmpbuff);
-		
-		sprintf(tmpbuff,"%s %s",_("Bitrate:"),playetGetMetaData(META_VIDEO_BITRATE));
+
+		sprintf(tmpbuff, "%s %s", _("Bitrate:"), playetGetMetaData(META_VIDEO_BITRATE));
 		video_osd_infobar_text_bitrate->SetText(tmpbuff);
 
 		video_osd_infobar->SetVisible(false);
@@ -1000,7 +1003,7 @@ extern "C" void mplayer_osd_open() {
 
 		//
 		mainWindow->Append(osd_options_window);
-		
+
 		mainWindow->Append(osd_options_subtitle_window);
 		osd_options_subtitle_window->SetVisible(false);
 
@@ -1013,7 +1016,7 @@ extern "C" void mplayer_osd_open() {
 		osd_duration_bar_width = img->width;
 	}
 	osd_show = 1;
-	last_level=-1;
+	last_level = -1;
 }
 
 extern "C" void mplayer_osd_close() {
@@ -1049,7 +1052,7 @@ extern "C" void mplayer_osd_close() {
 	}
 	osd_display_info = 0;
 	osd_show = 0;
-	last_level=-1;
+	last_level = -1;
 }
 
 static void format_time(char * dest, double time) {
@@ -1077,7 +1080,7 @@ extern "C" void mplayer_osd_draw(int level) {
 		video_osd_info_cur_time->SetText(osd_cur_time);
 		video_osd_info_duration->SetText(osd_duration);
 
-		if(last_level!=level){
+		if (last_level != level) {
 			video_osd_info_filename->SetText(playerGetFilename());
 			video_osd_info_filename->SetMaxWidth(644);
 			video_osd_info_filename->SetScroll(SCROLL_HORIZONTAL);
@@ -1119,12 +1122,12 @@ extern "C" void mplayer_osd_draw(int level) {
 			default:
 				break;
 		}
-		
-		if(osd_display_option_subtitle){
+
+		if (osd_display_option_subtitle) {
 			TR;
-			int ret =  osd_options_subtitle->GetClickedOption();
-			switch(ret){
-				
+			int ret = osd_options_subtitle->GetClickedOption();
+			switch (ret) {
+
 			}
 		}
 
@@ -1148,8 +1151,8 @@ extern "C" void mplayer_osd_draw(int level) {
 	} else {
 		osd_display_info = 0;
 	}
-	
-	last_level=level;
+
+	last_level = level;
 
 	UpdatePads();
 	Menu_Frame();
@@ -1180,13 +1183,13 @@ static void Browser(const char * title, const char * root) {
 			extValid = extAlwaysValid;
 			break;
 	}
-	
+
 	ResetBrowser();
 	BrowseDevice("/", root);
-	
+
 	gui_browser->ResetState();
 	gui_browser->TriggerUpdate();
-	
+
 	//mainWindow->SetAlignment(ALIGN_CENTRE,ALIGN_MIDDLE);
 	mainWindow->Append(gui_browser);
 
@@ -1205,7 +1208,7 @@ static void Browser(const char * title, const char * root) {
 
 	browser_headline->SetText(title);
 	browser_subheadline->SetText(rootdir);
-	
+
 	mainWindow->Append(browser_top_bg);
 	mainWindow->Append(browser_headline);
 	mainWindow->Append(browser_subheadline);
@@ -1213,33 +1216,31 @@ static void Browser(const char * title, const char * root) {
 
 	mainWindow->Append(browser_up_icon);
 	mainWindow->Append(browser_down_icon);
-	
+
 	last_menu = current_menu;
-	
+
 	int last_sel_item = -1;
-	
+
 	char tmp[256];
-	
+
 	while (current_menu == last_menu) {
-		if(last_sel_item!=browser.selIndex){
-			sprintf(tmp,"%d/%d",browser.selIndex+1,browser.numEntries);
+		if (last_sel_item != browser.selIndex) {
+			sprintf(tmp, "%d/%d", browser.selIndex + 1, browser.numEntries);
 			browser_pagecounter->SetText(tmp);
 		}
-		
+
 		last_sel_item = browser.selIndex;
-		
-		if(browser.pageIndex){
+
+		if (browser.pageIndex) {
 			// draw prev
 			browser_up_icon->SetVisible(true);
-		}
-		else{
+		} else {
 			browser_up_icon->SetVisible(false);
 		}
 		//if (browser.selIndex<browser.numEntries * ) {
-		if (browser.pageIndex + browser.selIndex +3 < browser.numEntries){
+		if (browser.pageIndex + browser.selIndex + 3 < browser.numEntries) {
 			browser_down_icon->SetVisible(true);
-		}
-		else{			
+		} else {
 			browser_down_icon->SetVisible(false);
 		}
 
@@ -1263,11 +1264,10 @@ static void Browser(const char * title, const char * root) {
 
 					ShutoffRumble();
 					gui_browser->ResetState();
-					
-					if(file_type(mplayer_filename)==BROWSER_TYPE_ELF){
+
+					if (file_type(mplayer_filename) == BROWSER_TYPE_ELF) {
 						current_menu = MENU_ELF;
-					}
-					else{
+					} else {
 						current_menu = MENU_MPLAYER;
 					}
 				}
@@ -1280,7 +1280,7 @@ static void Browser(const char * title, const char * root) {
 
 		update();
 	}
-	
+
 	mainWindow->Remove(browser_up_icon);
 	mainWindow->Remove(browser_down_icon);
 
@@ -1293,18 +1293,18 @@ static void Browser(const char * title, const char * root) {
 }
 
 static void HomePage() {
-	static int last_selected_value = 1; // Video
-	
+	static int last_selected_value = 0; // Video
+
 	mainWindow->Append(home_left);
 	mainWindow->Append(home_main_function_frame_bg);
 
 
 	home_list_v->Append(home_all_btn);
-	home_list_v->Append(home_video_btn);	
+	home_list_v->Append(home_video_btn);
 	home_list_v->Append(home_music_btn);
 	home_list_v->Append(home_photo_btn);
 	home_list_v->Append(home_setting_btn);
-	
+
 	home_list_v->SetSelected(last_selected_value);
 
 	mainWindow->Append(home_list_v);
@@ -1334,17 +1334,17 @@ static void HomePage() {
 	mainWindow->Append(&menuBtn);
 
 	static int last_device = -1;
-	
+
 	while (current_menu == HOME_PAGE) {
-		
+
 		int h_val = home_list_h->GetValue();
-		
-		if(last_device!=h_val){
+
+		if (last_device != h_val) {
 			home_curitem->SetText(device_list[h_val]);
 		}
-		
+
 		last_device = h_val;
-		
+
 		if (menuBtn.GetState() == STATE_CLICKED) {
 			switch (home_list_v->GetValue()) {
 				case 0:
@@ -1353,17 +1353,20 @@ static void HomePage() {
 				case 1:
 					current_menu = BROWSE_VIDEO;
 					break;
-//				case 2:
-//					current_menu = BROWSE_AUDIO;
-//					break;
-//				case 3:
-//					current_menu = BROWSE_PICTURE;
-//					break;
+					//				case 2:
+					//					current_menu = BROWSE_AUDIO;
+					//					break;
+					//				case 3:
+					//					current_menu = BROWSE_PICTURE;
+					//					break;
+				case 4:
+					current_menu = SETTINGS;
+					break;
 				default:
-					WindowPrompt("Warning","Not implemented yet","Ok",NULL);
+					WindowPrompt("Warning", "Not implemented yet", "Ok", NULL);
 					break;
 			}
-			
+
 			last_selected_value = home_list_v->GetValue();
 		}
 		update();
@@ -1388,6 +1391,135 @@ static void HomePage() {
 	mainWindow->Remove(home_curitem);
 }
 
+static int XMPSettings(){
+	
+	int menu = SETTINGS;
+	int ret;
+	int i = 0;
+	bool firstRun = true;
+	OptionList options;
+
+	sprintf(options.name[i++], "Exit Action");
+	sprintf(options.name[i++], "Language");
+	options.length = i;
+
+	for (i = 0; i < options.length; i++)
+		options.value[i][0] = 0;
+
+	GuiText titleTxt("Settings - Menu", 26, 0xfffa9600);
+	titleTxt.SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+	titleTxt.SetPosition(50, 50);
+
+//	GuiSound btnSoundOver(button_over_pcm, button_over_pcm_size, SOUND_PCM);
+//	GuiSound btnSoundClick(button_click_pcm, button_click_pcm_size, SOUND_PCM);
+	GuiImageData btnOutline(button_blue_png);
+	GuiImageData btnOutlineOver(button_green_png);
+
+	GuiText backBtnTxt("Go Back", 22, 0xFFFFFFFF);
+	GuiImage backBtnImg(&btnOutline);
+	GuiImage backBtnImgOver(&btnOutlineOver);
+	GuiButton backBtn(btnOutline.GetWidth(), btnOutline.GetHeight());
+	backBtn.SetAlignment(ALIGN_LEFT, ALIGN_BOTTOM);
+	backBtn.SetPosition(90, -35);
+	backBtn.SetLabel(&backBtnTxt);
+	backBtn.SetImage(&backBtnImg);
+	backBtn.SetImageOver(&backBtnImgOver);
+//	backBtn.SetSoundOver(&btnSoundOver);
+//	backBtn.SetSoundClick(&btnSoundClick);
+	backBtn.SetTrigger(trigA);
+	//backBtn.SetTrigger(trig2);
+	backBtn.SetEffectGrow();
+
+	GuiOptionBrowser optionBrowser(980, 426,new GuiImageData(browser_list_btn_png), &options);
+	optionBrowser.SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);
+	optionBrowser.SetCol2Position(275);
+
+	GuiWindow w(screenwidth, screenheight);
+	w.Append(&backBtn);
+	mainWindow->Append(&optionBrowser);
+	mainWindow->Append(&w);
+	mainWindow->Append(&titleTxt);
+
+	while (menu == SETTINGS) {
+		update();
+
+		ret = optionBrowser.GetClickedOption();
+
+		switch (ret) {
+			case 0:
+				XMPlayerCfg.exit_action++;
+				if (XMPlayerCfg.exit_action > 1)
+					XMPlayerCfg.exit_action = 0;
+				break;
+			case 1:
+				XMPlayerCfg.language++;
+
+				if (XMPlayerCfg.language >= LANG_LENGTH)
+					XMPlayerCfg.language = 0;
+
+				break;
+		}
+
+		if (ret >= 0 || firstRun) {
+			firstRun = false;
+
+			if (XMPlayerCfg.exit_action > 1)
+				XMPlayerCfg.exit_action = 0;
+			if (XMPlayerCfg.exit_action == 0)
+				sprintf(options.value[0], "Return to Xell");
+			else
+				sprintf(options.value[0], "Shutdown");
+
+			switch (XMPlayerCfg.language) {
+//				case LANG_JAPANESE: sprintf(options.value[5], "Japanese");
+//					break;
+				case LANG_ENGLISH: sprintf(options.value[1], "English");
+					break;
+//				case LANG_GERMAN: sprintf(options.value[5], "German");
+//					break;
+				case LANG_FRENCH: sprintf(options.value[1], "French");
+					LoadLanguage((char*) fr_lang, fr_lang_size);
+					break;
+//				case LANG_SPANISH: sprintf(options.value[5], "Spanish");
+//					break;
+//				case LANG_ITALIAN: sprintf(options.value[5], "Italian");
+//					break;
+//				case LANG_DUTCH: sprintf(options.value[5], "Dutch");
+//					break;
+//				case LANG_SIMP_CHINESE: sprintf(options.value[5], "Chinese (Simplified)");
+//					break;
+//				case LANG_TRAD_CHINESE: sprintf(options.value[5], "Chinese (Traditional)");
+//					break;
+//				case LANG_KOREAN: sprintf(options.value[5], "Korean");
+//					break;
+//				case LANG_PORTUGUESE: sprintf(options.value[5], "Portuguese");
+//					break;
+//				case LANG_BRAZILIAN_PORTUGUESE: sprintf(options.value[5], "Brazilian Portuguese");
+//					break;
+//				case LANG_CATALAN: sprintf(options.value[5], "Catalan");
+//					break;
+//				case LANG_TURKISH: sprintf(options.value[5], "Turkish");
+					break;
+			}
+
+			optionBrowser.TriggerUpdate();
+		}
+
+		if (backBtn.GetState() == STATE_CLICKED) {
+			menu = HOME_PAGE;
+		}
+	}
+	mainWindow->Remove(&optionBrowser);
+	mainWindow->Remove(&w);
+	mainWindow->Remove(&titleTxt);
+	
+	// save settings
+	SavePrefs(true);
+	
+	//back to home page
+	return menu;
+}
+
 static void do_mplayer(char * filename) {
 	static int mplayer_need_init = 1;
 	if (mplayer_need_init) {
@@ -1396,7 +1528,7 @@ static void do_mplayer(char * filename) {
 			"-really-quiet",
 			//"-demuxer","mkv",
 			"-menu",
-			"-lavdopts","skiploopfilter=all:threads=5",
+			"-lavdopts", "skiploopfilter=all:threads=5",
 			//"-vsync",
 
 			filename,
@@ -1418,13 +1550,13 @@ void MenuMplayer() {
 	do_mplayer(mplayer_filename);
 }
 
-void ElfLoader(){
+void ElfLoader() {
 	printf("Load Elf:%s\r\n", mplayer_filename);
-	char * argv[]={
-		"mplayer.elf",mplayer_filename
+	char * argv[] = {
+		mplayer_filename,
 	};
 	int argc = sizeof (argv) / sizeof (char *);
-	
+
 	elf_setArgcArgv(argc, argv);
 	elf_runFromDisk(mplayer_filename);
 }
@@ -1436,12 +1568,12 @@ static void gui_loop() {
 		if (current_menu == HOME_PAGE) {
 			HomePage();
 		} else if (current_menu == BROWSE_VIDEO) {
-			Browser("Video", root_dev);
+			Browser("Videos", root_dev);
 		} else if (current_menu == BROWSE_AUDIO) {
-			Browser("Audio", root_dev);
+			Browser("Audios", root_dev);
 		} else if (current_menu == BROWSE_PICTURE) {
-			Browser("Photo", root_dev);
-		}else if (current_menu == BROWSE_ALL) {
+			Browser("Photos", root_dev);
+		} else if (current_menu == BROWSE_ALL) {
 			Browser("All", root_dev);
 		} else if (current_menu == MENU_MPLAYER) {
 			MenuMplayer();
@@ -1449,6 +1581,9 @@ static void gui_loop() {
 			current_menu = HOME_PAGE;
 		} else if (current_menu == MENU_ELF) {
 			ElfLoader();
+		}
+		else if(current_menu == SETTINGS){
+			current_menu = XMPSettings();
 		}
 	}
 }
@@ -1474,27 +1609,27 @@ static int end_loading_thread = 0;
 static unsigned char thread_stack[6][0x10000];
 static unsigned int loadingThreadLock = 0;
 
-void loadingThread(){
+void loadingThread() {
 	int i = 0;
 	logo = loadPNGFromMemory((unsigned char*) logo_png);
 	loading[0] = loadPNGFromMemory((unsigned char*) loading_0_png);
 	loading[1] = loadPNGFromMemory((unsigned char*) loading_1_png);
 	loading[2] = loadPNGFromMemory((unsigned char*) loading_2_png);
 	loading[3] = loadPNGFromMemory((unsigned char*) loading_3_png);
-	
-	while(end_loading_thread==0){
+
+	while (end_loading_thread == 0) {
 		lock(&loadingThreadLock);
 		Xe_SetClearColor(g_pVideoDevice, 0xFFFFFFFF);
 		Menu_DrawImg(0, 0, 1280, 720, logo, 0, 1, 1, 0xff);
-		Menu_DrawImg(640-55, 500, 110, 110, loading[i], 0, 1, 1, 0xff);
+		Menu_DrawImg(640 - 55, 500, 110, 110, loading[i], 0, 1, 1, 0xff);
 		Menu_Render();
 		unlock(&loadingThreadLock);
-		
+
 		mdelay(60);
-		
+
 		i++;
-		if(i>=4)
-			i=0;
+		if (i >= 4)
+			i = 0;
 	}
 	lock(&loadingThreadLock);
 	loading_thread_finished = 1;
@@ -1503,48 +1638,54 @@ void loadingThread(){
 
 int main(int argc, char** argv) {
 	xenon_make_it_faster(XENON_SPEED_FULL);
-//	
+	//	
 	// Init Video
 	InitVideo();
 
 	/** loading **/
 	end_loading_thread = 0;
-	
+
 	// run in a thread ....
-	xenon_run_thread_task(2,thread_stack[2],(void*)loadingThread);
-	
+	xenon_run_thread_task(2, thread_stack[2], (void*) loadingThread);
+
 	// Init devices
 	usb_init();
 	xenon_ata_init();
 	xenon_atapi_init();
 	usb_do_poll();
-	
+
 	// fs
-	mount_all_devices();	
+	mount_all_devices();
 	init_mplayer();
 	findDevices();
 
+	// preference
+	if (LoadPrefs() == false)
+		SavePrefs(true);
+
 	// Init gui
 	// french langage
-	LoadLanguage((char*)fr_lang,fr_lang_size);
+	switch (XMPlayerCfg.language) {
+		case LANG_FRENCH:
+			LoadLanguage((char*) fr_lang, fr_lang_size);
+			break;
+	}
 	InitFreeType((u8*) font_ttf, font_ttf_size);
-	
+
 	SetupPads();
 	ChangeFontSize(26);
 	common_setup();
-	
 
-	
 	// signal end of loading thread
 	lock(&loadingThreadLock);
 	end_loading_thread = 1;
 	unlock(&loadingThreadLock);
-	while(loading_thread_finished==0){
+	while (loading_thread_finished == 0) {
 		lock(&loadingThreadLock);
 		udelay(25);
 		unlock(&loadingThreadLock);
 	}
-	
+
 	current_menu = HOME_PAGE;
 	while (1) {
 		// never exit !!

@@ -13,8 +13,14 @@ msgstr "Musique"
 msgid "Photo"
 msgstr "Photo"
 
+msgid "Photos"
+msgstr "Photos"
+
 msgid "Setting"
 msgstr "Paramètre"
+
+msgid "Settings"
+msgstr "Paramètres"
 
 msgid "@@pagecounter"
 msgstr "@@pagecounter"
@@ -59,13 +65,13 @@ msgid "Subtitle"
 msgstr "Sous-titre"
 
 msgid "Return to gui"
-msgstr "Retour à la gui"
+msgstr "Retour au menu"
 
 msgid "Warning"
 msgstr "Attention"
 
 msgid "Not implemented yet"
-msgstr "Pas encore implémenté"
+msgstr "Pas encore intégré"
 
 msgid "Ok"
 msgstr "Ok"

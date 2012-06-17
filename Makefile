@@ -17,7 +17,7 @@ include $(DEVKITXENON)/rules
 #---------------------------------------------------------------------------------
 TARGET		:=	$(notdir $(CURDIR))
 BUILD		:=	build
-SOURCES		:=	source source/libwiigui source/xtaf source/lang
+SOURCES		:=	source source/libwiigui source/xtaf
 DATA		:=	data
 INCLUDES		:=	-I$(LIBXENON_INC)/freetype2
 MPLAYER		:=	$(CURDIR)/mplayer
@@ -44,7 +44,7 @@ LDFLAGS		=	-g $(MACHDEP_LD) $(OPTIFLAGS) -Wl,-Map,$(notdir $@).map
 #---------------------------------------------------------------------------------
 # any extra libraries we wish to link with the project
 #---------------------------------------------------------------------------------
-LIBS		:=	 -lmplayer  -lavformat -lavcodec -lswscale -lavutil -lpostproc -lpng -lz -lxenon -lm  -liconv -lfreetype -lfribidi -lbz2 -lfat -lext2fs -lntfs -lxtaf
+LIBS		:=	 -lmplayer  -lavformat -lavcodec -lswscale -lavutil -lpostproc -lpng -lz -lxenon -lm  -liconv -lfreetype -lfribidi -lbz2 -lfat -lext2fs -lntfs -lxtaf -lmxml
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
@@ -76,7 +76,7 @@ SFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.S)))
 BINFILES		:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.*)))
 PNGFILES		:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.png)))
 TTFFILES		:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.ttf)))
-LANGFILES	:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.lang)))
+LANGFILES	:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.lang)))
 
 #---------------------------------------------------------------------------------
 # use CXX for linking C++ projects, CC for standard C

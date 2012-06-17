@@ -88,7 +88,7 @@ void GuiFileBrowser::SetPageSize(int size) {
 		fileList[i]->SetParent(this);
 		fileList[i]->SetLabel(fileListText[i]);
 		fileList[i]->SetImageOver(fileListBg[i]);
-		fileList[i]->SetPosition(2, bgFileSelectionEntry->GetHeight() * i + 5);
+		fileList[i]->SetPosition(2, bgFileSelectionEntry->GetHeight() * i );
 		fileList[i]->SetTrigger(trigA);
 		//        fileList[i]->SetTrigger(trig2);
 		//        fileList[i]->SetSoundClick(btnSoundClick);
