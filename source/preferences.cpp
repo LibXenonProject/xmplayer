@@ -94,6 +94,8 @@ static int preparePrefsData() {
 	int datasize = mxmlSaveString(xml, (char *) savebuffer, SAVEBUFFERSIZE, XMLSaveCallback);
 
 	mxmlDelete(xml);
+	
+	printf("XMPlayerCfg.language : %d\n",XMPlayerCfg.language);
 
 	return datasize;
 }
@@ -138,42 +140,45 @@ static void loadXMLSetting(float * var, const char * name) {
  ***************************************************************************/
 static bool decodePrefsData() {
 	bool result = false;
-
+	
 	xml = mxmlLoadString(NULL, (char *) savebuffer, MXML_TEXT_CALLBACK);
 
 	if (xml) {
 		// check settings version
 		item = mxmlFindElement(xml, xml, "file", "version", NULL, MXML_DESCEND);
-		if (item) // a version entry exists
-		{
-			const char * version = mxmlElementGetAttr(item, "version");
-
-			if (version && strlen(version) == 5) {
-				// this code assumes version in format X.X.X
-				// XX.X.X, X.XX.X, or X.X.XX will NOT work
-				int verMajor = version[0] - '0';
-				int verMinor = version[2] - '0';
-				int verPoint = version[4] - '0';
-				int curMajor = APPVERSION[0] - '0';
-				int curMinor = APPVERSION[2] - '0';
-				int curPoint = APPVERSION[4] - '0';
-
-				// first we'll check that the versioning is valid
-				if (!(verMajor >= 0 && verMajor <= 9 &&
-						verMinor >= 0 && verMinor <= 9 &&
-						verPoint >= 0 && verPoint <= 9))
-					result = false;
-				else if (verMajor < 4) // less than version 4.0.0
-					result = false; // reset settings
-				else if (verMajor == 4 && verMinor == 0 && verPoint < 2) // anything less than 4.0.2
-					result = false; // reset settings
-				else if ((verMajor * 100 + verMinor * 10 + verPoint) >
-						(curMajor * 100 + curMinor * 10 + curPoint)) // some future version
-					result = false; // reset settings
-				else
-					result = true;
-			}
-		}
+		
+		result = true;
+		
+//		if (item) // a version entry exists
+//		{
+//			const char * version = mxmlElementGetAttr(item, "version");
+//
+//			if (version && strlen(version) == 5) {
+//				// this code assumes version in format X.X.X
+//				// XX.X.X, X.XX.X, or X.X.XX will NOT work
+//				int verMajor = version[0] - '0';
+//				int verMinor = version[2] - '0';
+//				int verPoint = version[4] - '0';
+//				int curMajor = APPVERSION[0] - '0';
+//				int curMinor = APPVERSION[2] - '0';
+//				int curPoint = APPVERSION[4] - '0';
+//
+//				// first we'll check that the versioning is valid
+//				if (!(verMajor >= 0 && verMajor <= 9 &&
+//						verMinor >= 0 && verMinor <= 9 &&
+//						verPoint >= 0 && verPoint <= 9))
+//					result = false;
+//				else if (verMajor < 4) // less than version 4.0.0
+//					result = false; // reset settings
+//				else if (verMajor == 4 && verMinor == 0 && verPoint < 2) // anything less than 4.0.2
+//					result = false; // reset settings
+//				else if ((verMajor * 100 + verMinor * 10 + verPoint) >
+//						(curMajor * 100 + curMinor * 10 + curPoint)) // some future version
+//					result = false; // reset settings
+//				else
+//					result = true;
+//			}
+//		}
 
 		if (result) {
 			// Menu Settings
@@ -181,6 +186,8 @@ static bool decodePrefsData() {
 			loadXMLSetting(&XMPlayerCfg.language, "language");
 		}
 		mxmlDelete(xml);
+		
+		printf("XMPlayerCfg.language : %d\n",XMPlayerCfg.language);
 	}
 	return result;
 }
@@ -308,8 +315,6 @@ bool SavePrefs(bool silent) {
 	free(savebuffer);
 
 	if (offset > 0) {
-		//		if (!silent)
-		//			InfoPrompt("Preferences saved");
 		return true;
 	}
 	return false;
@@ -320,16 +325,16 @@ bool SavePrefs(bool silent) {
  ***************************************************************************/
 bool LoadPrefsFromMethod(char * path) {
 	bool retval = false;
-	int offset = 0;
+	int size = 0;
 	char filepath[MAXPATHLEN];
 
 	sprintf(filepath, "%s/%s", path, PREF_FILE_NAME);
 
 	savebuffer = (unsigned char*) malloc(SAVEBUFFERSIZE);
 
-	offset = LoadFile(filepath, 1);
+	size = LoadFile(filepath, 1);
 
-	if (offset > 0)
+	if (size > 0)
 		retval = decodePrefsData();
 
 	free(savebuffer);
@@ -337,7 +342,7 @@ bool LoadPrefsFromMethod(char * path) {
 	if (retval) {
 		strcpy(prefpath, path);
 	}
-
+	
 	return retval;
 }
 

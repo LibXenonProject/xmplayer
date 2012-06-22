@@ -4098,7 +4098,7 @@ goto_next_file:  // don't jump here after ao/vo/getch initialization!
 #ifdef XENON
 		(1)||
 #endif
-                                        mpctx->playtree_iter != NULL || player_idle_mode) {
+							mpctx->playtree_iter != NULL || player_idle_mode) {
         if (!mpctx->playtree_iter && !use_gui)
             filename = NULL;
         mpctx->eof = 0;

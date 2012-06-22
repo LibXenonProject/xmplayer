@@ -2,6 +2,7 @@
 #define _GETTEXT_H_
 
 bool LoadLanguage(char * file, int size);
+void gettextCleanUp(void);
 
 /*
  * input msg = a text in ASCII

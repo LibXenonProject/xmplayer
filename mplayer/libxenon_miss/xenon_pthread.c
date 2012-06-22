@@ -253,9 +253,9 @@ int pthread_cond_wait(pthread_cond_t * cond, pthread_mutex_t * mutex){
 
 typedef void *(*xenon_thread_func)(void*);
 
-static xenon_thread_func func_stack[6];
-static void * args_stack[6];
-static unsigned char stack[6 * 0x10000];
+static xenon_thread_func func_stack[6] __attribute__ ((aligned (256)));;
+static void * args_stack[6] __attribute__ ((aligned (256)));;
+static unsigned char stack[6 * 0x10000] __attribute__ ((aligned (256)));;
 
 static void thread_runner(void){
 	void *args=args_stack[mfspr(pir)];

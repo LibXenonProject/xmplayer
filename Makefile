@@ -26,11 +26,11 @@ MPLAYER		:=	$(CURDIR)/mplayer
 #---------------------------------------------------------------------------------
 
 # lto
-OPTIFLAGS	=	-Ofast -flto -fuse-linker-plugin -mcpu=cell -mtune=cell -fno-tree-vectorize -fno-tree-slp-vectorize -ftree-vectorizer-verbose=1
-#OPTIFLAGS =  -mcpu=cell -mtune=cell -fno-tree-vectorize -fno-tree-slp-vectorize -ftree-vectorizer-verbose=1
+#OPTIFLAGS	=	-Ofast -flto -fuse-linker-plugin -mcpu=cell -mtune=cell -fno-tree-vectorize -fno-tree-slp-vectorize -ftree-vectorizer-verbose=1
+OPTIFLAGS =  -O3 -mcpu=cell -mtune=cell -fno-tree-vectorize -fno-tree-slp-vectorize -ftree-vectorizer-verbose=1
 
 ASFLAGS		=	Wa,$(INCLUDE) -Wa,-a32
-CFLAGS		=	-g $(OPTIFLAGS) -Wall $(MACHDEP) $(INCLUDE)
+CFLAGS		=	-g  -fno-pic $(OPTIFLAGS) -Wall $(MACHDEP) $(INCLUDE)
 CXXFLAGS		=	$(CFLAGS)
 
 MACHDEP_LD	=	-DXENON -m32 -maltivec -fno-pic -mhard-float -L$(DEVKITXENON)/xenon/lib/32 -u read -u _start -u exc_base

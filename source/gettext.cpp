@@ -232,7 +232,7 @@ static MSG *setMSG(const char *msgid, const char *msgstr)
 	return NULL;
 }
 
-static void gettextCleanUp(void)
+void gettextCleanUp(void)
 {
 	while (baseMSG)
 	{

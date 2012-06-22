@@ -498,3 +498,4 @@ void mount_all_devices() {
 		FindPartitions(DEVICE_ATAPI);
 	}
 }
+

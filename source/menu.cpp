@@ -1297,7 +1297,12 @@ static void HomePage() {
 
 	mainWindow->Append(home_left);
 	mainWindow->Append(home_main_function_frame_bg);
-
+	
+	home_video_txt ->SetText("Videos");
+	home_all_txt ->SetText("All");
+	home_music_txt ->SetText("Musics");
+	home_photo_txt ->SetText("Photos");
+	home_setting_txt ->SetText("Settings");
 
 	home_list_v->Append(home_all_btn);
 	home_list_v->Append(home_video_btn);
@@ -1391,8 +1396,8 @@ static void HomePage() {
 	mainWindow->Remove(home_curitem);
 }
 
-static int XMPSettings(){
-	
+static int XMPSettings() {
+
 	int menu = SETTINGS;
 	int ret;
 	int i = 0;
@@ -1410,8 +1415,8 @@ static int XMPSettings(){
 	titleTxt.SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	titleTxt.SetPosition(50, 50);
 
-//	GuiSound btnSoundOver(button_over_pcm, button_over_pcm_size, SOUND_PCM);
-//	GuiSound btnSoundClick(button_click_pcm, button_click_pcm_size, SOUND_PCM);
+	//	GuiSound btnSoundOver(button_over_pcm, button_over_pcm_size, SOUND_PCM);
+	//	GuiSound btnSoundClick(button_click_pcm, button_click_pcm_size, SOUND_PCM);
 	GuiImageData btnOutline(button_blue_png);
 	GuiImageData btnOutlineOver(button_green_png);
 
@@ -1424,13 +1429,13 @@ static int XMPSettings(){
 	backBtn.SetLabel(&backBtnTxt);
 	backBtn.SetImage(&backBtnImg);
 	backBtn.SetImageOver(&backBtnImgOver);
-//	backBtn.SetSoundOver(&btnSoundOver);
-//	backBtn.SetSoundClick(&btnSoundClick);
+	//	backBtn.SetSoundOver(&btnSoundOver);
+	//	backBtn.SetSoundClick(&btnSoundClick);
 	backBtn.SetTrigger(trigA);
 	//backBtn.SetTrigger(trig2);
 	backBtn.SetEffectGrow();
 
-	GuiOptionBrowser optionBrowser(980, 426,new GuiImageData(browser_list_btn_png), &options);
+	GuiOptionBrowser optionBrowser(980, 426, new GuiImageData(browser_list_btn_png), &options);
 	optionBrowser.SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);
 	optionBrowser.SetCol2Position(275);
 
@@ -1471,34 +1476,11 @@ static int XMPSettings(){
 				sprintf(options.value[0], "Shutdown");
 
 			switch (XMPlayerCfg.language) {
-//				case LANG_JAPANESE: sprintf(options.value[5], "Japanese");
-//					break;
 				case LANG_ENGLISH: sprintf(options.value[1], "English");
+					gettextCleanUp();
 					break;
-//				case LANG_GERMAN: sprintf(options.value[5], "German");
-//					break;
 				case LANG_FRENCH: sprintf(options.value[1], "French");
 					LoadLanguage((char*) fr_lang, fr_lang_size);
-					break;
-//				case LANG_SPANISH: sprintf(options.value[5], "Spanish");
-//					break;
-//				case LANG_ITALIAN: sprintf(options.value[5], "Italian");
-//					break;
-//				case LANG_DUTCH: sprintf(options.value[5], "Dutch");
-//					break;
-//				case LANG_SIMP_CHINESE: sprintf(options.value[5], "Chinese (Simplified)");
-//					break;
-//				case LANG_TRAD_CHINESE: sprintf(options.value[5], "Chinese (Traditional)");
-//					break;
-//				case LANG_KOREAN: sprintf(options.value[5], "Korean");
-//					break;
-//				case LANG_PORTUGUESE: sprintf(options.value[5], "Portuguese");
-//					break;
-//				case LANG_BRAZILIAN_PORTUGUESE: sprintf(options.value[5], "Brazilian Portuguese");
-//					break;
-//				case LANG_CATALAN: sprintf(options.value[5], "Catalan");
-//					break;
-//				case LANG_TURKISH: sprintf(options.value[5], "Turkish");
 					break;
 			}
 
@@ -1512,10 +1494,10 @@ static int XMPSettings(){
 	mainWindow->Remove(&optionBrowser);
 	mainWindow->Remove(&w);
 	mainWindow->Remove(&titleTxt);
-	
+
 	// save settings
 	SavePrefs(true);
-	
+
 	//back to home page
 	return menu;
 }
@@ -1525,7 +1507,7 @@ static void do_mplayer(char * filename) {
 	if (mplayer_need_init) {
 		char * argv[] = {
 			"mplayer.xenon",
-			"-really-quiet",
+			//"-really-quiet",
 			//"-demuxer","mkv",
 			"-menu",
 			"-lavdopts", "skiploopfilter=all:threads=5",
@@ -1581,8 +1563,7 @@ static void gui_loop() {
 			current_menu = HOME_PAGE;
 		} else if (current_menu == MENU_ELF) {
 			ElfLoader();
-		}
-		else if(current_menu == SETTINGS){
+		} else if (current_menu == SETTINGS) {
 			current_menu = XMPSettings();
 		}
 	}
@@ -1606,7 +1587,7 @@ extern "C" void mount_all_devices();
 
 static int loading_thread_finished = 0;
 static int end_loading_thread = 0;
-static unsigned char thread_stack[6][0x10000];
+static unsigned char thread_stack[6][0x10000] __attribute__ ((aligned (256)));
 static unsigned int loadingThreadLock = 0;
 
 void loadingThread() {
@@ -1665,6 +1646,7 @@ int main(int argc, char** argv) {
 
 	// Init gui
 	// french langage
+	printf("XMPlayerCfg.language : %d\n",XMPlayerCfg.language);
 	switch (XMPlayerCfg.language) {
 		case LANG_FRENCH:
 			LoadLanguage((char*) fr_lang, fr_lang_size);
@@ -1701,12 +1683,21 @@ int main(int argc, char** argv) {
  */
 extern "C" void mplayer_return_to_gui() {
 	need_gui = 1;
+	
+	TR;
+	// always sync
+	Xe_Sync(g_pVideoDevice);
+	TR;
+	while (!Xe_IsVBlank(g_pVideoDevice));
+	Xe_InvalidateState(g_pVideoDevice);
 
+	TR;
 	// make sur to leave the gui
 	mplayer_osd_close();
 
 	current_menu = last_menu;
 
+	TR;
 	gui_loop();
 }
 
