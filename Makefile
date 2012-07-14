@@ -17,8 +17,8 @@ include $(DEVKITXENON)/rules
 #---------------------------------------------------------------------------------
 TARGET		:=	$(notdir $(CURDIR))
 BUILD		:=	build
-SOURCES		:=	source source/libwiigui source/xtaf
-DATA		:=	data
+SOURCES		:=	source source/libwiigui
+DATA		:=	data source/lang
 INCLUDES		:=	-I$(LIBXENON_INC)/freetype2
 MPLAYER		:=	$(CURDIR)/mplayer
 #---------------------------------------------------------------------------------
