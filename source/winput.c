@@ -273,7 +273,7 @@ uint16_t PAD_ButtonsDown(int ictrl) {
 		btn |= PAD_BUTTON_START;
 	}
 
-	if (PUSHED(select)) {
+	if (PUSHED(back)) {
 		btn |= PAD_BUTTON_BACK;
 	}
 
@@ -339,7 +339,7 @@ uint16_t PAD_ButtonsUp(int ictrl) {
 		btn |= PAD_BUTTON_START;
 	}
 
-	if (RELEASED(select)) {
+	if (RELEASED(back)) {
 		btn |= PAD_BUTTON_BACK;
 	}
 
@@ -405,7 +405,7 @@ uint16_t PAD_ButtonsHeld(int ictrl) {
 		btn |= PAD_BUTTON_START;
 	}
 
-	if (HELD(select)) {
+	if (HELD(back)) {
 		btn |= PAD_BUTTON_BACK;
 	}
 
@@ -429,7 +429,7 @@ uint16_t PAD_ButtonsHeld(int ictrl) {
 		btn |= PAD_BUTTON_LSTICK;
 	}
 
-	if (HELD(logo) && HELD(select) && HELD(start))
+	if (HELD(logo) && HELD(back) && HELD(start))
 		exit(0);
 
 	return btn;
@@ -478,7 +478,7 @@ void PAD_Update() {
 		get_controller_data(&ctrl[i], i);
 		
 		if(tb_diff_msec(curtime, lasttime) > 60){
-			if(ctrl[i].select && ctrl[i].logo){
+			if(ctrl[i].back && ctrl[i].logo){
 				doScreenCapture();
 				lasttime = curtime;
 			}
