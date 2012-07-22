@@ -1,7 +1,0 @@
-Fixed: "Return to Gui" usin Mplayer Gui and starting a video leads to crash (MP_CMD_QUIT: mplayer\mplayer.c, command.c)
-Fixed: .avi files not playing after a .mkv, .mov or .mp4 files has been played (mplayer.conf) 
-Added: "Restart" and "Shutdown" buttons (source\menu.cpp) 
-Added: "Subtitle Size" under Settings (source\menu.cpp, mplayer_cfg.h, preferences.cpp)
-
----------------------------
-Subtitle size virker ikke, subs fryser hvis man skifter til en anden video uden subs
