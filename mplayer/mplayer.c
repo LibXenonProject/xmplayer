@@ -1021,7 +1021,7 @@ static int libmpdemux_was_interrupted(int eof)
     if ((cmd = mp_input_get_cmd(0, 0, 0)) != NULL) {
         switch (cmd->id) {
         case MP_CMD_QUIT:
-            run_command(mpctx, cmd);
+             run_command(mpctx, cmd);
         case MP_CMD_PLAY_TREE_STEP:
             eof = (cmd->args[0].v.i > 0) ? PT_NEXT_ENTRY : PT_PREV_ENTRY;
             mpctx->play_tree_step = (cmd->args[0].v.i == 0) ? 1 : cmd->args[0].v.i;
@@ -3124,7 +3124,8 @@ play_next_file:
             entry = parse_playlist_file(cmd->args[0].v.s);
             break;
         case MP_CMD_QUIT:
-            exit_player_with_rc(EXIT_QUIT, (cmd->nargs > 0) ? cmd->args[0].v.i : 0);
+	     mpctx->eof=1; /*siz - added: 15/07/2012 - exits to XMPlayer Gui without crashing - see: command.c */
+           // exit_player_with_rc(EXIT_QUIT, (cmd->nargs > 0) ? cmd->args[0].v.i : 0);
             break;
         case MP_CMD_VO_FULLSCREEN:
         case MP_CMD_GET_PROPERTY:
@@ -4182,15 +4183,8 @@ int playerSwitchLoop(){
 	}
 }
 
-
 // try to play next file to go to gui
-void playerGuiAsked(){
-//        mp_input_parse_and_queue_cmds("pt_step 1");
-/*
-        mp_cmd_t * cmd = calloc( 1,sizeof( *cmd ) );
-        cmd->id=MP_CMD_QUIT;
-        cmd->name=strdup("quit");
-        mp_input_queue_cmd(cmd);
-*/
+void playerGuiAsked(){	
+//mp_input_queue_cmd(mp_input_parse_cmd("quit"));
         mpctx->eof=1;
 }

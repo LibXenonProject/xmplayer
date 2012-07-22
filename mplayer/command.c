@@ -2741,8 +2741,9 @@ int run_command(MPContext *mpctx, mp_cmd_t *cmd)
             break;
 
         case MP_CMD_QUIT:
-            exit_player_with_rc(EXIT_QUIT,
-                                (cmd->nargs > 0) ? cmd->args[0].v.i : 0);
+	    mpctx->eof=1; /*siz - added: 15/07/2012 - exits to XMPlayer Gui without crashing - see: mplayer.c */
+            //exit_player_with_rc(EXIT_QUIT,
+              //                  (cmd->nargs > 0) ? cmd->args[0].v.i : 0);
 
         case MP_CMD_PLAY_TREE_STEP:{
                 int n = cmd->args[0].v.i == 0 ? 1 : cmd->args[0].v.i;

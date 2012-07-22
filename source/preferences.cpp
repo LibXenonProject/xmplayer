@@ -90,6 +90,7 @@ static int preparePrefsData() {
 
 	createXMLSetting("ExitAction", "Exit Action", toStr(XMPlayerCfg.exit_action));
 	createXMLSetting("language", "Language", toStr(XMPlayerCfg.language));
+        createXMLSetting("SubtitleSize", "Subtitle Size", toStr(XMPlayerCfg.subtitle_size)); /*siz - added subtitle size: 14/07/2012 */
 
 	int datasize = mxmlSaveString(xml, (char *) savebuffer, SAVEBUFFERSIZE, XMLSaveCallback);
 
@@ -184,6 +185,7 @@ static bool decodePrefsData() {
 			// Menu Settings
 			loadXMLSetting(&XMPlayerCfg.exit_action, "ExitAction");
 			loadXMLSetting(&XMPlayerCfg.language, "language");
+			loadXMLSetting(&XMPlayerCfg.subtitle_size, "SubtitleSize"); /*siz - added subtitle size: 14/07/2012 */
 		}
 		mxmlDelete(xml);
 		

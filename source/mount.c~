@@ -12,8 +12,9 @@
 #include <sys/iosupport.h>
 #include <diskio/disc_io.h>
 #include <byteswap.h>
+#include "iso9660.h"
 
-#include "../mplayer/mplayerlib.h"
+//#include "../mplayer/mplayerlib.h"
 
 extern DISC_INTERFACE xenon_atapi_ops;
 extern DISC_INTERFACE xenon_ata_ops;
@@ -130,7 +131,7 @@ typedef struct {
 	sec_t sector;
 } DEVICE_STRUCT;
 
-#define DEBUG_MOUNTALL
+//#define DEBUG_MOUNTALL
 
 #ifdef DEBUG_MOUNTALL
 #define debug_printf(fmt, args...) \
@@ -162,6 +163,9 @@ static void AddPartition(sec_t sector, int device, int type, int *devnum) {
 
 	if (device == DEVICE_USB)
 		disc = (DISC_INTERFACE *) & usb2mass_ops;
+	
+	else if(device == DEVICE_ATAPI)
+		disc = (DISC_INTERFACE *) & xenon_atapi_ops;
 
 	char mount[10];
 	sprintf(mount, "%s%i", prefix[device], *devnum);
@@ -195,7 +199,6 @@ static void AddPartition(sec_t sector, int device, int type, int *devnum) {
 			else
 				part[device][*devnum].name[0] = 0;
 			break;
-			/*
 		case T_ISO9660:
 			if (!ISO9660_Mount(mount, disc))
 				return;
@@ -207,7 +210,6 @@ static void AddPartition(sec_t sector, int device, int type, int *devnum) {
 			else
 				strcpy(part[device][*devnum].name, "DVD");
 			break;
-			 */
 	}
 
 	int c = strlen(part[device][*devnum].name) - 1;
@@ -236,8 +238,8 @@ static int FindPartitions(int device) {
 	}
 
 	DISC_INTERFACE *interface;
-	
-	switch(device){		
+
+	switch(device){
 		case DEVICE_ATAPI:
 			interface = (DISC_INTERFACE *) & xenon_atapi_ops;
 			break;
@@ -248,7 +250,7 @@ static int FindPartitions(int device) {
 			interface = (DISC_INTERFACE *) & usb2mass_ops;
 			break;
 	}
-		
+
 
 	MASTER_BOOT_RECORD mbr;
 	PARTITION_RECORD *partition = NULL;
@@ -461,17 +463,12 @@ static void UnmountPartitions(int device) {
 				part[device][i].type = 0;
 				ext2Unmount(part[device][i].mount);
 				break;
-				/*	
-				case T_ISO9660:
-					part[device][i].type = 0;
-					sprintf(mount, "%s:", part[device][i].mount);
-					ISO9660_Unmount(mount);
-					if (dvdcss) {
-						dvdcss_close(dvdcss);
-						dvdcss = NULL;
-					}
-					break;
-				 */
+
+			case T_ISO9660:
+				part[device][i].type = 0;
+				sprintf(mount, "%s:", part[device][i].mount);
+				ISO9660_Unmount(mount);
+				break;
 		}
 		part[device][i].name[0] = 0;
 		part[device][i].mount[0] = 0;
@@ -481,17 +478,26 @@ static void UnmountPartitions(int device) {
 }
 
 
-extern int XTATMount();
+extern int XTAFMount();
 
+/* void sleep(int i) {
+	delay(i);
+}
+
+*/
+//
 /**
  * Parse mbr for filesystem
  */
 void mount_all_devices() {
 	FindPartitions(DEVICE_USB);
-	
 	if (xenon_ata_ops.isInserted()) {
-		if (XTATMount() == 0) {
+//		if (XTAFMount() == 0) {
 			FindPartitions(DEVICE_ATA);
 		}
+//	}
+	if (xenon_atapi_ops.isInserted()) {
+		FindPartitions(DEVICE_ATAPI);
 	}
 }
+

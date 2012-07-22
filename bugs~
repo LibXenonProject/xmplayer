@@ -1,0 +1,9 @@
+1. Brug af "back to gui" via OSD menuen, og ny video fører til stack dump. - fixed
+
+2. Hvis man går ud af video med subtitles på, og starter en anden så er subtitles frosent fra den anden video.
+
+3. Hvis man starter .mkv fil, så kan man ikke gå ind i en .avi fil, kun .mkv.
+
+Ønskede funktioner:
+Subtitle scale
+Subtitle color

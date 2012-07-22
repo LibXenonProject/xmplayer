@@ -1,0 +1,7 @@
+Quick fix: Subtitles stays on screen when exiting video with subs, via XMPlayer Gui, and playing a new video without subs.
+Fixed: "Return to Gui" using Mplayer Gui and starting a video leads to crash (MP_CMD_QUIT: mplayer\mplayer.c, command.c)
+Fixed: .avi files not playing after a .mkv, .mov or .mp4 files has been played (mplayer.conf) 
+Added: "Restart" and "Shutdown" buttons (source\menu.cpp) 
+Added: "Subtitle Size" under Settings - Atm you can only change size before starting you first video, after that you need to reset to take effect (source\menu.cpp, mplayer_cfg.h, preferences.cpp)
+Vsync is now enabled by default (disable via Gui) 
+

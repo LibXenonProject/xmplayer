@@ -14,6 +14,7 @@
 #include <usb/usbmain.h>
 #include <diskio/ata.h>
 #include <xenon_soc/xenon_power.h>
+#include <xenon_smc/xenon_smc.h> /*siz - included to add restart and shutdown buttons: 15/07/2012 */
 #include <sys/iosupport.h>
 #include <ppc/atomic.h>
 //#include <network/network.h>
@@ -119,11 +120,9 @@
 #include "mplayer_func.h"
 #include "folder_video_icon_png.h"
 
-
 #define _(x)	gettext(x)
 
 char * root_dev = NULL;
-
 static int device_list_size = 0;
 static char device_list[STD_MAX][10];
 
@@ -140,7 +139,6 @@ enum {
 	SETTINGS,
 	OSD = 0x20,
 };
-
 /**
  * used at loading
  **/
@@ -225,6 +223,8 @@ static GuiButton * home_all_btn = NULL;
 static GuiButton * home_music_btn = NULL;
 static GuiButton * home_photo_btn = NULL;
 static GuiButton * home_setting_btn = NULL;
+static GuiButton * home_restart_btn = NULL; /*siz - added Restart: 15/07/2012 */
+static GuiButton * home_shutdown_btn = NULL; /*siz - added Shutdown: 15/07/2012 */
 
 static GuiImage * home_video_img = NULL;
 static GuiImage * home_music_img = NULL;
@@ -236,6 +236,8 @@ static GuiText * home_all_txt = NULL;
 static GuiText * home_music_txt = NULL;
 static GuiText * home_photo_txt = NULL;
 static GuiText * home_setting_txt = NULL;
+static GuiText * home_restart_txt = NULL; /*siz - added Restart: 15/07/2012 */
+static GuiText * home_shutdown_txt = NULL; /*siz - added Shutdown: 15/07/2012 */
 
 /**
  * Not used yet
@@ -303,6 +305,13 @@ static OptionList subtitle_option_list;
 static OptionList audio_option_list;
 
 static char mplayer_filename[2048];
+static char exited_dir[2048]; /*siz - added Save exit path, for SmartMenu: 20/07/2012 */
+static char exited_dir_array[64][2048]; /*siz - added Save exit path for a specific menu, for SmartMenu: 20/07/2012 */
+static int exited_item[64]; /*siz - added Save exit item, for SmartMenu: 20/07/2012 */
+static int exited_page[64];
+//static int exited_page_i;
+//static int exited_page_size;
+
 
 static int last_menu;
 
@@ -354,6 +363,7 @@ static void osd_options_next_callback(void * data) {
 	GuiButton *button = (GuiButton *) data;
 	if (button->GetState() == STATE_CLICKED) {
 		button->ResetState();
+		playerSwitchSubtitle(); /*siz added: "clear" sub before quit -> sub doesn't stay on screen on a new video - quick fix - 16/07/2012 */
 		playerGuiAsked();
 		button->SetState(STATE_SELECTED);
 	}
@@ -452,15 +462,19 @@ static void loadHomeRessources() {
 
 	home_video_txt = new GuiText("Videos", 48, 0xFFFFFFFF);
 	home_all_txt = new GuiText("All", 48, 0xFFFFFFFF);
-	home_music_txt = new GuiText("Musics", 48, 0xFFFFFFFF);
+	home_music_txt = new GuiText("Music", 48, 0xFFFFFFFF);  // siz edit: Musics to Music
 	home_photo_txt = new GuiText("Photos", 48, 0xFFFFFFFF);
 	home_setting_txt = new GuiText("Settings", 48, 0xFFFFFFFF);
+	home_restart_txt = new GuiText("Restart", 48, 0xFFFFFFFF); /*siz - added Restart: 15/07/2012 */
+	home_shutdown_txt = new GuiText("Shutdown", 48, 0xFFFFFFFF); /*siz - added Shutdown: 15/07/2012 */
 
 	home_video_btn = new GuiButton(home_video_img->GetWidth(), home_video_img->GetHeight());
 	home_all_btn = new GuiButton(home_video_img->GetWidth(), home_video_img->GetHeight());
 	home_music_btn = new GuiButton(home_music_img->GetWidth(), home_music_img->GetHeight());
 	home_photo_btn = new GuiButton(home_photo_img->GetWidth(), home_photo_img->GetHeight());
 	home_setting_btn = new GuiButton(home_setting_img->GetWidth(), home_setting_img->GetHeight());
+	home_restart_btn = new GuiButton(home_setting_img->GetWidth(), home_setting_img->GetHeight()); /*siz - added Restart: 15/07/2012 */
+	home_shutdown_btn = new GuiButton(home_setting_img->GetWidth(), home_setting_img->GetHeight()); /*siz - added Shutdown: 15/07/2012 */
 
 	//	home_video_btn->SetIcon(home_video_img);
 	//	home_music_btn->SetIcon(home_music_img);
@@ -472,6 +486,8 @@ static void loadHomeRessources() {
 	home_music_btn->SetLabel(home_music_txt);
 	home_photo_btn->SetLabel(home_photo_txt);
 	home_setting_btn->SetLabel(home_setting_txt);
+	home_restart_btn->SetLabel(home_restart_txt); /*siz - added Restart: 15/07/2012 */
+	home_shutdown_btn->SetLabel(home_shutdown_txt); /*siz - added Shutdown: 15/07/2012 */
 }
 
 static void loadBrowserRessources() {
@@ -1163,6 +1179,7 @@ extern "C" void mplayer_osd_draw(int level) {
 	}
 }
 
+
 static void Browser(const char * title, const char * root) {
 	// apply correct icon
 	switch (current_menu) {
@@ -1183,12 +1200,23 @@ static void Browser(const char * title, const char * root) {
 			extValid = extAlwaysValid;
 			break;
 	}
-
 	ResetBrowser();
-	BrowseDevice("/", root);
-
-	gui_browser->ResetState();
-	gui_browser->TriggerUpdate();
+	/* siz added: accesses the stored exited path, for SmartMenu, instead of root when entering a menu again 20/07/2012 - Start */
+	if (strlen(exited_dir_array[current_menu]) != 0) {
+		BrowseDevice(exited_dir_array[current_menu], root);
+		gui_browser->ResetState();	
+		if (exited_item[current_menu] > gui_browser->GetPageSize()) {
+			browser.pageIndex = (exited_page[current_menu] - gui_browser->GetPageSize() - 1);			
+		} 
+		gui_browser->fileList[exited_item[current_menu]]->SetState(STATE_SELECTED);		
+		gui_browser->TriggerUpdate();
+	} else {
+		BrowseDevice("/", root);
+		gui_browser->ResetState();
+		gui_browser->fileList[0]->SetState(STATE_SELECTED);
+		gui_browser->TriggerUpdate();
+	}				
+	/* siz added: accesses the stored exited path, for SmartMenu, instead of root when entering a menu again 20/07/2012 - End */
 
 	//mainWindow->SetAlignment(ALIGN_CENTRE,ALIGN_MIDDLE);
 	mainWindow->Append(gui_browser);
@@ -1228,8 +1256,8 @@ static void Browser(const char * title, const char * root) {
 			sprintf(tmp, "%d/%d", browser.selIndex + 1, browser.numEntries);
 			browser_pagecounter->SetText(tmp);
 		}
-
-		last_sel_item = browser.selIndex;
+	
+	last_sel_item = browser.selIndex;
 
 		if (browser.pageIndex) {
 			// draw prev
@@ -1243,7 +1271,8 @@ static void Browser(const char * title, const char * root) {
 		} else {
 			browser_down_icon->SetVisible(false);
 		}
-
+	exited_item[current_menu] = browser.selIndex; /*siz - added Save selected item, for SmartMenu: 21/07/2012 */
+	exited_page[current_menu] = browser.pageIndex; //siz ---------------------------------
 		// update file browser based on arrow xenon_buttons
 		// set MENU_EXIT if A xenon_button pressed on a file
 		for (int i = 0; i < gui_browser->GetPageSize(); i++) {
@@ -1254,17 +1283,19 @@ static void Browser(const char * title, const char * root) {
 					if (BrowserChangeFolder()) {
 						gui_browser->ResetState();
 						gui_browser->fileList[0]->SetState(STATE_SELECTED);
-						gui_browser->TriggerUpdate();
+						gui_browser->TriggerUpdate();		
 					} else {
 						break;
 					}
 				} else {
 					sprintf(mplayer_filename, "%s/%s/%s", rootdir, browser.dir, browserList[browser.selIndex].filename);
-					CleanupPath(mplayer_filename);
-
+					sprintf(exited_dir, "%s/", browser.dir); /*siz - added Save exit path, for SmartMenu: 20/07/2012 */		
+					CleanupPath(mplayer_filename);								
+					CleanupPath(exited_dir); /*siz - added Save exit path, for SmartMenu: 20/07/2012 */		
+					strncpy(exited_dir_array[current_menu], exited_dir, 2048); /*siz - added Save exit path, for SmartMenu: 20/07/2012 */		
 					ShutoffRumble();
 					gui_browser->ResetState();
-
+				
 					if (file_type(mplayer_filename) == BROWSER_TYPE_ELF) {
 						current_menu = MENU_ELF;
 					} else {
@@ -1275,9 +1306,13 @@ static void Browser(const char * title, const char * root) {
 		}
 
 		if (menuBtn.GetState() == STATE_CLICKED) {
-			current_menu = MENU_BACK;
+		/*siz - added Save exit path, for SmartMenu: 20/07/2012 - Start */
+		sprintf(exited_dir, "%s/", browser.dir); 
+		CleanupPath(exited_dir); 
+		strncpy(exited_dir_array[current_menu], exited_dir, 2048);						
+		/*siz - added Save exit path, for SmartMenu: 20/07/2012 - End */
+		current_menu = MENU_BACK;
 		}
-
 		update();
 	}
 
@@ -1300,15 +1335,19 @@ static void HomePage() {
 	
 	home_video_txt ->SetText("Videos");
 	home_all_txt ->SetText("All");
-	home_music_txt ->SetText("Musics");
+	home_music_txt ->SetText("Music"); // siz edit: Musics to Music
 	home_photo_txt ->SetText("Photos");
 	home_setting_txt ->SetText("Settings");
+	home_restart_txt ->SetText("Restart"); /*siz - added Restart: 15/07/2012 */
+	home_shutdown_txt ->SetText("Shutdown"); /*siz - added Shutdown: 15/07/2012 */
 
 	home_list_v->Append(home_all_btn);
 	home_list_v->Append(home_video_btn);
 	home_list_v->Append(home_music_btn);
 	home_list_v->Append(home_photo_btn);
 	home_list_v->Append(home_setting_btn);
+	home_list_v->Append(home_restart_btn); /*siz - added Restart: 15/07/2012 */
+	home_list_v->Append(home_shutdown_btn); /*siz - added Shutdown: 15/07/2012 */
 
 	home_list_v->SetSelected(last_selected_value);
 
@@ -1367,6 +1406,12 @@ static void HomePage() {
 				case 4:
 					current_menu = SETTINGS;
 					break;
+				case 5:
+					xenon_smc_power_reboot(); /*siz - added Restart: 15/07/2012 */
+					break;
+				case 6:
+					xenon_smc_power_shutdown(); /*siz - added Shutdown: 15/07/2012 */
+					break;
 				default:
 					WindowPrompt("Warning", "Not implemented yet", "Ok", NULL);
 					break;
@@ -1393,9 +1438,29 @@ static void HomePage() {
 	home_list_v->Remove(home_music_btn);
 	home_list_v->Remove(home_photo_btn);
 	home_list_v->Remove(home_setting_btn);
+	home_list_v->Remove(home_restart_btn); /*siz - added Restart: 15/07/2012 */
+	home_list_v->Remove(home_shutdown_btn); /*siz - added Shutdown: 15/07/2012 */
 	mainWindow->Remove(home_curitem);
 }
+/*siz - added file_exists: used in Subtitles Size 17/07/2012 - Start */
+bool file_exists(const char * filename) {
+   FILE * fd;
+   fd = fopen(filename, "rb");
+   if (fd != NULL)
+   {
+      fclose(fd);
+      return true;
+   }
+   return false;
+}
+//Paths to subtitles
+char *sub_spath = "uda0:/mplayer/font/18font.desc";
+char *sub_npath = "uda0:/mplayer/font/24font.desc";
+char *sub_bpath = "uda0:/mplayer/font/28font.desc";
+char *sub_dpath = "uda0:/mplayer/font/font.desc";
+/*siz - added file_exists: used in Subtitles Size 17/07/2012 - End */
 
+//SETTINGS MENU
 static int XMPSettings() {
 
 	int menu = SETTINGS;
@@ -1406,6 +1471,7 @@ static int XMPSettings() {
 
 	sprintf(options.name[i++], "Exit Action");
 	sprintf(options.name[i++], "Language");
+        sprintf(options.name[i++], "Subtitle Size"); /*siz - added subtitle size: 14/07/2012 */
 	options.length = i;
 
 	for (i = 0; i < options.length; i++)
@@ -1463,6 +1529,13 @@ static int XMPSettings() {
 					XMPlayerCfg.language = 0;
 
 				break;
+			/*siz - added subtitle size: 14/07/2012 - Start */
+			case 2: 
+				XMPlayerCfg.subtitle_size++;
+				if (XMPlayerCfg.subtitle_size >= SUB_LENGTH)
+					XMPlayerCfg.subtitle_size = 0;
+				break;
+			/*siz - added subtitle size: 14/07/2012 - End */
 		}
 
 		if (ret >= 0 || firstRun) {
@@ -1483,6 +1556,34 @@ static int XMPSettings() {
 					LoadLanguage((char*) fr_lang, fr_lang_size);
 					break;
 			}
+			/*siz - added subtitle size: 17/07/2012 - Start */
+			switch (XMPlayerCfg.subtitle_size) {
+				case SUB_SMALL:{ 
+				sprintf(options.value[2], "Small"); 
+					if ((file_exists(sub_spath)) && (file_exists(sub_npath))) {
+					rename(sub_dpath, sub_bpath);
+					rename(sub_spath, sub_dpath);
+				    	}
+					break;
+				}
+				case SUB_NORMAL: {
+				sprintf(options.value[2], "Normal");					
+					if ((file_exists(sub_npath)) && (file_exists(sub_bpath))) {
+					rename(sub_dpath, sub_spath);
+					rename(sub_npath, sub_dpath);
+					}
+					break;
+				}
+				case SUB_BIG: {
+				sprintf(options.value[2], "Big");
+					if ((file_exists(sub_bpath)) && (file_exists(sub_spath))) {
+					rename(sub_dpath, sub_npath);
+					rename(sub_bpath, sub_dpath);
+					}
+					break;
+				}
+			}
+			/*siz - added subtitle size: 17/07/2012 - End */
 
 			optionBrowser.TriggerUpdate();
 		}
@@ -1511,8 +1612,7 @@ static void do_mplayer(char * filename) {
 			//"-demuxer","mkv",
 			"-menu",
 			"-lavdopts", "skiploopfilter=all:threads=5",
-			//"-vsync",
-
+			"-vsync", //enabled by siz - 16/07/2012
 			filename,
 		};
 		mplayer_need_init = 0;
@@ -1522,7 +1622,7 @@ static void do_mplayer(char * filename) {
 		// will never be here !!!
 	} else {
 		mplayer_load(filename);
-		mplayer_return_to_player();
+		mplayer_return_to_player();		
 	}
 }
 

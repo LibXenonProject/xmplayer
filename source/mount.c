@@ -480,10 +480,12 @@ static void UnmountPartitions(int device) {
 
 extern int XTAFMount();
 
-void sleep(int i) {
+/* void sleep(int i) {
 	delay(i);
 }
 
+*/
+//
 /**
  * Parse mbr for filesystem
  */

@@ -137,7 +137,7 @@ void GuiFileBrowser::SetFocus(int f) {
 void GuiFileBrowser::ResetState() {
 	state = STATE_DEFAULT;
 	stateChan = -1;
-	selectedItem = 0;
+	//selectedItem = 0; /* siz added comments, for SmartMenu, because it always selects Item 0 - 21/07/2012 */
 
 	for (int i = 0; i < file_pagesize; i++) {
 		fileList[i]->ResetState();
@@ -239,15 +239,16 @@ endNavigation:
 				fileList[i]->SetState(STATE_DISABLED);
 			}
 		}
-
-		if (i != selectedItem && fileList[i]->GetState() == STATE_SELECTED)
+		/* siz added comments, for SmartMenu, because it inflicts with this code - 21/07/2012*/
+		/*if (i != selectedItem && fileList[i]->GetState() == STATE_SELECTED) 
 		{
 			fileList[i]->ResetState();
 		}
-		else if (focus && i == selectedItem && fileList[i]->GetState() == STATE_DEFAULT)
+		else
+		if (focus && i == selectedItem && fileList[i]->GetState() == STATE_DEFAULT)
 		{
 			fileList[selectedItem]->SetState(STATE_SELECTED, t->chan);
-		}
+		}*/
 
 		int currChan = t->chan;
 
