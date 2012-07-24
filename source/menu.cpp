@@ -1454,7 +1454,6 @@ bool file_exists(const char * filename) {
 }
 //Paths to subtitles
 char *sub_spath = "uda0:/mplayer/font/18font.desc";
-//sprintf(sub_spath, "%s/mplayer/font/18font.desc", rootdir);
 char *sub_npath = "uda0:/mplayer/font/24font.desc";
 char *sub_bpath = "uda0:/mplayer/font/28font.desc";
 char *sub_dpath = "uda0:/mplayer/font/font.desc";

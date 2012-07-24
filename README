@@ -1,0 +1,17 @@
+This is a fork of xmplayer by Ced2911 (and now the Libxenon team) with my own customizations.
+My customizations, compared to original release, are at the moment (24/07/2012):
+
+Initial:
+-Quick fix: Subtitles stays on screen when playing a new video without subs, after exiting a video with subs
+-Fixed: "Return to Gui" and starting a video leads to crash 
+-Fixed: .avi files not playing after a .mkv, .mov or .mp4 file has been played 
+This fix is done via mplayer.conf by adding:
+[extension.avi]
+demuxer=avi
+-Added: "Restart" and "Shutdown" buttons 
+-Added: "Subtitle Size" under Settings - Atm you can only change size before starting your first video, after that you need to restart before it takes effect
+This is quite simple really, have 3 different fonts sizes from mplayerhq's site. This is temporary until the subscale can be implemented with subfont.ttf
+-Vsync is now enabled by default (disable via Gui)
+
+24/07/2012:
+-Added: A "smart menu" that saves your last selection and path when exiting a menu or playing a video
