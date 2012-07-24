@@ -1174,7 +1174,7 @@ extern "C" void mplayer_osd_draw(int level) {
 		mainWindow->Update(&userInput[i]);
 	}
 }
-	
+
 static void Browser(const char * title, const char * root) {
 	// apply correct icon
 	switch (current_menu) {
@@ -1195,15 +1195,15 @@ static void Browser(const char * title, const char * root) {
 			extValid = extAlwaysValid;
 			break;
 	}
-	//ResetBrowser();
-	/* siz added: accesses the stored exited path, for SmartMenu, instead of root when entering a menu again 20/07/2012 - Start */
+	ResetBrowser();
+	/* siz added: accesses the stored exited path, for SmartMenu, instead of root when entering a menu again 24/07/2012 - Start */
 	if (strlen(exited_dir_array[current_menu]) != 0) {
 		BrowseDevice(exited_dir_array[current_menu], root);
 		gui_browser->ResetState();	
-		if (exited_item[current_menu] >= gui_browser->GetPageSize()) {
-		browser.pageIndex = (exited_item[current_menu] + 1 - gui_browser->GetPageSize()); 
-		browser.selIndex = (exited_item[current_menu]);
-		//gui_browser->fileList[exited_item[current_menu]]->SetState(STATE_SELECTED);
+			if (exited_item[current_menu] >= gui_browser->GetPageSize()) {
+			browser.pageIndex = (exited_item[current_menu] + 1 - gui_browser->GetPageSize()); 
+			/* siz comment: filelist is only from 0 to 9 (pagesize is set to 10), so if pageindex is 1, item 1 is now 0 - 24/07/2012  */
+			gui_browser->fileList[9]->SetState(STATE_SELECTED); 
 		} else {
 		gui_browser->fileList[exited_item[current_menu]]->SetState(STATE_SELECTED);		
 		}
@@ -1214,7 +1214,7 @@ static void Browser(const char * title, const char * root) {
 		gui_browser->fileList[0]->SetState(STATE_SELECTED);
 		gui_browser->TriggerUpdate();
 	}				
-	/* siz added: accesses the stored exited path, for SmartMenu, instead of root when entering a menu again 20/07/2012 - End */
+	/* siz added: accesses the stored exited path, for SmartMenu, instead of root when entering a menu again 24/07/2012 - End */
 
 	//mainWindow->SetAlignment(ALIGN_CENTRE,ALIGN_MIDDLE);
 	mainWindow->Append(gui_browser);
@@ -1290,7 +1290,7 @@ static void Browser(const char * title, const char * root) {
 					sprintf(exited_dir, "%s/", browser.dir); /*siz - added Save exit path, for SmartMenu: 20/07/2012 */		
 					CleanupPath(mplayer_filename);								
 					CleanupPath(exited_dir); /*siz - added Save exit path, for SmartMenu: 20/07/2012 */		
-					strncpy(exited_dir_array[current_menu], exited_dir, 2048); /*siz - added Save exit path, for SmartMenu: 20/07/2012 */		
+					strncpy(exited_dir_array[current_menu], exited_dir, 2048); /*siz - added Save exit path, for SmartMenu: 20/07/2012 */					
 					ShutoffRumble();
 					gui_browser->ResetState();
 				
@@ -1298,6 +1298,7 @@ static void Browser(const char * title, const char * root) {
 						current_menu = MENU_ELF;
 					} else {
 						current_menu = MENU_MPLAYER;
+
 					}
 				}
 			}
@@ -1453,6 +1454,7 @@ bool file_exists(const char * filename) {
 }
 //Paths to subtitles
 char *sub_spath = "uda0:/mplayer/font/18font.desc";
+//sprintf(sub_spath, "%s/mplayer/font/18font.desc", rootdir);
 char *sub_npath = "uda0:/mplayer/font/24font.desc";
 char *sub_bpath = "uda0:/mplayer/font/28font.desc";
 char *sub_dpath = "uda0:/mplayer/font/font.desc";
