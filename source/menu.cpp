@@ -308,10 +308,6 @@ static char mplayer_filename[2048];
 static char exited_dir[2048]; /*siz - added Save exit path, for SmartMenu: 20/07/2012 */
 static char exited_dir_array[64][2048]; /*siz - added Save exit path for a specific menu, for SmartMenu: 20/07/2012 */
 static int exited_item[64]; /*siz - added Save exit item, for SmartMenu: 20/07/2012 */
-static int exited_page[64];
-//static int exited_page_i;
-//static int exited_page_size;
-
 
 static int last_menu;
 
@@ -1178,8 +1174,7 @@ extern "C" void mplayer_osd_draw(int level) {
 		mainWindow->Update(&userInput[i]);
 	}
 }
-
-
+	
 static void Browser(const char * title, const char * root) {
 	// apply correct icon
 	switch (current_menu) {
@@ -1200,15 +1195,18 @@ static void Browser(const char * title, const char * root) {
 			extValid = extAlwaysValid;
 			break;
 	}
-	ResetBrowser();
+	//ResetBrowser();
 	/* siz added: accesses the stored exited path, for SmartMenu, instead of root when entering a menu again 20/07/2012 - Start */
 	if (strlen(exited_dir_array[current_menu]) != 0) {
 		BrowseDevice(exited_dir_array[current_menu], root);
 		gui_browser->ResetState();	
-		if (exited_item[current_menu] > gui_browser->GetPageSize()) {
-			browser.pageIndex = (exited_page[current_menu] - gui_browser->GetPageSize() - 1);			
-		} 
+		if (exited_item[current_menu] >= gui_browser->GetPageSize()) {
+		browser.pageIndex = (exited_item[current_menu] + 1 - gui_browser->GetPageSize()); 
+		browser.selIndex = (exited_item[current_menu]);
+		//gui_browser->fileList[exited_item[current_menu]]->SetState(STATE_SELECTED);
+		} else {
 		gui_browser->fileList[exited_item[current_menu]]->SetState(STATE_SELECTED);		
+		}
 		gui_browser->TriggerUpdate();
 	} else {
 		BrowseDevice("/", root);
@@ -1272,12 +1270,12 @@ static void Browser(const char * title, const char * root) {
 			browser_down_icon->SetVisible(false);
 		}
 	exited_item[current_menu] = browser.selIndex; /*siz - added Save selected item, for SmartMenu: 21/07/2012 */
-	exited_page[current_menu] = browser.pageIndex; //siz ---------------------------------
 		// update file browser based on arrow xenon_buttons
 		// set MENU_EXIT if A xenon_button pressed on a file
 		for (int i = 0; i < gui_browser->GetPageSize(); i++) {
 			if (gui_browser->fileList[i]->GetState() == STATE_CLICKED) {
 				gui_browser->fileList[i]->ResetState();
+				gui_browser->ResetState();
 				// check corresponding browser entry
 				if (browserList[browser.selIndex].isdir) {
 					if (BrowserChangeFolder()) {
@@ -1309,7 +1307,7 @@ static void Browser(const char * title, const char * root) {
 		/*siz - added Save exit path, for SmartMenu: 20/07/2012 - Start */
 		sprintf(exited_dir, "%s/", browser.dir); 
 		CleanupPath(exited_dir); 
-		strncpy(exited_dir_array[current_menu], exited_dir, 2048);						
+		strncpy(exited_dir_array[current_menu], exited_dir, 2048);	
 		/*siz - added Save exit path, for SmartMenu: 20/07/2012 - End */
 		current_menu = MENU_BACK;
 		}
