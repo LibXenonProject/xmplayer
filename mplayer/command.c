@@ -2931,7 +2931,7 @@ int run_command(MPContext *mpctx, mp_cmd_t *cmd)
             break;
 
         case MP_CMD_OSD_SHOW_PROGRESSION:{
-                int len = demuxer_get_time_length(mpctx->demuxer);
+               int len = demuxer_get_time_length(mpctx->demuxer);
                 int pts = demuxer_get_current_time(mpctx->demuxer);
                 set_osd_bar(0, "Position", 0, 100, demuxer_get_percent_pos(mpctx->demuxer));
                 set_osd_msg(OSD_MSG_TEXT, 1, osd_duration,

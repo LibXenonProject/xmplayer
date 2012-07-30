@@ -3989,6 +3989,8 @@ goto_enable_cache:
                     break;                  // STOP
                 if (guiInfo.Playing == GUI_PAUSE)
                     mpctx->osd_function = OSD_PAUSE;
+    set_osd_msg(OSD_MSG_BAR, 1, osd_duration, "%s: %d %%",
+                name, ROUND(100 * (val - min) / (max - min)));
                 if (guiInfo.NewPlay)
                     goto goto_next_file;
 #ifdef CONFIG_DVDREAD
@@ -4042,7 +4044,7 @@ goto_next_file:  // don't jump here after ao/vo/getch initialization!
                    total_frame_cnt,
                    (total_time_usage > 0.5) ? (total_frame_cnt / total_time_usage) : 0);
     }
-
+	
     // time to uninit all, except global stuff:
     uninit_player(INITIALIZED_ALL - (INITIALIZED_GUI + INITIALIZED_INPUT + (fixed_vo ? INITIALIZED_VO : 0)));
 
@@ -4110,9 +4112,8 @@ goto_next_file:  // don't jump here after ao/vo/getch initialization!
 
     return 1;
 }
-
 #endif /* DISABLE_MAIN */
-
+	
 
 /**
  * shared with mplayer
@@ -4121,8 +4122,12 @@ goto_next_file:  // don't jump here after ao/vo/getch initialization!
 void mplayer_load(char * _filename) 
 {
 	filename = _filename;
+	mp_input_queue_cmd(mp_input_parse_cmd("sub_visibility")); /*siz added: toggle sub visibility back on - 30/07/2012 */
 }
 
+void playerSeekPos(char * seektime) {
+	mp_input_queue_cmd(mp_input_parse_cmd(seektime));
+}
 
 double playerGetElapsed() {
 	return demuxer_get_current_time(mpctx->demuxer);
@@ -4161,11 +4166,13 @@ void playerSwitchAudio(){
 	mp_property_do("switch_audio",M_PROPERTY_SET,&iparam,mpctx);
 }
 
-void playerSwitchSubtitle(){
+void playerSwitchSubtitle(){ 
         // cycle
         mp_input_queue_cmd(mp_input_parse_cmd("sub_select"));
 }
-
+void playerTurnOffSubtitle(){ /*siz added: toggle sub visibility off when exiting, see menu.cpp - 30/07/2012 */
+        mp_input_queue_cmd(mp_input_parse_cmd("sub_visibility"));
+}
 void playerSwitchFullscreen(){
 	mpctx->video_out->control(VOCTRL_FULLSCREEN,NULL);
 }
@@ -4183,8 +4190,15 @@ int playerSwitchLoop(){
 	}
 }
 
-// try to play next file to go to gui
-void playerGuiAsked(){	
-//mp_input_queue_cmd(mp_input_parse_cmd("quit"));
+// try to play next file to go to gui, and save last position of file
+void playerGuiAsked(char * seekfile) {	
+	double elapsed = demuxer_get_current_time(mpctx->demuxer);
+	int seconds = elapsed;
         mpctx->eof=1;
+	char * file = "";
+	asprintf(&file, "%s/cache/elapsed/%s%s", MPLAYER_CONFDIR, seekfile, ".txt"); /*siz: saves last position */
+	FILE *fd = fopen(file, "w+");
+	fprintf(fd, "%d", seconds);
+	fclose(fd); 
+	free(file);	
 }

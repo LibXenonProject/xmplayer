@@ -62,12 +62,14 @@ extern "C" {
 	void playerSwitchSubtitle();
 	void playerSwitchFullscreen();
 	void playerSwitchVsync();
-	
+	void playerSeekPos(char * seektime); /*siz added: for playback-resume, seek to position - 29/07/2012 */
+	void playerTurnOffSubtitle(); /*siz added: turns off subs before exiting video via osd - 30/07/2012 */
+
 	double playerGetElapsed();
 	double playerGetDuration();
 	const char * playerGetFilename();
 	int playerGetStatus();
-	void playerGuiAsked();
+	void playerGuiAsked(char * seekfile); /*siz added: for playback-resume, it gives file to exit func. which saves last postion to file.txt - 29/07/2012 */
 	
 	const char * playetGetMetaData(metadata_t type);
 

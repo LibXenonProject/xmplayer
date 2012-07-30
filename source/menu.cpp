@@ -111,6 +111,10 @@
 #include "../build/options_menu_bg_x6_png.h"
 #include "../build/options_menu_bg_x7_png.h"
 
+#include "../build/button_p_seek_png.h" //siz
+#include "../build/button_p_seek_select_png.h" //siz
+#include "../build/p_seek_bg_png.h" //siz
+
 #include "../build/video_info_bg_png.h"
 
 #include "../build/fr_lang.h"
@@ -305,9 +309,13 @@ static OptionList subtitle_option_list;
 static OptionList audio_option_list;
 
 static char mplayer_filename[2048];
-static char exited_dir[2048]; /*siz - added Save exit path, for SmartMenu: 20/07/2012 */
-static char exited_dir_array[64][2048]; /*siz - added Save exit path for a specific menu, for SmartMenu: 20/07/2012 */
-static int exited_item[64]; /*siz - added Save exit item, for SmartMenu: 20/07/2012 */
+static char exited_dir[2048]; /*siz - added: save exit path, for SmartMenu: 20/07/2012 */
+static char exited_dir_array[64][2048]; /*siz - added: save exit path for a specific menu, for SmartMenu: 20/07/2012 */
+static int exited_item[64]; /*siz - added: save exit item, for SmartMenu: 20/07/2012 */
+static char seek_filename[2048]; /*siz - added: path for playback-resume cache file: 29/07/2012 */
+static char * playerSeekTime = ""; /*siz - added: time for playback-resume: 29/07/2012 */
+static char * playerStopFile = ""; /*siz - added: file for playback-resume: 29/07/2012 */
+static int playerSeekChoice = 0; /*siz - added: choice for playback-resume: 29/07/2012 */
 
 static int last_menu;
 
@@ -359,8 +367,8 @@ static void osd_options_next_callback(void * data) {
 	GuiButton *button = (GuiButton *) data;
 	if (button->GetState() == STATE_CLICKED) {
 		button->ResetState();
-		playerSwitchSubtitle(); /*siz added: "clear" sub before quit -> sub doesn't stay on screen on a new video - quick fix - 16/07/2012 */
-		playerGuiAsked();
+		playerTurnOffSubtitle(); /*siz added: turns sub_visibility off before quit -> sub doesn't stay on screen on a new video - 30/07/2012 */
+		playerGuiAsked(playerStopFile);/*siz added: for playback-resume, it gives file to exit func. which saves last postion to file.txt - 29/07/2012 */
 		button->SetState(STATE_SELECTED);
 	}
 }
@@ -934,7 +942,128 @@ int WindowPrompt(const char *title, const char *msg, const char *btn1Label, cons
 	mainWindow->SetState(STATE_DEFAULT);
 	return choice;
 }
+static char* playerSeekFormatTime(char * dest, double time) {
+	div_t hrmin, minsec;
+	minsec = div(time, 60);
+	hrmin = div(minsec.quot, 60);
+	if (time < 3600) { 
+	asprintf(&dest, "Resume from %02d:%02d", hrmin.rem, minsec.rem);
+	} else {
+	asprintf(&dest, "Resume from %d:%02d:%02d", hrmin.quot, hrmin.rem, minsec.rem);
+	}
+	char * destfile = dest;
+	return destfile;
+	free(dest);	
+}
+/* siz added: File exists function - 25/07/2012 */
+bool file_exists(const char * filename) {
+   FILE * fd = fopen(filename, "rb");
+   if (fd != NULL) {
+      fclose(fd);
+      return true;
+   }
+   return false;
+}
+/* siz added: PlayerSeekOpen function - 28/07/2012 */
+char * playerSeekOpen(char * file) {
+	char* string = (char*)malloc(7);
+	FILE * fd = fopen(file, "r");	
+	fgets(string, strlen(string), fd);
+	if (string[strlen(string)-1] == '\n') {
+	string[strlen(string)-1] = '\0';
+	}
+        fclose(fd);
+	return string;
+}
+/* siz added: Prompts if a file has been played before, and you wish to resume - Start - 25/07/2012 */
+int playerSeekPrompt(char * seekfile) {
+	int choice = -2;
+	char *seektime = playerSeekOpen(seekfile);
+	double time = atof(seektime);
+	seektime = playerSeekFormatTime(seektime, time); 
+	GuiWindow promptWindow(300, 72);
+	promptWindow.SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);
+	promptWindow.SetPosition(0, 0);
+	GuiImageData btnOutline(button_p_seek_png);
+	GuiImageData btnOutlineOver(button_p_seek_select_png);
 
+	GuiImageData dialogBox(p_seek_bg_png);
+	GuiImage dialogBoxImg(&dialogBox);
+	dialogBoxImg.SetPosition(0, 20);
+	dialogBoxImg.SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);
+	
+	GuiText btn1Txt(seektime, 22, (XeColor) {
+		255, 255, 255, 255
+	});
+	GuiImage btn1Img(&btnOutline);
+	GuiImage btn1ImgOver(&btnOutlineOver);
+	GuiButton btn1(btnOutline.GetWidth(), btnOutline.GetHeight());
+	btn1.SetAlignment(ALIGN_CENTRE, ALIGN_BOTTOM);
+	btn1.SetPosition(0, -22);
+	btn1.SetLabel(&btn1Txt);
+	btn1.SetImage(&btn1Img);
+	btn1.SetImageOver(&btn1ImgOver);
+	btn1.SetTrigger(trigA);
+	btn1.SetState(STATE_SELECTED);
+	btn1.SetEffectGrow();
+
+	GuiText btn2Txt("Start from beginning", 22, (XeColor) {
+		255, 255, 255, 255
+	});
+	GuiImage btn2Img(&btnOutline);
+	GuiImage btn2ImgOver(&btnOutlineOver);
+	GuiButton btn2(btnOutline.GetWidth(), btnOutline.GetHeight());
+	btn2.SetAlignment(ALIGN_CENTRE, ALIGN_BOTTOM);
+	btn2.SetPosition(0, 22);
+	btn2.SetLabel(&btn2Txt);
+	btn2.SetImage(&btn2Img);
+	btn2.SetImageOver(&btn2ImgOver);
+	btn2.SetTrigger(trigA);
+	btn2.SetEffectGrow();
+
+	GuiTrigger trigMenu;
+	trigMenu.SetButtonOnlyTrigger(-1, 0, PAD_BUTTON_B);
+	GuiButton menuBtn(20, 20);
+	menuBtn.SetAlignment(ALIGN_LEFT, ALIGN_BOTTOM);
+	menuBtn.SetPosition(100, 100);
+	menuBtn.SetTrigger(&trigMenu);
+	menuBtn.SetEffectGrow();
+	menuBtn.SetSelectable(false);
+
+	promptWindow.Append(&dialogBoxImg);
+	promptWindow.Append(&btn1);
+	promptWindow.Append(&btn2);
+	promptWindow.Append(&menuBtn);
+
+	mainWindow->SetState(STATE_DISABLED);
+	mainWindow->Append(&promptWindow);
+	mainWindow->ChangeFocus(&promptWindow);
+
+	btn1.SetState(STATE_SELECTED);
+	btn2.ResetState();
+	while (choice == -2) {
+		update();
+		if (menuBtn.GetState() == STATE_CLICKED) { 
+			choice = -1;
+		} else {	
+			if (btn1.GetState() == STATE_CLICKED) {
+				choice = 1;
+				playerSeekChoice = 1;
+			}
+			else if (btn2.GetState() == STATE_CLICKED) {
+				choice = 0;
+				playerSeekChoice = 0;
+			}
+		}
+	}
+	while (promptWindow.GetEffect() > 0) {
+		update();
+	}
+	mainWindow->Remove(&promptWindow);
+	mainWindow->SetState(STATE_DEFAULT);
+	return choice;
+}
+/* siz added: Prompts if a file has been played before, and you wish to resume - End - 25/07/2012 */
 /** to do **/
 static void loadRessources() {
 	loadHomeRessources();
@@ -1066,7 +1195,6 @@ extern "C" void mplayer_osd_close() {
 	osd_show = 0;
 	last_level = -1;
 }
-
 static void format_time(char * dest, double time) {
 	div_t hrmin, minsec;
 	minsec = div(time, 60);
@@ -1074,7 +1202,6 @@ static void format_time(char * dest, double time) {
 
 	sprintf(dest, "%d:%02d:%02d", hrmin.quot, hrmin.rem, minsec.rem);
 }
-
 extern "C" void mplayer_osd_draw(int level) {
 	if (osd_show) {
 
@@ -1263,8 +1390,8 @@ static void Browser(const char * title, const char * root) {
 		} else {
 			browser_up_icon->SetVisible(false);
 		}
-		//if (browser.selIndex<browser.numEntries * ) {
-		if (browser.pageIndex + browser.selIndex + 3 < browser.numEntries) {
+//		if (browser.pageIndex + browser.selIndex + 3 < browser.numEntries) {
+		if ((browser.numEntries > 9) && (browser.selIndex + 3 < browser.numEntries)) { //siz changed it
 			browser_down_icon->SetVisible(true);
 		} else {
 			browser_down_icon->SetVisible(false);
@@ -1275,30 +1402,51 @@ static void Browser(const char * title, const char * root) {
 		for (int i = 0; i < gui_browser->GetPageSize(); i++) {
 			if (gui_browser->fileList[i]->GetState() == STATE_CLICKED) {
 				gui_browser->fileList[i]->ResetState();
-				gui_browser->ResetState();
 				// check corresponding browser entry
 				if (browserList[browser.selIndex].isdir) {
 					if (BrowserChangeFolder()) {
 						gui_browser->ResetState();
 						gui_browser->fileList[0]->SetState(STATE_SELECTED);
-						gui_browser->TriggerUpdate();		
+						gui_browser->TriggerUpdate();
+						sprintf(tmp, "%d/%d", 1, browser.numEntries); /*siz - fixed: not updating sel/num when entering folder 26/07/2012 */
+						browser_pagecounter->SetText(tmp); /*siz - fixed: not updating sel/num when entering folder 26/07/2012 */	
 					} else {
 						break;
 					}
 				} else {
 					sprintf(mplayer_filename, "%s/%s/%s", rootdir, browser.dir, browserList[browser.selIndex].filename);
 					sprintf(exited_dir, "%s/", browser.dir); /*siz - added Save exit path, for SmartMenu: 20/07/2012 */		
+					sprintf(seek_filename, "%smplayer/cache/elapsed/%s%s", device_list[0], browserList[browser.selIndex].filename, ".txt");					
 					CleanupPath(mplayer_filename);								
 					CleanupPath(exited_dir); /*siz - added Save exit path, for SmartMenu: 20/07/2012 */		
-					strncpy(exited_dir_array[current_menu], exited_dir, 2048); /*siz - added Save exit path, for SmartMenu: 20/07/2012 */					
+					strncpy(exited_dir_array[current_menu], exited_dir, 2048); /*siz - added Save exit path, for SmartMenu: 20/07/2012 */
+					playerStopFile = browserList[browser.selIndex].filename;					
 					ShutoffRumble();
-					gui_browser->ResetState();
-				
+					gui_browser->ResetState();		
 					if (file_type(mplayer_filename) == BROWSER_TYPE_ELF) {
 						current_menu = MENU_ELF;
 					} else {
-						current_menu = MENU_MPLAYER;
-
+					/*siz - added for resume-playback function: 29/07/2012 - Start */	
+						if ((file_exists(seek_filename)) && (playerSeekPrompt(seek_filename) == -1)) { //if B is pressed, everything is reset
+						gui_browser->fileList[i]->ResetState();
+							if (browser.selIndex > 9) {
+								browser.pageIndex = (browser.selIndex + 1 - gui_browser->GetPageSize()); 
+								gui_browser->fileList[9]->SetState(STATE_SELECTED);
+							} else {
+								gui_browser->fileList[browser.selIndex]->SetState(STATE_SELECTED);
+							}						
+								gui_browser->TriggerUpdate();
+						} else if ((file_exists(seek_filename)) && (playerSeekChoice == 1)) { //if resume is pressed, play from last location
+							char* seek_time = playerSeekOpen(seek_filename);
+							asprintf(&playerSeekTime, "seek %s 2", seek_time);
+							remove(seek_filename);
+							current_menu = MENU_MPLAYER;
+						} else {
+							playerSeekTime = "seek 0 2";
+							remove(seek_filename);
+							current_menu = MENU_MPLAYER;
+						}
+					/*siz - added for resume-playback function: 29/07/2012 - End */	
 					}
 				}
 			}
@@ -1307,7 +1455,7 @@ static void Browser(const char * title, const char * root) {
 		if (menuBtn.GetState() == STATE_CLICKED) {
 		/*siz - added Save exit path, for SmartMenu: 20/07/2012 - Start */
 		sprintf(exited_dir, "%s/", browser.dir); 
-		CleanupPath(exited_dir); 
+		CleanupPath(exited_dir);
 		strncpy(exited_dir_array[current_menu], exited_dir, 2048);	
 		/*siz - added Save exit path, for SmartMenu: 20/07/2012 - End */
 		current_menu = MENU_BACK;
@@ -1442,16 +1590,7 @@ static void HomePage() {
 	mainWindow->Remove(home_curitem);
 }
 /*siz - added file_exists: used in Subtitles Size 17/07/2012 - Start */
-bool file_exists(const char * filename) {
-   FILE * fd;
-   fd = fopen(filename, "rb");
-   if (fd != NULL)
-   {
-      fclose(fd);
-      return true;
-   }
-   return false;
-}
+
 //Paths to subtitles
 char *sub_spath = "uda0:/mplayer/font/18font.desc";
 char *sub_npath = "uda0:/mplayer/font/24font.desc";
@@ -1512,7 +1651,6 @@ static int XMPSettings() {
 
 	while (menu == SETTINGS) {
 		update();
-
 		ret = optionBrowser.GetClickedOption();
 
 		switch (ret) {
@@ -1622,6 +1760,7 @@ static void do_mplayer(char * filename) {
 	} else {
 		mplayer_load(filename);
 		mplayer_return_to_player();		
+		playerSeekPos(playerSeekTime); //siz
 	}
 }
 
