@@ -62,7 +62,6 @@ extern "C" {
 	void playerSwitchSubtitle();
 	void playerSwitchFullscreen();
 	void playerSwitchVsync();
-	void playerSeekPos(char * seektime); /*siz added: for playback-resume, seek to position - 29/07/2012 */
 	void playerTurnOffSubtitle(); /*siz added: turns off subs before exiting video via osd - 30/07/2012 */
 
 	double playerGetElapsed();

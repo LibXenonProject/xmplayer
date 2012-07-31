@@ -127,7 +127,7 @@
 #include "sub/eosd.h"
 #include "osdep/getch2.h"
 #include "osdep/timer.h"
-
+#include "../source/mplayer_common.h"
 #include "osdep/osdep_xenon.h"
 
 #include "udp_sync.h"
@@ -150,7 +150,6 @@ float start_volume = -1;
 double start_pts   = MP_NOPTS_VALUE;
 char *heartbeat_cmd;
 static int max_framesize;
-
 int noconsolecontrols;
 //**************************************************************************//
 
@@ -2744,7 +2743,7 @@ static int seek(MPContext *mpctx, double amount, int style)
 #ifndef DISABLE_MAIN
 int mplayer_main(int argc, char *argv[])
 {
-    int opt_exit = 0; // Flag indicating whether MPlayer should exit without playing anything.
+    int opt_exit = 0; // Flag indicating whether gMPlayer should exit without playing anything.
     int profile_config_loaded;
     int i;
 
@@ -2778,7 +2777,7 @@ int mplayer_main(int argc, char *argv[])
         cfg_read();
     }
 #endif
-
+	mp_input_queue_cmd(mp_input_parse_cmd(playerSeekTime)); /*siz added: for resume-playback function - 31/07/2012 */
     mpctx->playtree = m_config_parse_mp_command_line(mconfig, argc, argv);
     if (mpctx->playtree == NULL) {
         opt_exit = 1;
@@ -4046,6 +4045,7 @@ goto_next_file:  // don't jump here after ao/vo/getch initialization!
     }
 	
     // time to uninit all, except global stuff:
+
     uninit_player(INITIALIZED_ALL - (INITIALIZED_GUI + INITIALIZED_INPUT + (fixed_vo ? INITIALIZED_VO : 0)));
 
     if (mpctx->eof == PT_NEXT_ENTRY || mpctx->eof == PT_PREV_ENTRY) {
@@ -4122,11 +4122,8 @@ goto_next_file:  // don't jump here after ao/vo/getch initialization!
 void mplayer_load(char * _filename) 
 {
 	filename = _filename;
+	mp_input_queue_cmd(mp_input_parse_cmd(playerSeekTime)); /*siz added: for resume-playback function - 31/07/2012 */
 	mp_input_queue_cmd(mp_input_parse_cmd("sub_visibility")); /*siz added: toggle sub visibility back on - 30/07/2012 */
-}
-
-void playerSeekPos(char * seektime) {
-	mp_input_queue_cmd(mp_input_parse_cmd(seektime));
 }
 
 double playerGetElapsed() {

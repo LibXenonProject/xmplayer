@@ -313,7 +313,7 @@ static char exited_dir[2048]; /*siz - added: save exit path, for SmartMenu: 20/0
 static char exited_dir_array[64][2048]; /*siz - added: save exit path for a specific menu, for SmartMenu: 20/07/2012 */
 static int exited_item[64]; /*siz - added: save exit item, for SmartMenu: 20/07/2012 */
 static char seek_filename[2048]; /*siz - added: path for playback-resume cache file: 29/07/2012 */
-static char * playerSeekTime = ""; /*siz - added: time for playback-resume: 29/07/2012 */
+char * playerSeekTime = ""; /*siz - added: time for playback-resume: 29/07/2012 */ //--------------------------------------------------
 static char * playerStopFile = ""; /*siz - added: file for playback-resume: 29/07/2012 */
 static int playerSeekChoice = 0; /*siz - added: choice for playback-resume: 29/07/2012 */
 
@@ -1760,7 +1760,6 @@ static void do_mplayer(char * filename) {
 	} else {
 		mplayer_load(filename);
 		mplayer_return_to_player();		
-		playerSeekPos(playerSeekTime); //siz
 	}
 }
 

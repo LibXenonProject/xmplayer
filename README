@@ -23,10 +23,13 @@ This is quite simple really, have 3 different fonts sizes from mplayerhq's site.
 -Fixed: When paused, the osd buttons (y, xbox, x) unpauses video, only "a" pauses/unpauses now
 This is done by adding pausing_keep to the osd binds in mplayer's input.conf
 -Changed: The page down icon now only shows, if there are at least more items than a page (10 items pr page) 
--Added: Resume-playback function: if you stop a video in the middle of playing, it will save last position and resume from there if desired. However right now you cannot resume the first video after starting xmplayer.. Working to find a fix. 
 
 30/07/2012:
 -Changed: the subtitle quick fix from initial commit has been updated, it looks more stable now
+
+31/07/2012: 
+-Added: Resume-playback function: if you stop a video in the middle of playing, it will save last position and resume from there if desired.
+
 
 TODO:
 -Change subtitle paths
