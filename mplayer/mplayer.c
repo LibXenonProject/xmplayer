@@ -4192,10 +4192,12 @@ void playerGuiAsked(char * seekfile) {
 	double elapsed = demuxer_get_current_time(mpctx->demuxer);
 	int seconds = elapsed;
         mpctx->eof=1;
+	if (seconds > 60) {	
 	char * file = "";
 	asprintf(&file, "%s/cache/elapsed/%s%s", MPLAYER_CONFDIR, seekfile, ".txt"); /*siz: saves last position */
 	FILE *fd = fopen(file, "w+");
 	fprintf(fd, "%d", seconds);
 	fclose(fd); 
 	free(file);	
+	}
 }

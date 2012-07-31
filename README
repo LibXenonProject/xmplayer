@@ -28,7 +28,7 @@ This is done by adding pausing_keep to the osd binds in mplayer's input.conf
 -Changed: the subtitle quick fix from initial commit has been updated, it looks more stable now
 
 31/07/2012: 
--Added: Resume-playback function: if you stop a video in the middle of playing, it will save last position and resume from there if desired.
+-Added: Resume-playback function: if you stop a video in the middle of playing, it will save last position and resume from there if desired (more than a minute of video has to be played).
 
 
 TODO:
