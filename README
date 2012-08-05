@@ -30,10 +30,17 @@ This is done by adding pausing_keep to the osd binds in mplayer's input.conf
 31/07/2012: 
 -Added: Resume-playback function: if you stop a video in the middle of playing, it will save last position and resume from there if desired (more than a minute of video has to be played).
 
+05/08/2012:
+-Fixed: Osd_show_progression (x) only shows, if osd-button (y) hasn't been pressed before
+-Fixed: Smart Menu now support multiple devices
+This means that the browser will be reset between devices
+-Changed: Osd-button now switches from 1 to 3, this means it only needs one press to full osd and not 4 presses
+-Changed: When pressing the pause-button (a) progression will also show
+Bind a in input.conf needs to be pausing_toggle osd_show_progression
+
 
 TODO:
 -Change subtitle paths
--Show progress bar when paused (semi done, after pressing osd-button(y) the function doesn't work after)
 -Fix bug: The D-pad is very buggy after playing a video, every 2nd time you go out and in a menu it won't respond, but the A and B buttons work fine
 -Add support for more subtitle languages
 -Make the mplayer's menu working functions available in the main osd, so it no longer will be needed

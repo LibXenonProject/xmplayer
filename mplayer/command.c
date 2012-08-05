@@ -2827,25 +2827,8 @@ int run_command(MPContext *mpctx, mp_cmd_t *cmd)
             log_sub();
             break;
 
-        case MP_CMD_OSD:{
-                int v = cmd->args[0].v.i;
-                int max = (term_osd
-                           && !sh_video) ? MAX_TERM_OSD_LEVEL : MAX_OSD_LEVEL;
-                if (osd_level > max)
-                    osd_level = max;
-                if (v < 0)
-                    osd_level = (osd_level + 1) % (max + 1);
-                else
-                    osd_level = v > max ? max : v;
-                /* Show OSD state when disabled, but not when an explicit
-                   argument is given to the OSD command, i.e. in slave mode. */
-                if (v == -1 && osd_level <= 1)
-                    set_osd_msg(OSD_MSG_OSD_STATUS, 0, osd_duration,
-                                MSGTR_OSDosd,
-                                osd_level ? MSGTR_OSDenabled :
-                                MSGTR_OSDdisabled);
-                else
-                    rm_osd_msg(OSD_MSG_OSD_STATUS);
+        case MP_CMD_OSD:{ /*siz changed: osdlevel jumps between 1 and 3, no need to press 3 times before all shows, this also fixes progression only showing once - 05/08/2012 */
+	osd_level = (osd_level == 3) ? 1 : 3;
             }
             break;
 
@@ -2931,7 +2914,7 @@ int run_command(MPContext *mpctx, mp_cmd_t *cmd)
             break;
 
         case MP_CMD_OSD_SHOW_PROGRESSION:{
-               int len = demuxer_get_time_length(mpctx->demuxer);
+                int len = demuxer_get_time_length(mpctx->demuxer);
                 int pts = demuxer_get_current_time(mpctx->demuxer);
                 set_osd_bar(0, "Position", 0, 100, demuxer_get_percent_pos(mpctx->demuxer));
                 set_osd_msg(OSD_MSG_TEXT, 1, osd_duration,

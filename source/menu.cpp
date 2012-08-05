@@ -312,8 +312,9 @@ static char mplayer_filename[2048];
 static char exited_dir[2048]; /*siz - added: save exit path, for SmartMenu: 20/07/2012 */
 static char exited_dir_array[64][2048]; /*siz - added: save exit path for a specific menu, for SmartMenu: 20/07/2012 */
 static int exited_item[64]; /*siz - added: save exit item, for SmartMenu: 20/07/2012 */
+const char * exited_root = ""; //added 05/08/2012
 static char seek_filename[2048]; /*siz - added: path for playback-resume cache file: 29/07/2012 */
-char * playerSeekTime = ""; /*siz - added: time for playback-resume: 29/07/2012 */ //--------------------------------------------------
+char * playerSeekTime = ""; /*siz - added: time for playback-resume: 29/07/2012 */
 static char * playerStopFile = ""; /*siz - added: file for playback-resume: 29/07/2012 */
 static int playerSeekChoice = 0; /*siz - added: choice for playback-resume: 29/07/2012 */
 
@@ -1292,13 +1293,15 @@ extern "C" void mplayer_osd_draw(int level) {
 	}
 
 	last_level = level;
-
-	UpdatePads();
+	
 	Menu_Frame();
 	mainWindow->Draw();
 	//Menu_Render();
-	for (int i = 0; i < 4; i++) {
-		mainWindow->Update(&userInput[i]);
+	if (level == 3) { /* siz added: this fixes non intended key-presses when osd is not 3 (like when seekbar is present) - 05/08/2012 */
+	UpdatePads();	
+		for (int i = 0; i < 4; i++) {
+			mainWindow->Update(&userInput[i]);
+		}
 	}
 }
 
@@ -1324,7 +1327,7 @@ static void Browser(const char * title, const char * root) {
 	}
 	ResetBrowser();
 	/* siz added: accesses the stored exited path, for SmartMenu, instead of root when entering a menu again 24/07/2012 - Start */
-	if (strlen(exited_dir_array[current_menu]) != 0) {
+	if ((strlen(exited_dir_array[current_menu]) != 0) && (exited_root == root)) {
 		BrowseDevice(exited_dir_array[current_menu], root);
 		gui_browser->ResetState();	
 			if (exited_item[current_menu] >= gui_browser->GetPageSize()) {
@@ -1420,7 +1423,8 @@ static void Browser(const char * title, const char * root) {
 					CleanupPath(mplayer_filename);								
 					CleanupPath(exited_dir); /*siz - added Save exit path, for SmartMenu: 20/07/2012 */		
 					strncpy(exited_dir_array[current_menu], exited_dir, 2048); /*siz - added Save exit path, for SmartMenu: 20/07/2012 */
-					playerStopFile = browserList[browser.selIndex].filename;					
+					playerStopFile = browserList[browser.selIndex].filename;
+					exited_root = root;	//added 05/08/2012				
 					ShutoffRumble();
 					gui_browser->ResetState();		
 					if (file_type(mplayer_filename) == BROWSER_TYPE_ELF) {
@@ -1457,6 +1461,7 @@ static void Browser(const char * title, const char * root) {
 		sprintf(exited_dir, "%s/", browser.dir); 
 		CleanupPath(exited_dir);
 		strncpy(exited_dir_array[current_menu], exited_dir, 2048);	
+		exited_root = root; //added 05/08/2012					
 		/*siz - added Save exit path, for SmartMenu: 20/07/2012 - End */
 		current_menu = MENU_BACK;
 		}

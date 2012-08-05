@@ -47,7 +47,7 @@
 
 #include <debug.h>
 
-
+#include "../mplayer.h"
 //#include <input/input.h>
 
 struct controller_data_s {
@@ -130,7 +130,7 @@ static int getch2_internal(void) {
 
 		get_controller_down(&d_ctrl, i);
 		
-		if(gui_input_use==0){
+		if ((gui_input_use == 0) && (osd_level < 2)) {
 			if (d_ctrl.left)
 				key = KEY_LEFT;
 			if (d_ctrl.right)
