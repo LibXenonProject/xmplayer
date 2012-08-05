@@ -154,12 +154,12 @@ static int getch2_internal(void) {
 			if (d_ctrl.x)
 				key = 'x';
 
-			if (d_ctrl.rb)
+/*			if (d_ctrl.rb)
 				key = 'r';
 			if (d_ctrl.lb)
 				key = 'l';
 
-/*
+
 			if (ctrl[i].left)
 				key = KEY_LEFT;
 			if (ctrl[i].right)
@@ -182,12 +182,12 @@ static int getch2_internal(void) {
 				key = 'b';
 			if (ctrl[i].x)
 				key = 'x';
-
+ */
 			if (ctrl[i].rb)
-				key = 'r';
+				key = 'c';
 			if (ctrl[i].lb)
-				key = 'l';
- */ 
+				key = 'v';
+ 
 			
 			if (ctrl[i].rt>100)
 				key = 'R';

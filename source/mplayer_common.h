@@ -7,4 +7,3 @@
  * so we can use functions and variables from menu.cpp
  */
 extern char * playerSeekTime;
-//extern void mplayer_osd_draw(int level);

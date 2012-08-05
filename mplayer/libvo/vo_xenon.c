@@ -59,7 +59,6 @@
 #include "sub/font_load.h"
 #include "sub/sub.h"
 
-
 void mplayer_osd_close();
 void mplayer_osd_draw(int level);
 void mplayer_osd_open();
