@@ -1,5 +1,5 @@
 This is a fork of xmplayer by Ced2911 (and now the Libxenon team) with my own customizations.
-My customizations, compared to original release, are at the moment (30/07/2012):
+My customizations, compared to original release, are at the moment (05/08/2012):
 
 Initial:
 -Quick fix: Subtitles stays on screen when playing a new video without subs, after exiting a video with subs
@@ -11,7 +11,7 @@ demuxer=avi
 -Added: "Restart" and "Shutdown" buttons 
 -Added: "Subtitle Size" under Settings - Atm you can only change size before starting your first video, after that you need to restart before it takes effect
 This is quite simple really, have 3 different fonts sizes from mplayerhq's site. This is temporary until the subscale can be implemented with subfont.ttf
--Vsync is now enabled by default (disable via Gui)
+-Vsync is now enabled by default (disable via Gui) <--- CHANGED, see 05/08/2012
 
 24/07/2012:
 -Added: A "smart menu" that saves your last selection and path when exiting a menu or playing a video (using y and then exit!)
@@ -38,11 +38,15 @@ This means that the browser will be reset between devices
 Also changed the binds of "r" and "l" to "c" and "v" in input.conf (it didn't seem to detect lowercase l and r)
 -Changed: Osd-button now switches from 1 to 3, this means it only needs 1 press to full osd and not 3 presses
 -Changed: When pressing the pause-button (a) progression will also show
-Bind a in input.conf needs to be pausing_toggle osd_show_progression
+Bind "a" in input.conf needs to be "pausing_toggle osd_show_progression"
+-Removed: Font folder and subtitle size, not needed anymore.
+Without font-folder the subfont.ttf works fine, with font-scale working
+-Added: Support for multiple subtitle languages
+Supported language depends on subcp, slang and font. See mplayer\config
 
 
 TODO:
--Change subtitle paths
+-Get subfont-outline to work
 -Fix bug: The D-pad is very buggy after playing a video, every 2nd time you go out and in a menu it won't respond, but the A and B buttons work fine
--Add support for more subtitle languages
 -Make the mplayer's menu working functions available in the main osd, so it no longer will be needed
+-Get mplayer to seek through large files (>2gb)

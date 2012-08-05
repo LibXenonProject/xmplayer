@@ -1594,14 +1594,6 @@ static void HomePage() {
 	home_list_v->Remove(home_shutdown_btn); /*siz - added Shutdown: 15/07/2012 */
 	mainWindow->Remove(home_curitem);
 }
-/*siz - added file_exists: used in Subtitles Size 17/07/2012 - Start */
-
-//Paths to subtitles
-char *sub_spath = "uda0:/mplayer/font/18font.desc";
-char *sub_npath = "uda0:/mplayer/font/24font.desc";
-char *sub_bpath = "uda0:/mplayer/font/28font.desc";
-char *sub_dpath = "uda0:/mplayer/font/font.desc";
-/*siz - added file_exists: used in Subtitles Size 17/07/2012 - End */
 
 //SETTINGS MENU
 static int XMPSettings() {
@@ -1614,7 +1606,6 @@ static int XMPSettings() {
 
 	sprintf(options.name[i++], "Exit Action");
 	sprintf(options.name[i++], "Language");
-        sprintf(options.name[i++], "Subtitle Size"); /*siz - added subtitle size: 14/07/2012 */
 	options.length = i;
 
 	for (i = 0; i < options.length; i++)
@@ -1671,13 +1662,6 @@ static int XMPSettings() {
 					XMPlayerCfg.language = 0;
 
 				break;
-			/*siz - added subtitle size: 14/07/2012 - Start */
-			case 2: 
-				XMPlayerCfg.subtitle_size++;
-				if (XMPlayerCfg.subtitle_size >= SUB_LENGTH)
-					XMPlayerCfg.subtitle_size = 0;
-				break;
-			/*siz - added subtitle size: 14/07/2012 - End */
 		}
 
 		if (ret >= 0 || firstRun) {
@@ -1698,34 +1682,6 @@ static int XMPSettings() {
 					LoadLanguage((char*) fr_lang, fr_lang_size);
 					break;
 			}
-			/*siz - added subtitle size: 17/07/2012 - Start */
-			switch (XMPlayerCfg.subtitle_size) {
-				case SUB_SMALL:{ 
-				sprintf(options.value[2], "Small"); 
-					if ((file_exists(sub_spath)) && (file_exists(sub_npath))) {
-					rename(sub_dpath, sub_bpath);
-					rename(sub_spath, sub_dpath);
-				    	}
-					break;
-				}
-				case SUB_NORMAL: {
-				sprintf(options.value[2], "Normal");					
-					if ((file_exists(sub_npath)) && (file_exists(sub_bpath))) {
-					rename(sub_dpath, sub_spath);
-					rename(sub_npath, sub_dpath);
-					}
-					break;
-				}
-				case SUB_BIG: {
-				sprintf(options.value[2], "Big");
-					if ((file_exists(sub_bpath)) && (file_exists(sub_spath))) {
-					rename(sub_dpath, sub_npath);
-					rename(sub_bpath, sub_dpath);
-					}
-					break;
-				}
-			}
-			/*siz - added subtitle size: 17/07/2012 - End */
 
 			optionBrowser.TriggerUpdate();
 		}
