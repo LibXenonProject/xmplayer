@@ -1188,7 +1188,7 @@ extern "C" void mplayer_osd_close() {
 		mainWindow->Remove(video_osd_infobar);
 
 		mainWindow->Remove(osd_options_window);
-
+		mainWindow->Remove(osd_options_subtitle_window); /* siz added: It was appended without being removed, causing Dpad to be buggy after a video had been played - 06/08/2012 */
 		// reapply bg
 		mainWindow->Append(bgImg);
 	}
@@ -1393,7 +1393,6 @@ static void Browser(const char * title, const char * root) {
 		} else {
 			browser_up_icon->SetVisible(false);
 		}
-//		if (browser.pageIndex + browser.selIndex + 3 < browser.numEntries) {
 		if ((browser.numEntries > 9) && (browser.selIndex + 3 < browser.numEntries)) { //siz changed it
 			browser_down_icon->SetVisible(true);
 		} else {

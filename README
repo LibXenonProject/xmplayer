@@ -1,5 +1,5 @@
 This is a fork of xmplayer by Ced2911 (and now the Libxenon team) with my own customizations.
-My customizations, compared to original release, are at the moment (05/08/2012):
+My customizations, compared to original release, are at the moment (06/08/2012):
 
 Initial:
 -Quick fix: Subtitles stays on screen when playing a new video without subs, after exiting a video with subs
@@ -39,14 +39,15 @@ Also changed the binds of "r" and "l" to "c" and "v" in input.conf (it didn't se
 -Changed: Osd-button now switches from 1 to 3, this means it only needs 1 press to full osd and not 3 presses
 -Changed: When pressing the pause-button (a) progression will also show
 Bind "a" in input.conf needs to be "pausing_toggle osd_show_progression"
--Removed: Font folder and subtitle size, not needed anymore.
+-Removed: Font folder and subtitle size, not needed anymore
 Without font-folder the subfont.ttf works fine, with font-scale working
 -Added: Support for multiple subtitle languages
 Supported language depends on subcp, slang and font. See mplayer\config
 
+06/08/2012:
+-Fixed:The D-pad being buggy after a video has been played, every 2nd time you go out and in a menu it won't respond, but the A and B buttons work fine
 
 TODO:
--Get subfont-outline to work
--Fix bug: The D-pad is very buggy after playing a video, every 2nd time you go out and in a menu it won't respond, but the A and B buttons work fine
 -Make the mplayer's menu working functions available in the main osd, so it no longer will be needed
+-Get subfont-outline to work
 -Get mplayer to seek through large files (>2gb)
