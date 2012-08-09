@@ -114,6 +114,8 @@
 #include "../build/button_p_seek_png.h" //siz
 #include "../build/button_p_seek_select_png.h" //siz
 #include "../build/p_seek_bg_png.h" //siz
+#include "../build/osd_options_browser_btn_png.h" //siz
+#include "../build/osd_options_browser_bg_png.h" //siz
 
 #include "../build/video_info_bg_png.h"
 
@@ -122,6 +124,7 @@
 #include "filebrowser.h"
 
 #include "mplayer_func.h"
+#include "mplayer_common.h"
 #include "folder_video_icon_png.h"
 
 #define _(x)	gettext(x)
@@ -170,6 +173,8 @@ static GuiText * video_osd_infobar_text_filename = NULL;
 static GuiText * video_osd_infobar_text_trackinfo = NULL;
 static GuiText * video_osd_infobar_text_resolution = NULL;
 static GuiText * video_osd_infobar_text_bitrate = NULL;
+static GuiText * video_osd_infobar_text_a_codec = NULL;
+static GuiText * video_osd_infobar_text_a_bitrate = NULL;
 
 static GuiImage * video_osd_play = NULL;
 static GuiImage * video_osd_pause = NULL;
@@ -244,14 +249,6 @@ static GuiText * home_restart_txt = NULL; /*siz - added Restart: 15/07/2012 */
 static GuiText * home_shutdown_txt = NULL; /*siz - added Shutdown: 15/07/2012 */
 
 /**
- * Not used yet
- **/
-static GuiImage * decoration_state = NULL;
-static GuiImage * decoration_keyicon = NULL;
-static GuiImage * decoration_keyicon_ex = NULL;
-static GuiImage * decoration_wrongkeyicon = NULL;
-
-/**
  * Osd option menu
  **/
 static GuiTab * osd_options_window = NULL;
@@ -298,15 +295,20 @@ static GuiButton * osd_options_menu_subtitle_btn = NULL;
 static GuiButton * osd_options_menu_zoomin_btn = NULL;
 static GuiButton * osd_options_menu_zoomout_btn = NULL;
 
-/**
- * Osd option subtitles
- */
-static GuiImageData * osd_options_bg_entry = NULL;
+//osd subtitle options
 static GuiWindow * osd_options_subtitle_window = NULL;
 static GuiOptionBrowser * osd_options_subtitle = NULL;
 static OptionList subtitle_option_list;
-
+//osd audio options
+static GuiWindow * osd_options_audio_window = NULL;
+static GuiOptionBrowser * osd_options_audio = NULL;
 static OptionList audio_option_list;
+//osd video options
+static GuiWindow * osd_options_video_window = NULL;
+static GuiOptionBrowser * osd_options_video = NULL;
+static OptionList video_option_list;
+
+static GuiText * osd_options_headline = NULL;
 
 static char mplayer_filename[2048];
 static char exited_dir[2048]; /*siz - added: save exit path, for SmartMenu: 20/07/2012 */
@@ -330,12 +332,12 @@ static void update() {
 		mainWindow->Update(&userInput[i]);
 	}
 }
-
 /**
  * Callback for osd option bar
  **/
 static int osd_display_info = 0;
 static int osd_display_option_audio = 0;
+static int osd_display_option_video = 0;
 static int osd_display_option_subtitle = 0;
 
 static void osd_option_default_callback(void * data) {
@@ -349,7 +351,7 @@ static void osd_option_default_callback(void * data) {
 static void osd_options_pan_callback(void * data) {
 	GuiButton *button = (GuiButton *) data;
 	if (button->GetState() == STATE_CLICKED) {
-		playerSwitchFullscreen();
+		osd_display_option_video = !osd_display_option_video;
 		button->ResetState();
 		button->SetState(STATE_SELECTED);
 	}
@@ -394,8 +396,7 @@ static void osd_options_info_callback(void * data) {
 static void osd_options_audio_callback(void * data) {
 	GuiButton *button = (GuiButton *) data;
 	if (button->GetState() == STATE_CLICKED) {
-		playerSwitchAudio();
-		//osd_display_option_audio = 1; 
+		osd_display_option_audio = !osd_display_option_audio;
 		button->ResetState();
 		button->SetState(STATE_SELECTED);
 	}
@@ -404,48 +405,33 @@ static void osd_options_audio_callback(void * data) {
 static void osd_options_sub_callback(void * data) {
 	GuiButton *button = (GuiButton *) data;
 	if (button->GetState() == STATE_CLICKED) {
-		playerSwitchSubtitle();
-		//		osd_display_option_subtitle = 1;
-		//		osd_options_subtitle_window->SetVisible(true);
-		//		osd_options_subtitle_window->SetFocus(1);
+		osd_display_option_subtitle = !osd_display_option_subtitle;
 		button->ResetState();
-		button->SetState(STATE_SELECTED);
+		//button->SetState(STATE_SELECTED);
 	}
 }
-
 /**
  * Load ressources
  **/
 static void loadHomeRessources() {
-
-	//	<image image="image/home_left.png" x="0" y="0" w="522" h="720" bg="1"/>
-	//	<image image="image/home_main_function_frame_bg.png" x="0" y="341" w="1280" h="148" bg="1"/>
 	home_left = new GuiImage(new GuiImageData(home_left_png));
-	home_main_function_frame_bg = new GuiImage(new GuiImageData(home_main_function_frame_bg_png));
 
+	home_main_function_frame_bg = new GuiImage(new GuiImageData(home_main_function_frame_bg_png));
 	home_main_function_frame_bg->SetPosition(0, 341);
 
-	// <wgt_mlist name="VERT_MLIST" image="" x="305" y="140" w="200" h="440" fontsize="26" duration="250" motion_type="decrease" textcolor="0xffffff" align="hcenter" direction="vert" itemcount="4" extra_index="3" extra_len="0"/>
 	home_list_v = new GuiList(200, 440);
-
 	home_list_v->SetPosition(290, 140);
 	home_list_v->SetCount(4);
 	home_list_v->SetCenter(3);
-
-
 	home_list_v->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 
-	// <wgt_mlist name="HORI_MLIST" x="560" y="360" w="465" h="110" fontsize="20" duration="250" motion_type="decrease" textcolor="0xffffff" align="hcenter" direction="hori" itemcount="3"/>
 	home_list_h = new GuiList(465, 110, 'H');
-
 	home_list_h->SetPosition(560, 360);
 	home_list_h->SetCount(3);
 	home_list_h->SetCenter(2);
-
 	home_list_h_selector = new GuiImage(new GuiImageData(home_horizontal_select_bar_png));
 	home_list_h_selector->SetPosition(715, 350);
 
-	// <text text="@@curitem" x="550" y="610" w="650" h="40" align="right" fontsize="32" textcolor="0xffffff"/>
 	home_curitem = new GuiText("@@curitem", 32, 0xffffffff);
 	home_curitem->SetPosition(550, 610);
 	home_curitem->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
@@ -508,10 +494,6 @@ static void loadBrowserRessources() {
 
 	browser_selector = new GuiImageData(browser_list_btn_png);
 
-	//	<item id="headline" x="100" y="44" w="300" h="40" align="left"/>
-	//	<item id="subheadline" x="100" y="70" w="300" h="30" fontsize="24" align="left"/>
-	//	<item id="pagecounter" x="980" y="54" w="200" h="26" fontsize="24" align="right" textcolor="0xffffff"/>
-
 	browser_pagecounter = new GuiText("@@pagecounter", 24, 0xFFFFFFFF);
 	browser_pagecounter->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	browser_pagecounter->SetPosition(980, 54);
@@ -529,10 +511,7 @@ static void loadBrowserRessources() {
 
 	browser_up_icon = new GuiImage(new GuiImageData(browser_list_arrow_up_png));
 	browser_down_icon = new GuiImage(new GuiImageData(browser_list_arrow_down_png));
-	;
 
-	// <image image="@@moreprev" x="150" y="650" w="19" h="13"/>
-	// <image image="@@morenext" x="1111" y="650" w="19" h="13"/>
 	browser_up_icon->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	browser_down_icon->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	browser_up_icon->SetPosition(120, 650);
@@ -552,8 +531,6 @@ static void loadBrowserRessources() {
 	browser_files_icon[BROWSER_TYPE_ELF] = new GuiImageData(browser_elf_icon_f_png);
 	browser_files_icon[BROWSER_TYPE_NAND] = new GuiImageData(browser_file_icon_f_png);
 
-	//	browser_file_icon = browser_video_icon;
-
 	gui_browser = new GuiFileBrowser(980, 500, browser_selector, browser_folder_icon, browser_files_icon);
 	gui_browser->SetPosition(150, 131);
 	gui_browser->SetFontSize(20);
@@ -566,49 +543,45 @@ static void loadOsdRessources() { // OSD
 	video_osd_progress_bar_back = new GuiImage(new GuiImageData(video_control_time_played_line_bg_png));
 	video_osd_bg = new GuiImage(new GuiImageData(video_control_frame_bg_png));
 
-	//<text text="@@info_filename" x="264" y="621" w="644" h="24" fontsize="22" textcolor="0xffffff" speed="1" delay="2" align="left" auto_translate="1"/>
-	//<text text="@@info_cur_time" x="943" y="625" w="80" h="20" fontsize="18" textcolor="0xffffff" align="left"/>
-	//<text text="@@info_duration" x="1023" y="625" w="95" h="20" fontsize="18" textcolor="0x0096fa" align="left"/>
-
-	//<image x="202" y="613" w="40" h="40" image="@@speed_state"/>
-	//<image image="@@play_state" x="202" y="613" w="40" h="40"/>
-
 	video_osd_info_filename = new GuiText("@@info_filename", 22, 0xffffffff);
 	video_osd_info_cur_time = new GuiText("@@info_cur_time", 18, 0xffffffff);
 	video_osd_info_duration = new GuiText("@@info_duration", 18, 0xfffa9600);
 
 	/** video infobar **/
-	video_osd_infobar_text_filename = new GuiText("Filename", 22, 0xffffffff);
-	video_osd_infobar_text_trackinfo = new GuiText("Codec", 22, 0xffffffff);
-	video_osd_infobar_text_resolution = new GuiText("Resolution", 22, 0xffffffff);
-	video_osd_infobar_text_bitrate = new GuiText("Bitrate", 22, 0xffffffff);
+	video_osd_infobar_text_filename = new GuiText("Filename", 20, 0xffffffff);
+	video_osd_infobar_text_trackinfo = new GuiText("Video Codec", 20, 0xffffffff);
+	video_osd_infobar_text_resolution = new GuiText("Resolution", 20, 0xffffffff);
+	video_osd_infobar_text_bitrate = new GuiText("Video Bitrate", 20, 0xffffffff);
+	video_osd_infobar_text_a_codec = new GuiText("Audio Codec", 20, 0xffffffff);
+	video_osd_infobar_text_a_bitrate = new GuiText("Audio Bitrate", 20, 0xffffffff);
 
 	video_osd_infobar_bg = new GuiImage(new GuiImageData(video_info_bg_png));
-
 	video_osd_infobar_bg->SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);
-	//video_osd_infobar_bg->SetPosition(68,240);
-
 
 	video_osd_infobar = new GuiWindow(1144, 240);
-	//video_osd_infobar->SetPosition(110, 350);
 	video_osd_infobar->SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);
 
 	video_osd_infobar->Append(video_osd_infobar_bg);
-
 	video_osd_infobar->Append(video_osd_infobar_text_filename);
 	video_osd_infobar->Append(video_osd_infobar_text_trackinfo);
 	video_osd_infobar->Append(video_osd_infobar_text_resolution);
 	video_osd_infobar->Append(video_osd_infobar_text_bitrate);
+	video_osd_infobar->Append(video_osd_infobar_text_a_codec);
+	video_osd_infobar->Append(video_osd_infobar_text_a_bitrate);
 
 	video_osd_infobar_text_filename->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	video_osd_infobar_text_trackinfo->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	video_osd_infobar_text_resolution->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	video_osd_infobar_text_bitrate->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+	video_osd_infobar_text_a_codec->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+	video_osd_infobar_text_a_bitrate->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 
 	video_osd_infobar_text_filename->SetPosition(20, 20);
-	video_osd_infobar_text_trackinfo->SetPosition(20, 50);
-	video_osd_infobar_text_resolution->SetPosition(20, 80);
+	video_osd_infobar_text_resolution->SetPosition(20, 50);
+	video_osd_infobar_text_trackinfo->SetPosition(20, 80);
 	video_osd_infobar_text_bitrate->SetPosition(20, 110);
+	video_osd_infobar_text_a_codec->SetPosition(20, 140);
+	video_osd_infobar_text_a_bitrate->SetPosition(20, 170);
 
 	/** play state **/
 	video_osd_play = new GuiImage(new GuiImageData(video_control_play_btn_png));
@@ -619,19 +592,11 @@ static void loadOsdRessources() { // OSD
 	video_osd_rewind = new GuiImage(new GuiImageData(video_control_rewind_btn_png));
 	video_osd_forward = new GuiImage(new GuiImageData(video_control_fastforward_btn_png));
 
-
 	/** a ranger **/
-	// <image image="image/video_control_frame_bg.png" x="149" y="597" w="983" h="73" disable="@@progress_disable" bg="1"/>
 	video_osd_bg->SetPosition(149, 597);
 
-	// <progress_bar name="video_time_bar" x="262" y="652" w="858" h="4" pb_back_img="image/video_control_time_played_line_bg.png" pb_front_img="image/Video_Player_time_played_line_n_01.png" pb_point_img="image/slideshow_player_time_played_line_mark.png" pb_delay="500" disable="@@progress_disable"/>
 	video_osd_progress_bar_front->SetPosition(262, 652);
-	//video_osd_progress_bar_back->SetPosition(262,652);
 	video_osd_progress_bar_back->SetPosition(262, 652);
-
-	//<text text="@@info_filename" x="264" y="621" w="644" h="24" fontsize="22" textcolor="0xffffff" speed="1" delay="2" align="left" auto_translate="1"/>
-	//<text text="@@info_cur_time" x="943" y="625" w="80" h="20" fontsize="18" textcolor="0xffffff" align="left"/>
-	//<text text="@@info_duration" x="1023" y="625" w="95" h="20" fontsize="18" textcolor="0x0096fa" align="left"/>
 
 	video_osd_info_filename->SetPosition(264, 621);
 	video_osd_info_cur_time->SetPosition(943, 625);
@@ -639,13 +604,10 @@ static void loadOsdRessources() { // OSD
 
 	video_osd_info_filename->SetMaxWidth(644);
 	video_osd_info_filename->SetScroll(SCROLL_HORIZONTAL);
-	//
+	
 	video_osd_info_filename->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	video_osd_info_cur_time->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	video_osd_info_duration->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
-
-	//<image x="202" y="613" w="40" h="40" image="@@speed_state"/>
-	//<image image="@@play_state" x="202" y="613" w="40" h="40"/>
 
 	video_osd_play->SetPosition(202, 613);
 	video_osd_pause->SetPosition(202, 613);
@@ -655,10 +617,7 @@ static void loadOsdRessources() { // OSD
 	video_osd_rewind->SetPosition(202, 613);
 	video_osd_forward->SetPosition(202, 613);
 
-
 	/** osd level 3**/
-	// <table x="435" y="30" h="50" w="410" cols="7" align="hcenter" disable="@@disable-options_bg">
-	//osd_options_window = new GuiTab(520, 91);
 	osd_options_window = new GuiTab(340, 50);
 	osd_options_window->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	osd_options_window->SetPosition(480, 30);
@@ -666,8 +625,6 @@ static void loadOsdRessources() { // OSD
 	osd_options_window->setRow(1);
 	osd_options_window->setCol(5);
 
-
-	// <image image="image/slideshow_options_menu_bg_x7.png" x="410" y="0" w="460" h="91" bg="1" disable="@@disable-options_bg"/>
 	osd_options_bg_x5 = new GuiImage(new GuiImageData(options_menu_bg_x5_png));
 	osd_options_bg_x6 = new GuiImage(new GuiImageData(options_menu_bg_x6_png));
 	osd_options_bg_x7 = new GuiImage(new GuiImageData(options_menu_bg_x7_png));
@@ -786,55 +743,114 @@ static void loadOsdRessources() { // OSD
 	//	osd_options_menu_subtitle_btn->SetLabelOver(btn_subtitle_text);
 	//	osd_options_menu_next_btn->SetLabelOver(btn_return_text);
 
+	//Order of the options window icons, left to right
 	//osd_options_window->SetBackground(osd_options_bg_x7);
 	osd_options_window->SetBackground(osd_options_bg_x5);
-	osd_options_window->Append(osd_options_menu_audio_channel_btn);
+	osd_options_window->Append(osd_options_menu_audio_channel_btn); //audio menu
+	osd_options_window->Append(osd_options_menu_pan_btn); //video menu
+	osd_options_window->Append(osd_options_menu_subtitle_btn); //subtitle menu
 	osd_options_window->Append(osd_options_menu_info_btn);
-	osd_options_window->Append(osd_options_menu_pan_btn);
-	osd_options_window->Append(osd_options_menu_subtitle_btn);
 	osd_options_window->Append(osd_options_menu_next_btn);
 	//	osd_options_window->Append(osd_options_menu_repeat_btn);
 	//	osd_options_window->Append(osd_options_menu_zoomin_btn);
 	//	osd_options_window->Append(osd_options_menu_zoomout_btn);
 
-	osd_options_menu_audio_channel_btn->SetFocus(1);
+	//osd_options_menu_audio_channel_btn->SetFocus(1);
 
 	// position
 	for (u32 i = 1; i < osd_options_window->GetSize(); i++) {
 		osd_options_window->GetGuiElementAt(i)->SetTrigger(trigA);
 	}
-
-
+ 	
 	/**
 	 * Osd Subtiles window
 	 */
 	int i = 0;
-	sprintf(subtitle_option_list.name[i++], "Subtitles");
-	sprintf(subtitle_option_list.name[i++], "Visibility");
-	sprintf(subtitle_option_list.name[i++], "Position");
-	sprintf(subtitle_option_list.name[i++], "Delay");
-	sprintf(subtitle_option_list.name[i++], "Scale");
+	sprintf(subtitle_option_list.name[i++], "Subtitle:");
+	sprintf(subtitle_option_list.name[i++], "Visibility:");
+	sprintf(subtitle_option_list.name[i++], "Position:");
+	sprintf(subtitle_option_list.name[i++], "Delay:");
+	sprintf(subtitle_option_list.name[i++], "Scale:");
+	sprintf(subtitle_option_list.name[i++], "BACK");
 	subtitle_option_list.length = i;
 
 	for (i = 0; i < subtitle_option_list.length; i++)
 		subtitle_option_list.value[i][0] = 0;
 
-	osd_options_subtitle_window = new GuiWindow(1142, 240);
-	osd_options_subtitle = new GuiOptionBrowser(1122, 220, new GuiImageData(browser_list_btn_png), &subtitle_option_list);
-	osd_options_subtitle->SetPosition(20, 20);
-
+	osd_options_subtitle_window = new GuiWindow(405, 280);
+	osd_options_subtitle = new GuiOptionBrowser(400, 275, new GuiImageData(osd_options_browser_btn_png), &subtitle_option_list);
+	osd_options_subtitle->SetPosition(0, 40);
+	osd_options_subtitle->SetCol2Position(150);	
 	osd_options_subtitle_window->SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);
-
-
-	osd_options_subtitle_window->Append(new GuiImage(new GuiImageData(video_info_bg_png)));
+	
+	osd_options_subtitle_window->Append(new GuiImage(new GuiImageData(osd_options_browser_bg_png)));
 	osd_options_subtitle_window->Append(osd_options_subtitle);
+	/**
+	 * Osd Audio window
+	 */
+	int d = 0;
+	sprintf(audio_option_list.name[d++], "SWITCH SOURCE");
+	sprintf(audio_option_list.name[d++], "Volume:");
+	sprintf(audio_option_list.name[d++], "Balance:");
+	sprintf(audio_option_list.name[d++], "Mute:");
+	sprintf(audio_option_list.name[d++], "Delay:");
+	sprintf(audio_option_list.name[d++], "BACK");
+	audio_option_list.length = d;
+
+	for (d = 0; d < audio_option_list.length; d++)
+		audio_option_list.value[d][0] = 0;
+
+	osd_options_audio_window = new GuiWindow(405, 280);
+	osd_options_audio = new GuiOptionBrowser(400, 275, new GuiImageData(osd_options_browser_btn_png), &audio_option_list);
+	osd_options_audio->SetPosition(0, 40);
+	osd_options_audio->SetCol2Position(150);	
+	osd_options_audio_window->SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);
+	
+	osd_options_audio_window->Append(new GuiImage(new GuiImageData(osd_options_browser_bg_png)));
+	osd_options_audio_window->Append(osd_options_audio);
+	/**
+	 * Osd Audio window
+	 */
+	int g = 0;
+	sprintf(video_option_list.name[g++], "Fullscreen:");
+	sprintf(video_option_list.name[g++], "Frame Drop:");
+	sprintf(video_option_list.name[g++], "Vsync:");
+	sprintf(video_option_list.name[g++], "BACK");
+	video_option_list.length = g;
+
+	for (g = 0; g < video_option_list.length; g++)
+		video_option_list.value[g][0] = 0;
+
+	osd_options_video_window = new GuiWindow(405, 280);
+	osd_options_video = new GuiOptionBrowser(400, 275, new GuiImageData(osd_options_browser_btn_png), &video_option_list);
+	osd_options_video->SetPosition(0, 40);
+	osd_options_video->SetCol2Position(150);	
+	osd_options_video_window->SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);
+	
+	osd_options_video_window->Append(new GuiImage(new GuiImageData(osd_options_browser_bg_png)));
+	osd_options_video_window->Append(osd_options_video);
+
+	//Headline for Osd Options
+	osd_options_headline = new GuiText("@@osdheadline", 24, 0xfffa9600);
+	osd_options_headline->SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);
+	osd_options_headline->SetPosition(0, -120);
+	osd_options_headline->SetEffectGrow();
 }
-
-
+//Mplayer's subtitle variables
 extern "C" int sub_pos;
 extern "C" int sub_visibility;
 extern "C" float sub_delay;
-
+extern "C" float text_font_scale_factor;
+extern "C" int force_load_font;
+//Mplayer's audio variables
+extern "C" float audio_delay;
+//Mplayer's video variables
+extern "C" int vo_fs; 
+extern "C" int vo_vsync;
+extern "C" int frame_dropping;
+//D-Pad direction for OSD Settings
+extern int osd_pad_right; //from gui_optionbrowser.cpp
+extern int osd_pad_left; //from gui_optionbrowser.cpp
 /****************************************************************************
  * WindowPrompt
  *
@@ -847,8 +863,6 @@ int WindowPrompt(const char *title, const char *msg, const char *btn1Label, cons
 	GuiWindow promptWindow(448, 288);
 	promptWindow.SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);
 	promptWindow.SetPosition(0, -10);
-	//	GuiSound btnSoundOver(button_over_pcm, button_over_pcm_size, SOUND_PCM);
-	//	GuiSound btnSoundClick(button_click_pcm, button_click_pcm_size, SOUND_PCM);
 	GuiImageData btnOutline(button_blue_png);
 	GuiImageData btnOutlineOver(button_green_png);
 
@@ -886,8 +900,6 @@ int WindowPrompt(const char *title, const char *msg, const char *btn1Label, cons
 	btn1.SetLabel(&btn1Txt);
 	btn1.SetImage(&btn1Img);
 	btn1.SetImageOver(&btn1ImgOver);
-	//	btn1.SetSoundOver(&btnSoundOver);
-	//	btn1.SetSoundClick(&btnSoundClick);
 	btn1.SetTrigger(trigA);
 	btn1.SetState(STATE_SELECTED);
 	btn1.SetEffectGrow();
@@ -903,8 +915,6 @@ int WindowPrompt(const char *title, const char *msg, const char *btn1Label, cons
 	btn2.SetLabel(&btn2Txt);
 	btn2.SetImage(&btn2Img);
 	btn2.SetImageOver(&btn2ImgOver);
-	//	btn2.SetSoundOver(&btnSoundOver);
-	//	btn2.SetSoundClick(&btnSoundClick);
 	btn2.SetTrigger(trigA);
 	btn2.SetEffectGrow();
 
@@ -1103,14 +1113,20 @@ extern "C" void mplayer_osd_open() {
 		sprintf(tmpbuff, "%s %s", _("Filename:"), playetGetMetaData(META_NAME));
 		video_osd_infobar_text_filename->SetText(tmpbuff);
 
-		sprintf(tmpbuff, "%s %s", _("Codec:"), playetGetMetaData(META_VIDEO_CODEC));
-		video_osd_infobar_text_trackinfo->SetText(tmpbuff);
-
 		sprintf(tmpbuff, "%s %s", _("Resolution:"), playetGetMetaData(META_VIDEO_RESOLUTION));
 		video_osd_infobar_text_resolution->SetText(tmpbuff);
 
-		sprintf(tmpbuff, "%s %s", _("Bitrate:"), playetGetMetaData(META_VIDEO_BITRATE));
+		sprintf(tmpbuff, "%s %s", _("Video Codec:"), playetGetMetaData(META_VIDEO_CODEC));
+		video_osd_infobar_text_trackinfo->SetText(tmpbuff);
+
+		sprintf(tmpbuff, "%s %s", _("Video Bitrate:"), playetGetMetaData(META_VIDEO_BITRATE));
 		video_osd_infobar_text_bitrate->SetText(tmpbuff);
+		
+		sprintf(tmpbuff, "%s %s", _("Audio Codec:"), playetGetMetaData(META_AUDIO_CODEC));
+		video_osd_infobar_text_a_codec->SetText(tmpbuff);
+
+		sprintf(tmpbuff, "%s %s", _("Audio Bitrate:"), playetGetMetaData(META_AUDIO_BITRATE));
+		video_osd_infobar_text_a_bitrate->SetText(tmpbuff);
 
 		video_osd_infobar->SetVisible(false);
 
@@ -1131,10 +1147,8 @@ extern "C" void mplayer_osd_open() {
 		mainWindow->Append(video_osd_info_cur_time);
 		mainWindow->Append(video_osd_info_duration);
 
-		//
 		mainWindow->Append(video_osd_infobar);
 
-		//
 		mainWindow->Append(video_osd_play);
 		mainWindow->Append(video_osd_pause);
 		mainWindow->Append(video_osd_stop);
@@ -1143,11 +1157,11 @@ extern "C" void mplayer_osd_open() {
 		mainWindow->Append(video_osd_rewind);
 		mainWindow->Append(video_osd_forward);
 
-		//
 		mainWindow->Append(osd_options_window);
-
 		mainWindow->Append(osd_options_subtitle_window);
-		osd_options_subtitle_window->SetVisible(false);
+		mainWindow->Append(osd_options_audio_window);
+		mainWindow->Append(osd_options_video_window);
+		mainWindow->Append(osd_options_headline);
 
 		// remove bg
 		mainWindow->Remove(bgImg);
@@ -1159,8 +1173,239 @@ extern "C" void mplayer_osd_open() {
 	}
 	osd_show = 1;
 	last_level = -1;
+	osd_pad_right = 0;
+	osd_pad_left = 0;
 }
-
+static void osdSubtitlesOptions() {
+bool firstRun = true;
+char *osd_sub_name = "";
+  if ((osd_display_option_audio == 0) && (osd_display_option_video == 0)) { 
+if (osd_display_option_subtitle) {
+	osd_options_window->SetFocus(0);
+	osd_options_headline->SetText("Subtitle Options");
+	osd_options_subtitle_window->SetVisible(true);
+	osd_options_subtitle_window->SetFocus(1);
+	osd_options_subtitle->SetFocus(1);
+	Menu_Frame();
+	UpdatePads();	
+	for (int i = 0; i < 4; i++) {
+		mainWindow->Update(&userInput[i]);
+	}
+	int ret = osd_options_subtitle->GetClickedOption();
+	switch (ret) {
+		case 0: {
+			playerSwitchSubtitle();
+			break;
+		}
+		case 1: {
+			sub_visibility = (sub_visibility == 1) ? 0 : 1;
+			break;
+		}
+		case 5: {
+			osd_display_option_subtitle = 0;
+			osd_options_menu_subtitle_btn->SetState(STATE_SELECTED);
+			break;		
+		}
+	}
+	int het = osd_options_subtitle->GetSelectedOption();
+	if (osd_pad_left == 1) { 
+		switch (het) {
+			case 2: { 
+				sub_pos--;
+				if (sub_pos<0) { sub_pos = 100; }
+				break;
+			}
+			case 3: {
+				sub_delay -= 0.1;
+				break;
+			}
+			case 4: {
+			text_font_scale_factor -= 0.1;
+			if (text_font_scale_factor < 0) { text_font_scale_factor = 100; }
+			force_load_font = 1;
+			break;		
+			}
+		}
+	osd_pad_left = 0;
+	} else if (osd_pad_right == 1) {
+		switch (het) {
+			case 2: { 
+				sub_pos++;
+				if (sub_pos>100) { sub_pos = 0; }
+				break;
+			}
+			case 3: {
+				sub_delay += 0.1;
+				break;
+			}
+			case 4: {
+			text_font_scale_factor += 0.1;
+			if (text_font_scale_factor > 100) { text_font_scale_factor = 0; }
+			force_load_font = 1;
+			break;		
+			}
+		}
+	osd_pad_right = 0;	
+	}
+	if (ret >= 0 || firstRun)  {
+		firstRun = false;
+		osd_sub_name = playerGetSubtitle();
+		sprintf(subtitle_option_list.value[0], osd_sub_name);
+		sprintf(subtitle_option_list.value[1], "%s", sub_visibility == 1 ? "Enabled" : "Disabled");
+		sprintf(subtitle_option_list.value[2], "%d", sub_pos);
+		sprintf(subtitle_option_list.value[3], "%.1f s", sub_delay);
+		sprintf(subtitle_option_list.value[4], "%.2f", text_font_scale_factor);
+		osd_options_subtitle->TriggerUpdate();
+	}
+   } else {
+	osd_options_headline->SetText(NULL); 
+	osd_options_subtitle_window->SetVisible(false);
+	osd_options_subtitle_window->SetFocus(0);
+	osd_options_subtitle->SetFocus(0);
+	osd_options_window->SetFocus(1);
+	}
+   }
+}
+static void osdAudioOptions() {
+bool firstRun = true;
+char *osd_mute = "";
+char *osd_balance = "";
+char *osd_volume = "";
+   if ((osd_display_option_subtitle == 0) && (osd_display_option_video == 0)) {
+if (osd_display_option_audio) {
+	osd_options_window->SetFocus(0);
+	osd_options_headline->SetText("Audio Options");
+	osd_options_audio_window->SetVisible(true);
+	osd_options_audio_window->SetFocus(1);
+	osd_options_audio->SetFocus(1);
+	Menu_Frame();
+	UpdatePads();	
+	for (int i = 0; i < 4; i++) {
+		mainWindow->Update(&userInput[i]);
+	}
+	int ret = osd_options_audio->GetClickedOption();
+	switch (ret) {
+		case 0: {
+			playerSwitchAudio();
+			break;
+		}
+		case 3: {
+			playerSwitchMute();
+			break;	
+		}
+		case 5: {
+			osd_display_option_audio = 0;
+			osd_options_menu_audio_channel_btn->SetState(STATE_SELECTED);
+			break;		
+		}
+	}
+	int het = osd_options_audio->GetSelectedOption();
+	if (osd_pad_left == 1) { 
+		switch (het) {
+			case 1: { 
+				playerSwitchVolume(0);
+				break;
+			}
+			case 2: {
+				playerSwitchBalance(1);
+				break;
+			}
+			case 4: {
+				audio_delay -= 0.1; 
+				break;		
+			}
+		}
+	osd_pad_left = 0;
+	} else if (osd_pad_right == 1) {
+		switch (het) {
+			case 1: { 
+				playerSwitchVolume(1);
+				break;
+			}
+			case 2: {
+				playerSwitchBalance(0);		
+				break;
+			}
+			case 4: {
+				audio_delay += 0.1; 
+				break;		
+			}
+		}
+	osd_pad_right = 0;	
+	}
+	if (ret >= 0 || firstRun)  {
+		firstRun = false;
+		osd_volume = playerGetVolume();
+		osd_balance = playerGetBalance();
+		osd_mute = playerGetMute();
+		sprintf(audio_option_list.value[1], osd_volume);
+		sprintf(audio_option_list.value[2], osd_balance);
+		sprintf(audio_option_list.value[3], osd_mute);
+		sprintf(audio_option_list.value[4], "%.1f s", audio_delay);
+		osd_options_audio->TriggerUpdate();
+	}
+   } else {
+	osd_options_headline->SetText(NULL); 
+	osd_options_audio_window->SetVisible(false);
+	osd_options_audio_window->SetFocus(0);
+	osd_options_audio->SetFocus(0);
+	osd_options_window->SetFocus(1);
+	}
+  }
+}
+static void osdVideoOptions() {
+bool firstRun = true;
+char* osd_framedrop = "";
+   if ((osd_display_option_subtitle == 0) && (osd_display_option_audio == 0)) {
+if (osd_display_option_video) {
+	osd_options_window->SetFocus(0);
+	osd_options_headline->SetText("Video Options");
+	osd_options_video_window->SetVisible(true);
+	osd_options_video_window->SetFocus(1);
+	osd_options_video->SetFocus(1);
+	Menu_Frame();
+	UpdatePads();	
+	for (int i = 0; i < 4; i++) {
+		mainWindow->Update(&userInput[i]);
+	}
+	int ret = osd_options_video->GetClickedOption();
+	switch (ret) {
+		case 0: {
+			playerSwitchFullscreen();
+			break;
+		}
+		case 1: {
+			frame_dropping++;
+			if (frame_dropping > 2) { frame_dropping = 0; }
+			break;
+		}
+		case 2: {
+			vo_vsync = !vo_vsync;
+			break;
+		}
+		case 3: {
+			osd_display_option_video = 0;
+			osd_options_menu_pan_btn->SetState(STATE_SELECTED);
+			break;		
+		}
+	}
+	if (ret >= 0 || firstRun)  {
+		firstRun = false;
+		if (frame_dropping == 2) { osd_framedrop = "Hard"; } else if (frame_dropping == 1) { osd_framedrop = "Enabled"; } else { osd_framedrop = "Disabled"; }
+		sprintf(video_option_list.value[0], "%s", vo_fs == 1 ? "Enabled" : "Disabled");
+		sprintf(video_option_list.value[1], osd_framedrop);
+		sprintf(video_option_list.value[2], "%s", vo_vsync == 1 ? "Enabled" : "Disabled");
+		osd_options_video->TriggerUpdate();
+	}
+   } else {
+	osd_options_headline->SetText(NULL); 
+	osd_options_video_window->SetVisible(false);
+	osd_options_video_window->SetFocus(0);
+	osd_options_video->SetFocus(0);
+	osd_options_window->SetFocus(1);
+	}
+  }
+}
 extern "C" void mplayer_osd_close() {
 	if (osd_show) {
 
@@ -1184,16 +1429,21 @@ extern "C" void mplayer_osd_close() {
 		mainWindow->Remove(video_osd_rewind);
 		mainWindow->Remove(video_osd_forward);
 
-		//
 		mainWindow->Remove(video_osd_infobar);
 
 		mainWindow->Remove(osd_options_window);
-		mainWindow->Remove(osd_options_subtitle_window); /* siz added: It was appended without being removed, causing Dpad to be buggy after a video had been played - 06/08/2012 */
+		mainWindow->Remove(osd_options_subtitle_window);
+		mainWindow->Remove(osd_options_audio_window);
+		mainWindow->Remove(osd_options_video_window);
+		mainWindow->Remove(osd_options_headline);
 		// reapply bg
 		mainWindow->Append(bgImg);
 	}
 	osd_display_info = 0;
 	osd_show = 0;
+	osd_display_option_subtitle = 0;
+	osd_display_option_audio = 0;
+	osd_display_option_video = 0;
 	last_level = -1;
 }
 static void format_time(char * dest, double time) {
@@ -1263,14 +1513,6 @@ extern "C" void mplayer_osd_draw(int level) {
 				break;
 		}
 
-		if (osd_display_option_subtitle) {
-			TR;
-			int ret = osd_options_subtitle->GetClickedOption();
-			switch (ret) {
-
-			}
-		}
-
 		// show file info
 		if (osd_display_info) {
 			if (!video_osd_infobar->IsVisible())
@@ -1287,16 +1529,19 @@ extern "C" void mplayer_osd_draw(int level) {
 			if (osd_options_window->IsVisible())
 				osd_options_window->SetVisible(false);
 			osd_display_info = 0;
+			osd_display_option_subtitle = 0;
+			osd_display_option_audio = 0;
+			osd_display_option_video = 0;
 		}
 	} else {
 		osd_display_info = 0;
 	}
-
-	last_level = level;
-	
+	osdSubtitlesOptions();
+	osdAudioOptions();
+	osdVideoOptions();
+	last_level = level;	
 	Menu_Frame();
 	mainWindow->Draw();
-	//Menu_Render();
 	if (level == 3) { /* siz added: this fixes non intended key-presses when osd is not 3 (like when seekbar is present) - 05/08/2012 */
 	UpdatePads();	
 		for (int i = 0; i < 4; i++) {
@@ -1310,16 +1555,13 @@ static void Browser(const char * title, const char * root) {
 	switch (current_menu) {
 		case BROWSE_AUDIO:
 			browser_folder_icon = browser_music_folder_icon;
-			//browser_file_icon = browser_music_icon;
 			break;
 		case BROWSE_VIDEO:
 			browser_folder_icon = browser_video_folder_icon;
-			//browser_file_icon = browser_video_icon;
 			extValid = extIsValidVideoExt;
 			break;
 		case BROWSE_PICTURE:
 			browser_folder_icon = browser_photo_folder_icon;
-			//browser_file_icon = browser_photo_icon;
 			break;
 		default:
 			extValid = extAlwaysValid;
@@ -1346,17 +1588,14 @@ static void Browser(const char * title, const char * root) {
 	}				
 	/* siz added: accesses the stored exited path, for SmartMenu, instead of root when entering a menu again 24/07/2012 - End */
 
-	//mainWindow->SetAlignment(ALIGN_CENTRE,ALIGN_MIDDLE);
 	mainWindow->Append(gui_browser);
 
 	GuiTrigger trigMenu;
 	trigMenu.SetButtonOnlyTrigger(-1, 0, PAD_BUTTON_B);
 
-	//GuiText menuBtnTxt("B", 18, 0xffffffff);
 	GuiButton menuBtn(20, 20);
 	menuBtn.SetAlignment(ALIGN_LEFT, ALIGN_BOTTOM);
 	menuBtn.SetPosition(50, -35);
-	//menuBtn.SetLabel(&menuBtnTxt);
 	menuBtn.SetTrigger(&trigMenu);
 	menuBtn.SetEffectGrow();
 
@@ -1518,11 +1757,9 @@ static void HomePage() {
 	GuiTrigger trigMenu;
 	trigMenu.SetButtonOnlyTrigger(-1, 0, PAD_BUTTON_A);
 
-	//GuiText menuBtnTxt("A", 18, 0xffffffff);
 	GuiButton menuBtn(20, 20);
 	menuBtn.SetAlignment(ALIGN_LEFT, ALIGN_BOTTOM);
 	menuBtn.SetPosition(50, -35);
-	//menuBtn.SetLabel(&menuBtnTxt);
 	menuBtn.SetTrigger(&trigMenu);
 	menuBtn.SetEffectGrow();
 
@@ -1614,8 +1851,6 @@ static int XMPSettings() {
 	titleTxt.SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	titleTxt.SetPosition(50, 50);
 
-	//	GuiSound btnSoundOver(button_over_pcm, button_over_pcm_size, SOUND_PCM);
-	//	GuiSound btnSoundClick(button_click_pcm, button_click_pcm_size, SOUND_PCM);
 	GuiImageData btnOutline(button_blue_png);
 	GuiImageData btnOutlineOver(button_green_png);
 
@@ -1628,10 +1863,7 @@ static int XMPSettings() {
 	backBtn.SetLabel(&backBtnTxt);
 	backBtn.SetImage(&backBtnImg);
 	backBtn.SetImageOver(&backBtnImgOver);
-	//	backBtn.SetSoundOver(&btnSoundOver);
-	//	backBtn.SetSoundClick(&btnSoundClick);
 	backBtn.SetTrigger(trigA);
-	//backBtn.SetTrigger(trig2);
 	backBtn.SetEffectGrow();
 
 	GuiOptionBrowser optionBrowser(980, 426, new GuiImageData(browser_list_btn_png), &options);
@@ -1709,7 +1941,7 @@ static void do_mplayer(char * filename) {
 			//"-demuxer","mkv",
 			"-menu",
 			"-lavdopts", "skiploopfilter=all:threads=5",
-			"-vsync", //enabled by siz - 16/07/2012
+			//"-vsync", //siz: removed here, but added to mplayer\config, so people can have it off from the start
 			filename,
 		};
 		mplayer_need_init = 0;

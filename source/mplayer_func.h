@@ -47,7 +47,7 @@ extern "C" {
 	int mplayer_main(int argc, char *argv[]);
 
 	// use that to load a new file
-	// mplayer.c
+	// mplayer.cIf the interface file and object file get out of sync for any reason, t
 	void mplayer_load(char * filename);
 
 	// return to gui - doesn't exit mplayer process
@@ -59,19 +59,26 @@ extern "C" {
 	void mplayer_return_to_player();
 	
 	void playerSwitchAudio();
+	void playerSwitchMute();
 	void playerSwitchSubtitle();
-	void playerSwitchFullscreen();
+	void playerSwitchFullscreen(); 
 	void playerSwitchVsync();
+	void playerSwitchBalance(int left); //siz: 1 towards left, 0 towards right
+	void playerSwitchVolume(int up); //siz: 1 turns up, 0 turns down
 	void playerTurnOffSubtitle(); /*siz added: turns off subs before exiting video via osd - 30/07/2012 */
 
+	char* playerGetSubtitle();
+	char* playerGetMute();	
+	char* playerGetBalance();
+	char* playerGetVolume();
+      //  char* playerGetAudioStreams();
 	double playerGetElapsed();
 	double playerGetDuration();
 	const char * playerGetFilename();
 	int playerGetStatus();
 	void playerGuiAsked(char * seekfile); /*siz added: for playback-resume, it gives file to exit func. which saves last postion to file.txt - 29/07/2012 */
-	
-	const char * playetGetMetaData(metadata_t type);
 
+	const char * playetGetMetaData(metadata_t type);
 
 	void mplayer_osd_close();
 	void mplayer_osd_draw(int level);

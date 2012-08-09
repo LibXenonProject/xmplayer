@@ -47,7 +47,9 @@ Supported language depends on subcp, slang and font. See mplayer\config
 06/08/2012:
 -Fixed:The D-pad being buggy after a video has been played, every 2nd time you go out and in a menu it won't respond, but the A and B buttons work fine
 
+09/08/2012:
+-Added: All libmenu's working functions available in the main osd, so libmenu will no longer be needed
+
 TODO:
--Make the mplayer's menu working functions available in the main osd, so it no longer will be needed
 -Get subfont-outline to work
 -Get mplayer to seek through large files (>2gb)

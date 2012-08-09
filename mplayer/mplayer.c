@@ -4125,7 +4125,7 @@ void mplayer_load(char * _filename)
 	mp_input_queue_cmd(mp_input_parse_cmd(playerSeekTime)); /*siz added: for resume-playback function - 31/07/2012 */
 	mp_input_queue_cmd(mp_input_parse_cmd("sub_visibility")); /*siz added: toggle sub visibility back on - 30/07/2012 */
 }
-
+//Player Get functions
 double playerGetElapsed() {
 	return demuxer_get_current_time(mpctx->demuxer);
 }
@@ -4146,6 +4146,79 @@ const char * playetGetMetaData(metadata_t type){
 	return get_metadata(type);
 }
 
+char* playerGetSubtitle() {
+	char* osd_sub = "";
+	if (subdata) {
+	char *sub_name = subdata->filename;
+   	const char *tmp = mp_basename(sub_name);
+            asprintf(&osd_sub, "(%d) %s%s",
+                     mpctx->set_of_sub_pos + 1,
+                     strlen(tmp) < 15 ? "" : "..",
+                     strlen(tmp) < 15 ? tmp : tmp + strlen(tmp) - 14);
+	return osd_sub;
+	free(osd_sub);
+	} else {
+	osd_sub = "Disabled";
+	return osd_sub;
+	}
+}
+
+char* playerGetMute() {
+	char* osd_mute = "";
+	if (mpctx->mixer.muted) {
+	 	osd_mute = "Enabled";
+	} else {
+		osd_mute = "Disabled";
+	}
+return osd_mute;
+}
+
+char* playerGetBalance() {
+	float bal;
+	char* str;
+	mixer_getbalance(&mpctx->mixer, &bal);
+	    if (bal == 0.f) {
+		str = strdup("Center");
+		return str;
+	    } else if (bal == -1.f) {
+		str = strdup("Left only");
+		return str;
+	    } else if (bal == 1.f) {
+		str = strdup("Right only");
+		return str;
+	    } else {
+		unsigned right = (bal + 1.f) / 2.f * 100.f;
+		//str = malloc(sizeof("L: xxx%, R: xxx%"));
+		asprintf(&str, "L: %d%%, R: %d%%", 100 - right, right);
+		return str;
+		free (str);
+	    }
+}
+
+char* playerGetVolume() {
+	char* osd_volume = "";
+	float vol;
+	mixer_getbothvolume(&mpctx->mixer, &vol);
+	asprintf(&osd_volume, "%.2f", (double)vol);
+	return osd_volume;
+	free(osd_volume);
+}
+
+/*char* playerGetAudioStreams() {
+	char* osd_streams = "";
+	demuxer_t *demuxer = mpctx_get_demuxer(mpctx);
+	int audio_strem_size = 0;
+	int i;
+	for (i = 0; i < MAX_A_STREAMS; i++){
+		if (demuxer->a_streams[i]) {
+			audio_strem_size++;
+		}
+	}
+	asprintf(&osd_streams, "%d of %d", audio_id, audio_strem_size);
+	return osd_streams;
+	free(osd_streams);
+}*/
+//Player switch functions
 void playerSwitchAudio(){
 	static int iparam = 1;
 	demuxer_t *demuxer = mpctx_get_demuxer(mpctx);
@@ -4165,17 +4238,17 @@ void playerSwitchAudio(){
 
 void playerSwitchSubtitle(){ 
         // cycle
-        mp_input_queue_cmd(mp_input_parse_cmd("sub_select"));
+        mp_input_queue_cmd(mp_input_parse_cmd("pausing_keep sub_select"));
 }
-void playerTurnOffSubtitle(){ /*siz added: toggle sub visibility off when exiting, see menu.cpp - 30/07/2012 */
-        mp_input_queue_cmd(mp_input_parse_cmd("sub_visibility"));
-}
+
 void playerSwitchFullscreen(){
 	mpctx->video_out->control(VOCTRL_FULLSCREEN,NULL);
 }
+
 void playerSwitchVsync(){
 	vo_vsync = !vo_vsync;
 }
+
 int playerSwitchLoop(){
 	if(mpctx->loop_times<0){
 		// inf
@@ -4186,7 +4259,30 @@ int playerSwitchLoop(){
 		mpctx->loop_times = -1;
 	}
 }
+void playerSwitchMute() {
+ mixer_mute(&mpctx->mixer);
+}
 
+void playerSwitchBalance(int left) {
+	if (left == 1) {
+        mp_input_queue_cmd(mp_input_parse_cmd("pausing_keep balance -0.1"));
+	} else {
+	mp_input_queue_cmd(mp_input_parse_cmd("pausing_keep balance +0.1"));
+	}
+}
+
+void playerSwitchVolume(int up) {
+	if (up == 1) {
+        mp_input_queue_cmd(mp_input_parse_cmd("pausing_keep volume 1"));
+	} else {
+	mp_input_queue_cmd(mp_input_parse_cmd("pausing_keep volume -1"));
+	}
+}
+
+void playerTurnOffSubtitle(){ /*siz added: toggle sub visibility off when exiting, see menu.cpp - 30/07/2012 */
+        mp_input_queue_cmd(mp_input_parse_cmd("sub_visibility"));
+}
+//Exit
 // try to play next file to go to gui, and save last position of file
 void playerGuiAsked(char * seekfile) {	
 	double elapsed = demuxer_get_current_time(mpctx->demuxer);
