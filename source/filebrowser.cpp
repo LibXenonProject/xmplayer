@@ -144,7 +144,7 @@ static char * video_extensions[] = {
 	".mpg", ".mpeg", ".mpeg2", ".ts", ".m2ts",
 	".ogv", ".ogx", ".vp3", ".vp6", ".vp7",
 	".flv", ".264", ".x264", ".h264",
-	".3gp", ".3g2",
+	".3gp", ".3g2", ".rar",
 };
 
 static char * audio_extensions[] = {

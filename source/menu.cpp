@@ -2080,7 +2080,6 @@ int main(int argc, char** argv) {
 			break;
 	}
 	InitFreeType((u8*) font_ttf, font_ttf_size);
-
 	SetupPads();
 	ChangeFontSize(26);
 	common_setup();

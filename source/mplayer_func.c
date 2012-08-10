@@ -27,7 +27,6 @@ void init_mplayer(){
 	sprintf(MPLAYER_DATADIR,"%s:/mplayer",devoptab_list[DEFAULT_DEVICE]->name);
 	sprintf(MPLAYER_CONFDIR,"%s:/mplayer",devoptab_list[DEFAULT_DEVICE]->name);
 	sprintf(MPLAYER_LIBDIR,"%s:/mplayer",devoptab_list[DEFAULT_DEVICE]->name);
-	
 	setenv("HOME",MPLAYER_ENV,1);
 }
 
