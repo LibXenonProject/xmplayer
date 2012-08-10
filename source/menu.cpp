@@ -317,7 +317,6 @@ static int exited_item[64]; /*siz - added: save exit item, for SmartMenu: 20/07/
 const char * exited_root = ""; //added 05/08/2012
 static char seek_filename[2048]; /*siz - added: path for playback-resume cache file: 29/07/2012 */
 char * playerSeekTime = ""; /*siz - added: time for playback-resume: 29/07/2012 */
-static char * playerStopFile = ""; /*siz - added: file for playback-resume: 29/07/2012 */
 static int playerSeekChoice = 0; /*siz - added: choice for playback-resume: 29/07/2012 */
 
 static int last_menu;
@@ -371,7 +370,7 @@ static void osd_options_next_callback(void * data) {
 	if (button->GetState() == STATE_CLICKED) {
 		button->ResetState();
 		playerTurnOffSubtitle(); /*siz added: turns sub_visibility off before quit -> sub doesn't stay on screen on a new video - 30/07/2012 */
-		playerGuiAsked(playerStopFile);/*siz added: for playback-resume, it gives file to exit func. which saves last postion to file.txt - 29/07/2012 */
+		playerGuiAsked();/*siz added: for playback-resume, it gives file to exit func. which saves last postion to file.txt - 29/07/2012 */
 		button->SetState(STATE_SELECTED);
 	}
 }
@@ -1661,7 +1660,6 @@ static void Browser(const char * title, const char * root) {
 					CleanupPath(mplayer_filename);								
 					CleanupPath(exited_dir); /*siz - added Save exit path, for SmartMenu: 20/07/2012 */		
 					strncpy(exited_dir_array[current_menu], exited_dir, 2048); /*siz - added Save exit path, for SmartMenu: 20/07/2012 */
-					playerStopFile = browserList[browser.selIndex].filename;
 					exited_root = root;	//added 05/08/2012				
 					ShutoffRumble();
 					gui_browser->ResetState();		

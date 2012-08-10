@@ -3123,7 +3123,8 @@ play_next_file:
             entry = parse_playlist_file(cmd->args[0].v.s);
             break;
         case MP_CMD_QUIT:
-	     mpctx->eof=1; /*siz - added: 15/07/2012 - exits to XMPlayer Gui without crashing - see: command.c */
+	     playerGuiAsked();
+//	     mpctx->eof=1; /*siz - added: 15/07/2012 - exits to XMPlayer Gui without crashing - see: command.c */
            // exit_player_with_rc(EXIT_QUIT, (cmd->nargs > 0) ? cmd->args[0].v.i : 0);
             break;
         case MP_CMD_VO_FULLSCREEN:
@@ -4284,13 +4285,13 @@ void playerTurnOffSubtitle(){ /*siz added: toggle sub visibility off when exitin
 }
 //Exit
 // try to play next file to go to gui, and save last position of file
-void playerGuiAsked(char * seekfile) {	
+void playerGuiAsked() {	
 	double elapsed = demuxer_get_current_time(mpctx->demuxer);
 	int seconds = elapsed;
         mpctx->eof=1;
 	if (seconds > 60) {	
 	char * file = "";
-	asprintf(&file, "%s/cache/elapsed/%s%s", MPLAYER_CONFDIR, seekfile, ".txt"); /*siz: saves last position */
+	asprintf(&file, "%s/cache/elapsed/%s%s", MPLAYER_CONFDIR, mp_basename(filename), ".txt"); /*siz: saves last position */
 	FILE *fd = fopen(file, "w+");
 	fprintf(fd, "%d", seconds);
 	fclose(fd); 

@@ -47,5 +47,5 @@ extern int stream_dump_type;
 extern char *stream_dump_name;
 
 void update_set_of_subtitles(void);
-
+void playerGuiAsked(); //save exit pos, for mp_cmd_quit in command.c and mplayer.c 
 #endif /* MPLAYER_MPLAYER_H */

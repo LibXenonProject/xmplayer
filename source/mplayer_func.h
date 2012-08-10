@@ -76,7 +76,7 @@ extern "C" {
 	double playerGetDuration();
 	const char * playerGetFilename();
 	int playerGetStatus();
-	void playerGuiAsked(char * seekfile); /*siz added: for playback-resume, it gives file to exit func. which saves last postion to file.txt - 29/07/2012 */
+	void playerGuiAsked(); /*siz added: for playback-resume, it gives file to exit func. which saves last postion to file.txt - 29/07/2012 */
 
 	const char * playetGetMetaData(metadata_t type);
 

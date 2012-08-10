@@ -50,6 +50,9 @@ Supported language depends on subcp, slang and font. See mplayer\config
 09/08/2012:
 -Added: All libmenu's working functions available in the main osd, so libmenu will no longer be needed
 
+10/08/2012:
+-Added: When quiting via libmenu or quit-button (b is binded to quit now), it will now save last position
+
 TODO:
 -Get subfont-outline to work
 -Get mplayer to seek through large files (>2gb)

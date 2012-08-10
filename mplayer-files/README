@@ -1,0 +1,18 @@
+These files are the current configuration files used in mplayer by xmplayer. When xmplayer is compiled
+place these files in root\mplayer\ folder.
+
+-Codecs.conf: is the config for codecs, don't touch!
+-Config: is the user config file, check here to configure startup vsync and sub settings.
+-Input.conf: binds for mplayer, can be changed, but not all mplayers commands are working.
+.Menu.conf: binds for mplayers libmenu, osd now has access to the same settings. A bind
+in input.conf needs to be "toggle menu" to access it.
+-Mplayer.conf: mplayer config file, basically the same as config, but settings in config 
+overshadows these. Don't touch!
+-Subfont.ttf: is the font used for subtitles. Can be changed, but keep backup.
+
+-xmplayer.xml: is the saved settings from the xmplayer settings. 
+
+-Cache folder: cache files for xmplayer, in elapsed folder is where the last position (in seconds) of a file 
+is stored.
+-Fonts folder: some font settings, no need to touch. 
+
