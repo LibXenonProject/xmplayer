@@ -2777,7 +2777,7 @@ int mplayer_main(int argc, char *argv[])
         cfg_read();
     }
 #endif
-	mp_input_queue_cmd(mp_input_parse_cmd(playerSeekTime)); /*siz added: for resume-playback function - 31/07/2012 */
+	mp_input_queue_cmd(mp_input_parse_cmd(playerSeekTime)); //for resume-playback function
     mpctx->playtree = m_config_parse_mp_command_line(mconfig, argc, argv);
     if (mpctx->playtree == NULL) {
         opt_exit = 1;
@@ -3124,7 +3124,7 @@ play_next_file:
             break;
         case MP_CMD_QUIT:
 	     playerGuiAsked();
-//	     mpctx->eof=1; /*siz - added: 15/07/2012 - exits to XMPlayer Gui without crashing - see: command.c */
+//	     mpctx->eof=1; 
            // exit_player_with_rc(EXIT_QUIT, (cmd->nargs > 0) ? cmd->args[0].v.i : 0);
             break;
         case MP_CMD_VO_FULLSCREEN:
@@ -4123,8 +4123,8 @@ goto_next_file:  // don't jump here after ao/vo/getch initialization!
 void mplayer_load(char * _filename) 
 {
 	filename = _filename;
-	mp_input_queue_cmd(mp_input_parse_cmd(playerSeekTime)); /*siz added: for resume-playback function - 31/07/2012 */
-	mp_input_queue_cmd(mp_input_parse_cmd("sub_visibility")); /*siz added: toggle sub visibility back on - 30/07/2012 */
+	mp_input_queue_cmd(mp_input_parse_cmd(playerSeekTime)); 
+	mp_input_queue_cmd(mp_input_parse_cmd("sub_visibility"));
 }
 //Player Get functions
 double playerGetElapsed() {
@@ -4189,7 +4189,6 @@ char* playerGetBalance() {
 		return str;
 	    } else {
 		unsigned right = (bal + 1.f) / 2.f * 100.f;
-		//str = malloc(sizeof("L: xxx%, R: xxx%"));
 		asprintf(&str, "L: %d%%, R: %d%%", 100 - right, right);
 		return str;
 		free (str);
@@ -4280,7 +4279,7 @@ void playerSwitchVolume(int up) {
 	}
 }
 
-void playerTurnOffSubtitle(){ /*siz added: toggle sub visibility off when exiting, see menu.cpp - 30/07/2012 */
+void playerTurnOffSubtitle(){
         mp_input_queue_cmd(mp_input_parse_cmd("sub_visibility"));
 }
 //Exit
@@ -4291,7 +4290,7 @@ void playerGuiAsked() {
         mpctx->eof=1;
 	if (seconds > 60) {	
 	char * file = "";
-	asprintf(&file, "%s/cache/elapsed/%s%s", MPLAYER_CONFDIR, mp_basename(filename), ".txt"); /*siz: saves last position */
+	asprintf(&file, "%s/cache/elapsed/%s%s", MPLAYER_CONFDIR, mp_basename(filename), ".txt"); //saves last position
 	FILE *fd = fopen(file, "w+");
 	fprintf(fd, "%d", seconds);
 	fclose(fd); 

@@ -63,9 +63,9 @@ extern "C" {
 	void playerSwitchSubtitle();
 	void playerSwitchFullscreen(); 
 	void playerSwitchVsync();
-	void playerSwitchBalance(int left); //siz: 1 towards left, 0 towards right
-	void playerSwitchVolume(int up); //siz: 1 turns up, 0 turns down
-	void playerTurnOffSubtitle(); /*siz added: turns off subs before exiting video via osd - 30/07/2012 */
+	void playerSwitchBalance(int left); //1 towards left, 0 towards right (broken)
+	void playerSwitchVolume(int up); //1 turns up, 0 turns down
+	void playerTurnOffSubtitle();
 
 	char* playerGetSubtitle();
 	char* playerGetMute();	
@@ -76,7 +76,7 @@ extern "C" {
 	double playerGetDuration();
 	const char * playerGetFilename();
 	int playerGetStatus();
-	void playerGuiAsked(); /*siz added: for playback-resume, it gives file to exit func. which saves last postion to file.txt - 29/07/2012 */
+	void playerGuiAsked();
 
 	const char * playetGetMetaData(metadata_t type);
 

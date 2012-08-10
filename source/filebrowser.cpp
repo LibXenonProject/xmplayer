@@ -261,7 +261,7 @@ int ParseDirectory() {
 
 		strncpy(browserList[entryNum].filename, "..", MAXJOLIET);
 
-		sprintf(browserList[entryNum].displayname, ".."); /* siz changed: Up One Level to ".." - 19/07/2012 */
+		sprintf(browserList[entryNum].displayname, "..");
 		browserList[entryNum].isdir = 1; // flag this as a dir
 		entryNum++;
 	}

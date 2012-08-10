@@ -14,7 +14,7 @@
 #include <usb/usbmain.h>
 #include <diskio/ata.h>
 #include <xenon_soc/xenon_power.h>
-#include <xenon_smc/xenon_smc.h> /*siz - included to add restart and shutdown buttons: 15/07/2012 */
+#include <xenon_smc/xenon_smc.h> 
 #include <sys/iosupport.h>
 #include <ppc/atomic.h>
 //#include <network/network.h>
@@ -111,11 +111,11 @@
 #include "../build/options_menu_bg_x6_png.h"
 #include "../build/options_menu_bg_x7_png.h"
 
-#include "../build/button_p_seek_png.h" //siz
-#include "../build/button_p_seek_select_png.h" //siz
-#include "../build/p_seek_bg_png.h" //siz
-#include "../build/osd_options_browser_btn_png.h" //siz
-#include "../build/osd_options_browser_bg_png.h" //siz
+#include "../build/button_p_seek_png.h" 
+#include "../build/button_p_seek_select_png.h"
+#include "../build/p_seek_bg_png.h"
+#include "../build/osd_options_browser_btn_png.h"
+#include "../build/osd_options_browser_bg_png.h"
 
 #include "../build/video_info_bg_png.h"
 
@@ -232,8 +232,8 @@ static GuiButton * home_all_btn = NULL;
 static GuiButton * home_music_btn = NULL;
 static GuiButton * home_photo_btn = NULL;
 static GuiButton * home_setting_btn = NULL;
-static GuiButton * home_restart_btn = NULL; /*siz - added Restart: 15/07/2012 */
-static GuiButton * home_shutdown_btn = NULL; /*siz - added Shutdown: 15/07/2012 */
+static GuiButton * home_restart_btn = NULL;
+static GuiButton * home_shutdown_btn = NULL;
 
 static GuiImage * home_video_img = NULL;
 static GuiImage * home_music_img = NULL;
@@ -245,8 +245,8 @@ static GuiText * home_all_txt = NULL;
 static GuiText * home_music_txt = NULL;
 static GuiText * home_photo_txt = NULL;
 static GuiText * home_setting_txt = NULL;
-static GuiText * home_restart_txt = NULL; /*siz - added Restart: 15/07/2012 */
-static GuiText * home_shutdown_txt = NULL; /*siz - added Shutdown: 15/07/2012 */
+static GuiText * home_restart_txt = NULL;
+static GuiText * home_shutdown_txt = NULL;
 
 /**
  * Osd option menu
@@ -311,13 +311,13 @@ static OptionList video_option_list;
 static GuiText * osd_options_headline = NULL;
 
 static char mplayer_filename[2048];
-static char exited_dir[2048]; /*siz - added: save exit path, for SmartMenu: 20/07/2012 */
-static char exited_dir_array[64][2048]; /*siz - added: save exit path for a specific menu, for SmartMenu: 20/07/2012 */
-static int exited_item[64]; /*siz - added: save exit item, for SmartMenu: 20/07/2012 */
-const char * exited_root = ""; //added 05/08/2012
-static char seek_filename[2048]; /*siz - added: path for playback-resume cache file: 29/07/2012 */
-char * playerSeekTime = ""; /*siz - added: time for playback-resume: 29/07/2012 */
-static int playerSeekChoice = 0; /*siz - added: choice for playback-resume: 29/07/2012 */
+static char exited_dir[2048]; 
+static char exited_dir_array[64][2048];
+static int exited_item[64];
+const char * exited_root = ""; 
+static char seek_filename[2048];
+char * playerSeekTime = "";
+static int playerSeekChoice = 0;
 
 static int last_menu;
 
@@ -369,8 +369,8 @@ static void osd_options_next_callback(void * data) {
 	GuiButton *button = (GuiButton *) data;
 	if (button->GetState() == STATE_CLICKED) {
 		button->ResetState();
-		playerTurnOffSubtitle(); /*siz added: turns sub_visibility off before quit -> sub doesn't stay on screen on a new video - 30/07/2012 */
-		playerGuiAsked();/*siz added: for playback-resume, it gives file to exit func. which saves last postion to file.txt - 29/07/2012 */
+		playerTurnOffSubtitle(); //turns off subs, atm if not, subs will be freezed on a video without them
+		playerGuiAsked();//playback resume
 		button->SetState(STATE_SELECTED);
 	}
 }
@@ -452,19 +452,19 @@ static void loadHomeRessources() {
 
 	home_video_txt = new GuiText("Videos", 48, 0xFFFFFFFF);
 	home_all_txt = new GuiText("All", 48, 0xFFFFFFFF);
-	home_music_txt = new GuiText("Music", 48, 0xFFFFFFFF);  // siz edit: Musics to Music
+	home_music_txt = new GuiText("Music", 48, 0xFFFFFFFF);  
 	home_photo_txt = new GuiText("Photos", 48, 0xFFFFFFFF);
 	home_setting_txt = new GuiText("Settings", 48, 0xFFFFFFFF);
-	home_restart_txt = new GuiText("Restart", 48, 0xFFFFFFFF); /*siz - added Restart: 15/07/2012 */
-	home_shutdown_txt = new GuiText("Shutdown", 48, 0xFFFFFFFF); /*siz - added Shutdown: 15/07/2012 */
+	home_restart_txt = new GuiText("Restart", 48, 0xFFFFFFFF);
+	home_shutdown_txt = new GuiText("Shutdown", 48, 0xFFFFFFFF);
 
 	home_video_btn = new GuiButton(home_video_img->GetWidth(), home_video_img->GetHeight());
 	home_all_btn = new GuiButton(home_video_img->GetWidth(), home_video_img->GetHeight());
 	home_music_btn = new GuiButton(home_music_img->GetWidth(), home_music_img->GetHeight());
 	home_photo_btn = new GuiButton(home_photo_img->GetWidth(), home_photo_img->GetHeight());
 	home_setting_btn = new GuiButton(home_setting_img->GetWidth(), home_setting_img->GetHeight());
-	home_restart_btn = new GuiButton(home_setting_img->GetWidth(), home_setting_img->GetHeight()); /*siz - added Restart: 15/07/2012 */
-	home_shutdown_btn = new GuiButton(home_setting_img->GetWidth(), home_setting_img->GetHeight()); /*siz - added Shutdown: 15/07/2012 */
+	home_restart_btn = new GuiButton(home_setting_img->GetWidth(), home_setting_img->GetHeight());
+	home_shutdown_btn = new GuiButton(home_setting_img->GetWidth(), home_setting_img->GetHeight()); 
 
 	//	home_video_btn->SetIcon(home_video_img);
 	//	home_music_btn->SetIcon(home_music_img);
@@ -476,8 +476,8 @@ static void loadHomeRessources() {
 	home_music_btn->SetLabel(home_music_txt);
 	home_photo_btn->SetLabel(home_photo_txt);
 	home_setting_btn->SetLabel(home_setting_txt);
-	home_restart_btn->SetLabel(home_restart_txt); /*siz - added Restart: 15/07/2012 */
-	home_shutdown_btn->SetLabel(home_shutdown_txt); /*siz - added Shutdown: 15/07/2012 */
+	home_restart_btn->SetLabel(home_restart_txt);
+	home_shutdown_btn->SetLabel(home_shutdown_txt);
 }
 
 static void loadBrowserRessources() {
@@ -965,7 +965,6 @@ static char* playerSeekFormatTime(char * dest, double time) {
 	return destfile;
 	free(dest);	
 }
-/* siz added: File exists function - 25/07/2012 */
 bool file_exists(const char * filename) {
    FILE * fd = fopen(filename, "rb");
    if (fd != NULL) {
@@ -974,7 +973,6 @@ bool file_exists(const char * filename) {
    }
    return false;
 }
-/* siz added: PlayerSeekOpen function - 28/07/2012 */
 char * playerSeekOpen(char * file) {
 	char* string = (char*)malloc(7);
 	FILE * fd = fopen(file, "r");	
@@ -985,7 +983,6 @@ char * playerSeekOpen(char * file) {
         fclose(fd);
 	return string;
 }
-/* siz added: Prompts if a file has been played before, and you wish to resume - Start - 25/07/2012 */
 int playerSeekPrompt(char * seekfile) {
 	int choice = -2;
 	char *seektime = playerSeekOpen(seekfile);
@@ -1073,7 +1070,7 @@ int playerSeekPrompt(char * seekfile) {
 	mainWindow->SetState(STATE_DEFAULT);
 	return choice;
 }
-/* siz added: Prompts if a file has been played before, and you wish to resume - End - 25/07/2012 */
+
 /** to do **/
 static void loadRessources() {
 	loadHomeRessources();
@@ -1541,7 +1538,7 @@ extern "C" void mplayer_osd_draw(int level) {
 	last_level = level;	
 	Menu_Frame();
 	mainWindow->Draw();
-	if (level == 3) { /* siz added: this fixes non intended key-presses when osd is not 3 (like when seekbar is present) - 05/08/2012 */
+	if (level == 3) { //this fixes non intended key-presses when osd is not 3 (like when seekbar is present)
 	UpdatePads();	
 		for (int i = 0; i < 4; i++) {
 			mainWindow->Update(&userInput[i]);
@@ -1567,13 +1564,12 @@ static void Browser(const char * title, const char * root) {
 			break;
 	}
 	ResetBrowser();
-	/* siz added: accesses the stored exited path, for SmartMenu, instead of root when entering a menu again 24/07/2012 - Start */
 	if ((strlen(exited_dir_array[current_menu]) != 0) && (exited_root == root)) {
 		BrowseDevice(exited_dir_array[current_menu], root);
 		gui_browser->ResetState();	
 			if (exited_item[current_menu] >= gui_browser->GetPageSize()) {
 			browser.pageIndex = (exited_item[current_menu] + 1 - gui_browser->GetPageSize()); 
-			/* siz comment: filelist is only from 0 to 9 (pagesize is set to 10), so if pageindex is 1, item 1 is now 0 - 24/07/2012  */
+			//filelist is only from 0 to 9 (pagesize is set to 10), so if pageindex is 1, item 1 is now 0
 			gui_browser->fileList[9]->SetState(STATE_SELECTED); 
 		} else {
 		gui_browser->fileList[exited_item[current_menu]]->SetState(STATE_SELECTED);		
@@ -1585,7 +1581,6 @@ static void Browser(const char * title, const char * root) {
 		gui_browser->fileList[0]->SetState(STATE_SELECTED);
 		gui_browser->TriggerUpdate();
 	}				
-	/* siz added: accesses the stored exited path, for SmartMenu, instead of root when entering a menu again 24/07/2012 - End */
 
 	mainWindow->Append(gui_browser);
 
@@ -1631,12 +1626,12 @@ static void Browser(const char * title, const char * root) {
 		} else {
 			browser_up_icon->SetVisible(false);
 		}
-		if ((browser.numEntries > 9) && (browser.selIndex + 3 < browser.numEntries)) { //siz changed it
+		if ((browser.numEntries > 9) && (browser.selIndex + 3 < browser.numEntries)) { 
 			browser_down_icon->SetVisible(true);
 		} else {
 			browser_down_icon->SetVisible(false);
 		}
-	exited_item[current_menu] = browser.selIndex; /*siz - added Save selected item, for SmartMenu: 21/07/2012 */
+	exited_item[current_menu] = browser.selIndex;
 		// update file browser based on arrow xenon_buttons
 		// set MENU_EXIT if A xenon_button pressed on a file
 		for (int i = 0; i < gui_browser->GetPageSize(); i++) {
@@ -1648,26 +1643,25 @@ static void Browser(const char * title, const char * root) {
 						gui_browser->ResetState();
 						gui_browser->fileList[0]->SetState(STATE_SELECTED);
 						gui_browser->TriggerUpdate();
-						sprintf(tmp, "%d/%d", 1, browser.numEntries); /*siz - fixed: not updating sel/num when entering folder 26/07/2012 */
-						browser_pagecounter->SetText(tmp); /*siz - fixed: not updating sel/num when entering folder 26/07/2012 */	
+						sprintf(tmp, "%d/%d", 1, browser.numEntries); 
+						browser_pagecounter->SetText(tmp);
 					} else {
 						break;
 					}
 				} else {
 					sprintf(mplayer_filename, "%s/%s/%s", rootdir, browser.dir, browserList[browser.selIndex].filename);
-					sprintf(exited_dir, "%s/", browser.dir); /*siz - added Save exit path, for SmartMenu: 20/07/2012 */		
+					sprintf(exited_dir, "%s/", browser.dir); 
 					sprintf(seek_filename, "%smplayer/cache/elapsed/%s%s", device_list[0], browserList[browser.selIndex].filename, ".txt");					
 					CleanupPath(mplayer_filename);								
-					CleanupPath(exited_dir); /*siz - added Save exit path, for SmartMenu: 20/07/2012 */		
-					strncpy(exited_dir_array[current_menu], exited_dir, 2048); /*siz - added Save exit path, for SmartMenu: 20/07/2012 */
-					exited_root = root;	//added 05/08/2012				
+					CleanupPath(exited_dir); 
+					strncpy(exited_dir_array[current_menu], exited_dir, 2048);
+					exited_root = root;
 					ShutoffRumble();
 					gui_browser->ResetState();		
 					if (file_type(mplayer_filename) == BROWSER_TYPE_ELF) {
 						current_menu = MENU_ELF;
 					} else {
-					/*siz - added for resume-playback function: 29/07/2012 - Start */	
-						if ((file_exists(seek_filename)) && (playerSeekPrompt(seek_filename) == -1)) { //if B is pressed, everything is reset
+						if ((file_exists(seek_filename)) && (playerSeekPrompt(seek_filename) == -1)) { 
 						gui_browser->fileList[i]->ResetState();
 							if (browser.selIndex > 9) {
 								browser.pageIndex = (browser.selIndex + 1 - gui_browser->GetPageSize()); 
@@ -1676,7 +1670,7 @@ static void Browser(const char * title, const char * root) {
 								gui_browser->fileList[browser.selIndex]->SetState(STATE_SELECTED);
 							}						
 								gui_browser->TriggerUpdate();
-						} else if ((file_exists(seek_filename)) && (playerSeekChoice == 1)) { //if resume is pressed, play from last location
+						} else if ((file_exists(seek_filename)) && (playerSeekChoice == 1)) {
 							char* seek_time = playerSeekOpen(seek_filename);
 							asprintf(&playerSeekTime, "seek %s 2", seek_time);
 							remove(seek_filename);
@@ -1686,19 +1680,16 @@ static void Browser(const char * title, const char * root) {
 							remove(seek_filename);
 							current_menu = MENU_MPLAYER;
 						}
-					/*siz - added for resume-playback function: 29/07/2012 - End */	
 					}
 				}
 			}
 		}
 
 		if (menuBtn.GetState() == STATE_CLICKED) {
-		/*siz - added Save exit path, for SmartMenu: 20/07/2012 - Start */
 		sprintf(exited_dir, "%s/", browser.dir); 
 		CleanupPath(exited_dir);
 		strncpy(exited_dir_array[current_menu], exited_dir, 2048);	
-		exited_root = root; //added 05/08/2012					
-		/*siz - added Save exit path, for SmartMenu: 20/07/2012 - End */
+		exited_root = root;
 		current_menu = MENU_BACK;
 		}
 		update();
@@ -1723,19 +1714,19 @@ static void HomePage() {
 	
 	home_video_txt ->SetText("Videos");
 	home_all_txt ->SetText("All");
-	home_music_txt ->SetText("Music"); // siz edit: Musics to Music
+	home_music_txt ->SetText("Music");
 	home_photo_txt ->SetText("Photos");
 	home_setting_txt ->SetText("Settings");
-	home_restart_txt ->SetText("Restart"); /*siz - added Restart: 15/07/2012 */
-	home_shutdown_txt ->SetText("Shutdown"); /*siz - added Shutdown: 15/07/2012 */
+	home_restart_txt ->SetText("Restart");
+	home_shutdown_txt ->SetText("Shutdown");
 
 	home_list_v->Append(home_all_btn);
 	home_list_v->Append(home_video_btn);
 	home_list_v->Append(home_music_btn);
 	home_list_v->Append(home_photo_btn);
 	home_list_v->Append(home_setting_btn);
-	home_list_v->Append(home_restart_btn); /*siz - added Restart: 15/07/2012 */
-	home_list_v->Append(home_shutdown_btn); /*siz - added Shutdown: 15/07/2012 */
+	home_list_v->Append(home_restart_btn);
+	home_list_v->Append(home_shutdown_btn);
 
 	home_list_v->SetSelected(last_selected_value);
 
@@ -1793,10 +1784,10 @@ static void HomePage() {
 					current_menu = SETTINGS;
 					break;
 				case 5:
-					xenon_smc_power_reboot(); /*siz - added Restart: 15/07/2012 */
+					xenon_smc_power_reboot();
 					break;
 				case 6:
-					xenon_smc_power_shutdown(); /*siz - added Shutdown: 15/07/2012 */
+					xenon_smc_power_shutdown();
 					break;
 				default:
 					WindowPrompt("Warning", "Not implemented yet", "Ok", NULL);
@@ -1939,7 +1930,6 @@ static void do_mplayer(char * filename) {
 			//"-demuxer","mkv",
 			"-menu",
 			"-lavdopts", "skiploopfilter=all:threads=5",
-			//"-vsync", //siz: removed here, but added to mplayer\config, so people can have it off from the start
 			filename,
 		};
 		mplayer_need_init = 0;

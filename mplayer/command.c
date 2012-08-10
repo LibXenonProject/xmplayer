@@ -2742,7 +2742,7 @@ int run_command(MPContext *mpctx, mp_cmd_t *cmd)
 
         case MP_CMD_QUIT:
 	    playerGuiAsked(); 
-	    //mpctx->eof=1; /*siz - added: 15/07/2012 - exits to XMPlayer Gui without crashing - see: mplayer.c */
+	    //mpctx->eof=1; 
             //exit_player_with_rc(EXIT_QUIT,
               //                  (cmd->nargs > 0) ? cmd->args[0].v.i : 0);
 
@@ -2828,7 +2828,7 @@ int run_command(MPContext *mpctx, mp_cmd_t *cmd)
             log_sub();
             break;
 
-        case MP_CMD_OSD:{ /*siz changed: osdlevel jumps between 1 and 3, no need to press 3 times before all shows, this also fixes progression only showing once - 05/08/2012 */
+        case MP_CMD_OSD:{ // osdlevel jumps between 1 and 3
 	osd_level = (osd_level == 3) ? 1 : 3;
             }
             break;
