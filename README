@@ -52,6 +52,8 @@ Supported language depends on subcp, slang and font. See mplayer\config
 
 10/08/2012:
 -Added: When quiting via libmenu or quit-button (b is binded to quit now), it will now save last position
+-Added: Patch from mplayerdev's mailing list which adds support for playing videos inside multivolume uncompressed rar files
+Haven't been tested intensively. 
 
 TODO:
 -Get subfont-outline to work
