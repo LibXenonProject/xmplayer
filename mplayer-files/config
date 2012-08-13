@@ -2,7 +2,7 @@ subpos=90 #subs position on screen
 sub-fuzziness=1 #makes all subs containing the name of the video as selectable
 utf8=yes	
 unicode=yes
-vsync=yes
+vsync=no
 subfont-text-scale=2 #subtitle scale
 subcp=ISO-8859-1
 #-----------------#

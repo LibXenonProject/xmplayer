@@ -1584,17 +1584,26 @@ static void Browser(const char * title, const char * root) {
 
 	mainWindow->Append(gui_browser);
 
-	GuiTrigger trigMenu;
-	trigMenu.SetButtonOnlyTrigger(-1, 0, PAD_BUTTON_B);
+	GuiTrigger bMenu;
+	bMenu.SetButtonOnlyTrigger(-1, 0, PAD_BUTTON_B);
 
-	GuiButton menuBtn(20, 20);
-	menuBtn.SetAlignment(ALIGN_LEFT, ALIGN_BOTTOM);
-	menuBtn.SetPosition(50, -35);
-	menuBtn.SetTrigger(&trigMenu);
-	menuBtn.SetEffectGrow();
+	GuiButton bBtn(20, 20);
+	bBtn.SetAlignment(ALIGN_LEFT, ALIGN_BOTTOM);
+	bBtn.SetPosition(50, -35);
+	bBtn.SetTrigger(&bMenu);
+	bBtn.SetEffectGrow();
 
-	mainWindow->Append(&menuBtn);
+	GuiTrigger backMenu;
+	backMenu.SetButtonOnlyTrigger(-1, 0, PAD_BUTTON_BACK);
 
+	GuiButton backBtn(20, 20);
+	backBtn.SetAlignment(ALIGN_LEFT, ALIGN_BOTTOM);
+	backBtn.SetPosition(10, -35);
+	backBtn.SetTrigger(&backMenu);
+	backBtn.SetEffectGrow();
+
+	mainWindow->Append(&bBtn);
+	mainWindow->Append(&backBtn);
 	browser_headline->SetText(title);
 	browser_subheadline->SetText(rootdir);
 
@@ -1605,7 +1614,7 @@ static void Browser(const char * title, const char * root) {
 
 	mainWindow->Append(browser_up_icon);
 	mainWindow->Append(browser_down_icon);
-
+	
 	last_menu = current_menu;
 
 	int last_sel_item = -1;
@@ -1635,6 +1644,23 @@ static void Browser(const char * title, const char * root) {
 		// update file browser based on arrow xenon_buttons
 		// set MENU_EXIT if A xenon_button pressed on a file
 		for (int i = 0; i < gui_browser->GetPageSize(); i++) {
+		if (bBtn.GetState() == STATE_CLICKED) {
+		    gui_browser->fileList[i]->ResetState();
+		      if (strcmp(browserList[0].filename, "..") == 0) {
+			bBtn.ResetState();
+			// go up one level
+			browser.pageIndex = 0;
+			browser.selIndex = 0;
+			BrowserChangeFolder();
+			gui_browser->ResetState();
+			gui_browser->fileList[0]->SetState(STATE_SELECTED);
+			gui_browser->TriggerUpdate();
+			sprintf(tmp, "%d/%d", 1, browser.numEntries); 
+			browser_pagecounter->SetText(tmp);
+		      } else {
+			goto browser_exit;
+		      }		
+		}		
 			if (gui_browser->fileList[i]->GetState() == STATE_CLICKED) {
 				gui_browser->fileList[i]->ResetState();
 				// check corresponding browser entry
@@ -1684,9 +1710,8 @@ static void Browser(const char * title, const char * root) {
 				}
 			}
 		}
-
-		if (menuBtn.GetState() == STATE_CLICKED) {
-		sprintf(exited_dir, "%s/", browser.dir); 
+		if (backBtn.GetState() == STATE_CLICKED) {
+browser_exit:	sprintf(exited_dir, "%s/", browser.dir); 
 		CleanupPath(exited_dir);
 		strncpy(exited_dir_array[current_menu], exited_dir, 2048);	
 		exited_root = root;
@@ -1703,7 +1728,8 @@ static void Browser(const char * title, const char * root) {
 	mainWindow->Remove(browser_subheadline);
 	mainWindow->Remove(browser_pagecounter);
 	mainWindow->Remove(gui_browser);
-	mainWindow->Remove(&menuBtn);
+	mainWindow->Remove(&bBtn);
+	mainWindow->Remove(&backBtn);
 }
 
 static void HomePage() {

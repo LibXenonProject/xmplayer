@@ -55,6 +55,11 @@ Supported language depends on subcp, slang and font. See mplayer\config
 -Added: Patch from mplayerdev's mailing list which adds support for playing videos inside multivolume uncompressed rar files
 Haven't been tested intensively. 
 
+13/08/2012:
+-Changed: The B-button doesn't exit to homepage any more, it goes one level up, until root then goes to homepage
+-Added: The Back-button goes directly back to homepage
+-Added: [extension.rar] demuxer=lavf in mplayer.conf
+
 TODO:
 -Get subfont-outline to work
 -Get mplayer to seek through large files (>2gb)

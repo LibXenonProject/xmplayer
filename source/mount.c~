@@ -484,7 +484,7 @@ extern int XTAFMount();
 	delay(i);
 }
 
-*/
+
 //
 /**
  * Parse mbr for filesystem
@@ -492,10 +492,10 @@ extern int XTAFMount();
 void mount_all_devices() {
 	FindPartitions(DEVICE_USB);
 	if (xenon_ata_ops.isInserted()) {
-//		if (XTAFMount() == 0) {
+		if (XTAFMount() == 0) {
 			FindPartitions(DEVICE_ATA);
 		}
-//	}
+	}
 	if (xenon_atapi_ops.isInserted()) {
 		FindPartitions(DEVICE_ATAPI);
 	}
