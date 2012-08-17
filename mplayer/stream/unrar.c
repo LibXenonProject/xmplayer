@@ -33,10 +33,10 @@
 #include "libavutil/intreadwrite.h"
 #include "unrar.h"
 #include "mp_msg.h"
-
+//char* rar_arch_filename;
 /***************************************************************************/
 
-#define RAR_HEADER_SIZE 64
+#define RAR_HEADER_SIZE 128
 
 #if !defined(O_BINARY)
     #define O_BINARY 0
@@ -252,7 +252,14 @@ int rar_init(struct rar_archive *rar)
         rar->header_size = i + size; // size of total header (from start to end of this header)
         rar->size_per_part = AV_RL32(buf + i + 0x07); // pack size
         rar->trailing_bytes = rar->filesize - rar->header_size - rar->size_per_part;
-                
+	char* file;
+	  if (strlen(buf + i + 0x20) > 0) {	
+		file = (buf + i + 0x20);
+		rar->extension = strrchr(file, '.'); 
+	} else if (strlen(buf + i + 0x28) > 0) {
+		file = (buf + i + 0x28);
+		rar->extension = strrchr(file, '.'); 
+	}     
     }
 
     // set file basename
@@ -387,3 +394,10 @@ off_t rar_size(struct rar_archive *rar)
     return rar->size;
 }
 
+char* playerGetRarExt (char * filename) {
+    struct rar_archive *rar = rar_open(filename);
+	if (strlen(rar->extension) > 0) {
+		return rar->extension;
+		rar_free(rar);
+	}
+}

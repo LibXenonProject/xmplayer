@@ -58,7 +58,13 @@ Haven't been tested intensively.
 13/08/2012:
 -Changed: The B-button doesn't exit to homepage any more, it goes one level up, until root then goes to homepage
 -Added: The Back-button goes directly back to homepage
--Added: [extension.rar] demuxer=lavf in mplayer.conf
+-Added: [extension.rar] demuxer=lavf in mplayer.conf <-- see 17/08/2012
+
+17/08/2012:
+-Removed: [extension.rar] demuxer=lavf in mplayer.conf
+-Changed: [extension.mp4] demuxer=mov to demuxer=lavf in mplayer.conf, lavf handles .mp4 files better than mov
+-Changed: have disabled libmenu, now that osd menu has the same functions, can cause instability
+-Added: if a .rar file loads, it now gets the extension of the archived file, so the true extension profile is loaded
 
 TODO:
 -Get subfont-outline to work

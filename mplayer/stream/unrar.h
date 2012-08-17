@@ -126,6 +126,7 @@
 
 struct rar_archive {
     char *filename;
+    char *extension;
     unsigned int new_naming_scheme; // 1 = yes, 0 = no
 
     off_t size; // size of the first file in the rar
@@ -146,5 +147,5 @@ void rar_free(struct rar_archive *rar);
 int rar_read(struct rar_archive *rar, void *buf, int count);
 off_t rar_seek(struct rar_archive *rar, off_t offset);
 off_t rar_size(struct rar_archive *rar);
-
+char* playerGetRarExt (char* filename);
 #endif /* MPLAYER_UNRAR_H */

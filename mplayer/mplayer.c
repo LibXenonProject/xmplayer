@@ -129,7 +129,7 @@
 #include "osdep/timer.h"
 #include "../source/mplayer_common.h"
 #include "osdep/osdep_xenon.h"
-
+#include "stream/unrar.h"
 #include "udp_sync.h"
 
 #ifdef CONFIG_X11
@@ -151,6 +151,7 @@ double start_pts   = MP_NOPTS_VALUE;
 char *heartbeat_cmd;
 static int max_framesize;
 int noconsolecontrols;
+
 //**************************************************************************//
 
 // Not all functions in mplayer.c take the context as an argument yet
@@ -927,9 +928,12 @@ static void load_per_extension_config(m_config_t *conf, const char *const file)
 
     /* does filename actually have an extension ? */
     str = strrchr(filename, '.');
-    if (!str)
-        return;
-
+    if (!str) {
+        return;	
+    }	
+    if (strcmp(str, ".rar") == 0) { //checks if filename is a .rar
+	str = playerGetRarExt(filename); //get extension from file inside .rar archive
+    }	
     sprintf(extension, PROFILE_CFG_EXTENSION);
     strncat(extension, ++str, 7);
     p = m_config_get_profile(conf, extension);

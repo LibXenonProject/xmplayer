@@ -1954,7 +1954,7 @@ static void do_mplayer(char * filename) {
 			"mplayer.xenon",
 			//"-really-quiet",
 			//"-demuxer","mkv",
-			"-menu",
+			//"-menu",
 			"-lavdopts", "skiploopfilter=all:threads=5",
 			filename,
 		};
