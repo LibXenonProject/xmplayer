@@ -1566,21 +1566,20 @@ static void Browser(const char * title, const char * root) {
 	ResetBrowser();
 	if ((strlen(exited_dir_array[current_menu]) != 0) && (exited_root == root)) {
 		BrowseDevice(exited_dir_array[current_menu], root);
-		gui_browser->ResetState();	
-			if (exited_item[current_menu] >= gui_browser->GetPageSize()) {
+browser_select:	gui_browser->ResetState();	
+		//filelist is only from 0 to 9 (pagesize is set to 10), so if pageindex is 1, item 1 is now 0
+		  if (exited_item[current_menu] >= gui_browser->GetPageSize()) {
 			browser.pageIndex = (exited_item[current_menu] + 1 - gui_browser->GetPageSize()); 
-			//filelist is only from 0 to 9 (pagesize is set to 10), so if pageindex is 1, item 1 is now 0
 			gui_browser->fileList[9]->SetState(STATE_SELECTED); 
 		} else {
 		gui_browser->fileList[exited_item[current_menu]]->SetState(STATE_SELECTED);		
 		}
-		gui_browser->TriggerUpdate();
 	} else {
 		BrowseDevice("/", root);
 		gui_browser->ResetState();
 		gui_browser->fileList[0]->SetState(STATE_SELECTED);
-		gui_browser->TriggerUpdate();
 	}				
+	gui_browser->TriggerUpdate();
 
 	mainWindow->Append(gui_browser);
 
@@ -1616,14 +1615,13 @@ static void Browser(const char * title, const char * root) {
 	mainWindow->Append(browser_down_icon);
 	
 	last_menu = current_menu;
-
 	int last_sel_item = -1;
 
 	char tmp[256];
 
 	while (current_menu == last_menu) {
 		if (last_sel_item != browser.selIndex) {
-			sprintf(tmp, "%d/%d", browser.selIndex + 1, browser.numEntries);
+browser_counter:	sprintf(tmp, "%d/%d", browser.selIndex + 1, browser.numEntries);
 			browser_pagecounter->SetText(tmp);
 		}
 	
@@ -1644,23 +1642,6 @@ static void Browser(const char * title, const char * root) {
 		// update file browser based on arrow xenon_buttons
 		// set MENU_EXIT if A xenon_button pressed on a file
 		for (int i = 0; i < gui_browser->GetPageSize(); i++) {
-		if (bBtn.GetState() == STATE_CLICKED) {
-		    gui_browser->fileList[i]->ResetState();
-		      if (strcmp(browserList[0].filename, "..") == 0) {
-			bBtn.ResetState();
-			// go up one level
-			browser.pageIndex = 0;
-			browser.selIndex = 0;
-			BrowserChangeFolder();
-			gui_browser->ResetState();
-			gui_browser->fileList[0]->SetState(STATE_SELECTED);
-			gui_browser->TriggerUpdate();
-			sprintf(tmp, "%d/%d", 1, browser.numEntries); 
-			browser_pagecounter->SetText(tmp);
-		      } else {
-			goto browser_exit;
-		      }		
-		}		
 			if (gui_browser->fileList[i]->GetState() == STATE_CLICKED) {
 				gui_browser->fileList[i]->ResetState();
 				// check corresponding browser entry
@@ -1669,8 +1650,7 @@ static void Browser(const char * title, const char * root) {
 						gui_browser->ResetState();
 						gui_browser->fileList[0]->SetState(STATE_SELECTED);
 						gui_browser->TriggerUpdate();
-						sprintf(tmp, "%d/%d", 1, browser.numEntries); 
-						browser_pagecounter->SetText(tmp);
+						goto browser_counter;
 					} else {
 						break;
 					}
@@ -1688,27 +1668,34 @@ static void Browser(const char * title, const char * root) {
 						current_menu = MENU_ELF;
 					} else {
 						if ((file_exists(seek_filename)) && (playerSeekPrompt(seek_filename) == -1)) { 
-						gui_browser->fileList[i]->ResetState();
-							if (browser.selIndex > 9) {
-								browser.pageIndex = (browser.selIndex + 1 - gui_browser->GetPageSize()); 
-								gui_browser->fileList[9]->SetState(STATE_SELECTED);
-							} else {
-								gui_browser->fileList[browser.selIndex]->SetState(STATE_SELECTED);
-							}						
-								gui_browser->TriggerUpdate();
-						} else if ((file_exists(seek_filename)) && (playerSeekChoice == 1)) {
+							goto browser_select;
+						} else {
+						    if ((file_exists(seek_filename)) && (playerSeekChoice == 1)) {
 							char* seek_time = playerSeekOpen(seek_filename);
 							asprintf(&playerSeekTime, "seek %s 2", seek_time);
-							remove(seek_filename);
-							current_menu = MENU_MPLAYER;
-						} else {
+							} else {
 							playerSeekTime = "seek 0 2";
-							remove(seek_filename);
-							current_menu = MENU_MPLAYER;
+							}
+						remove(seek_filename);
+						current_menu = MENU_MPLAYER;	
 						}
+						
 					}
 				}
 			}
+		}
+		if (bBtn.GetState() == STATE_CLICKED) {
+		      if (strcmp(browserList[0].filename, "..") == 0) {
+			bBtn.ResetState();
+			browser.selIndex = 0;
+			BrowserChangeFolder();
+			gui_browser->ResetState();
+			gui_browser->fileList[0]->SetState(STATE_SELECTED);
+			gui_browser->TriggerUpdate();
+			goto browser_counter;
+		      } else {
+			goto browser_exit;
+		      }		
 		}
 		if (backBtn.GetState() == STATE_CLICKED) {
 browser_exit:	sprintf(exited_dir, "%s/", browser.dir); 
@@ -2125,7 +2112,7 @@ int main(int argc, char** argv) {
  */
 extern "C" void mplayer_return_to_gui() {
 	need_gui = 1;
-	
+
 	TR;
 	// always sync
 	Xe_Sync(g_pVideoDevice);
