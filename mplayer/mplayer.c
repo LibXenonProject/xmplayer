@@ -4207,7 +4207,13 @@ char* playerGetVolume() {
 	return osd_volume;
 	free(osd_volume);
 }
-
+int playerGetPause() {
+	if(mpctx->was_paused == 1) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
 /*char* playerGetAudioStreams() {
 	char* osd_streams = "";
 	demuxer_t *demuxer = mpctx_get_demuxer(mpctx);
@@ -4289,6 +4295,7 @@ void playerTurnOffSubtitle(){
 //Exit
 // try to play next file to go to gui, and save last position of file
 void playerGuiAsked() {	
+	osd_level = 1; //remove osd before exit
 	double elapsed = demuxer_get_current_time(mpctx->demuxer);
 	int seconds = elapsed;
         mpctx->eof=1;

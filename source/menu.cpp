@@ -850,6 +850,7 @@ extern "C" int frame_dropping;
 //D-Pad direction for OSD Settings
 extern int osd_pad_right; //from gui_optionbrowser.cpp
 extern int osd_pad_left; //from gui_optionbrowser.cpp
+extern int osd_level; 
 /****************************************************************************
  * WindowPrompt
  *
@@ -1450,6 +1451,13 @@ static void format_time(char * dest, double time) {
 	sprintf(dest, "%d:%02d:%02d", hrmin.quot, hrmin.rem, minsec.rem);
 }
 extern "C" void mplayer_osd_draw(int level) {
+	//Y-osd button used because libmenu is off
+	GuiTrigger osdMenu;
+	osdMenu.SetButtonOnlyTrigger(-1, 0, PAD_BUTTON_Y);
+	GuiButton osdBtn(20, 20);
+	osdBtn.SetTrigger(&osdMenu);
+	osdBtn.SetSelectable(false);
+	mainWindow->Append(&osdBtn);
 	if (osd_show) {
 
 		double duration = playerGetDuration();
@@ -1535,15 +1543,19 @@ extern "C" void mplayer_osd_draw(int level) {
 	osdSubtitlesOptions();
 	osdAudioOptions();
 	osdVideoOptions();
-	last_level = level;	
 	Menu_Frame();
+	last_level = level;	
 	mainWindow->Draw();
 	if (level == 3) { //this fixes non intended key-presses when osd is not 3 (like when seekbar is present)
 	UpdatePads();	
 		for (int i = 0; i < 4; i++) {
 			mainWindow->Update(&userInput[i]);
 		}
+		if ((playerGetPause() == 1) && (osdBtn.GetState() == STATE_CLICKED)) {
+			osd_level = 1;
+		}
 	}
+	mainWindow->Remove(&osdBtn);
 }
 
 static void Browser(const char * title, const char * root) {
@@ -2128,6 +2140,7 @@ extern "C" void mplayer_return_to_gui() {
 
 	TR;
 	gui_loop();
+	
 }
 
 /**

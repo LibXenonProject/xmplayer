@@ -2830,6 +2830,11 @@ int run_command(MPContext *mpctx, mp_cmd_t *cmd)
 
         case MP_CMD_OSD:{ // osdlevel jumps between 1 and 3
 	osd_level = (osd_level == 3) ? 1 : 3;
+		if (mpctx->was_paused) {
+			while (osd_level == 3) { //hack to make the osd be selectable when paused
+			mpctx->video_out->flip_page();
+			}
+		}
             }
             break;
 
