@@ -142,7 +142,7 @@ static void loadXMLSetting(float * var, const char * name) {
 static bool decodePrefsData() {
 	bool result = false;
 
-	xml = mxmlLoadString(NULL,  savebuffer, MXML_TEXT_CALLBACK);
+	xml = mxmlLoadString(NULL, (char*) savebuffer, MXML_TEXT_CALLBACK);
 
 	if (xml) {
 		// check settings version
@@ -190,7 +190,6 @@ static bool decodePrefsData() {
 		mxmlDelete(xml);
 		printf("XMPlayerCfg.language : %d\n",XMPlayerCfg.language);
 	}
-	printf("[cfg] decodePrefsData - xml: %s result: %s\n", (xml)?"true":"false", (result)?"true":"false");
 	return result;
 }
 
