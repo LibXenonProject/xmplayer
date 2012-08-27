@@ -66,6 +66,9 @@ Haven't been tested intensively.
 -Changed: have disabled libmenu, now that osd menu has the same functions, can cause instability
 -Added: if a .rar file loads, it now gets the extension of the archived file, so the true extension profile is loaded
 
+27/07/2012:
+Added: Sort files. By pressing "x" in the file browser, you can order by Name or Date (day/month/year)
+
 TODO:
 -Get subfont-outline to work
 -Get mplayer to seek through large files (>2gb)

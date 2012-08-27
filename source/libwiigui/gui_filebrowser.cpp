@@ -61,6 +61,7 @@ void GuiFileBrowser::SetPageSize(int size) {
 
 	fileList = new GuiButton*[size];
 	fileListText = new GuiText*[size];
+	fileListModDate = new GuiText*[size];
 
 	fileListBg = new GuiImage*[size];
 	fileListFolder = new GuiImage*[size];
@@ -74,7 +75,14 @@ void GuiFileBrowser::SetPageSize(int size) {
 		});
 		fileListText[i]->SetAlignment(ALIGN_LEFT, ALIGN_MIDDLE);
 		fileListText[i]->SetPosition(5, 0);
-		fileListText[i]->SetMaxWidth(this->GetWidth()  - 50);
+		fileListText[i]->SetMaxWidth(800);
+
+		fileListModDate[i] = new GuiText(NULL, font_size, (XeColor) {
+			0xff, 0xff, 0xff, 0xff
+		});
+		fileListModDate[i]->SetAlignment(ALIGN_LEFT, ALIGN_MIDDLE);
+		fileListModDate[i]->SetPosition(850, 0);
+		fileListModDate[i]->SetMaxWidth(150);
 
 		fileListBg[i] = new GuiImage(bgFileSelectionEntry);
 		
@@ -86,7 +94,8 @@ void GuiFileBrowser::SetPageSize(int size) {
 
 		fileList[i] = new GuiButton(this->GetWidth(), bgFileSelectionEntry->GetHeight());
 		fileList[i]->SetParent(this);
-		fileList[i]->SetLabel(fileListText[i]);
+		fileList[i]->SetLabel(fileListText[i], 0);
+		fileList[i]->SetLabel(fileListModDate[i], 1);
 		fileList[i]->SetImageOver(fileListBg[i]);
 		fileList[i]->SetPosition(2, bgFileSelectionEntry->GetHeight() * i );
 		fileList[i]->SetTrigger(trigA);
@@ -112,6 +121,7 @@ GuiFileBrowser::~GuiFileBrowser() {
 
 	for (int i = 0; i < file_pagesize; i++) {
 		delete fileListText[i];
+		delete fileListModDate[i];
 		delete fileList[i];
 		delete fileListBg[i];
 		delete fileListFolder[i];	
@@ -119,6 +129,7 @@ GuiFileBrowser::~GuiFileBrowser() {
 	}
 	
 	delete fileListText;
+	delete fileListModDate;
 	delete fileList;
 	delete fileListBg;
 	delete fileListFolder;
@@ -224,6 +235,7 @@ endNavigation:
 				fileList[i]->SetVisible(true);
 
 				fileListText[i]->SetText(browserList[browser.pageIndex + i].displayname);
+				fileListModDate[i]->SetText(browserList[browser.pageIndex + i].moddate);
 
 				if (browserList[browser.pageIndex + i].isdir) // directory
 				{

@@ -993,6 +993,7 @@ public:
 	GuiButton ** fileList;
 protected:
 	GuiText ** fileListText;
+	GuiText ** fileListModDate;
 	GuiImage ** fileListBg;
 	GuiImage ** fileListFolder;
 	GuiImage ** fileListFile;

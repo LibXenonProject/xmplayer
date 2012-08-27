@@ -16,8 +16,9 @@
 //#include <sys/dir.h>
 #include <malloc.h>
 #include <debug.h>
-
+#include <fcntl.h>
 #include "filebrowser.h"
+#include "mplayer_cfg.h"
 
 BROWSERINFO browser;
 BROWSERENTRY * browserList = NULL; // list of files/folders in browser
@@ -132,8 +133,27 @@ int FileSortCallback(const void *f1, const void *f2) {
 	/* If one is a file and one is a directory the directory is first. */
 	if (((BROWSERENTRY *) f1)->isdir && !(((BROWSERENTRY *) f2)->isdir)) return -1;
 	if (!(((BROWSERENTRY *) f1)->isdir) && ((BROWSERENTRY *) f2)->isdir) return 1;
-
-	return stricmp(((BROWSERENTRY *) f1)->filename, ((BROWSERENTRY *) f2)->filename);
+	//Ascending Name
+	if (XMPlayerCfg.sort_order == 0) {
+		return stricmp(((BROWSERENTRY *) f1)->filename, ((BROWSERENTRY *) f2)->filename);
+	//Descending Name
+	} else if (XMPlayerCfg.sort_order == 1) {
+		return stricmp(((BROWSERENTRY *) f2)->filename, ((BROWSERENTRY *) f1)->filename);
+	//Date Ascending
+	} else if (XMPlayerCfg.sort_order == 2) {
+	if (stricmp(((BROWSERENTRY *) f2)->order_date, ((BROWSERENTRY *) f1)->order_date) == 0) { //if date is the same order by filename
+			return stricmp(((BROWSERENTRY *) f1)->filename, ((BROWSERENTRY *) f2)->filename);
+		} else {
+			return stricmp(((BROWSERENTRY *) f1)->order_date, ((BROWSERENTRY *) f2)->order_date);
+		}
+	//Date Descending
+	} else if (XMPlayerCfg.sort_order == 3) {
+		if (stricmp(((BROWSERENTRY *) f2)->order_date, ((BROWSERENTRY *) f1)->order_date) == 0) { 
+			return stricmp(((BROWSERENTRY *) f1)->filename, ((BROWSERENTRY *) f2)->filename);
+		} else {
+			return stricmp(((BROWSERENTRY *) f2)->order_date, ((BROWSERENTRY *) f1)->order_date);
+		}
+	}
 }
 
 
@@ -219,6 +239,22 @@ int extAlwaysValid(char *ext) {
 
 int (*extValid)(char * ext) = NULL;
 
+static char format_date[20];
+static char* getModifiedDate(char *filename) {
+	struct stat buffer;
+	struct tm* ts;
+	char buf[20];
+	CleanupPath(filename);
+	if (stat(filename, &buffer) == 0) {
+		ts = localtime(&buffer.st_mtime);
+		strftime(buf, 20, "%d/%m/%Y", ts);
+		strftime(format_date, 20, "%Y%m%d", ts);
+		return buf;
+	} else {
+		printf("[filebrowser.cpp] File error, does FS support stat?");
+	}
+}
+
 /***************************************************************************
  * Browse subdirectories
  **************************************************************************/
@@ -227,7 +263,7 @@ int ParseDirectory() {
 	char fulldir[MAXPATHLEN];
 	struct dirent *entry;
 	char * ext = NULL;
-
+	char* file_path = "";
 	if (extValid == NULL)
 		extValid = extAlwaysValid;
 
@@ -284,10 +320,14 @@ int ParseDirectory() {
 
 		strncpy(browserList[entryNum].filename, entry->d_name, MAXJOLIET);
 
+		asprintf(&file_path, "%s/%s", fulldir, entry->d_name);
+		strncpy(browserList[entryNum].moddate, getModifiedDate(file_path), 20);
+		strncpy(browserList[entryNum].order_date, format_date, 20);
+		free(file_path);
 		//
 		ext = strrchr(entry->d_name, '.');
 		if (extValid(ext) || entry->d_type == DT_DIR) {
-
+			
 			if (entry->d_type != DT_DIR)
 				browserList[entryNum].type = file_type(entry->d_name);
 
@@ -295,6 +335,7 @@ int ParseDirectory() {
 
 			if (entry->d_type == DT_DIR)
 				browserList[entryNum].isdir = 1; // flag this as a dir
+
 		} else {
 			continue;
 		}

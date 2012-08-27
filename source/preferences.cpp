@@ -90,6 +90,7 @@ static int preparePrefsData() {
 
 	createXMLSetting("ExitAction", "Exit Action", toStr(XMPlayerCfg.exit_action));
 	createXMLSetting("language", "Language", toStr(XMPlayerCfg.language));
+	createXMLSetting("sort_order", "Sort Order", toStr(XMPlayerCfg.sort_order));
 
 	int datasize = mxmlSaveString(xml, (char *) savebuffer, SAVEBUFFERSIZE, XMLSaveCallback);
 
@@ -140,8 +141,8 @@ static void loadXMLSetting(float * var, const char * name) {
  ***************************************************************************/
 static bool decodePrefsData() {
 	bool result = false;
-	
-	xml = mxmlLoadString(NULL, (char *) savebuffer, MXML_TEXT_CALLBACK);
+
+	xml = mxmlLoadString(NULL,  savebuffer, MXML_TEXT_CALLBACK);
 
 	if (xml) {
 		// check settings version
@@ -184,11 +185,12 @@ static bool decodePrefsData() {
 			// Menu Settings
 			loadXMLSetting(&XMPlayerCfg.exit_action, "ExitAction");
 			loadXMLSetting(&XMPlayerCfg.language, "language");
+			loadXMLSetting(&XMPlayerCfg.sort_order, "sort_order");
 		}
 		mxmlDelete(xml);
-		
 		printf("XMPlayerCfg.language : %d\n",XMPlayerCfg.language);
 	}
+	printf("[cfg] decodePrefsData - xml: %s result: %s\n", (xml)?"true":"false", (result)?"true":"false");
 	return result;
 }
 

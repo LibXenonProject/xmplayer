@@ -295,6 +295,10 @@ static GuiButton * osd_options_menu_subtitle_btn = NULL;
 static GuiButton * osd_options_menu_zoomin_btn = NULL;
 static GuiButton * osd_options_menu_zoomout_btn = NULL;
 
+//browser sorting
+static GuiText * browser_sortText = NULL;
+static GuiImage * browser_sort_up = NULL;
+static GuiImage * browser_sort_down = NULL;
 //osd subtitle options
 static GuiWindow * osd_options_subtitle_window = NULL;
 static GuiOptionBrowser * osd_options_subtitle = NULL;
@@ -406,7 +410,7 @@ static void osd_options_sub_callback(void * data) {
 	if (button->GetState() == STATE_CLICKED) {
 		osd_display_option_subtitle = !osd_display_option_subtitle;
 		button->ResetState();
-		//button->SetState(STATE_SELECTED);
+		button->SetState(STATE_SELECTED);
 	}
 }
 /**
@@ -508,13 +512,26 @@ static void loadBrowserRessources() {
 	browser_headline->SetPosition(100, 40);
 	browser_headline->SetEffectGrow();
 
+	browser_sortText = new GuiText("@@sorttext", 24, 0xFFFFFFFF);
+	browser_sortText->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+	browser_sortText->SetPosition(550, 40);
+	browser_sortText->SetEffectGrow();
+
+	browser_sort_up = new GuiImage(new GuiImageData(browser_list_arrow_up_png));
+	browser_sort_down = new GuiImage(new GuiImageData(browser_list_arrow_down_png));
+
+	browser_sort_up->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+	browser_sort_down->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+	browser_sort_up->SetPosition(710, 45);
+	browser_sort_down->SetPosition(710, 45);
+
 	browser_up_icon = new GuiImage(new GuiImageData(browser_list_arrow_up_png));
 	browser_down_icon = new GuiImage(new GuiImageData(browser_list_arrow_down_png));
 
 	browser_up_icon->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	browser_down_icon->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
-	browser_up_icon->SetPosition(120, 650);
-	browser_down_icon->SetPosition(1141, 650);
+	browser_up_icon->SetPosition(120, 640);
+	browser_down_icon->SetPosition(1141, 640);
 
 	browser_top_bg = new GuiImage(new GuiImageData(browser_top_png));
 	browser_top_bg->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
@@ -533,7 +550,7 @@ static void loadBrowserRessources() {
 	gui_browser = new GuiFileBrowser(980, 500, browser_selector, browser_folder_icon, browser_files_icon);
 	gui_browser->SetPosition(150, 131);
 	gui_browser->SetFontSize(20);
-	gui_browser->SetSelectedFontSize(26);
+	gui_browser->SetSelectedFontSize(24);
 	gui_browser->SetPageSize(10);
 }
 
@@ -1577,8 +1594,8 @@ static void Browser(const char * title, const char * root) {
 	}
 	ResetBrowser();
 	if ((strlen(exited_dir_array[current_menu]) != 0) && (exited_root == root)) {
-		BrowseDevice(exited_dir_array[current_menu], root);
-browser_select:	gui_browser->ResetState();	
+browser_select:	BrowseDevice(exited_dir_array[current_menu], root);
+		gui_browser->ResetState();	
 		//filelist is only from 0 to 9 (pagesize is set to 10), so if pageindex is 1, item 1 is now 0
 		  if (exited_item[current_menu] >= gui_browser->GetPageSize()) {
 			browser.pageIndex = (exited_item[current_menu] + 1 - gui_browser->GetPageSize()); 
@@ -1613,6 +1630,15 @@ browser_select:	gui_browser->ResetState();
 	backBtn.SetTrigger(&backMenu);
 	backBtn.SetEffectGrow();
 
+	GuiTrigger sortMenu;
+	sortMenu.SetButtonOnlyTrigger(-1, 0, PAD_BUTTON_X);
+
+	GuiButton browser_sortBtn(20, 20);
+	browser_sortBtn.SetAlignment(ALIGN_LEFT, ALIGN_BOTTOM);
+	browser_sortBtn.SetPosition(30, -35);
+	browser_sortBtn.SetTrigger(&sortMenu);
+	browser_sortBtn.SetEffectGrow();
+
 	mainWindow->Append(&bBtn);
 	mainWindow->Append(&backBtn);
 	browser_headline->SetText(title);
@@ -1622,10 +1648,32 @@ browser_select:	gui_browser->ResetState();
 	mainWindow->Append(browser_headline);
 	mainWindow->Append(browser_subheadline);
 	mainWindow->Append(browser_pagecounter);
+	mainWindow->Append(&browser_sortBtn);	
+	mainWindow->Append(browser_sortText);	
 
 	mainWindow->Append(browser_up_icon);
 	mainWindow->Append(browser_down_icon);
-	
+
+	mainWindow->Append(browser_sort_up);
+	mainWindow->Append(browser_sort_down);
+
+	if (XMPlayerCfg.sort_order == 0) {
+		browser_sortText->SetText("Sort by: Name");
+		browser_sort_up->SetVisible(true);
+		browser_sort_down->SetVisible(false);
+	} else if (XMPlayerCfg.sort_order == 1) {
+		browser_sortText->SetText("Sort by: Name");
+		browser_sort_down->SetVisible(true);
+		browser_sort_up->SetVisible(false);
+	} else if (XMPlayerCfg.sort_order == 2) {
+		browser_sortText->SetText("Sort by: Date");
+		browser_sort_up->SetVisible(true);
+		browser_sort_down->SetVisible(false);
+	} else if (XMPlayerCfg.sort_order == 3) {
+		browser_sortText->SetText("Sort by: Date");
+		browser_sort_down->SetVisible(true);
+		browser_sort_up->SetVisible(false);
+	}
 	last_menu = current_menu;
 	int last_sel_item = -1;
 
@@ -1696,6 +1744,17 @@ browser_counter:	sprintf(tmp, "%d/%d", browser.selIndex + 1, browser.numEntries)
 				}
 			}
 		}
+		//Sort button selection
+		if (browser_sortBtn.GetState() == STATE_CLICKED) {
+			XMPlayerCfg.sort_order++;
+			if (XMPlayerCfg.sort_order > 3) {
+				XMPlayerCfg.sort_order = 0;
+			} 
+			sprintf(exited_dir, "%s/", browser.dir); 
+			CleanupPath(exited_dir);
+			strncpy(exited_dir_array[current_menu], exited_dir, 2048);
+			goto browser_select;
+		}
 		if (bBtn.GetState() == STATE_CLICKED) {
 		      if (strcmp(browserList[0].filename, "..") == 0) {
 			bBtn.ResetState();
@@ -1729,6 +1788,10 @@ browser_exit:	sprintf(exited_dir, "%s/", browser.dir);
 	mainWindow->Remove(gui_browser);
 	mainWindow->Remove(&bBtn);
 	mainWindow->Remove(&backBtn);
+	mainWindow->Remove(&browser_sortBtn);	
+	mainWindow->Remove(browser_sortText);
+	mainWindow->Remove(browser_sort_up);
+	mainWindow->Remove(browser_sort_down);	
 }
 
 static void HomePage() {
@@ -1892,6 +1955,7 @@ static int XMPSettings() {
 
 	while (menu == SETTINGS) {
 		update();
+
 		ret = optionBrowser.GetClickedOption();
 
 		switch (ret) {
