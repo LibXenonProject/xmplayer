@@ -1231,7 +1231,7 @@ if (osd_display_option_subtitle) {
 				break;
 			}
 			case 3: {
-				sub_delay += 0.1;
+				sub_delay -= 0.1;
 				break;
 			}
 			case 4: {
@@ -1250,7 +1250,7 @@ if (osd_display_option_subtitle) {
 				break;
 			}
 			case 3: {
-				sub_delay -= 0.1;
+				sub_delay += 0.1;
 				break;
 			}
 			case 4: {
@@ -1265,7 +1265,7 @@ if (osd_display_option_subtitle) {
 	if (ret >= 0 || firstRun)  {
 		firstRun = false;
 		osd_sub_name = playerGetSubtitle();
-		osd_subdelay = (sub_delay * -1000);
+		osd_subdelay = (sub_delay * 1000);
 		sprintf(subtitle_option_list.value[0], osd_sub_name);
 		sprintf(subtitle_option_list.value[1], "%s", sub_visibility == 1 ? "Enabled" : "Disabled");
 		sprintf(subtitle_option_list.value[2], "%d", sub_pos);

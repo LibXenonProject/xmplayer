@@ -18576,426 +18576,425 @@ LOAD /usr/local/xenon/lib/gcc/xenon/4.6.1/../../../../xenon/lib/../lib/crtn.o
                 0x0000000080965308      0x54b menu.o
                                         0x581 (size before relaxing)
  *fill*         0x0000000080965853        0x1 00
- .rodata.cst4   0x0000000080965854       0x1c menu.o
- .rodata.cst8   0x0000000080965870        0x8 menu.o
+ .rodata.cst4   0x0000000080965854       0x20 menu.o
+ *fill*         0x0000000080965874        0x4 00
+ .rodata.cst8   0x0000000080965878        0x8 menu.o
  .rodata.str1.8
-                0x0000000080965878       0xe5 preferences.o
+                0x0000000080965880       0xe5 preferences.o
                                         0x165 (size before relaxing)
- *fill*         0x000000008096595d        0x3 00
+ *fill*         0x0000000080965965        0x3 00
  .rodata._ZTS9GuiButton
-                0x0000000080965960        0xb gui_button.o
-                0x0000000080965960                _ZTS9GuiButton
- *fill*         0x000000008096596b        0x1 00
+                0x0000000080965968        0xb gui_button.o
+                0x0000000080965968                _ZTS9GuiButton
+ *fill*         0x0000000080965973        0x1 00
  .rodata._ZTI9GuiButton
-                0x000000008096596c        0xc gui_button.o
-                0x000000008096596c                _ZTI9GuiButton
+                0x0000000080965974        0xc gui_button.o
+                0x0000000080965974                _ZTI9GuiButton
  .rodata._ZTV9GuiButton
-                0x0000000080965978       0x40 gui_button.o
-                0x0000000080965978                _ZTV9GuiButton
+                0x0000000080965980       0x40 gui_button.o
+                0x0000000080965980                _ZTV9GuiButton
  .rodata._ZTS10GuiElement
-                0x00000000809659b8        0xd gui_element.o
-                0x00000000809659b8                _ZTS10GuiElement
- *fill*         0x00000000809659c5        0x3 00
+                0x00000000809659c0        0xd gui_element.o
+                0x00000000809659c0                _ZTS10GuiElement
+ *fill*         0x00000000809659cd        0x3 00
  .rodata._ZTV10GuiElement
-                0x00000000809659c8       0x40 gui_element.o
-                0x00000000809659c8                _ZTV10GuiElement
- .rodata.cst4   0x0000000080965a08        0x8 gui_element.o
+                0x00000000809659d0       0x40 gui_element.o
+                0x00000000809659d0                _ZTV10GuiElement
+ .rodata.cst4   0x0000000080965a10        0x8 gui_element.o
                                          0x10 (size before relaxing)
- .rodata.cst8   0x0000000080965a10        0x8 gui_element.o
+ .rodata.cst8   0x0000000080965a18        0x8 gui_element.o
  .rodata._ZTS14GuiFileBrowser
-                0x0000000080965a18       0x11 gui_filebrowser.o
-                0x0000000080965a18                _ZTS14GuiFileBrowser
- *fill*         0x0000000080965a29        0x3 00
+                0x0000000080965a20       0x11 gui_filebrowser.o
+                0x0000000080965a20                _ZTS14GuiFileBrowser
+ *fill*         0x0000000080965a31        0x3 00
  .rodata._ZTI14GuiFileBrowser
-                0x0000000080965a2c        0xc gui_filebrowser.o
-                0x0000000080965a2c                _ZTI14GuiFileBrowser
+                0x0000000080965a34        0xc gui_filebrowser.o
+                0x0000000080965a34                _ZTI14GuiFileBrowser
  .rodata._ZTV14GuiFileBrowser
-                0x0000000080965a38       0x40 gui_filebrowser.o
-                0x0000000080965a38                _ZTV14GuiFileBrowser
+                0x0000000080965a40       0x40 gui_filebrowser.o
+                0x0000000080965a40                _ZTV14GuiFileBrowser
  .rodata._ZTS8GuiImage
-                0x0000000080965a78        0xa gui_image.o
-                0x0000000080965a78                _ZTS8GuiImage
- *fill*         0x0000000080965a82        0x2 00
+                0x0000000080965a80        0xa gui_image.o
+                0x0000000080965a80                _ZTS8GuiImage
+ *fill*         0x0000000080965a8a        0x2 00
  .rodata._ZTI8GuiImage
-                0x0000000080965a84        0xc gui_image.o
-                0x0000000080965a84                _ZTI8GuiImage
+                0x0000000080965a8c        0xc gui_image.o
+                0x0000000080965a8c                _ZTI8GuiImage
  .rodata._ZTV8GuiImage
-                0x0000000080965a90       0x40 gui_image.o
-                0x0000000080965a90                _ZTV8GuiImage
- .rodata.cst4   0x0000000080965ad0        0x4 gui_image.o
- *fill*         0x0000000080965ad4        0x4 00
+                0x0000000080965a98       0x40 gui_image.o
+                0x0000000080965a98                _ZTV8GuiImage
+ .rodata.cst4   0x0000000080965ad8        0x4 gui_image.o
+ *fill*         0x0000000080965adc        0x4 00
  .rodata._ZTS7GuiList
-                0x0000000080965ad8        0x9 gui_list.o
-                0x0000000080965ad8                _ZTS7GuiList
- *fill*         0x0000000080965ae1        0x3 00
+                0x0000000080965ae0        0x9 gui_list.o
+                0x0000000080965ae0                _ZTS7GuiList
+ *fill*         0x0000000080965ae9        0x3 00
  .rodata._ZTI7GuiList
-                0x0000000080965ae4        0xc gui_list.o
-                0x0000000080965ae4                _ZTI7GuiList
+                0x0000000080965aec        0xc gui_list.o
+                0x0000000080965aec                _ZTI7GuiList
  .rodata._ZTV7GuiList
-                0x0000000080965af0       0x40 gui_list.o
-                0x0000000080965af0                _ZTV7GuiList
+                0x0000000080965af8       0x40 gui_list.o
+                0x0000000080965af8                _ZTV7GuiList
  .rodata.str1.8
-                0x0000000080965b30       0x17 gui_list.o
- *fill*         0x0000000080965b47        0x1 00
+                0x0000000080965b38       0x17 gui_list.o
+ *fill*         0x0000000080965b4f        0x1 00
  .rodata._ZTS16GuiOptionBrowser
-                0x0000000080965b48       0x13 gui_optionbrowser.o
-                0x0000000080965b48                _ZTS16GuiOptionBrowser
- *fill*         0x0000000080965b5b        0x1 00
+                0x0000000080965b50       0x13 gui_optionbrowser.o
+                0x0000000080965b50                _ZTS16GuiOptionBrowser
+ *fill*         0x0000000080965b63        0x1 00
  .rodata._ZTI16GuiOptionBrowser
-                0x0000000080965b5c        0xc gui_optionbrowser.o
-                0x0000000080965b5c                _ZTI16GuiOptionBrowser
+                0x0000000080965b64        0xc gui_optionbrowser.o
+                0x0000000080965b64                _ZTI16GuiOptionBrowser
  .rodata._ZTV16GuiOptionBrowser
-                0x0000000080965b68       0x40 gui_optionbrowser.o
-                0x0000000080965b68                _ZTV16GuiOptionBrowser
+                0x0000000080965b70       0x40 gui_optionbrowser.o
+                0x0000000080965b70                _ZTV16GuiOptionBrowser
  .rodata._ZTV6GuiTab
-                0x0000000080965ba8       0x40 gui_tab.o
-                0x0000000080965ba8                _ZTV6GuiTab
+                0x0000000080965bb0       0x40 gui_tab.o
+                0x0000000080965bb0                _ZTV6GuiTab
  .rodata._ZTI6GuiTab
-                0x0000000080965be8        0xc gui_tab.o
-                0x0000000080965be8                _ZTI6GuiTab
- *fill*         0x0000000080965bf4        0x4 00
+                0x0000000080965bf0        0xc gui_tab.o
+                0x0000000080965bf0                _ZTI6GuiTab
+ *fill*         0x0000000080965bfc        0x4 00
  .rodata._ZTS7GuiText
-                0x0000000080965bf8        0x9 gui_text.o
-                0x0000000080965bf8                _ZTS7GuiText
- *fill*         0x0000000080965c01        0x3 00
+                0x0000000080965c00        0x9 gui_text.o
+                0x0000000080965c00                _ZTS7GuiText
+ *fill*         0x0000000080965c09        0x3 00
  .rodata._ZTI7GuiText
-                0x0000000080965c04        0xc gui_text.o
-                0x0000000080965c04                _ZTI7GuiText
+                0x0000000080965c0c        0xc gui_text.o
+                0x0000000080965c0c                _ZTI7GuiText
  .rodata._ZTV7GuiText
-                0x0000000080965c10       0x40 gui_text.o
-                0x0000000080965c10                _ZTV7GuiText
+                0x0000000080965c18       0x40 gui_text.o
+                0x0000000080965c18                _ZTV7GuiText
  .rodata._ZTS9GuiWindow
-                0x0000000080965c50        0xb gui_window.o
-                0x0000000080965c50                _ZTS9GuiWindow
- *fill*         0x0000000080965c5b        0x1 00
+                0x0000000080965c58        0xb gui_window.o
+                0x0000000080965c58                _ZTS9GuiWindow
+ *fill*         0x0000000080965c63        0x1 00
  .rodata._ZTI9GuiWindow
-                0x0000000080965c5c        0xc gui_window.o
-                0x0000000080965c5c                _ZTI9GuiWindow
+                0x0000000080965c64        0xc gui_window.o
+                0x0000000080965c64                _ZTI9GuiWindow
  .rodata._ZTV9GuiWindow
-                0x0000000080965c68       0x40 gui_window.o
-                0x0000000080965c68                _ZTV9GuiWindow
+                0x0000000080965c70       0x40 gui_window.o
+                0x0000000080965c70                _ZTV9GuiWindow
  .rodata.cst4   0x0000000000000000        0x4 gui_window.o
  .rodata.str1.8
                 0x0000000000000000       0x17 gui_window.o
- .rodata        0x0000000080965ca8       0x9f http_client.o
- *fill*         0x0000000080965d47        0x1 00
+ .rodata        0x0000000080965cb0       0x9f http_client.o
+ *fill*         0x0000000080965d4f        0x1 00
  .rodata.str1.8
-                0x0000000080965d48       0xed http_client.o
+                0x0000000080965d50       0xed http_client.o
                                         0x11d (size before relaxing)
- *fill*         0x0000000080965e35        0x3 00
- .rodata        0x0000000080965e38      0x752 http_parser.o
- *fill*         0x000000008096658a        0x6 00
+ *fill*         0x0000000080965e3d        0x3 00
+ .rodata        0x0000000080965e40      0x752 http_parser.o
+ *fill*         0x0000000080966592        0x6 00
  .rodata.str1.8
-                0x0000000080966590      0x9da http_parser.o
- *fill*         0x0000000080966f6a        0x2 00
- .rodata        0x0000000080966f6c       0x64 iso9660.o
+                0x0000000080966598      0x9da http_parser.o
+ *fill*         0x0000000080966f72        0x2 00
+ .rodata        0x0000000080966f74       0x64 iso9660.o
  .rodata.str1.8
-                0x0000000080966fd0        0xf iso9660.o
+                0x0000000080966fd8        0xf iso9660.o
                                          0x17 (size before relaxing)
- *fill*         0x0000000080966fdf        0x1 00
- .rodata        0x0000000080966fe0       0x13 mount.o
- *fill*         0x0000000080966ff3        0x5 00
+ *fill*         0x0000000080966fe7        0x1 00
+ .rodata        0x0000000080966fe8       0x13 mount.o
+ *fill*         0x0000000080966ffb        0x5 00
  .rodata.str1.8
-                0x0000000080966ff8       0x1c mount.o
- *fill*         0x0000000080967014        0x4 00
+                0x0000000080967000       0x1c mount.o
+ *fill*         0x000000008096701c        0x4 00
  .rodata.str1.8
-                0x0000000080967018        0xc mplayer_func.o
+                0x0000000080967020        0xc mplayer_func.o
                                          0x1d (size before relaxing)
- *fill*         0x0000000080967024        0x4 00
+ *fill*         0x000000008096702c        0x4 00
  .rodata.str1.8
-                0x0000000080967028       0x55 screencapture.o
+                0x0000000080967030       0x55 screencapture.o
                                          0x5d (size before relaxing)
- *fill*         0x000000008096707d        0x3 00
+ *fill*         0x0000000080967085        0x3 00
  .rodata.str1.8
-                0x0000000080967080       0xe3 utils.o
+                0x0000000080967088       0xe3 utils.o
                                          0xf3 (size before relaxing)
- *fill*         0x0000000080967163        0x1 00
- .rodata.cst4   0x0000000080967164        0x8 VecMatrix.o
+ *fill*         0x000000008096716b        0x1 00
+ .rodata.cst4   0x000000008096716c        0x8 VecMatrix.o
                                          0x10 (size before relaxing)
  .rodata.cst4   0x0000000000000000        0x4 VecVector.o
- .rodata        0x000000008096716c      0x378 video.o
-                0x000000008096716c                g_xps_psT
-                0x0000000080967254                g_xps_psC
-                0x00000000809672f8                g_xvs_VSmain
- .rodata.cst4   0x00000000809674e4       0x1c video.o
+ .rodata        0x0000000080967174      0x378 video.o
+                0x0000000080967174                g_xps_psT
+                0x000000008096725c                g_xps_psC
+                0x0000000080967300                g_xvs_VSmain
+ .rodata.cst4   0x00000000809674ec       0x1c video.o
                                          0x28 (size before relaxing)
  .rodata.str1.8
-                0x0000000080967500        0xc video.o
- *fill*         0x000000008096750c        0x4 00
- .rodata        0x0000000080967510     0x4bc8 /home/siz/xmplayer/mplayer//libmplayer.a(mplayer.o)
-                0x0000000080967590                mplayer_opts
-                0x0000000080968cd8                common_opts
-                0x000000008096afd0                tvscan_conf
-                0x000000008096b070                vd_conf
-                0x000000008096b0c0                msgl_config
-                0x000000008096b868                audio_filter_conf
-                0x000000008096b8e0                mfopts_conf
-                0x000000008096b9d0                vivoopts_conf
-                0x000000008096bb38                scaler_filter_conf
-                0x000000008096bc50                tvopts_conf
- .rodata.cst4   0x000000008096c0d8      0x1ac /home/siz/xmplayer/mplayer//libmplayer.a(mplayer.o)
- *fill*         0x000000008096c284        0x4 00
- .rodata.cst8   0x000000008096c288       0x80 /home/siz/xmplayer/mplayer//libmplayer.a(mplayer.o)
+                0x0000000080967508        0xc video.o
+ *fill*         0x0000000080967514        0x4 00
+ .rodata        0x0000000080967518     0x4bc8 /home/siz/xmplayer/mplayer//libmplayer.a(mplayer.o)
+                0x0000000080967598                mplayer_opts
+                0x0000000080968ce0                common_opts
+                0x000000008096afd8                tvscan_conf
+                0x000000008096b078                vd_conf
+                0x000000008096b0c8                msgl_config
+                0x000000008096b870                audio_filter_conf
+                0x000000008096b8e8                mfopts_conf
+                0x000000008096b9d8                vivoopts_conf
+                0x000000008096bb40                scaler_filter_conf
+                0x000000008096bc58                tvopts_conf
+ .rodata.cst4   0x000000008096c0e0      0x1ac /home/siz/xmplayer/mplayer//libmplayer.a(mplayer.o)
+ *fill*         0x000000008096c28c        0x4 00
+ .rodata.cst8   0x000000008096c290       0x80 /home/siz/xmplayer/mplayer//libmplayer.a(mplayer.o)
                                          0x90 (size before relaxing)
  .rodata.str1.8
-                0x000000008096c308     0x4118 /home/siz/xmplayer/mplayer//libmplayer.a(mplayer.o)
+                0x000000008096c310     0x4118 /home/siz/xmplayer/mplayer//libmplayer.a(mplayer.o)
                                        0x4308 (size before relaxing)
  .rodata.str1.8
-                0x0000000080970420      0x176 /home/siz/xmplayer/mplayer//libmplayer.a(parser-mpcmd.o)
+                0x0000000080970428      0x176 /home/siz/xmplayer/mplayer//libmplayer.a(parser-mpcmd.o)
                                         0x1be (size before relaxing)
- *fill*         0x0000000080970596        0x2 00
+ *fill*         0x000000008097059e        0x2 00
  .rodata.str1.8
-                0x0000000080970598     0x17cb /home/siz/xmplayer/mplayer//libmplayer.a(input.o)
+                0x00000000809705a0     0x17cb /home/siz/xmplayer/mplayer//libmplayer.a(input.o)
                                        0x18fb (size before relaxing)
- *fill*         0x0000000080971d63        0x5 00
- .rodata        0x0000000080971d68     0x67d8 /home/siz/xmplayer/mplayer//libmplayer.a(input.o)
- .rodata        0x0000000080978540       0x14 /home/siz/xmplayer/mplayer//libmplayer.a(audio_out.o)
-                0x0000000080978540                audio_out_drivers
- *fill*         0x0000000080978554        0x4 00
+ *fill*         0x0000000080971d6b        0x5 00
+ .rodata        0x0000000080971d70     0x67d8 /home/siz/xmplayer/mplayer//libmplayer.a(input.o)
+ .rodata        0x0000000080978548       0x14 /home/siz/xmplayer/mplayer//libmplayer.a(audio_out.o)
+                0x0000000080978548                audio_out_drivers
+ *fill*         0x000000008097855c        0x4 00
  .rodata.str1.8
-                0x0000000080978558      0x154 /home/siz/xmplayer/mplayer//libmplayer.a(audio_out.o)
+                0x0000000080978560      0x154 /home/siz/xmplayer/mplayer//libmplayer.a(audio_out.o)
                                         0x15c (size before relaxing)
- *fill*         0x00000000809786ac        0x4 00
+ *fill*         0x00000000809786b4        0x4 00
  .rodata.str1.8
-                0x00000000809786b0       0x2e /home/siz/xmplayer/mplayer//libmplayer.a(aspect.o)
+                0x00000000809786b8       0x2e /home/siz/xmplayer/mplayer//libmplayer.a(aspect.o)
  .rodata.cst4   0x0000000000000000        0x4 /home/siz/xmplayer/mplayer//libmplayer.a(aspect.o)
- *fill*         0x00000000809786de        0x2 00
- .rodata        0x00000000809786e0       0x24 /home/siz/xmplayer/mplayer//libmplayer.a(geometry.o)
+ *fill*         0x00000000809786e6        0x2 00
+ .rodata        0x00000000809786e8       0x24 /home/siz/xmplayer/mplayer//libmplayer.a(geometry.o)
  .rodata.cst8   0x0000000000000000        0x8 /home/siz/xmplayer/mplayer//libmplayer.a(geometry.o)
- *fill*         0x0000000080978704        0x4 00
+ *fill*         0x000000008097870c        0x4 00
  .rodata.str1.8
-                0x0000000080978708      0x1c9 /home/siz/xmplayer/mplayer//libmplayer.a(geometry.o)
- *fill*         0x00000000809788d1        0x3 00
- .rodata        0x00000000809788d4       0x3c /home/siz/xmplayer/mplayer//libmplayer.a(video_out.o)
-                0x00000000809788d4                video_out_drivers
+                0x0000000080978710      0x1c9 /home/siz/xmplayer/mplayer//libmplayer.a(geometry.o)
+ *fill*         0x00000000809788d9        0x3 00
+ .rodata        0x00000000809788dc       0x3c /home/siz/xmplayer/mplayer//libmplayer.a(video_out.o)
+                0x00000000809788dc                video_out_drivers
  .rodata.str1.8
-                0x0000000080978910       0xec /home/siz/xmplayer/mplayer//libmplayer.a(video_out.o)
+                0x0000000080978918       0xec /home/siz/xmplayer/mplayer//libmplayer.a(video_out.o)
                                          0xfc (size before relaxing)
- .rodata        0x00000000809789fc       0x38 /home/siz/xmplayer/mplayer//libmplayer.a(vo_mpegpes.o)
-                0x00000000809789fc                video_out_mpegpes
- *fill*         0x0000000080978a34        0x4 00
+ .rodata        0x0000000080978a04       0x38 /home/siz/xmplayer/mplayer//libmplayer.a(vo_mpegpes.o)
+                0x0000000080978a04                video_out_mpegpes
+ *fill*         0x0000000080978a3c        0x4 00
  .rodata.str1.8
-                0x0000000080978a38       0x58 /home/siz/xmplayer/mplayer//libmplayer.a(vo_mpegpes.o)
+                0x0000000080978a40       0x58 /home/siz/xmplayer/mplayer//libmplayer.a(vo_mpegpes.o)
                                          0x61 (size before relaxing)
- .rodata        0x0000000080978a90       0x38 /home/siz/xmplayer/mplayer//libmplayer.a(vo_null.o)
-                0x0000000080978a90                video_out_null
+ .rodata        0x0000000080978a98       0x38 /home/siz/xmplayer/mplayer//libmplayer.a(vo_null.o)
+                0x0000000080978a98                video_out_null
  .rodata.str1.8
-                0x0000000080978ac8       0x73 /home/siz/xmplayer/mplayer//libmplayer.a(vo_null.o)
+                0x0000000080978ad0       0x73 /home/siz/xmplayer/mplayer//libmplayer.a(vo_null.o)
                                          0x79 (size before relaxing)
- *fill*         0x0000000080978b3b        0x1 00
- .rodata        0x0000000080978b3c       0x88 /home/siz/xmplayer/mplayer//libmplayer.a(vo_png.o)
-                0x0000000080978b8c                video_out_png
- *fill*         0x0000000080978bc4        0x4 00
+ *fill*         0x0000000080978b43        0x1 00
+ .rodata        0x0000000080978b44       0x88 /home/siz/xmplayer/mplayer//libmplayer.a(vo_png.o)
+                0x0000000080978b94                video_out_png
+ *fill*         0x0000000080978bcc        0x4 00
  .rodata.str1.8
-                0x0000000080978bc8      0x30a /home/siz/xmplayer/mplayer//libmplayer.a(vo_png.o)
+                0x0000000080978bd0      0x30a /home/siz/xmplayer/mplayer//libmplayer.a(vo_png.o)
                                         0x33a (size before relaxing)
- *fill*         0x0000000080978ed2        0x2 00
- .rodata        0x0000000080978ed4       0x20 /home/siz/xmplayer/mplayer//libmplayer.a(menu.o)
-                0x0000000080978ed4                menu_info_list
- *fill*         0x0000000080978ef4        0x4 00
+ *fill*         0x0000000080978eda        0x2 00
+ .rodata        0x0000000080978edc       0x20 /home/siz/xmplayer/mplayer//libmplayer.a(menu.o)
+                0x0000000080978edc                menu_info_list
+ *fill*         0x0000000080978efc        0x4 00
  .rodata.str1.8
-                0x0000000080978ef8      0x216 /home/siz/xmplayer/mplayer//libmplayer.a(menu.o)
+                0x0000000080978f00      0x216 /home/siz/xmplayer/mplayer//libmplayer.a(menu.o)
                                         0x22e (size before relaxing)
- *fill*         0x000000008097910e        0x2 00
- .rodata        0x0000000080979110      0x2e8 /home/siz/xmplayer/mplayer//libmplayer.a(menu_chapsel.o)
-                0x000000008097912c                menu_info_chapsel
+ *fill*         0x0000000080979116        0x2 00
+ .rodata        0x0000000080979118      0x2e8 /home/siz/xmplayer/mplayer//libmplayer.a(menu_chapsel.o)
+                0x0000000080979134                menu_info_chapsel
  .rodata.str1.8
-                0x00000000809793f8      0x136 /home/siz/xmplayer/mplayer//libmplayer.a(menu_chapsel.o)
+                0x0000000080979400      0x136 /home/siz/xmplayer/mplayer//libmplayer.a(menu_chapsel.o)
                                         0x16e (size before relaxing)
- *fill*         0x000000008097952e        0x2 00
- .rodata        0x0000000080979530      0x280 /home/siz/xmplayer/mplayer//libmplayer.a(menu_cmdlist.o)
-                0x0000000080979530                menu_info_cmdlist
+ *fill*         0x0000000080979536        0x2 00
+ .rodata        0x0000000080979538      0x280 /home/siz/xmplayer/mplayer//libmplayer.a(menu_cmdlist.o)
+                0x0000000080979538                menu_info_cmdlist
  .rodata.str1.8
-                0x00000000809797b0       0xdc /home/siz/xmplayer/mplayer//libmplayer.a(menu_cmdlist.o)
+                0x00000000809797b8       0xdc /home/siz/xmplayer/mplayer//libmplayer.a(menu_cmdlist.o)
                                         0x1be (size before relaxing)
- *fill*         0x000000008097988c        0x4 00
- .rodata        0x0000000080979890      0x230 /home/siz/xmplayer/mplayer//libmplayer.a(menu_console.o)
-                0x0000000080979890                menu_info_console
+ *fill*         0x0000000080979894        0x4 00
+ .rodata        0x0000000080979898      0x230 /home/siz/xmplayer/mplayer//libmplayer.a(menu_console.o)
+                0x0000000080979898                menu_info_console
  .rodata.str1.8
-                0x0000000080979ac0      0x152 /home/siz/xmplayer/mplayer//libmplayer.a(menu_console.o)
+                0x0000000080979ac8      0x152 /home/siz/xmplayer/mplayer//libmplayer.a(menu_console.o)
                                         0x192 (size before relaxing)
- *fill*         0x0000000080979c12        0x6 00
+ *fill*         0x0000000080979c1a        0x6 00
  .rodata.str1.8
-                0x0000000080979c18      0x160 /home/siz/xmplayer/mplayer//libmplayer.a(menu_filesel.o)
+                0x0000000080979c20      0x160 /home/siz/xmplayer/mplayer//libmplayer.a(menu_filesel.o)
                                         0x247 (size before relaxing)
- .rodata        0x0000000080979d78      0x348 /home/siz/xmplayer/mplayer//libmplayer.a(menu_filesel.o)
-                0x0000000080979d78                menu_info_filesel
- .rodata        0x000000008097a0c0       0x30 /home/siz/xmplayer/mplayer//libmplayer.a(menu_list.o)
- .rodata        0x000000008097a0f0      0x2e8 /home/siz/xmplayer/mplayer//libmplayer.a(menu_param.o)
-                0x000000008097a108                menu_info_pref
+ .rodata        0x0000000080979d80      0x348 /home/siz/xmplayer/mplayer//libmplayer.a(menu_filesel.o)
+                0x0000000080979d80                menu_info_filesel
+ .rodata        0x000000008097a0c8       0x30 /home/siz/xmplayer/mplayer//libmplayer.a(menu_list.o)
+ .rodata        0x000000008097a0f8      0x2e8 /home/siz/xmplayer/mplayer//libmplayer.a(menu_param.o)
+                0x000000008097a110                menu_info_pref
  .rodata.str1.8
-                0x000000008097a3d8      0x1b8 /home/siz/xmplayer/mplayer//libmplayer.a(menu_param.o)
+                0x000000008097a3e0      0x1b8 /home/siz/xmplayer/mplayer//libmplayer.a(menu_param.o)
                                         0x2e0 (size before relaxing)
- .rodata        0x000000008097a590      0x2a8 /home/siz/xmplayer/mplayer//libmplayer.a(menu_pt.o)
-                0x000000008097a590                menu_info_pt
+ .rodata        0x000000008097a598      0x2a8 /home/siz/xmplayer/mplayer//libmplayer.a(menu_pt.o)
+                0x000000008097a598                menu_info_pt
  .rodata.str1.8
-                0x000000008097a838       0x98 /home/siz/xmplayer/mplayer//libmplayer.a(menu_pt.o)
+                0x000000008097a840       0x98 /home/siz/xmplayer/mplayer//libmplayer.a(menu_pt.o)
                                         0x173 (size before relaxing)
- .rodata        0x000000008097a8d0       0xf0 /home/siz/xmplayer/mplayer//libmplayer.a(menu_txt.o)
-                0x000000008097a8fc                menu_info_txt
+ .rodata        0x000000008097a8d8       0xf0 /home/siz/xmplayer/mplayer//libmplayer.a(menu_txt.o)
+                0x000000008097a904                menu_info_txt
  .rodata.str1.8
-                0x000000008097a9c0       0xcf /home/siz/xmplayer/mplayer//libmplayer.a(menu_txt.o)
+                0x000000008097a9c8       0xcf /home/siz/xmplayer/mplayer//libmplayer.a(menu_txt.o)
                                          0xfd (size before relaxing)
- *fill*         0x000000008097aa8f        0x1 00
+ *fill*         0x000000008097aa97        0x1 00
  .rodata.str1.8
-                0x000000008097aa90       0xa4 /home/siz/xmplayer/mplayer//libmplayer.a(vf_menu.o)
+                0x000000008097aa98       0xa4 /home/siz/xmplayer/mplayer//libmplayer.a(vf_menu.o)
                                          0xe9 (size before relaxing)
- .rodata        0x000000008097ab34       0x18 /home/siz/xmplayer/mplayer//libmplayer.a(vf_menu.o)
-                0x000000008097ab34                vf_info_menu
+ .rodata        0x000000008097ab3c       0x18 /home/siz/xmplayer/mplayer//libmplayer.a(vf_menu.o)
+                0x000000008097ab3c                vf_info_menu
  .rodata.cst8   0x0000000000000000        0x8 /home/siz/xmplayer/mplayer//libmplayer.a(vf_menu.o)
- .rodata        0x000000008097ab4c       0x58 /home/siz/xmplayer/mplayer//libmplayer.a(vo_md5sum.o)
-                0x000000008097ab6c                video_out_md5sum
- *fill*         0x000000008097aba4        0x4 00
+ .rodata        0x000000008097ab54       0x58 /home/siz/xmplayer/mplayer//libmplayer.a(vo_md5sum.o)
+                0x000000008097ab74                video_out_md5sum
+ *fill*         0x000000008097abac        0x4 00
  .rodata.str1.8
-                0x000000008097aba8      0x102 /home/siz/xmplayer/mplayer//libmplayer.a(vo_md5sum.o)
+                0x000000008097abb0      0x102 /home/siz/xmplayer/mplayer//libmplayer.a(vo_md5sum.o)
                                         0x169 (size before relaxing)
- *fill*         0x000000008097acaa        0x2 00
- .rodata        0x000000008097acac       0x40 /home/siz/xmplayer/mplayer//libmplayer.a(vo_pnm.o)
-                0x000000008097acb4                video_out_pnm
- *fill*         0x000000008097acec        0x4 00
+ *fill*         0x000000008097acb2        0x2 00
+ .rodata        0x000000008097acb4       0x40 /home/siz/xmplayer/mplayer//libmplayer.a(vo_pnm.o)
+                0x000000008097acbc                video_out_pnm
+ *fill*         0x000000008097acf4        0x4 00
  .rodata.str1.8
-                0x000000008097acf0      0x1bc /home/siz/xmplayer/mplayer//libmplayer.a(vo_pnm.o)
+                0x000000008097acf8      0x1bc /home/siz/xmplayer/mplayer//libmplayer.a(vo_pnm.o)
                                         0x409 (size before relaxing)
- .rodata        0x000000008097aeac       0x80 /home/siz/xmplayer/mplayer//libmplayer.a(vo_tga.o)
-                0x000000008097aef4                video_out_tga
- *fill*         0x000000008097af2c        0x4 00
+ .rodata        0x000000008097aeb4       0x80 /home/siz/xmplayer/mplayer//libmplayer.a(vo_tga.o)
+                0x000000008097aefc                video_out_tga
+ *fill*         0x000000008097af34        0x4 00
  .rodata.str1.8
-                0x000000008097af30       0x9b /home/siz/xmplayer/mplayer//libmplayer.a(vo_tga.o)
+                0x000000008097af38       0x9b /home/siz/xmplayer/mplayer//libmplayer.a(vo_tga.o)
                                          0xa9 (size before relaxing)
- *fill*         0x000000008097afcb        0x1 00
- .rodata        0x000000008097afcc       0x38 /home/siz/xmplayer/mplayer//libmplayer.a(vo_yuv4mpeg.o)
-                0x000000008097afcc                video_out_yuv4mpeg
- .rodata.cst4   0x000000008097b004        0x4 /home/siz/xmplayer/mplayer//libmplayer.a(vo_yuv4mpeg.o)
+ *fill*         0x000000008097afd3        0x1 00
+ .rodata        0x000000008097afd4       0x38 /home/siz/xmplayer/mplayer//libmplayer.a(vo_yuv4mpeg.o)
+                0x000000008097afd4                video_out_yuv4mpeg
+ .rodata.cst4   0x000000008097b00c        0x4 /home/siz/xmplayer/mplayer//libmplayer.a(vo_yuv4mpeg.o)
                                           0x8 (size before relaxing)
  .rodata.str1.8
-                0x000000008097b008      0x257 /home/siz/xmplayer/mplayer//libmplayer.a(vo_yuv4mpeg.o)
+                0x000000008097b010      0x257 /home/siz/xmplayer/mplayer//libmplayer.a(vo_yuv4mpeg.o)
                                         0x279 (size before relaxing)
- *fill*         0x000000008097b25f        0x1 00
+ *fill*         0x000000008097b267        0x1 00
  .rodata.str1.8
-                0x000000008097b260      0x4a2 /home/siz/xmplayer/mplayer//libmplayer.a(asxparser.o)
+                0x000000008097b268      0x4a2 /home/siz/xmplayer/mplayer//libmplayer.a(asxparser.o)
                                         0x4b2 (size before relaxing)
- *fill*         0x000000008097b702        0x2 00
- .rodata        0x000000008097b704    0x87c74 /home/siz/xmplayer/mplayer//libmplayer.a(codec-cfg.o)
-                0x000000008097b944                builtin_video_codecs
-                0x00000000809d7258                builtin_audio_codecs
+ *fill*         0x000000008097b70a        0x2 00
+ .rodata        0x000000008097b70c    0x87c74 /home/siz/xmplayer/mplayer//libmplayer.a(codec-cfg.o)
+                0x000000008097b94c                builtin_video_codecs
+                0x00000000809d7260                builtin_audio_codecs
  .rodata.str1.8
-                0x0000000080a03378     0x79a1 /home/siz/xmplayer/mplayer//libmplayer.a(codec-cfg.o)
+                0x0000000080a03380     0x79a1 /home/siz/xmplayer/mplayer//libmplayer.a(codec-cfg.o)
                                        0x7b11 (size before relaxing)
- *fill*         0x0000000080a0ad19        0x7 00
+ *fill*         0x0000000080a0ad21        0x7 00
  .rodata.str1.8
-                0x0000000080a0ad20      0x16b /home/siz/xmplayer/mplayer//libmplayer.a(edl.o)
+                0x0000000080a0ad28      0x16b /home/siz/xmplayer/mplayer//libmplayer.a(edl.o)
                                         0x173 (size before relaxing)
- *fill*         0x0000000080a0ae8b        0x1 00
- .rodata        0x0000000080a0ae8c      0x2c0 /home/siz/xmplayer/mplayer//libmplayer.a(fmt-conversion.o)
- *fill*         0x0000000080a0b14c        0x4 00
+ *fill*         0x0000000080a0ae93        0x1 00
+ .rodata        0x0000000080a0ae94      0x2c0 /home/siz/xmplayer/mplayer//libmplayer.a(fmt-conversion.o)
+ *fill*         0x0000000080a0b154        0x4 00
  .rodata.str1.8
-                0x0000000080a0b150       0x57 /home/siz/xmplayer/mplayer//libmplayer.a(fmt-conversion.o)
- *fill*         0x0000000080a0b1a7        0x1 00
+                0x0000000080a0b158       0x57 /home/siz/xmplayer/mplayer//libmplayer.a(fmt-conversion.o)
+ *fill*         0x0000000080a0b1af        0x1 00
  .rodata.str1.8
-                0x0000000080a0b1a8      0x30d /home/siz/xmplayer/mplayer//libmplayer.a(m_config.o)
+                0x0000000080a0b1b0      0x30d /home/siz/xmplayer/mplayer//libmplayer.a(m_config.o)
                                         0x32d (size before relaxing)
- *fill*         0x0000000080a0b4b5        0x3 00
- .rodata        0x0000000080a0b4b8      0x7a0 /home/siz/xmplayer/mplayer//libmplayer.a(m_option.o)
-                0x0000000080a0b808                m_option_type_print_indirect
-                0x0000000080a0b830                m_option_type_print_func
-                0x0000000080a0b858                m_option_type_string_list
-                0x0000000080a0b880                m_option_type_custom_url
-                0x0000000080a0b8a8                m_option_type_obj_presets
-                0x0000000080a0b8d0                m_option_type_obj_settings_list
-                0x0000000080a0b8f8                m_option_type_obj_params
-                0x0000000080a0b920                m_option_type_time_size
-                0x0000000080a0b948                m_option_type_time
-                0x0000000080a0b970                m_option_type_afmt
-                0x0000000080a0b998                m_option_type_imgfmt
-                0x0000000080a0b9c0                m_option_type_subconfig
-                0x0000000080a0b9e8                m_option_type_print
-                0x0000000080a0ba10                m_option_type_func
-                0x0000000080a0ba38                m_option_type_func_full
-                0x0000000080a0ba60                m_option_type_func_param
-                0x0000000080a0ba88                m_option_type_func_param_immediate
-                0x0000000080a0bab0                m_option_type_string
-                0x0000000080a0bad8                m_option_type_position
-                0x0000000080a0bb00                m_option_type_float
-                0x0000000080a0bb28                m_option_type_double
-                0x0000000080a0bb50                m_option_type_int64
-                0x0000000080a0bb78                m_option_type_int
-                0x0000000080a0bba0                m_option_type_flag
- .rodata.cst8   0x0000000080a0bc58       0x20 /home/siz/xmplayer/mplayer//libmplayer.a(m_option.o)
+ *fill*         0x0000000080a0b4bd        0x3 00
+ .rodata        0x0000000080a0b4c0      0x7a0 /home/siz/xmplayer/mplayer//libmplayer.a(m_option.o)
+                0x0000000080a0b810                m_option_type_print_indirect
+                0x0000000080a0b838                m_option_type_print_func
+                0x0000000080a0b860                m_option_type_string_list
+                0x0000000080a0b888                m_option_type_custom_url
+                0x0000000080a0b8b0                m_option_type_obj_presets
+                0x0000000080a0b8d8                m_option_type_obj_settings_list
+                0x0000000080a0b900                m_option_type_obj_params
+                0x0000000080a0b928                m_option_type_time_size
+                0x0000000080a0b950                m_option_type_time
+                0x0000000080a0b978                m_option_type_afmt
+                0x0000000080a0b9a0                m_option_type_imgfmt
+                0x0000000080a0b9c8                m_option_type_subconfig
+                0x0000000080a0b9f0                m_option_type_print
+                0x0000000080a0ba18                m_option_type_func
+                0x0000000080a0ba40                m_option_type_func_full
+                0x0000000080a0ba68                m_option_type_func_param
+                0x0000000080a0ba90                m_option_type_func_param_immediate
+                0x0000000080a0bab8                m_option_type_string
+                0x0000000080a0bae0                m_option_type_position
+                0x0000000080a0bb08                m_option_type_float
+                0x0000000080a0bb30                m_option_type_double
+                0x0000000080a0bb58                m_option_type_int64
+                0x0000000080a0bb80                m_option_type_int
+                0x0000000080a0bba8                m_option_type_flag
+ .rodata.cst8   0x0000000080a0bc60       0x20 /home/siz/xmplayer/mplayer//libmplayer.a(m_option.o)
                                          0x28 (size before relaxing)
  .rodata.str1.8
-                0x0000000080a0bc78     0x134e /home/siz/xmplayer/mplayer//libmplayer.a(m_option.o)
+                0x0000000080a0bc80     0x134e /home/siz/xmplayer/mplayer//libmplayer.a(m_option.o)
                                        0x1474 (size before relaxing)
- *fill*         0x0000000080a0cfc6        0x2 00
+ *fill*         0x0000000080a0cfce        0x2 00
  .rodata.str1.8
-                0x0000000080a0cfc8       0xb7 /home/siz/xmplayer/mplayer//libmplayer.a(m_struct.o)
- *fill*         0x0000000080a0d07f        0x1 00
+                0x0000000080a0cfd0       0xb7 /home/siz/xmplayer/mplayer//libmplayer.a(m_struct.o)
+ *fill*         0x0000000080a0d087        0x1 00
  .rodata.str1.8
-                0x0000000080a0d080      0x24b /home/siz/xmplayer/mplayer//libmplayer.a(mp_msg.o)
+                0x0000000080a0d088      0x24b /home/siz/xmplayer/mplayer//libmplayer.a(mp_msg.o)
                                         0x25b (size before relaxing)
- *fill*         0x0000000080a0d2cb        0x5 00
- .rodata        0x0000000080a0d2d0      0x10a /home/siz/xmplayer/mplayer//libmplayer.a(mp_msg.o)
- *fill*         0x0000000080a0d3da        0x6 00
+ *fill*         0x0000000080a0d2d3        0x5 00
+ .rodata        0x0000000080a0d2d8      0x10a /home/siz/xmplayer/mplayer//libmplayer.a(mp_msg.o)
+ *fill*         0x0000000080a0d3e2        0x6 00
  .rodata.str1.8
-                0x0000000080a0d3e0      0x15f /home/siz/xmplayer/mplayer//libmplayer.a(mpcommon.o)
+                0x0000000080a0d3e8      0x15f /home/siz/xmplayer/mplayer//libmplayer.a(mpcommon.o)
                                         0x17f (size before relaxing)
- *fill*         0x0000000080a0d53f        0x1 00
- .rodata        0x0000000080a0d540       0xa0 /home/siz/xmplayer/mplayer//libmplayer.a(mpcommon.o)
-                0x0000000080a0d540                noconfig_opts
- .rodata.cst4   0x0000000080a0d5e0       0x10 /home/siz/xmplayer/mplayer//libmplayer.a(mpcommon.o)
+ *fill*         0x0000000080a0d547        0x1 00
+ .rodata        0x0000000080a0d548       0xa0 /home/siz/xmplayer/mplayer//libmplayer.a(mpcommon.o)
+                0x0000000080a0d548                noconfig_opts
+ .rodata.cst4   0x0000000080a0d5e8       0x10 /home/siz/xmplayer/mplayer//libmplayer.a(mpcommon.o)
                                          0x14 (size before relaxing)
- .rodata.cst8   0x0000000080a0d5f0       0x18 /home/siz/xmplayer/mplayer//libmplayer.a(mpcommon.o)
+ .rodata.cst8   0x0000000080a0d5f8       0x18 /home/siz/xmplayer/mplayer//libmplayer.a(mpcommon.o)
                                          0x40 (size before relaxing)
  .rodata.str1.8
-                0x0000000080a0d608      0x1df /home/siz/xmplayer/mplayer//libmplayer.a(parser-cfg.o)
+                0x0000000080a0d610      0x1df /home/siz/xmplayer/mplayer//libmplayer.a(parser-cfg.o)
                                         0x1f7 (size before relaxing)
- *fill*         0x0000000080a0d7e7        0x1 00
+ *fill*         0x0000000080a0d7ef        0x1 00
  .rodata.str1.8
-                0x0000000080a0d7e8       0x72 /home/siz/xmplayer/mplayer//libmplayer.a(path.o)
+                0x0000000080a0d7f0       0x72 /home/siz/xmplayer/mplayer//libmplayer.a(path.o)
                                          0x8a (size before relaxing)
- *fill*         0x0000000080a0d85a        0x6 00
- .rodata.cst8   0x0000000080a0d860        0x8 /home/siz/xmplayer/mplayer//libmplayer.a(playtree.o)
+ *fill*         0x0000000080a0d862        0x6 00
+ .rodata.cst8   0x0000000080a0d868        0x8 /home/siz/xmplayer/mplayer//libmplayer.a(playtree.o)
  .rodata.str1.8
-                0x0000000080a0d868      0x15a /home/siz/xmplayer/mplayer//libmplayer.a(playtree.o)
- *fill*         0x0000000080a0d9c2        0x6 00
- .rodata        0x0000000080a0d9c8       0x1a /home/siz/xmplayer/mplayer//libmplayer.a(playtreeparser.o)
- *fill*         0x0000000080a0d9e2        0x6 00
+                0x0000000080a0d870      0x15a /home/siz/xmplayer/mplayer//libmplayer.a(playtree.o)
+ *fill*         0x0000000080a0d9ca        0x6 00
+ .rodata        0x0000000080a0d9d0       0x1a /home/siz/xmplayer/mplayer//libmplayer.a(playtreeparser.o)
+ *fill*         0x0000000080a0d9ea        0x6 00
  .rodata.str1.8
-                0x0000000080a0d9e8      0x7b5 /home/siz/xmplayer/mplayer//libmplayer.a(playtreeparser.o)
+                0x0000000080a0d9f0      0x7b5 /home/siz/xmplayer/mplayer//libmplayer.a(playtreeparser.o)
                                         0x855 (size before relaxing)
- *fill*         0x0000000080a0e19d        0x3 00
- .rodata        0x0000000080a0e1a0       0x2c /home/siz/xmplayer/mplayer//libmplayer.a(subopt-helper.o)
- *fill*         0x0000000080a0e1cc        0x4 00
+ *fill*         0x0000000080a0e1a5        0x3 00
+ .rodata        0x0000000080a0e1a8       0x2c /home/siz/xmplayer/mplayer//libmplayer.a(subopt-helper.o)
+ *fill*         0x0000000080a0e1d4        0x4 00
  .rodata.str1.8
-                0x0000000080a0e1d0      0x10b /home/siz/xmplayer/mplayer//libmplayer.a(subopt-helper.o)
+                0x0000000080a0e1d8      0x10b /home/siz/xmplayer/mplayer//libmplayer.a(subopt-helper.o)
                                         0x11b (size before relaxing)
- *fill*         0x0000000080a0e2db        0x5 00
+ *fill*         0x0000000080a0e2e3        0x5 00
  .rodata.str1.8
-                0x0000000080a0e2e0      0x4ae /home/siz/xmplayer/mplayer//libmplayer.a(af.o)
+                0x0000000080a0e2e8      0x4ae /home/siz/xmplayer/mplayer//libmplayer.a(af.o)
                                         0x4ee (size before relaxing)
- *fill*         0x0000000080a0e78e        0x2 00
- .rodata        0x0000000080a0e790       0x84 /home/siz/xmplayer/mplayer//libmplayer.a(af.o)
+ *fill*         0x0000000080a0e796        0x2 00
+ .rodata        0x0000000080a0e798       0x84 /home/siz/xmplayer/mplayer//libmplayer.a(af.o)
  .rodata.cst8   0x0000000000000000       0x10 /home/siz/xmplayer/mplayer//libmplayer.a(af.o)
  .rodata.cst4   0x0000000000000000        0x4 /home/siz/xmplayer/mplayer//libmplayer.a(af_center.o)
- *fill*         0x0000000080a0e814        0x4 00
+ *fill*         0x0000000080a0e81c        0x4 00
  .rodata.str1.8
-                0x0000000080a0e818       0xa1 /home/siz/xmplayer/mplayer//libmplayer.a(af_center.o)
+                0x0000000080a0e820       0xa1 /home/siz/xmplayer/mplayer//libmplayer.a(af_center.o)
                                          0xa9 (size before relaxing)
- *fill*         0x0000000080a0e8b9        0x3 00
- .rodata        0x0000000080a0e8bc       0x24 /home/siz/xmplayer/mplayer//libmplayer.a(af_channels.o)
+ *fill*         0x0000000080a0e8c1        0x3 00
+ .rodata        0x0000000080a0e8c4       0x24 /home/siz/xmplayer/mplayer//libmplayer.a(af_channels.o)
  .rodata.str1.8
-                0x0000000080a0e8e0      0x1f7 /home/siz/xmplayer/mplayer//libmplayer.a(af_channels.o)
+                0x0000000080a0e8e8      0x1f7 /home/siz/xmplayer/mplayer//libmplayer.a(af_channels.o)
                                         0x209 (size before relaxing)
- *fill*         0x0000000080a0ead7        0x1 00
- .rodata.cst4   0x0000000080a0ead8       0x10 /home/siz/xmplayer/mplayer//libmplayer.a(af_comp.o)
+ *fill*         0x0000000080a0eadf        0x1 00
+ .rodata.cst4   0x0000000080a0eae0       0x10 /home/siz/xmplayer/mplayer//libmplayer.a(af_comp.o)
                                          0x20 (size before relaxing)
  .rodata.str1.8
-                0x0000000080a0eae8       0x2d /home/siz/xmplayer/mplayer//libmplayer.a(af_comp.o)
+                0x0000000080a0eaf0       0x2d /home/siz/xmplayer/mplayer//libmplayer.a(af_comp.o)
                                          0x39 (size before relaxing)
- *fill*         0x0000000080a0eb15        0x3 00
- .rodata.cst4   0x0000000080a0eb18        0x4 /home/siz/xmplayer/mplayer//libmplayer.a(af_delay.o)
-                                          0x8 (size before relaxing)
+ .rodata.cst4   0x0000000000000000        0x8 /home/siz/xmplayer/mplayer//libmplayer.a(af_delay.o)
  .rodata.cst8   0x0000000000000000       0x10 /home/siz/xmplayer/mplayer//libmplayer.a(af_delay.o)
- *fill*         0x0000000080a0eb1c        0x4 00
+ *fill*         0x0000000080a0eb1d        0x3 00
  .rodata.str1.8
                 0x0000000080a0eb20       0x8b /home/siz/xmplayer/mplayer//libmplayer.a(af_delay.o)
                                          0xa1 (size before relaxing)
