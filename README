@@ -66,8 +66,11 @@ Haven't been tested intensively.
 -Changed: have disabled libmenu, now that osd menu has the same functions, can cause instability
 -Added: if a .rar file loads, it now gets the extension of the archived file, so the true extension profile is loaded
 
-27/07/2012:
+27/08/2012:
 Added: Sort files. By pressing "x" in the file browser, you can order by Name or Date (day/month/year)
+
+28/08/2012:
+Changed: The delay options in osd are more logical, a sub_delay of 100 ms doesn't mean subs shows 100 ms before audio (mplayer standard), but 100 ms after
 
 TODO:
 -Get subfont-outline to work

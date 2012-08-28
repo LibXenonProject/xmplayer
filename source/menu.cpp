@@ -1193,6 +1193,7 @@ extern "C" void mplayer_osd_open() {
 static void osdSubtitlesOptions() {
 bool firstRun = true;
 char *osd_sub_name = "";
+float osd_subdelay;
   if ((osd_display_option_audio == 0) && (osd_display_option_video == 0)) { 
 if (osd_display_option_subtitle) {
 	osd_options_window->SetFocus(0);
@@ -1230,7 +1231,7 @@ if (osd_display_option_subtitle) {
 				break;
 			}
 			case 3: {
-				sub_delay -= 0.1;
+				sub_delay += 0.1;
 				break;
 			}
 			case 4: {
@@ -1249,7 +1250,7 @@ if (osd_display_option_subtitle) {
 				break;
 			}
 			case 3: {
-				sub_delay += 0.1;
+				sub_delay -= 0.1;
 				break;
 			}
 			case 4: {
@@ -1264,10 +1265,11 @@ if (osd_display_option_subtitle) {
 	if (ret >= 0 || firstRun)  {
 		firstRun = false;
 		osd_sub_name = playerGetSubtitle();
+		osd_subdelay = (sub_delay * -1000);
 		sprintf(subtitle_option_list.value[0], osd_sub_name);
 		sprintf(subtitle_option_list.value[1], "%s", sub_visibility == 1 ? "Enabled" : "Disabled");
 		sprintf(subtitle_option_list.value[2], "%d", sub_pos);
-		sprintf(subtitle_option_list.value[3], "%.1f s", sub_delay);
+		sprintf(subtitle_option_list.value[3], "%.0f ms", osd_subdelay);
 		sprintf(subtitle_option_list.value[4], "%.2f", text_font_scale_factor);
 		osd_options_subtitle->TriggerUpdate();
 	}
@@ -1285,6 +1287,7 @@ bool firstRun = true;
 char *osd_mute = "";
 char *osd_balance = "";
 char *osd_volume = "";
+float osd_audiodelay;
    if ((osd_display_option_subtitle == 0) && (osd_display_option_video == 0)) {
 if (osd_display_option_audio) {
 	osd_options_window->SetFocus(0);
@@ -1325,7 +1328,7 @@ if (osd_display_option_audio) {
 				break;
 			}
 			case 4: {
-				audio_delay -= 0.1; 
+				audio_delay += 0.1; 
 				break;		
 			}
 		}
@@ -1341,7 +1344,7 @@ if (osd_display_option_audio) {
 				break;
 			}
 			case 4: {
-				audio_delay += 0.1; 
+				audio_delay -= 0.1; 
 				break;		
 			}
 		}
@@ -1352,10 +1355,11 @@ if (osd_display_option_audio) {
 		osd_volume = playerGetVolume();
 		osd_balance = playerGetBalance();
 		osd_mute = playerGetMute();
+		osd_audiodelay = (audio_delay * -1000);
 		sprintf(audio_option_list.value[1], osd_volume);
 		sprintf(audio_option_list.value[2], osd_balance);
 		sprintf(audio_option_list.value[3], osd_mute);
-		sprintf(audio_option_list.value[4], "%.1f s", audio_delay);
+		sprintf(audio_option_list.value[4], "%.0f ms", osd_audiodelay);
 		osd_options_audio->TriggerUpdate();
 	}
    } else {
