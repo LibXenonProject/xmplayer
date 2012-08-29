@@ -1,14 +1,25 @@
-subpos=90 #subs position on screen
-sub-fuzziness=1 #makes all subs containing the name of the video as selectable
-utf8=yes	
-unicode=yes
 vsync=no
-subfont-text-scale=2 #subtitle scale
+# =====================
+# Text-based subtitles
+# =====================
+# Subtitle Color
+ass-color=ffffff00
+# Subtitle font style (MarginV is the number of pixels between bottom of screen and subs)
+ass-force-style=Outline=1,Shadow=1,FontSize=16,MarginV=5,Alignment=2
+# Find subtitle files (loads all subs containing movie name)
+sub-fuzziness=1
+# Font encoding
+subfont-encoding=unicode
+# Subtitle file encoding
+utf8=yes
+unicode=yes
+# Subtitle Codepage
 subcp=ISO-8859-1
-#-----------------#
-#SUBTITLE OPTIONS
-#-----------------#
-#Info:
+# Default selected sub lang
+slang=en
+# =====================
+# Subtitle Readme
+# =====================
 #Change the subcp value to ISO-8859-2 for Slavic and so forth.
 #It can be it doesn't work, there are alot of different codes, and sometimes a "slang" (slang="en" etc.) has to be set.
 #Use google to search for help if it doesn't work, there are a lot of solutions: google.com: "mplayer latin subtitles"
@@ -34,5 +45,4 @@ subcp=ISO-8859-1
 #ISO-8859-9 - Latin 5
 #Same as 8859-1 except for Turkish instead of Icelandic
 #ISO-8859-10 - Latin 6
-#Latin6, for Lappish/Nordic/Eskimo languages: Adds the last Inuit (Greenlandic) and Sami (Lappish) letters that were missing in Latin 4 to cover the entire Nordic area.
-                  
+#Latin6, for Lappish/Nordic/Eskimo languages: Adds the last Inuit (Greenlandic) and Sami (Lappish) letters that were missing in Latin 4 to cover the entire Nordic area.          

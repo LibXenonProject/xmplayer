@@ -373,7 +373,7 @@ static void osd_options_next_callback(void * data) {
 	GuiButton *button = (GuiButton *) data;
 	if (button->GetState() == STATE_CLICKED) {
 		button->ResetState();
-		playerTurnOffSubtitle(); //turns off subs, atm if not, subs will be freezed on a video without them
+		//playerTurnOffSubtitle(); //turns off subs, atm if not, subs will be freezed on a video without them
 		playerGuiAsked();//playback resume
 		button->SetState(STATE_SELECTED);
 	}
@@ -858,11 +858,15 @@ extern "C" int sub_visibility;
 extern "C" float sub_delay;
 extern "C" float text_font_scale_factor;
 extern "C" int force_load_font;
+extern "C" float ass_font_scale;
+extern "C" int ass_enabled;
+extern "C" int ass_force_reload;
 //Mplayer's audio variables
 extern "C" float audio_delay;
 //Mplayer's video variables
 extern "C" int vo_fs; 
 extern "C" int vo_vsync;
+extern "C" int vo_dheight;
 extern "C" int frame_dropping;
 //D-Pad direction for OSD Settings
 extern int osd_pad_right; //from gui_optionbrowser.cpp
@@ -1226,27 +1230,10 @@ if (osd_display_option_subtitle) {
 	if (osd_pad_left == 1) { 
 		switch (het) {
 			case 2: { 
-				sub_pos--;
-				if (sub_pos<0) { sub_pos = 100; }
-				break;
-			}
-			case 3: {
-				sub_delay -= 0.1;
-				break;
-			}
-			case 4: {
-			text_font_scale_factor -= 0.1;
-			if (text_font_scale_factor < 0) { text_font_scale_factor = 100; }
-			force_load_font = 1;
-			break;		
-			}
-		}
-	osd_pad_left = 0;
-	} else if (osd_pad_right == 1) {
-		switch (het) {
-			case 2: { 
-				sub_pos++;
-				if (sub_pos>100) { sub_pos = 0; }
+				if (!ass_enabled) {				
+					sub_pos--;
+					if (sub_pos<0) { sub_pos = 100; }
+				}				
 				break;
 			}
 			case 3: {
@@ -1254,10 +1241,43 @@ if (osd_display_option_subtitle) {
 				break;
 			}
 			case 4: {
-			text_font_scale_factor += 0.1;
-			if (text_font_scale_factor > 100) { text_font_scale_factor = 0; }
-			force_load_font = 1;
-			break;		
+				if (ass_enabled) {			
+					ass_font_scale -= 0.1;
+					if (ass_font_scale < 0) { ass_font_scale = 100; }
+					ass_force_reload = 1;
+				} else {
+					text_font_scale_factor -= 0.1;
+					if (text_font_scale_factor < 0) { text_font_scale_factor = 100; }
+					force_load_font = 1;
+				}
+				break;		
+			}
+		}
+	osd_pad_left = 0;
+	} else if (osd_pad_right == 1) {
+		switch (het) {
+			case 2: { 
+				if (!ass_enabled) {				
+				sub_pos++;
+				if (sub_pos>100) { sub_pos = 0; }
+				}
+				break;
+			}
+			case 3: {
+				sub_delay -= 0.1;
+				break;
+			}
+			case 4: {
+				if (ass_enabled) {			
+					ass_font_scale += 0.1;
+					if (ass_font_scale > 100) { ass_font_scale = 0; }
+					ass_force_reload = 1;
+				} else {
+					text_font_scale_factor += 0.1;
+					if (text_font_scale_factor > 100) { text_font_scale_factor = 0; }
+					force_load_font = 1;
+				}
+				break;		
 			}
 		}
 	osd_pad_right = 0;	
@@ -1268,9 +1288,9 @@ if (osd_display_option_subtitle) {
 		osd_subdelay = (sub_delay * 1000);
 		sprintf(subtitle_option_list.value[0], osd_sub_name);
 		sprintf(subtitle_option_list.value[1], "%s", sub_visibility == 1 ? "Enabled" : "Disabled");
-		sprintf(subtitle_option_list.value[2], "%d", sub_pos);
+		if (!ass_enabled) { sprintf(subtitle_option_list.value[2], "%d", sub_pos); } else { sprintf(subtitle_option_list.value[2], "%s", "Disabled"); }
 		sprintf(subtitle_option_list.value[3], "%.0f ms", osd_subdelay);
-		sprintf(subtitle_option_list.value[4], "%.2f", text_font_scale_factor);
+		sprintf(subtitle_option_list.value[4], "%.2f", ass_enabled == 1 ? ass_font_scale : text_font_scale_factor);
 		osd_options_subtitle->TriggerUpdate();
 	}
    } else {
@@ -2022,6 +2042,7 @@ static void do_mplayer(char * filename) {
 			//"-really-quiet",
 			//"-demuxer","mkv",
 			//"-menu",
+			"-ass",
 			"-lavdopts", "skiploopfilter=all:threads=5",
 			filename,
 		};

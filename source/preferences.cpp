@@ -190,6 +190,7 @@ static bool decodePrefsData() {
 		mxmlDelete(xml);
 		printf("XMPlayerCfg.language : %d\n",XMPlayerCfg.language);
 	}
+	printf("[decodePrefsData] xml: %s result: %s\n", (xml)?"true":"false", (result)?"true":"false");
 	return result;
 }
 
@@ -334,7 +335,7 @@ bool LoadPrefsFromMethod(char * path) {
 	savebuffer = (unsigned char*) malloc(SAVEBUFFERSIZE);
 
 	size = LoadFile(filepath, 1);
-
+	printf("[LoadPrefsFromMethod] size %d \n", size);
 	if (size > 0)
 		retval = decodePrefsData();
 

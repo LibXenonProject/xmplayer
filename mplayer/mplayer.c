@@ -4128,7 +4128,7 @@ void mplayer_load(char * _filename)
 {
 	filename = _filename;
 	mp_input_queue_cmd(mp_input_parse_cmd(playerSeekTime)); 
-	mp_input_queue_cmd(mp_input_parse_cmd("sub_visibility"));
+	//mp_input_queue_cmd(mp_input_parse_cmd("sub_visibility"));
 }
 //Player Get functions
 double playerGetElapsed() {
@@ -4153,18 +4153,26 @@ const char * playetGetMetaData(metadata_t type){
 
 char* playerGetSubtitle() {
 	char* osd_sub = "";
-	if (subdata) {
-	char *sub_name = subdata->filename;
-   	const char *tmp = mp_basename(sub_name);
+	if ((subdata) || (ass_track)) {
+        int tracks;
+        char *sub_name;
+        if (subdata) {
+                sub_name = subdata->filename;
+                tracks =  mpctx->set_of_sub_pos + 1;
+            } else {
+                sub_name = ass_track->name;
+                tracks =  mpctx->set_of_sub_size;
+            }
+       const char *tmp = mp_basename(sub_name);
             asprintf(&osd_sub, "(%d) %s%s",
-                     mpctx->set_of_sub_pos + 1,
+                     tracks,
                      strlen(tmp) < 15 ? "" : "..",
                      strlen(tmp) < 15 ? tmp : tmp + strlen(tmp) - 14);
-	return osd_sub;
-	free(osd_sub);
-	} else {
-	osd_sub = "Disabled";
-	return osd_sub;
+	    return osd_sub;
+	    free(osd_sub);
+    } else {
+	    osd_sub = "Disabled";
+	    return osd_sub;
 	}
 }
 

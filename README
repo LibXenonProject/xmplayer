@@ -72,6 +72,10 @@ Added: Sort files. By pressing "x" in the file browser, you can order by Name or
 28/08/2012:
 Changed: The audio delay option in osd is more logical, a audio_delay of 100 ms doesn't mean audio is 100 ms before video (mplayer standard), but 100 ms after
 
+29/08/2012:
+-Changed: Updated libass to 0.10.0
+-Changed: ass/ssa is now subtitle default which means outline, color etc. works 
+-Added: ass settings can be accessed from the subtitle osd menu, ass is forced on (ass can be buggy, video freeze etc.)
+
 TODO:
--Get subfont-outline to work
 -Get mplayer to seek through large files (>2gb)
