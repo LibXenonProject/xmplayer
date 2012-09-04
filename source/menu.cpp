@@ -17,8 +17,7 @@
 #include <xenon_smc/xenon_smc.h> 
 #include <sys/iosupport.h>
 #include <ppc/atomic.h>
-#include <network/network.h>
-#include <console/telnet_console.h>
+//#include <network/network.h>
 #include <time/time.h>
 #include <elf/elf.h>
 
@@ -2155,8 +2154,7 @@ int main(int argc, char** argv) {
 	//	
 	// Init Video
 	InitVideo();
-        network_init();
-        telnet_console_init();
+
 	/** loading **/
 	end_loading_thread = 0;
 
