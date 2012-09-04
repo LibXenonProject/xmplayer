@@ -17,7 +17,7 @@ include $(DEVKITXENON)/rules
 #---------------------------------------------------------------------------------
 TARGET		:=	$(notdir $(CURDIR))
 BUILD		:=	build
-SOURCES		:=	source source/libwiigui
+SOURCES		:=	source source/libwiigui source/tinyxml
 DATA		:=	data source/lang
 INCLUDES		:=	-I$(LIBXENON_INC)/freetype2
 MPLAYER		:=	$(CURDIR)/mplayer
@@ -44,7 +44,7 @@ LDFLAGS		=	-g $(MACHDEP_LD) $(OPTIFLAGS) -Wl,-Map,$(notdir $@).map
 #---------------------------------------------------------------------------------
 # any extra libraries we wish to link with the project
 #---------------------------------------------------------------------------------
-LIBS		:=	 -lmplayer  -lavformat -lavcodec -lswscale -lavutil -lpostproc -lpng -lz -lxenon -lm  -liconv -lfreetype -lfribidi -lbz2 -lfat -lext2fs -lntfs -lxtaf -lmxml
+LIBS		:=	 -lmplayer  -lavformat -lavcodec -lswscale -lavutil -lpostproc -lpng -lz -lxenon -lm  -liconv -lfreetype -lfribidi -lbz2 -lfat -lext2fs -lntfs -lxtaf
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing

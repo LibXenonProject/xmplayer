@@ -17,7 +17,8 @@
 #include <xenon_smc/xenon_smc.h> 
 #include <sys/iosupport.h>
 #include <ppc/atomic.h>
-//#include <network/network.h>
+#include <network/network.h>
+#include <console/telnet_console.h>
 #include <time/time.h>
 #include <elf/elf.h>
 
@@ -1774,6 +1775,7 @@ browser_counter:	sprintf(tmp, "%d/%d", browser.selIndex + 1, browser.numEntries)
 			if (XMPlayerCfg.sort_order > 3) {
 				XMPlayerCfg.sort_order = 0;
 			} 
+                        SavePrefs(true); //save to xmplayer.xml
 			sprintf(exited_dir, "%s/", browser.dir); 
 			CleanupPath(exited_dir);
 			strncpy(exited_dir_array[current_menu], exited_dir, 2048);
@@ -2153,7 +2155,8 @@ int main(int argc, char** argv) {
 	//	
 	// Init Video
 	InitVideo();
-
+        network_init();
+        telnet_console_init();
 	/** loading **/
 	end_loading_thread = 0;
 

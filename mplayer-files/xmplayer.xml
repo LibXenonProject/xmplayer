@@ -1,8 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
-<file app="XMPlayer" version="0.0.1">
-
-<section name="Menu" description="Menu Settings">
-	<setting name="ExitAction" value="0" description="Exit Action" />
-	<setting name="language" value="0" description="Language" />
-</section>
-</file>
+<?xml version="1.0" ?>
+<settings>
+    <file app="XMPlayer" version="0.0.1" />
+    <menu exit_action="0" language="0" />
+    <filebrowser sort_order="0" />
+</settings>

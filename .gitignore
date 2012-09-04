@@ -5,10 +5,11 @@
 *.dll
 *.elf
 *.elf32
+*.sh
 ffmpeg_old
 codec-cfg
 nbproject
 .svn
 *.*~
 *~
-
+/nbproject/*
