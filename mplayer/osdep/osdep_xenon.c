@@ -39,13 +39,13 @@ long long llrint(double x) {
 	return (long long) x;
 }
 
-/*int access(const char *__path, int __amode) {
+int access(const char *__path, int __amode) {
 	return -1;
 }
 
 void waitpid() {
 
-}*/
+}
 
 int usleep(useconds_t __useconds) {
 	udelay(__useconds);
