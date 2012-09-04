@@ -975,16 +975,16 @@ int WindowPrompt(const char *title, const char *msg, const char *btn1Label, cons
 	return choice;
 }
 static char* playerSeekFormatTime(char * dest, double time) {
-	div_t hrmin, minsec;
-	minsec = div(time, 60);
-	hrmin = div(minsec.quot, 60);
+        int min, sec, hr;        
+	hr = (time / 3600);
+        min = fmod(time, 3600) / 60;
+        sec = fmod(time, 60);
 	if (time < 3600) { 
-	asprintf(&dest, "Resume from %02d:%02d", hrmin.rem, minsec.rem);
+                asprintf(&dest, "Resume from %02d:%02d", min, sec);
 	} else {
-	asprintf(&dest, "Resume from %d:%02d:%02d", hrmin.quot, hrmin.rem, minsec.rem);
+                asprintf(&dest, "Resume from %d:%02d:%02d", hr, min, sec);
 	}
-	char * destfile = dest;
-	return destfile;
+	return dest;
 	free(dest);	
 }
 bool file_exists(const char * filename) {
@@ -1485,11 +1485,12 @@ extern "C" void mplayer_osd_close() {
 	last_level = -1;
 }
 static void format_time(char * dest, double time) {
-	div_t hrmin, minsec;
-	minsec = div(time, 60);
-	hrmin = div(minsec.quot, 60);
+        int min, sec, hr;        
+	hr = (time / 3600);
+        min = fmod(time, 3600) / 60;
+        sec = fmod(time, 60);
 
-	sprintf(dest, "%d:%02d:%02d", hrmin.quot, hrmin.rem, minsec.rem);
+        sprintf(dest, "%d:%02d:%02d", hr, min, sec);
 }
 extern "C" void mplayer_osd_draw(int level) {
 	//Y-osd button used because libmenu is off
