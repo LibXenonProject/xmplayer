@@ -1,5 +1,5 @@
 This is a fork of xmplayer by Ced2911 (and now the Libxenon team) with my own customizations.
-My customizations, compared to original release, are at the moment (06/08/2012):
+My customizations, compared to original release, are at the moment (05/09/2012):
 
 Initial:
 -Quick fix: Subtitles stays on screen when playing a new video without subs, after exiting a video with subs
@@ -75,7 +75,14 @@ Changed: The audio delay option in osd is more logical, a audio_delay of 100 ms 
 29/08/2012:
 -Changed: Updated libass to 0.10.0
 -Changed: ass/ssa is now subtitle default which means outline, color etc. works 
--Added: ass settings can be accessed from the subtitle osd menu, ass is forced on (ass can be buggy, video freeze etc.)
+-Added: ass settings can be accessed from the subtitle osd menu (ass can be buggy, video freeze etc.)
+
+04/09/2012:
+-Changed: replaced mxml with tinyxml, because of loading problems and it seems lighter
+
+05/09/2012:
+-Fixed: some bugs with osd displaying delay as -0 because of it being close to zero
+-Added: set ass=yes and vf=ass in mplayer config, with vf=ass it looks stable, haven't experienced freezes. This means it can be disabled and subfont can be used if wished
 
 TODO:
 -Get mplayer to seek through large files (>2gb)

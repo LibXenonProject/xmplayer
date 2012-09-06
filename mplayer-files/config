@@ -1,11 +1,33 @@
+# =====================
+# Audio and Video
+# =====================
+# Enabled soft volume
+softvol=1
+# Set max soft volume
+softvol-max=300
+# Virtual Sync
 vsync=no
 # =====================
 # Text-based subtitles
 # =====================
+#<<==Subfont settings==>>
+# Settings are only used if ass=no - no outline
+# Subfont starting scale
+subfont-text-scale=2
+# Subfont position (0-100)
+subpos=90
+#
+#<<==ASS/SSA settings==>>
+# Disable ASS (ass=no) if you are having random freeze
+# ASS Subtitles switch
+ass=yes
+vf=ass
 # Subtitle Color
 ass-color=ffffff00
-# Subtitle font style (MarginV is the number of pixels between bottom of screen and subs)
+# Subtitle font style (MarginV is the number of pixels between bottom of screen and sub)
 ass-force-style=Outline=1,Shadow=1,FontSize=16,MarginV=5,Alignment=2
+#
+#<<==General subtitles settings==>>
 # Find subtitle files (loads all subs containing movie name)
 sub-fuzziness=1
 # Font encoding
@@ -18,7 +40,7 @@ subcp=ISO-8859-1
 # Default selected sub lang
 slang=en
 # =====================
-# Subtitle Readme
+#Subtitle Readme
 # =====================
 #Change the subcp value to ISO-8859-2 for Slavic and so forth.
 #It can be it doesn't work, there are alot of different codes, and sometimes a "slang" (slang="en" etc.) has to be set.
@@ -45,4 +67,4 @@ slang=en
 #ISO-8859-9 - Latin 5
 #Same as 8859-1 except for Turkish instead of Icelandic
 #ISO-8859-10 - Latin 6
-#Latin6, for Lappish/Nordic/Eskimo languages: Adds the last Inuit (Greenlandic) and Sami (Lappish) letters that were missing in Latin 4 to cover the entire Nordic area.          
+#Latin6, for Lappish/Nordic/Eskimo languages: Adds the last Inuit (Greenlandic) and Sami (Lappish) letters that were missing in Latin 4 to cover the entire Nordic area.              

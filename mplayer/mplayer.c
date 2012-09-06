@@ -3011,7 +3011,7 @@ int mplayer_main(int argc, char *argv[])
 
     // Catch signals
 #ifndef __MINGW32__
-    //signal(SIGCHLD, child_sighandler);
+    signal(SIGCHLD, child_sighandler);
 #endif
 
 #ifdef CONFIG_CRASH_DEBUG

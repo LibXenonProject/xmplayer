@@ -1285,7 +1285,8 @@ if (osd_display_option_subtitle) {
 	if (ret >= 0 || firstRun)  {
 		firstRun = false;
 		osd_sub_name = playerGetSubtitle();
-		osd_subdelay = (sub_delay * 1000);
+		osd_subdelay = (sub_delay * -1000);
+                if ((osd_subdelay < 5) && (osd_subdelay > -5)) { osd_subdelay = 0; }
 		sprintf(subtitle_option_list.value[0], osd_sub_name);
 		sprintf(subtitle_option_list.value[1], "%s", sub_visibility == 1 ? "Enabled" : "Disabled");
 		if (!ass_enabled) { sprintf(subtitle_option_list.value[2], "%d", sub_pos); } else { sprintf(subtitle_option_list.value[2], "%s", "Disabled"); }
@@ -1376,6 +1377,7 @@ if (osd_display_option_audio) {
 		osd_balance = playerGetBalance();
 		osd_mute = playerGetMute();
 		osd_audiodelay = (audio_delay * -1000);
+                if ((osd_audiodelay < 5) && (osd_audiodelay > -5)) { osd_audiodelay = 0; }
 		sprintf(audio_option_list.value[1], osd_volume);
 		sprintf(audio_option_list.value[2], osd_balance);
 		sprintf(audio_option_list.value[3], osd_mute);
@@ -2044,7 +2046,6 @@ static void do_mplayer(char * filename) {
 			//"-really-quiet",
 			//"-demuxer","mkv",
 			//"-menu",
-			"-ass",
 			"-lavdopts", "skiploopfilter=all:threads=5",
 			filename,
 		};
