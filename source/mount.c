@@ -489,6 +489,7 @@ extern int XTAFMount();
 /**
  * Parse mbr for filesystem
  */
+
 void mount_all_devices() {
 	FindPartitions(DEVICE_USB);
 	if (xenon_ata_ops.isInserted()) {

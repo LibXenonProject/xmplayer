@@ -315,13 +315,18 @@ static OptionList video_option_list;
 static GuiText * osd_options_headline = NULL;
 
 static char mplayer_filename[2048];
+//Browser
+static const char * exited_root = ""; 
 static char exited_dir[2048]; 
 static char exited_dir_array[64][2048];
 static int exited_item[64];
-const char * exited_root = ""; 
+static int exited_page[64];
+static int exited_i[64];
+
+//Saved seek
 static char seek_filename[2048];
-char * playerSeekTime = "";
 static int playerSeekChoice = 0;
+char * playerSeekTime = "";
 
 static int last_menu;
 
@@ -1623,13 +1628,9 @@ static void Browser(const char * title, const char * root) {
 	if ((strlen(exited_dir_array[current_menu]) != 0) && (exited_root == root)) {
 browser_select:	BrowseDevice(exited_dir_array[current_menu], root);
 		gui_browser->ResetState();	
-		//filelist is only from 0 to 9 (pagesize is set to 10), so if pageindex is 1, item 1 is now 0
-		  if (exited_item[current_menu] >= gui_browser->GetPageSize()) {
-			browser.pageIndex = (exited_item[current_menu] + 1 - gui_browser->GetPageSize()); 
-			gui_browser->fileList[9]->SetState(STATE_SELECTED); 
-		} else {
-		gui_browser->fileList[exited_item[current_menu]]->SetState(STATE_SELECTED);		
-		}
+		browser.selIndex = exited_item[current_menu];
+		browser.pageIndex = exited_page[current_menu];
+		gui_browser->fileList[exited_i[current_menu]]->SetState(STATE_SELECTED);		
 	} else {
 		BrowseDevice("/", root);
 		gui_browser->ResetState();
@@ -1726,9 +1727,13 @@ browser_counter:	sprintf(tmp, "%d/%d", browser.selIndex + 1, browser.numEntries)
 			browser_down_icon->SetVisible(false);
 		}
 	exited_item[current_menu] = browser.selIndex;
+	exited_page[current_menu] = browser.pageIndex;
 		// update file browser based on arrow xenon_buttons
 		// set MENU_EXIT if A xenon_button pressed on a file
 		for (int i = 0; i < gui_browser->GetPageSize(); i++) {
+			if (gui_browser->fileList[i]->GetState() == STATE_SELECTED) {
+				exited_i[current_menu] = i;
+			}
 			if (gui_browser->fileList[i]->GetState() == STATE_CLICKED) {
 				gui_browser->fileList[i]->ResetState();
 				// check corresponding browser entry
@@ -2164,7 +2169,10 @@ int main(int argc, char** argv) {
 	xenon_run_thread_task(2, thread_stack[2], (void*) loadingThread);
 
 	// Init devices
-	usb_init();
+	while (usb_init() != 0) {
+		printf("[USB] Initializing.. \n");
+		mdelay(100);
+	}
 	xenon_ata_init();
 	xenon_atapi_init();
 	usb_do_poll();
