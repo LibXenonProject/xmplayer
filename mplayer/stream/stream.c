@@ -79,6 +79,7 @@ extern const stream_info_t stream_info_cue;
 extern const stream_info_t stream_info_null;
 extern const stream_info_t stream_info_mf;
 extern const stream_info_t stream_info_ffmpeg;
+extern const stream_info_t stream_info_rar;
 extern const stream_info_t stream_info_file;
 extern const stream_info_t stream_info_ifo;
 extern const stream_info_t stream_info_dvd;
@@ -144,6 +145,7 @@ static const stream_info_t* const auto_open_streams[] = {
 
   &stream_info_null,
   &stream_info_mf,
+  &stream_info_rar,
   &stream_info_file,
   NULL
 };

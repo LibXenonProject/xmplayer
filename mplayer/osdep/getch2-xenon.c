@@ -47,7 +47,7 @@
 
 #include <debug.h>
 
-
+#include "../mplayer.h"
 //#include <input/input.h>
 
 struct controller_data_s {
@@ -129,8 +129,7 @@ static int getch2_internal(void) {
 		struct controller_data_s d_ctrl;
 
 		get_controller_down(&d_ctrl, i);
-		
-		if(gui_input_use==0){
+		if ((gui_input_use == 0) && (osd_level < 2)) {
 			if (d_ctrl.left)
 				key = KEY_LEFT;
 			if (d_ctrl.right)
@@ -154,12 +153,12 @@ static int getch2_internal(void) {
 			if (d_ctrl.x)
 				key = 'x';
 
-			if (d_ctrl.rb)
+/*			if (d_ctrl.rb)
 				key = 'r';
 			if (d_ctrl.lb)
 				key = 'l';
 
-/*
+
 			if (ctrl[i].left)
 				key = KEY_LEFT;
 			if (ctrl[i].right)
@@ -182,12 +181,12 @@ static int getch2_internal(void) {
 				key = 'b';
 			if (ctrl[i].x)
 				key = 'x';
-
+ */
 			if (ctrl[i].rb)
-				key = 'r';
+				key = 'c';
 			if (ctrl[i].lb)
-				key = 'l';
- */ 
+				key = 'v';
+ 
 			
 			if (ctrl[i].rt>100)
 				key = 'R';

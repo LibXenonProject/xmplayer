@@ -493,6 +493,8 @@ SRCS_COMMON = asxparser.c \
               stream/stream_file.c \
               stream/stream_mf.c \
               stream/stream_null.c \
+              stream/stream_rar.c \
+              stream/unrar.c \
               stream/url.c \
               sub/eosd.c \
               sub/find_sub.c \

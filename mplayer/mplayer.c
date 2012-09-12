@@ -127,9 +127,9 @@
 #include "sub/eosd.h"
 #include "osdep/getch2.h"
 #include "osdep/timer.h"
-
+#include "../source/mplayer_common.h"
 #include "osdep/osdep_xenon.h"
-
+#include "stream/unrar.h"
 #include "udp_sync.h"
 
 #ifdef CONFIG_X11
@@ -150,8 +150,8 @@ float start_volume = -1;
 double start_pts   = MP_NOPTS_VALUE;
 char *heartbeat_cmd;
 static int max_framesize;
-
 int noconsolecontrols;
+
 //**************************************************************************//
 
 // Not all functions in mplayer.c take the context as an argument yet
@@ -928,9 +928,12 @@ static void load_per_extension_config(m_config_t *conf, const char *const file)
 
     /* does filename actually have an extension ? */
     str = strrchr(filename, '.');
-    if (!str)
-        return;
-
+    if (!str) {
+        return;	
+    }	
+    if (strcmp(str, ".rar") == 0) { //checks if filename is a .rar
+	str = playerGetRarExt(filename); //get extension from file inside .rar archive
+    }	
     sprintf(extension, PROFILE_CFG_EXTENSION);
     strncat(extension, ++str, 7);
     p = m_config_get_profile(conf, extension);
@@ -1021,7 +1024,7 @@ static int libmpdemux_was_interrupted(int eof)
     if ((cmd = mp_input_get_cmd(0, 0, 0)) != NULL) {
         switch (cmd->id) {
         case MP_CMD_QUIT:
-            run_command(mpctx, cmd);
+             run_command(mpctx, cmd);
         case MP_CMD_PLAY_TREE_STEP:
             eof = (cmd->args[0].v.i > 0) ? PT_NEXT_ENTRY : PT_PREV_ENTRY;
             mpctx->play_tree_step = (cmd->args[0].v.i == 0) ? 1 : cmd->args[0].v.i;
@@ -2744,7 +2747,7 @@ static int seek(MPContext *mpctx, double amount, int style)
 #ifndef DISABLE_MAIN
 int mplayer_main(int argc, char *argv[])
 {
-    int opt_exit = 0; // Flag indicating whether MPlayer should exit without playing anything.
+    int opt_exit = 0; // Flag indicating whether gMPlayer should exit without playing anything.
     int profile_config_loaded;
     int i;
 
@@ -2778,7 +2781,7 @@ int mplayer_main(int argc, char *argv[])
         cfg_read();
     }
 #endif
-
+	mp_input_queue_cmd(mp_input_parse_cmd(playerSeekTime)); //for resume-playback function
     mpctx->playtree = m_config_parse_mp_command_line(mconfig, argc, argv);
     if (mpctx->playtree == NULL) {
         opt_exit = 1;
@@ -3008,7 +3011,7 @@ int mplayer_main(int argc, char *argv[])
 
     // Catch signals
 #ifndef __MINGW32__
-    signal(SIGCHLD, child_sighandler);
+    //signal(SIGCHLD, child_sighandler); //disabled because of gligi's toolchain
 #endif
 
 #ifdef CONFIG_CRASH_DEBUG
@@ -3124,7 +3127,9 @@ play_next_file:
             entry = parse_playlist_file(cmd->args[0].v.s);
             break;
         case MP_CMD_QUIT:
-            exit_player_with_rc(EXIT_QUIT, (cmd->nargs > 0) ? cmd->args[0].v.i : 0);
+	     playerGuiAsked();
+//	     mpctx->eof=1; 
+           // exit_player_with_rc(EXIT_QUIT, (cmd->nargs > 0) ? cmd->args[0].v.i : 0);
             break;
         case MP_CMD_VO_FULLSCREEN:
         case MP_CMD_GET_PROPERTY:
@@ -3988,6 +3993,8 @@ goto_enable_cache:
                     break;                  // STOP
                 if (guiInfo.Playing == GUI_PAUSE)
                     mpctx->osd_function = OSD_PAUSE;
+    set_osd_msg(OSD_MSG_BAR, 1, osd_duration, "%s: %d %%",
+                name, ROUND(100 * (val - min) / (max - min)));
                 if (guiInfo.NewPlay)
                     goto goto_next_file;
 #ifdef CONFIG_DVDREAD
@@ -4041,8 +4048,9 @@ goto_next_file:  // don't jump here after ao/vo/getch initialization!
                    total_frame_cnt,
                    (total_time_usage > 0.5) ? (total_frame_cnt / total_time_usage) : 0);
     }
-
+	
     // time to uninit all, except global stuff:
+
     uninit_player(INITIALIZED_ALL - (INITIALIZED_GUI + INITIALIZED_INPUT + (fixed_vo ? INITIALIZED_VO : 0)));
 
     if (mpctx->eof == PT_NEXT_ENTRY || mpctx->eof == PT_PREV_ENTRY) {
@@ -4109,9 +4117,8 @@ goto_next_file:  // don't jump here after ao/vo/getch initialization!
 
     return 1;
 }
-
 #endif /* DISABLE_MAIN */
-
+	
 
 /**
  * shared with mplayer
@@ -4120,9 +4127,10 @@ goto_next_file:  // don't jump here after ao/vo/getch initialization!
 void mplayer_load(char * _filename) 
 {
 	filename = _filename;
+	mp_input_queue_cmd(mp_input_parse_cmd(playerSeekTime)); 
+	//mp_input_queue_cmd(mp_input_parse_cmd("sub_visibility"));
 }
-
-
+//Player Get functions
 double playerGetElapsed() {
 	return demuxer_get_current_time(mpctx->demuxer);
 }
@@ -4143,6 +4151,92 @@ const char * playetGetMetaData(metadata_t type){
 	return get_metadata(type);
 }
 
+char* playerGetSubtitle() {
+	char* osd_sub = "";
+	if ((subdata) || (ass_track)) {
+        int tracks;
+        char *sub_name;
+        if (subdata) {
+                sub_name = subdata->filename;
+                tracks =  mpctx->set_of_sub_pos + 1;
+            } else {
+                sub_name = ass_track->name;
+                tracks =  mpctx->set_of_sub_size;
+            }
+       const char *tmp = mp_basename(sub_name);
+            asprintf(&osd_sub, "(%d) %s%s",
+                     tracks,
+                     strlen(tmp) < 15 ? "" : "..",
+                     strlen(tmp) < 15 ? tmp : tmp + strlen(tmp) - 14);
+	    return osd_sub;
+	    free(osd_sub);
+    } else {
+	    osd_sub = "Disabled";
+	    return osd_sub;
+	}
+}
+
+char* playerGetMute() {
+	char* osd_mute = "";
+	if (mpctx->mixer.muted) {
+	 	osd_mute = "Enabled";
+	} else {
+		osd_mute = "Disabled";
+	}
+return osd_mute;
+}
+
+char* playerGetBalance() {
+	float bal;
+	char* str;
+	mixer_getbalance(&mpctx->mixer, &bal);
+	    if (bal == 0.f) {
+		str = strdup("Center");
+		return str;
+	    } else if (bal == -1.f) {
+		str = strdup("Left only");
+		return str;
+	    } else if (bal == 1.f) {
+		str = strdup("Right only");
+		return str;
+	    } else {
+		unsigned right = (bal + 1.f) / 2.f * 100.f;
+		asprintf(&str, "L: %d%%, R: %d%%", 100 - right, right);
+		return str;
+		free (str);
+	    }
+}
+
+char* playerGetVolume() {
+	char* osd_volume = "";
+	float vol;
+	mixer_getbothvolume(&mpctx->mixer, &vol);
+	asprintf(&osd_volume, "%.2f", (double)vol);
+	return osd_volume;
+	free(osd_volume);
+}
+int playerGetPause() {
+	if(mpctx->was_paused == 1) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
+/*char* playerGetAudioStreams() {
+	char* osd_streams = "";
+	demuxer_t *demuxer = mpctx_get_demuxer(mpctx);
+	int audio_strem_size = 0;
+	int i;
+	for (i = 0; i < MAX_A_STREAMS; i++){
+		if (demuxer->a_streams[i]) {
+			audio_strem_size++;
+		}
+	}
+	asprintf(&osd_streams, "%d of %d", audio_id, audio_strem_size);
+	return osd_streams;
+	free(osd_streams);
+}*/
+//Player switch functions
 void playerSwitchAudio(){
 	static int iparam = 1;
 	demuxer_t *demuxer = mpctx_get_demuxer(mpctx);
@@ -4160,17 +4254,19 @@ void playerSwitchAudio(){
 	mp_property_do("switch_audio",M_PROPERTY_SET,&iparam,mpctx);
 }
 
-void playerSwitchSubtitle(){
+void playerSwitchSubtitle(){ 
         // cycle
-        mp_input_queue_cmd(mp_input_parse_cmd("sub_select"));
+        mp_input_queue_cmd(mp_input_parse_cmd("pausing_keep sub_select"));
 }
 
 void playerSwitchFullscreen(){
 	mpctx->video_out->control(VOCTRL_FULLSCREEN,NULL);
 }
+
 void playerSwitchVsync(){
 	vo_vsync = !vo_vsync;
 }
+
 int playerSwitchLoop(){
 	if(mpctx->loop_times<0){
 		// inf
@@ -4181,16 +4277,42 @@ int playerSwitchLoop(){
 		mpctx->loop_times = -1;
 	}
 }
+void playerSwitchMute() {
+ mixer_mute(&mpctx->mixer);
+}
 
+void playerSwitchBalance(int left) {
+	if (left == 1) {
+        mp_input_queue_cmd(mp_input_parse_cmd("pausing_keep balance -0.1"));
+	} else {
+	mp_input_queue_cmd(mp_input_parse_cmd("pausing_keep balance +0.1"));
+	}
+}
 
-// try to play next file to go to gui
-void playerGuiAsked(){
-//        mp_input_parse_and_queue_cmds("pt_step 1");
-/*
-        mp_cmd_t * cmd = calloc( 1,sizeof( *cmd ) );
-        cmd->id=MP_CMD_QUIT;
-        cmd->name=strdup("quit");
-        mp_input_queue_cmd(cmd);
-*/
+void playerSwitchVolume(int up) {
+	if (up == 1) {
+        mp_input_queue_cmd(mp_input_parse_cmd("pausing_keep volume 1"));
+	} else {
+	mp_input_queue_cmd(mp_input_parse_cmd("pausing_keep volume -1"));
+	}
+}
+
+void playerTurnOffSubtitle(){
+        mp_input_queue_cmd(mp_input_parse_cmd("sub_visibility"));
+}
+//Exit
+// try to play next file to go to gui, and save last position of file
+void playerGuiAsked() {	
+	osd_level = 1; //remove osd before exit
+	double elapsed = demuxer_get_current_time(mpctx->demuxer);
+	int seconds = elapsed;
         mpctx->eof=1;
+	if (seconds > 60) {	
+	char * file = "";
+	asprintf(&file, "%s/cache/elapsed/%s%s", MPLAYER_CONFDIR, mp_basename(filename), ".txt"); //saves last position
+	FILE *fd = fopen(file, "w+");
+	fprintf(fd, "%d", seconds);
+	fclose(fd); 
+	free(file);	
+	}
 }

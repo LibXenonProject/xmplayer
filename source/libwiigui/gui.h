@@ -941,6 +941,7 @@ public:
 	void SetCol2Position(int x);
 	int FindMenuItem(int c, int d);
 	int GetClickedOption();
+	int GetSelectedOption();
 	void ResetState();
 	void SetFocus(int f);
 	void Draw();
@@ -992,6 +993,7 @@ public:
 	GuiButton ** fileList;
 protected:
 	GuiText ** fileListText;
+	GuiText ** fileListModDate;
 	GuiImage ** fileListBg;
 	GuiImage ** fileListFolder;
 	GuiImage ** fileListFile;
@@ -1020,7 +1022,6 @@ protected:
 
 	bool listChanged;
 };
-
 typedef struct _savelist {
 	int length;
 	char filename[MAX_SAVES + 1][256];
@@ -1070,6 +1071,5 @@ protected:
 
 	bool saveBtnLastOver[SAVELISTSIZE];
 };
-
 
 #endif

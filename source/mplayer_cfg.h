@@ -13,6 +13,7 @@ enum{
 typedef struct {
 	int language;
 	int exit_action;
+	int sort_order;
 } XMPlayerCfg_t;
 
 extern XMPlayerCfg_t XMPlayerCfg;

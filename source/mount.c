@@ -480,13 +480,16 @@ static void UnmountPartitions(int device) {
 
 extern int XTAFMount();
 
-void sleep(int i) {
+/* void sleep(int i) {
 	delay(i);
 }
 
+*/
+//
 /**
  * Parse mbr for filesystem
  */
+
 void mount_all_devices() {
 	FindPartitions(DEVICE_USB);
 	if (xenon_ata_ops.isInserted()) {

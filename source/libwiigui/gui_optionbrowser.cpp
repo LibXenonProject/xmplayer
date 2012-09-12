@@ -11,7 +11,8 @@
 #include "gui.h"
 #include "../w_input.h"
 #include "../gui_debug.h"
-
+int osd_pad_right = 0;
+int osd_pad_left = 0;
 /**
  * Constructor for the GuiOptionBrowser class.
  */
@@ -131,7 +132,16 @@ int GuiOptionBrowser::GetClickedOption() {
     }
     return found;
 }
-
+int GuiOptionBrowser::GetSelectedOption() {
+    int found = -1;
+    for (int i = 0; i < PAGESIZE; i++) {
+        if (optionBtn[i]->GetState() == STATE_SELECTED) {
+            found = optionIndex[i];
+            break;
+        }
+    }
+    return found;
+}
 /****************************************************************************
  * FindMenuItem
  *
@@ -267,8 +277,11 @@ void GuiOptionBrowser::Update(GuiTrigger * t) {
                 --selectedItem;
             }
         }
+    } else if (t->Right()) {
+	osd_pad_right = 1;
+    } else if (t->Left()) { 
+	osd_pad_left = 1;
     }
-
     if (updateCB)
         updateCB(this);
 }

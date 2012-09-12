@@ -40,6 +40,8 @@ typedef struct {
 	char isdir; // 0 - file, 1 - directory
 	char filename[MAXJOLIET + 1]; // full filename
 	char displayname[MAXDISPLAY + 1]; // name for browser display
+	char moddate[20];
+	char order_date[20];
 	BROWSER_TYPE type;
 } BROWSERENTRY;
 

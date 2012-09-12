@@ -683,8 +683,6 @@ blend_vector_exit:
     render_priv->state.clip_drawing = 0;
 }
 
-#define SKIP_SYMBOL(x) ((x) == 0 || (x) == '\n' || (x) == '\r')
-
 /**
  * \brief Convert TextInfo struct to ASS_Image list
  * Splits glyphs in halves when needed (for \kf karaoke).
@@ -702,7 +700,7 @@ static ASS_Image *render_text(ASS_Renderer *render_priv, int dst_x, int dst_y)
 
     for (i = 0; i < text_info->length; ++i) {
         GlyphInfo *info = text_info->glyphs + i;
-        if (SKIP_SYMBOL(info->symbol) || !info->bm_s
+        if ((info->symbol == 0) || (info->symbol == '\n') || !info->bm_s
             || (info->shadow_x == 0 && info->shadow_y == 0) || info->skip)
             continue;
 
@@ -736,7 +734,7 @@ static ASS_Image *render_text(ASS_Renderer *render_priv, int dst_x, int dst_y)
     last_tail = 0;
     for (i = 0; i < text_info->length; ++i) {
         GlyphInfo *info = text_info->glyphs + i;
-        if (SKIP_SYMBOL(info->symbol) || !info->bm_o
+        if ((info->symbol == 0) || (info->symbol == '\n') || !info->bm_o
             || info->skip)
             continue;
 
@@ -769,7 +767,7 @@ static ASS_Image *render_text(ASS_Renderer *render_priv, int dst_x, int dst_y)
 
     for (i = 0; i < text_info->length; ++i) {
         GlyphInfo *info = text_info->glyphs + i;
-        if (SKIP_SYMBOL(info->symbol) || !info->bm
+        if ((info->symbol == 0) || (info->symbol == '\n') || !info->bm
             || info->skip)
             continue;
 
