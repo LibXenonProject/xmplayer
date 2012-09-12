@@ -129,7 +129,6 @@ static int getch2_internal(void) {
 		struct controller_data_s d_ctrl;
 
 		get_controller_down(&d_ctrl, i);
-		
 		if ((gui_input_use == 0) && (osd_level < 2)) {
 			if (d_ctrl.left)
 				key = KEY_LEFT;

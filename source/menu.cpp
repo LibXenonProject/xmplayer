@@ -328,6 +328,9 @@ static char seek_filename[2048];
 static int playerSeekChoice = 0;
 char * playerSeekTime = "";
 
+//Audio player
+static int audio_gui = 0;
+
 static int last_menu;
 
 static int current_menu = HOME_PAGE;
@@ -340,6 +343,15 @@ static void update() {
 		mainWindow->Update(&userInput[i]);
 	}
 }
+
+static void resetController() {
+	int i = 0;
+	for(i=0;i<4;i++){
+		struct controller_data_s ctrl_zero = {};
+		set_controller_data(i,&ctrl_zero);
+	}
+}
+
 /**
  * Callback for osd option bar
  **/
@@ -1612,6 +1624,7 @@ static void Browser(const char * title, const char * root) {
 	switch (current_menu) {
 		case BROWSE_AUDIO:
 			browser_folder_icon = browser_music_folder_icon;
+			extValid = extIsValidAudioExt;
 			break;
 		case BROWSE_VIDEO:
 			browser_folder_icon = browser_video_folder_icon;
@@ -1619,6 +1632,7 @@ static void Browser(const char * title, const char * root) {
 			break;
 		case BROWSE_PICTURE:
 			browser_folder_icon = browser_photo_folder_icon;
+			extValid = extIsValidPictureExt;
 			break;
 		default:
 			extValid = extAlwaysValid;
@@ -1758,6 +1772,9 @@ browser_counter:	sprintf(tmp, "%d/%d", browser.selIndex + 1, browser.numEntries)
 					gui_browser->ResetState();		
 					if (file_type(mplayer_filename) == BROWSER_TYPE_ELF) {
 						current_menu = MENU_ELF;
+					/*} else if (file_type(mplayer_filename) == BROWSER_TYPE_AUDIO) {
+						audio_gui = 1;
+						current_menu = MENU_MPLAYER;*/
 					} else {
 						if ((file_exists(seek_filename)) && (playerSeekPrompt(seek_filename) == -1)) { 
 							goto browser_select;
@@ -2091,7 +2108,7 @@ static void gui_loop() {
 		} else if (current_menu == BROWSE_VIDEO) {
 			Browser("Videos", root_dev);
 		} else if (current_menu == BROWSE_AUDIO) {
-			Browser("Audios", root_dev);
+			Browser("Music", root_dev);
 		} else if (current_menu == BROWSE_PICTURE) {
 			Browser("Photos", root_dev);
 		} else if (current_menu == BROWSE_ALL) {
@@ -2169,10 +2186,7 @@ int main(int argc, char** argv) {
 	xenon_run_thread_task(2, thread_stack[2], (void*) loadingThread);
 
 	// Init devices
-	while (usb_init() != 0) {
-		printf("[USB] Initializing.. \n");
-		mdelay(100);
-	}
+	usb_init();
 	xenon_ata_init();
 	xenon_atapi_init();
 	usb_do_poll();
@@ -2235,7 +2249,7 @@ extern "C" void mplayer_return_to_gui() {
 	TR;
 	// make sur to leave the gui
 	mplayer_osd_close();
-
+	resetController(); //resets buttons, so pushes from mplayer doesn't get reconized in browser
 	current_menu = last_menu;
 
 	TR;

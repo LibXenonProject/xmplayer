@@ -5,20 +5,22 @@
 softvol=1
 # Set max soft volume
 softvol-max=300
+# Start volume (0-100)
+volume=80
 # Virtual Sync
 vsync=no
 # =====================
 # Text-based subtitles
 # =====================
 #<<==Subfont settings==>>
-# Settings are only used if ass=no - no outline
+# Settings are only used if ass=no - no outline working atm
 # Subfont starting scale
 subfont-text-scale=2
 # Subfont position (0-100)
 subpos=90
 #
 #<<==ASS/SSA settings==>>
-# Disable ASS (ass=no) if you are having random freeze
+# Disable ASS (ass=no) if you are having random freeze (and #vf=ass)
 # ASS Subtitles switch
 ass=yes
 vf=ass

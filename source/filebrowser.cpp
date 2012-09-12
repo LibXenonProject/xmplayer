@@ -321,8 +321,13 @@ int ParseDirectory() {
 		strncpy(browserList[entryNum].filename, entry->d_name, MAXJOLIET);
 
 		asprintf(&file_path, "%s/%s", fulldir, entry->d_name);
-		strncpy(browserList[entryNum].moddate, getModifiedDate(file_path), 20);
-		strncpy(browserList[entryNum].order_date, format_date, 20);
+		if (strstr(rootdir, "uda") != NULL) {
+			strncpy(browserList[entryNum].moddate, getModifiedDate(file_path), 20);
+			strncpy(browserList[entryNum].order_date, format_date, 20);
+		} else { //sda (xtaf) does not support stat atm
+			strncpy(browserList[entryNum].moddate, "00/00/0000", 20);
+			strncpy(browserList[entryNum].order_date, "00000000", 20);
+		}
 		free(file_path);
 		//
 		ext = strrchr(entry->d_name, '.');
