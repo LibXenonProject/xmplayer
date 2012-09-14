@@ -378,7 +378,7 @@ static const mp_key_name_t key_names[] = {
 // The second is the command
 
 static const mp_cmd_bind_t def_cmd_binds[] = {
-
+#if 0
   // Ignore modifiers by default
   { { KEY_CTRL, 0 }, "ignore" },
 
@@ -517,7 +517,24 @@ static const mp_cmd_bind_t def_cmd_binds[] = {
   { { '@', 0 }, "seek_chapter 1" },
   { { 'A', 0 }, "switch_angle 1" },
   { { 'U', 0 }, "stop" },
-
+#else
+  // Libxenon default config
+  { { KEY_RIGHT, 0 }, "seek 10" },
+  { { KEY_LEFT, 0 }, "seek -10" },
+  { { KEY_UP, 0 }, "seek 60" },
+  { { KEY_DOWN, 0 }, "seek -60" },
+  { { 'L', 0 }, "seek -10" },
+  { { 'R', 0 }, "seek +10" },
+  { { 'v', 0 }, "seek -600" },
+  { { 'c', 0 }, "seek +600" },
+  { { 'a', 0 }, "pausing_toggle osd_show_progression" },
+  { { 'b', 0 }, "quit" },
+  { { 'x', 0 }, "osd_show_progression" },
+  { { 'y', 0 }, "pausing_keep osd" },
+  { { 'X', 0 }, "pausing_keep osd" },
+  { { KEY_ENTER, 0 }, "pt_step 1" },
+  { { ' ', 0 }, "pt_step -1" },
+#endif
   { { 0 }, NULL }
 };
 
