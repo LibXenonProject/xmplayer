@@ -14,11 +14,11 @@
 #include <byteswap.h>
 #include "iso9660.h"
 
-//#include "../mplayer/mplayerlib.h"
-
 extern DISC_INTERFACE xenon_atapi_ops;
 extern DISC_INTERFACE xenon_ata_ops;
-extern DISC_INTERFACE usb2mass_ops;
+extern DISC_INTERFACE usb2mass_ops_0;
+extern DISC_INTERFACE usb2mass_ops_1;
+extern DISC_INTERFACE usb2mass_ops_2;
 
 #define le32_to_cpu(x) bswap_32(x)
 
@@ -141,12 +141,14 @@ typedef struct {
 #endif
 
 enum {
-	DEVICE_USB, // usb
+	DEVICE_USB_0, // usb
+	DEVICE_USB_1, // usb
+	DEVICE_USB_2, // usb
 	DEVICE_ATA, // hdd
 	DEVICE_ATAPI, // cdrom
 };
 
-static char *prefix[] = {"uda", "sda", "dvd"};
+static char *prefix[] = {"uda", "udb", "udc", "sda", "dvd"};
 
 DEVICE_STRUCT part[2][MAX_DEVICES];
 
@@ -159,13 +161,28 @@ static void AddPartition(sec_t sector, int device, int type, int *devnum) {
 	for (i = 0; i < *devnum; i++)
 		if (part[device][i].sector == sector) return; // to avoid mount same partition again
 
-	DISC_INTERFACE *disc = (DISC_INTERFACE *) & xenon_ata_ops;
+	DISC_INTERFACE *disc = NULL;
 
-	if (device == DEVICE_USB)
-		disc = (DISC_INTERFACE *) & usb2mass_ops;
-	
-	else if(device == DEVICE_ATAPI)
+	switch(device)
+	{
+		case DEVICE_USB_0:
+		disc = (DISC_INTERFACE *) & usb2mass_ops_0;
+		break;		
+		case DEVICE_USB_1:
+		disc = (DISC_INTERFACE *) & usb2mass_ops_1;
+		break;		
+		case DEVICE_USB_2:
+		disc = (DISC_INTERFACE *) & usb2mass_ops_2;
+		break;		
+		case DEVICE_ATA:
+		disc = (DISC_INTERFACE *) & xenon_ata_ops;
+		break;		
+		case DEVICE_ATAPI:
 		disc = (DISC_INTERFACE *) & xenon_atapi_ops;
+		break;
+		default:
+		return;	
+	}
 
 	char mount[10];
 	sprintf(mount, "%s%i", prefix[device], *devnum);
@@ -239,16 +256,25 @@ static int FindPartitions(int device) {
 
 	DISC_INTERFACE *interface;
 
-	switch(device){
-		case DEVICE_ATAPI:
-			interface = (DISC_INTERFACE *) & xenon_atapi_ops;
-			break;
+	switch(device)
+	{
+		case DEVICE_USB_0:
+		interface = (DISC_INTERFACE *) & usb2mass_ops_0;
+		break;		
+		case DEVICE_USB_1:
+		interface = (DISC_INTERFACE *) & usb2mass_ops_1;
+		break;		
+		case DEVICE_USB_2:
+		interface = (DISC_INTERFACE *) & usb2mass_ops_2;
+		break;		
 		case DEVICE_ATA:
-			interface = (DISC_INTERFACE *) & xenon_ata_ops;
-			break;
-		case DEVICE_USB:
-			interface = (DISC_INTERFACE *) & usb2mass_ops;
-			break;
+		interface = (DISC_INTERFACE *) & xenon_ata_ops;
+		break;		
+		case DEVICE_ATAPI:
+		interface = (DISC_INTERFACE *) & xenon_atapi_ops;
+		break;
+		default:
+		return -1;	
 	}
 
 
@@ -491,7 +517,9 @@ extern int XTAFMount();
  */
 
 void mount_all_devices() {
-	FindPartitions(DEVICE_USB);
+	FindPartitions(DEVICE_USB_0);
+	FindPartitions(DEVICE_USB_1);
+	FindPartitions(DEVICE_USB_2);
 	if (xenon_ata_ops.isInserted()) {
 		if (XTAFMount() == 0) {
 			FindPartitions(DEVICE_ATA);
