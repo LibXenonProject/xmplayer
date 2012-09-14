@@ -2213,19 +2213,7 @@ int main(int argc, char** argv) {
 	// fs
 	mount_all_devices();
 	findDevices();
-
-	// preference
-	if (LoadPrefs() == false)
-		SavePrefs(true);
-
-	// Init gui
-	// french langage
-	printf("XMPlayerCfg.language : %d\n",XMPlayerCfg.language);
-	switch (XMPlayerCfg.language) {
-		case LANG_FRENCH:
-			LoadLanguage((char*) fr_lang, fr_lang_size);
-			break;
-	}
+	
 	InitFreeType((u8*) font_ttf, font_ttf_size);
 	SetupPads();
 	ChangeFontSize(26);
@@ -2240,11 +2228,22 @@ int main(int argc, char** argv) {
 		udelay(25);
 		unlock(&loadingThreadLock);
 	}
-
-	current_menu = HOME_PAGE;
 	
 	// init mplayer
 	init_mplayer();
+	
+	// preference
+	if (LoadPrefs() == false)
+		SavePrefs(true);
+
+	// Init gui
+	switch (XMPlayerCfg.language) {
+		case LANG_FRENCH:
+			LoadLanguage((char*) fr_lang, fr_lang_size);
+			break;
+	}
+
+	current_menu = HOME_PAGE;
 	
 	while (1) {
 		// never exit !!
