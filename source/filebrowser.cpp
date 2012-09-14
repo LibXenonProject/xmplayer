@@ -239,19 +239,15 @@ int extAlwaysValid(char *ext) {
 
 int (*extValid)(char * ext) = NULL;
 
-static char format_date[20];
-static char* getModifiedDate(char *filename) {
-	struct stat buffer;
+#define getFormatDate() "%d/%m/%Y"
+
+static void getDate(time_t time, char * out) {
 	struct tm* ts;
-	char buf[20];
-	CleanupPath(filename);
-	if (stat(filename, &buffer) == 0) {
-		ts = localtime(&buffer.st_mtime);
-		strftime(buf, 20, "%d/%m/%Y", ts);
-		strftime(format_date, 20, "%Y%m%d", ts);
-		return buf;
+	if (time) {
+		ts = localtime(&time);
+		strftime(out, 20, "%d/%m/%Y", ts);
 	} else {
-		printf("[filebrowser.cpp] File error, does FS support stat?");
+		strcpy(out, "00/00/0000");
 	}
 }
 
@@ -321,13 +317,10 @@ int ParseDirectory() {
 		strncpy(browserList[entryNum].filename, entry->d_name, MAXJOLIET);
 
 		asprintf(&file_path, "%s/%s", fulldir, entry->d_name);
-		if (strstr(rootdir, "uda") != NULL) {
-			strncpy(browserList[entryNum].moddate, getModifiedDate(file_path), 20);
-			strncpy(browserList[entryNum].order_date, format_date, 20);
-		} else { //sda (xtaf) does not support stat atm
-			strncpy(browserList[entryNum].moddate, "00/00/0000", 20);
-			strncpy(browserList[entryNum].order_date, "00000000", 20);
-		}
+		
+		getDate(entry->d_mtime, browserList[entryNum].moddate);
+		getDate(entry->d_ctime, browserList[entryNum].order_date);
+			
 		free(file_path);
 		//
 		ext = strrchr(entry->d_name, '.');
