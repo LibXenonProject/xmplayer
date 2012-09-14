@@ -29,7 +29,7 @@ MPLAYER		:=	$(CURDIR)/mplayer
 #OPTIFLAGS	=	-Ofast -flto -fuse-linker-plugin -mcpu=cell -mtune=cell -fno-tree-vectorize -fno-tree-slp-vectorize -ftree-vectorizer-verbose=1
 OPTIFLAGS =  -O3 -mcpu=cell -mtune=cell -fno-tree-vectorize -fno-tree-slp-vectorize -ftree-vectorizer-verbose=1 
 
-ASFLAGS		=	Wa,$(INCLUDE) -Wa,-a32
+ASFLAGS		=	-Wa,-a32
 CFLAGS		=	-g  -fno-pic $(OPTIFLAGS) -Wall $(MACHDEP) $(INCLUDE)
 CXXFLAGS		=	$(CFLAGS)
 
@@ -123,7 +123,7 @@ $(BUILD):
 	@echo build player
 	cd mplayer; $(MAKE) -f Makefile lib; cd ../..
 	@[ -d $@ ] || mkdir -p $@
-	@make --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
+	@make --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile -j4
 
 #---------------------------------------------------------------------------------
 clean:
