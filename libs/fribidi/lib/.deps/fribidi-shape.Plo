@@ -1,31 +1,32 @@
 fribidi-shape.lo: fribidi-shape.c common.h ../config.h fribidi-common.h \
  fribidi-config.h \
- /usr/local/xenon/lib/gcc/xenon/4.6.1/../../../../xenon/include/stdlib.h \
- /usr/local/xenon/lib/gcc/xenon/4.6.1/../../../../xenon/include/_ansi.h \
- /usr/local/xenon/lib/gcc/xenon/4.6.1/../../../../xenon/include/newlib.h \
- /usr/local/xenon/lib/gcc/xenon/4.6.1/../../../../xenon/include/sys/config.h \
- /usr/local/xenon/lib/gcc/xenon/4.6.1/../../../../xenon/include/machine/ieeefp.h \
- /usr/local/xenon/lib/gcc/xenon/4.6.1/include/stddef.h \
- /usr/local/xenon/lib/gcc/xenon/4.6.1/../../../../xenon/include/sys/reent.h \
- /usr/local/xenon/lib/gcc/xenon/4.6.1/../../../../xenon/include/_ansi.h \
- /usr/local/xenon/lib/gcc/xenon/4.6.1/../../../../xenon/include/sys/_types.h \
- /usr/local/xenon/lib/gcc/xenon/4.6.1/../../../../xenon/include/machine/_types.h \
- /usr/local/xenon/lib/gcc/xenon/4.6.1/../../../../xenon/include/machine/_default_types.h \
- /usr/local/xenon/lib/gcc/xenon/4.6.1/../../../../xenon/include/sys/lock.h \
- /usr/local/xenon/lib/gcc/xenon/4.6.1/../../../../xenon/include/machine/stdlib.h \
- /usr/local/xenon/lib/gcc/xenon/4.6.1/../../../../xenon/include/string.h \
- /usr/local/xenon/lib/gcc/xenon/4.6.1/../../../../xenon/include/sys/string.h \
+ /usr/local/xenon/lib/gcc/xenon/4.7.1/../../../../xenon/include/stdlib.h \
+ /usr/local/xenon/lib/gcc/xenon/4.7.1/../../../../xenon/include/machine/ieeefp.h \
+ /usr/local/xenon/lib/gcc/xenon/4.7.1/../../../../xenon/include/_ansi.h \
+ /usr/local/xenon/lib/gcc/xenon/4.7.1/../../../../xenon/include/newlib.h \
+ /usr/local/xenon/lib/gcc/xenon/4.7.1/../../../../xenon/include/sys/config.h \
+ /usr/local/xenon/lib/gcc/xenon/4.7.1/../../../../xenon/include/sys/features.h \
+ /usr/local/xenon/lib/gcc/xenon/4.7.1/include/stddef.h \
+ /usr/local/xenon/lib/gcc/xenon/4.7.1/../../../../xenon/include/sys/reent.h \
+ /usr/local/xenon/lib/gcc/xenon/4.7.1/../../../../xenon/include/_ansi.h \
+ /usr/local/xenon/lib/gcc/xenon/4.7.1/../../../../xenon/include/sys/_types.h \
+ /usr/local/xenon/lib/gcc/xenon/4.7.1/../../../../xenon/include/machine/_types.h \
+ /usr/local/xenon/lib/gcc/xenon/4.7.1/../../../../xenon/include/machine/_default_types.h \
+ /usr/local/xenon/lib/gcc/xenon/4.7.1/../../../../xenon/include/sys/lock.h \
+ /usr/local/xenon/lib/gcc/xenon/4.7.1/../../../../xenon/include/machine/stdlib.h \
+ /usr/local/xenon/lib/gcc/xenon/4.7.1/../../../../xenon/include/string.h \
+ /usr/local/xenon/lib/gcc/xenon/4.7.1/../../../../xenon/include/sys/cdefs.h \
+ /usr/local/xenon/lib/gcc/xenon/4.7.1/../../../../xenon/include/sys/string.h \
  debug.h fribidi-types.h fribidi-common.h fribidi-begindecls.h \
- /usr/local/xenon/lib/gcc/xenon/4.6.1/../../../../xenon/include/inttypes.h \
- /usr/local/xenon/lib/gcc/xenon/4.6.1/include/stdint.h \
- /usr/local/xenon/lib/gcc/xenon/4.6.1/../../../../xenon/include/stdint.h \
+ /usr/local/xenon/lib/gcc/xenon/4.7.1/../../../../xenon/include/inttypes.h \
+ /usr/local/xenon/lib/gcc/xenon/4.7.1/include/stdint.h \
+ /usr/local/xenon/lib/gcc/xenon/4.7.1/../../../../xenon/include/stdint.h \
  fribidi-enddecls.h fribidi-begindecls.h \
- /usr/local/xenon/lib/gcc/xenon/4.6.1/../../../../xenon/include/stdio.h \
- /usr/local/xenon/lib/gcc/xenon/4.6.1/include/stdarg.h \
- /usr/local/xenon/lib/gcc/xenon/4.6.1/../../../../xenon/include/sys/types.h \
- /usr/local/xenon/lib/gcc/xenon/4.6.1/../../../../xenon/include/machine/types.h \
- /usr/local/xenon/lib/gcc/xenon/4.6.1/../../../../xenon/include/sys/features.h \
- /usr/local/xenon/lib/gcc/xenon/4.6.1/../../../../xenon/include/sys/stdio.h \
+ /usr/local/xenon/lib/gcc/xenon/4.7.1/../../../../xenon/include/stdio.h \
+ /usr/local/xenon/lib/gcc/xenon/4.7.1/include/stdarg.h \
+ /usr/local/xenon/lib/gcc/xenon/4.7.1/../../../../xenon/include/sys/types.h \
+ /usr/local/xenon/lib/gcc/xenon/4.7.1/../../../../xenon/include/machine/types.h \
+ /usr/local/xenon/lib/gcc/xenon/4.7.1/../../../../xenon/include/sys/stdio.h \
  fribidi-enddecls.h fribidi-shape.h fribidi-types.h fribidi-flags.h \
  fribidi-bidi-types.h fribidi-bidi-types-list.h fribidi-joining-types.h \
  fribidi-joining-types-list.h fribidi-mirroring.h fribidi-arabic.h \
@@ -39,35 +40,39 @@ fribidi-common.h:
 
 fribidi-config.h:
 
-/usr/local/xenon/lib/gcc/xenon/4.6.1/../../../../xenon/include/stdlib.h:
+/usr/local/xenon/lib/gcc/xenon/4.7.1/../../../../xenon/include/stdlib.h:
 
-/usr/local/xenon/lib/gcc/xenon/4.6.1/../../../../xenon/include/_ansi.h:
+/usr/local/xenon/lib/gcc/xenon/4.7.1/../../../../xenon/include/machine/ieeefp.h:
 
-/usr/local/xenon/lib/gcc/xenon/4.6.1/../../../../xenon/include/newlib.h:
+/usr/local/xenon/lib/gcc/xenon/4.7.1/../../../../xenon/include/_ansi.h:
 
-/usr/local/xenon/lib/gcc/xenon/4.6.1/../../../../xenon/include/sys/config.h:
+/usr/local/xenon/lib/gcc/xenon/4.7.1/../../../../xenon/include/newlib.h:
 
-/usr/local/xenon/lib/gcc/xenon/4.6.1/../../../../xenon/include/machine/ieeefp.h:
+/usr/local/xenon/lib/gcc/xenon/4.7.1/../../../../xenon/include/sys/config.h:
 
-/usr/local/xenon/lib/gcc/xenon/4.6.1/include/stddef.h:
+/usr/local/xenon/lib/gcc/xenon/4.7.1/../../../../xenon/include/sys/features.h:
 
-/usr/local/xenon/lib/gcc/xenon/4.6.1/../../../../xenon/include/sys/reent.h:
+/usr/local/xenon/lib/gcc/xenon/4.7.1/include/stddef.h:
 
-/usr/local/xenon/lib/gcc/xenon/4.6.1/../../../../xenon/include/_ansi.h:
+/usr/local/xenon/lib/gcc/xenon/4.7.1/../../../../xenon/include/sys/reent.h:
 
-/usr/local/xenon/lib/gcc/xenon/4.6.1/../../../../xenon/include/sys/_types.h:
+/usr/local/xenon/lib/gcc/xenon/4.7.1/../../../../xenon/include/_ansi.h:
 
-/usr/local/xenon/lib/gcc/xenon/4.6.1/../../../../xenon/include/machine/_types.h:
+/usr/local/xenon/lib/gcc/xenon/4.7.1/../../../../xenon/include/sys/_types.h:
 
-/usr/local/xenon/lib/gcc/xenon/4.6.1/../../../../xenon/include/machine/_default_types.h:
+/usr/local/xenon/lib/gcc/xenon/4.7.1/../../../../xenon/include/machine/_types.h:
 
-/usr/local/xenon/lib/gcc/xenon/4.6.1/../../../../xenon/include/sys/lock.h:
+/usr/local/xenon/lib/gcc/xenon/4.7.1/../../../../xenon/include/machine/_default_types.h:
 
-/usr/local/xenon/lib/gcc/xenon/4.6.1/../../../../xenon/include/machine/stdlib.h:
+/usr/local/xenon/lib/gcc/xenon/4.7.1/../../../../xenon/include/sys/lock.h:
 
-/usr/local/xenon/lib/gcc/xenon/4.6.1/../../../../xenon/include/string.h:
+/usr/local/xenon/lib/gcc/xenon/4.7.1/../../../../xenon/include/machine/stdlib.h:
 
-/usr/local/xenon/lib/gcc/xenon/4.6.1/../../../../xenon/include/sys/string.h:
+/usr/local/xenon/lib/gcc/xenon/4.7.1/../../../../xenon/include/string.h:
+
+/usr/local/xenon/lib/gcc/xenon/4.7.1/../../../../xenon/include/sys/cdefs.h:
+
+/usr/local/xenon/lib/gcc/xenon/4.7.1/../../../../xenon/include/sys/string.h:
 
 debug.h:
 
@@ -77,27 +82,25 @@ fribidi-common.h:
 
 fribidi-begindecls.h:
 
-/usr/local/xenon/lib/gcc/xenon/4.6.1/../../../../xenon/include/inttypes.h:
+/usr/local/xenon/lib/gcc/xenon/4.7.1/../../../../xenon/include/inttypes.h:
 
-/usr/local/xenon/lib/gcc/xenon/4.6.1/include/stdint.h:
+/usr/local/xenon/lib/gcc/xenon/4.7.1/include/stdint.h:
 
-/usr/local/xenon/lib/gcc/xenon/4.6.1/../../../../xenon/include/stdint.h:
+/usr/local/xenon/lib/gcc/xenon/4.7.1/../../../../xenon/include/stdint.h:
 
 fribidi-enddecls.h:
 
 fribidi-begindecls.h:
 
-/usr/local/xenon/lib/gcc/xenon/4.6.1/../../../../xenon/include/stdio.h:
+/usr/local/xenon/lib/gcc/xenon/4.7.1/../../../../xenon/include/stdio.h:
 
-/usr/local/xenon/lib/gcc/xenon/4.6.1/include/stdarg.h:
+/usr/local/xenon/lib/gcc/xenon/4.7.1/include/stdarg.h:
 
-/usr/local/xenon/lib/gcc/xenon/4.6.1/../../../../xenon/include/sys/types.h:
+/usr/local/xenon/lib/gcc/xenon/4.7.1/../../../../xenon/include/sys/types.h:
 
-/usr/local/xenon/lib/gcc/xenon/4.6.1/../../../../xenon/include/machine/types.h:
+/usr/local/xenon/lib/gcc/xenon/4.7.1/../../../../xenon/include/machine/types.h:
 
-/usr/local/xenon/lib/gcc/xenon/4.6.1/../../../../xenon/include/sys/features.h:
-
-/usr/local/xenon/lib/gcc/xenon/4.6.1/../../../../xenon/include/sys/stdio.h:
+/usr/local/xenon/lib/gcc/xenon/4.7.1/../../../../xenon/include/sys/stdio.h:
 
 fribidi-enddecls.h:
 
