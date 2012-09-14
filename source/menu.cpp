@@ -889,6 +889,20 @@ extern "C" int frame_dropping;
 extern int osd_pad_right; //from gui_optionbrowser.cpp
 extern int osd_pad_left; //from gui_optionbrowser.cpp
 extern int osd_level; 
+
+
+static void ExitMplayer(){
+	// save settings
+	SavePrefs(true);
+	
+	if (XMPlayerCfg.exit_action == 0) {
+		exit(0);
+	}
+	else {
+		xenon_smc_power_shutdown();
+	}
+}
+
 /****************************************************************************
  * WindowPrompt
  *
@@ -991,6 +1005,12 @@ int WindowPrompt(const char *title, const char *msg, const char *btn1Label, cons
 	mainWindow->SetState(STATE_DEFAULT);
 	return choice;
 }
+
+extern "C" void cErrorPrompt(const char *msg) {
+	WindowPrompt("Error", msg, "Quit", NULL);
+	ExitMplayer();
+}
+
 static char* playerSeekFormatTime(char * dest, double time) {
         int min, sec, hr;        
 	hr = (time / 3600);
@@ -1953,8 +1973,8 @@ static void HomePage() {
 	home_list_v->Remove(home_music_btn);
 	home_list_v->Remove(home_photo_btn);
 	home_list_v->Remove(home_setting_btn);
-	home_list_v->Remove(home_restart_btn); /*siz - added Restart: 15/07/2012 */
-	home_list_v->Remove(home_shutdown_btn); /*siz - added Shutdown: 15/07/2012 */
+	home_list_v->Remove(home_restart_btn); 
+	home_list_v->Remove(home_shutdown_btn);
 	mainWindow->Remove(home_curitem);
 }
 
@@ -2140,7 +2160,6 @@ static void findDevices() {
 
 extern "C" void mount_all_devices();
 
-
 static int loading_thread_finished = 0;
 static int end_loading_thread = 0;
 static unsigned char thread_stack[6][0x10000] __attribute__ ((aligned (256)));
@@ -2193,7 +2212,6 @@ int main(int argc, char** argv) {
 
 	// fs
 	mount_all_devices();
-	init_mplayer();
 	findDevices();
 
 	// preference
@@ -2224,6 +2242,10 @@ int main(int argc, char** argv) {
 	}
 
 	current_menu = HOME_PAGE;
+	
+	// init mplayer
+	init_mplayer();
+	
 	while (1) {
 		// never exit !!
 		need_gui = 1;
@@ -2239,20 +2261,16 @@ int main(int argc, char** argv) {
 extern "C" void mplayer_return_to_gui() {
 	need_gui = 1;
 
-	TR;
 	// always sync
 	Xe_Sync(g_pVideoDevice);
-	TR;
 	while (!Xe_IsVBlank(g_pVideoDevice));
 	Xe_InvalidateState(g_pVideoDevice);
 
-	TR;
 	// make sur to leave the gui
 	mplayer_osd_close();
 	resetController(); //resets buttons, so pushes from mplayer doesn't get reconized in browser
 	current_menu = last_menu;
 
-	TR;
 	gui_loop();
 	
 }
