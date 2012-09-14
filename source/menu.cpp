@@ -129,11 +129,17 @@
 
 #define _(x)	gettext(x)
 
+// mplayer_func.C
+extern char MPLAYER_DATADIR[100]; 
+extern char MPLAYER_CONFDIR[100]; 
+extern char MPLAYER_LIBDIR[100];
+
 char * root_dev = NULL;
 static int device_list_size = 0;
 static char device_list[STD_MAX][10];
 
-enum {
+enum
+{
 	MENU_BACK = -1,
 	HOME_PAGE = 1,
 	MENU_MPLAYER,
@@ -316,8 +322,8 @@ static GuiText * osd_options_headline = NULL;
 
 static char mplayer_filename[2048];
 //Browser
-static const char * exited_root = ""; 
-static char exited_dir[2048]; 
+static const char * exited_root = "";
+static char exited_dir[2048];
 static char exited_dir_array[64][2048];
 static int exited_item[64];
 static int exited_page[64];
@@ -326,7 +332,7 @@ static int exited_i[64];
 //Saved seek
 static char seek_filename[2048];
 static int playerSeekChoice = 0;
-char * playerSeekTime = "";
+char playerSeekTime[100] = {};
 
 //Audio player
 static int audio_gui = 0;
@@ -335,7 +341,8 @@ static int last_menu;
 
 static int current_menu = HOME_PAGE;
 
-static void update() {
+static void update()
+{
 	UpdatePads();
 	mainWindow->Draw();
 	Menu_Render();
@@ -344,11 +351,12 @@ static void update() {
 	}
 }
 
-static void resetController() {
+static void resetController()
+{
 	int i = 0;
-	for(i=0;i<4;i++){
+	for (i = 0; i < 4; i++) {
 		struct controller_data_s ctrl_zero = {};
-		set_controller_data(i,&ctrl_zero);
+		set_controller_data(i, &ctrl_zero);
 	}
 }
 
@@ -360,7 +368,8 @@ static int osd_display_option_audio = 0;
 static int osd_display_option_video = 0;
 static int osd_display_option_subtitle = 0;
 
-static void osd_option_default_callback(void * data) {
+static void osd_option_default_callback(void * data)
+{
 	GuiButton *button = (GuiButton *) data;
 	if (button->GetState() == STATE_CLICKED) {
 		button->ResetState();
@@ -368,7 +377,8 @@ static void osd_option_default_callback(void * data) {
 	}
 }
 
-static void osd_options_pan_callback(void * data) {
+static void osd_options_pan_callback(void * data)
+{
 	GuiButton *button = (GuiButton *) data;
 	if (button->GetState() == STATE_CLICKED) {
 		osd_display_option_video = !osd_display_option_video;
@@ -377,7 +387,8 @@ static void osd_options_pan_callback(void * data) {
 	}
 }
 
-static void osd_options_vsync_callback(void * data) {
+static void osd_options_vsync_callback(void * data)
+{
 	GuiButton *button = (GuiButton *) data;
 	if (button->GetState() == STATE_CLICKED) {
 		playerSwitchVsync();
@@ -386,17 +397,19 @@ static void osd_options_vsync_callback(void * data) {
 	}
 }
 
-static void osd_options_next_callback(void * data) {
+static void osd_options_next_callback(void * data)
+{
 	GuiButton *button = (GuiButton *) data;
 	if (button->GetState() == STATE_CLICKED) {
 		button->ResetState();
 		//playerTurnOffSubtitle(); //turns off subs, atm if not, subs will be freezed on a video without them
-		playerGuiAsked();//playback resume
+		playerGuiAsked(); //playback resume
 		button->SetState(STATE_SELECTED);
 	}
 }
 
-static void osd_options_loop_callback(void * data) {
+static void osd_options_loop_callback(void * data)
+{
 	GuiButton *button = (GuiButton *) data;
 	if (button->GetState() == STATE_CLICKED) {
 		button->ResetState();
@@ -404,7 +417,8 @@ static void osd_options_loop_callback(void * data) {
 	}
 }
 
-static void osd_options_info_callback(void * data) {
+static void osd_options_info_callback(void * data)
+{
 	GuiButton *button = (GuiButton *) data;
 	if (button->GetState() == STATE_CLICKED) {
 		osd_display_info = !osd_display_info;
@@ -413,7 +427,8 @@ static void osd_options_info_callback(void * data) {
 	}
 }
 
-static void osd_options_audio_callback(void * data) {
+static void osd_options_audio_callback(void * data)
+{
 	GuiButton *button = (GuiButton *) data;
 	if (button->GetState() == STATE_CLICKED) {
 		osd_display_option_audio = !osd_display_option_audio;
@@ -422,7 +437,8 @@ static void osd_options_audio_callback(void * data) {
 	}
 }
 
-static void osd_options_sub_callback(void * data) {
+static void osd_options_sub_callback(void * data)
+{
 	GuiButton *button = (GuiButton *) data;
 	if (button->GetState() == STATE_CLICKED) {
 		osd_display_option_subtitle = !osd_display_option_subtitle;
@@ -430,10 +446,12 @@ static void osd_options_sub_callback(void * data) {
 		button->SetState(STATE_SELECTED);
 	}
 }
+
 /**
  * Load ressources
  **/
-static void loadHomeRessources() {
+static void loadHomeRessources()
+{
 	home_left = new GuiImage(new GuiImageData(home_left_png));
 
 	home_main_function_frame_bg = new GuiImage(new GuiImageData(home_main_function_frame_bg_png));
@@ -473,7 +491,7 @@ static void loadHomeRessources() {
 
 	home_video_txt = new GuiText("Videos", 48, 0xFFFFFFFF);
 	home_all_txt = new GuiText("All", 48, 0xFFFFFFFF);
-	home_music_txt = new GuiText("Music", 48, 0xFFFFFFFF);  
+	home_music_txt = new GuiText("Music", 48, 0xFFFFFFFF);
 	home_photo_txt = new GuiText("Photos", 48, 0xFFFFFFFF);
 	home_setting_txt = new GuiText("Settings", 48, 0xFFFFFFFF);
 	home_restart_txt = new GuiText("Restart", 48, 0xFFFFFFFF);
@@ -485,7 +503,7 @@ static void loadHomeRessources() {
 	home_photo_btn = new GuiButton(home_photo_img->GetWidth(), home_photo_img->GetHeight());
 	home_setting_btn = new GuiButton(home_setting_img->GetWidth(), home_setting_img->GetHeight());
 	home_restart_btn = new GuiButton(home_setting_img->GetWidth(), home_setting_img->GetHeight());
-	home_shutdown_btn = new GuiButton(home_setting_img->GetWidth(), home_setting_img->GetHeight()); 
+	home_shutdown_btn = new GuiButton(home_setting_img->GetWidth(), home_setting_img->GetHeight());
 
 	//	home_video_btn->SetIcon(home_video_img);
 	//	home_music_btn->SetIcon(home_music_img);
@@ -501,7 +519,8 @@ static void loadHomeRessources() {
 	home_shutdown_btn->SetLabel(home_shutdown_txt);
 }
 
-static void loadBrowserRessources() {
+static void loadBrowserRessources()
+{
 
 	// Browser
 	browser_photo_icon = new GuiImageData(browser_photo_icon_f_png);
@@ -571,7 +590,8 @@ static void loadBrowserRessources() {
 	gui_browser->SetPageSize(10);
 }
 
-static void loadOsdRessources() { // OSD
+static void loadOsdRessources()
+{ // OSD
 	video_osd_progress_bar_front = new GuiImage(new GuiImageData(video_player_time_played_line_n_01_png));
 	video_osd_progress_bar_back = new GuiImage(new GuiImageData(video_control_time_played_line_bg_png));
 	video_osd_bg = new GuiImage(new GuiImageData(video_control_frame_bg_png));
@@ -637,7 +657,7 @@ static void loadOsdRessources() { // OSD
 
 	video_osd_info_filename->SetMaxWidth(644);
 	video_osd_info_filename->SetScroll(SCROLL_HORIZONTAL);
-	
+
 	video_osd_info_filename->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	video_osd_info_cur_time->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	video_osd_info_duration->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
@@ -794,7 +814,7 @@ static void loadOsdRessources() { // OSD
 	for (u32 i = 1; i < osd_options_window->GetSize(); i++) {
 		osd_options_window->GetGuiElementAt(i)->SetTrigger(trigA);
 	}
- 	
+
 	/**
 	 * Osd Subtiles window
 	 */
@@ -813,9 +833,9 @@ static void loadOsdRessources() { // OSD
 	osd_options_subtitle_window = new GuiWindow(405, 280);
 	osd_options_subtitle = new GuiOptionBrowser(400, 275, new GuiImageData(osd_options_browser_btn_png), &subtitle_option_list);
 	osd_options_subtitle->SetPosition(0, 40);
-	osd_options_subtitle->SetCol2Position(150);	
+	osd_options_subtitle->SetCol2Position(150);
 	osd_options_subtitle_window->SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);
-	
+
 	osd_options_subtitle_window->Append(new GuiImage(new GuiImageData(osd_options_browser_bg_png)));
 	osd_options_subtitle_window->Append(osd_options_subtitle);
 	/**
@@ -836,9 +856,9 @@ static void loadOsdRessources() { // OSD
 	osd_options_audio_window = new GuiWindow(405, 280);
 	osd_options_audio = new GuiOptionBrowser(400, 275, new GuiImageData(osd_options_browser_btn_png), &audio_option_list);
 	osd_options_audio->SetPosition(0, 40);
-	osd_options_audio->SetCol2Position(150);	
+	osd_options_audio->SetCol2Position(150);
 	osd_options_audio_window->SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);
-	
+
 	osd_options_audio_window->Append(new GuiImage(new GuiImageData(osd_options_browser_bg_png)));
 	osd_options_audio_window->Append(osd_options_audio);
 	/**
@@ -857,9 +877,9 @@ static void loadOsdRessources() { // OSD
 	osd_options_video_window = new GuiWindow(405, 280);
 	osd_options_video = new GuiOptionBrowser(400, 275, new GuiImageData(osd_options_browser_btn_png), &video_option_list);
 	osd_options_video->SetPosition(0, 40);
-	osd_options_video->SetCol2Position(150);	
+	osd_options_video->SetCol2Position(150);
 	osd_options_video_window->SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);
-	
+
 	osd_options_video_window->Append(new GuiImage(new GuiImageData(osd_options_browser_bg_png)));
 	osd_options_video_window->Append(osd_options_video);
 
@@ -881,24 +901,23 @@ extern "C" int ass_force_reload;
 //Mplayer's audio variables
 extern "C" float audio_delay;
 //Mplayer's video variables
-extern "C" int vo_fs; 
+extern "C" int vo_fs;
 extern "C" int vo_vsync;
 extern "C" int vo_dheight;
 extern "C" int frame_dropping;
 //D-Pad direction for OSD Settings
 extern int osd_pad_right; //from gui_optionbrowser.cpp
 extern int osd_pad_left; //from gui_optionbrowser.cpp
-extern int osd_level; 
+extern int osd_level;
 
-
-static void ExitMplayer(){
+static void ExitMplayer()
+{
 	// save settings
 	SavePrefs(true);
-	
+
 	if (XMPlayerCfg.exit_action == 0) {
 		exit(0);
-	}
-	else {
+	} else {
 		xenon_smc_power_shutdown();
 	}
 }
@@ -909,7 +928,8 @@ static void ExitMplayer(){
  * Displays a prompt window to user, with information, an error message, or
  * presenting a user with a choice
  ***************************************************************************/
-int WindowPrompt(const char *title, const char *msg, const char *btn1Label, const char *btn2Label) {
+int WindowPrompt(const char *title, const char *msg, const char *btn1Label, const char *btn2Label)
+{
 	int choice = -1;
 
 	GuiWindow promptWindow(448, 288);
@@ -921,22 +941,16 @@ int WindowPrompt(const char *title, const char *msg, const char *btn1Label, cons
 	GuiImageData dialogBox(dialogue_box_png);
 	GuiImage dialogBoxImg(&dialogBox);
 
-	GuiText titleTxt(title, 26, (XeColor) {
-		255, 255, 255, 255
-	});
+	GuiText titleTxt(title, 26, (XeColor){{ 255, 255, 255, 255}});
 	titleTxt.SetAlignment(ALIGN_CENTRE, ALIGN_TOP);
 	titleTxt.SetPosition(0, 14);
 
-	GuiText msgTxt(msg, 26, (XeColor) {
-		255, 255, 255, 255
-	});
+	GuiText msgTxt(msg, 26, (XeColor){{  255, 255, 255, 255 }});
 	msgTxt.SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);
 	msgTxt.SetPosition(0, -20);
 	msgTxt.SetWrap(true, 430);
 
-	GuiText btn1Txt(btn1Label, 22, (XeColor) {
-		255, 255, 255, 255
-	});
+	GuiText btn1Txt(btn1Label, 22, (XeColor){{255, 255, 255, 255}});
 	GuiImage btn1Img(&btnOutline);
 	GuiImage btn1ImgOver(&btnOutlineOver);
 	GuiButton btn1(btnOutline.GetWidth(), btnOutline.GetHeight());
@@ -956,9 +970,7 @@ int WindowPrompt(const char *title, const char *msg, const char *btn1Label, cons
 	btn1.SetState(STATE_SELECTED);
 	btn1.SetEffectGrow();
 
-	GuiText btn2Txt(btn2Label, 22, (XeColor) {
-		255, 0, 0, 0
-	});
+	GuiText btn2Txt(btn2Label, 22, (XeColor){{255, 0, 0, 0}});
 	GuiImage btn2Img(&btnOutline);
 	GuiImage btn2ImgOver(&btnOutlineOver);
 	GuiButton btn2(btnOutline.GetWidth(), btnOutline.GetHeight());
@@ -1006,47 +1018,62 @@ int WindowPrompt(const char *title, const char *msg, const char *btn1Label, cons
 	return choice;
 }
 
-extern "C" void cErrorPrompt(const char *msg) {
+extern "C" void cErrorPrompt(const char *msg)
+{
 	WindowPrompt("Error", msg, "Quit", NULL);
 	ExitMplayer();
 }
 
-static char* playerSeekFormatTime(char * dest, double time) {
-        int min, sec, hr;        
+void playerSeekFormatTime(char * dest, double time)
+{
+	TR
+	int min, sec, hr;
 	hr = (time / 3600);
-        min = fmod(time, 3600) / 60;
-        sec = fmod(time, 60);
-	if (time < 3600) { 
-                asprintf(&dest, "Resume from %02d:%02d", min, sec);
+	min = fmod(time, 3600) / 60;
+	sec = fmod(time, 60);
+	if (time < 3600) {
+		sprintf(dest, "%s %02d:%02d", _("Resume from"), min, sec);
 	} else {
-                asprintf(&dest, "Resume from %d:%02d:%02d", hr, min, sec);
+		sprintf(dest, "%s %d:%02d:%02d", _("Resume from"), hr, min, sec);
 	}
-	return dest;
-	free(dest);	
+	TR
 }
-bool file_exists(const char * filename) {
-   FILE * fd = fopen(filename, "rb");
-   if (fd != NULL) {
-      fclose(fd);
-      return true;
-   }
-   return false;
-}
-char * playerSeekOpen(char * file) {
-	char* string = (char*)malloc(7);
-	FILE * fd = fopen(file, "r");	
-	fgets(string, strlen(string), fd);
-	if (string[strlen(string)-1] == '\n') {
-	string[strlen(string)-1] = '\0';
+
+bool file_exists(const char * filename)
+{
+	FILE * fd = fopen(filename, "rb");
+	if (fd != NULL) {
+		fclose(fd);
+		return true;
 	}
-        fclose(fd);
-	return string;
+	return false;
 }
-int playerSeekPrompt(char * seekfile) {
+
+double playerSeekOpen(char * file)
+{
+	TR
+	double time = 0;
+	char seektime[8];
+	FILE * fd = fopen(file, "r");
+	if( fd ) {
+		fgets(seektime, 8, fd);
+		if (seektime[strlen(seektime) - 1] == '\n') {
+			seektime[strlen(seektime) - 1] = '\0';
+		}
+		fclose(fd);
+		time = atof(seektime);
+	}
+	TR
+	return time;
+}
+
+int playerSeekPrompt(char * seekfile)
+{
+	TR
 	int choice = -2;
-	char *seektime = playerSeekOpen(seekfile);
-	double time = atof(seektime);
-	seektime = playerSeekFormatTime(seektime, time); 
+	char seekstring[100];
+	double seektime = playerSeekOpen(seekfile);	
+	playerSeekFormatTime(seekstring, seektime);
 	GuiWindow promptWindow(300, 72);
 	promptWindow.SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);
 	promptWindow.SetPosition(0, 0);
@@ -1057,10 +1084,8 @@ int playerSeekPrompt(char * seekfile) {
 	GuiImage dialogBoxImg(&dialogBox);
 	dialogBoxImg.SetPosition(0, 20);
 	dialogBoxImg.SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);
-	
-	GuiText btn1Txt(seektime, 22, (XeColor) {
-		255, 255, 255, 255
-	});
+
+	GuiText btn1Txt(seekstring, 22, (XeColor) {{255, 255, 255, 255 }});
 	GuiImage btn1Img(&btnOutline);
 	GuiImage btn1ImgOver(&btnOutlineOver);
 	GuiButton btn1(btnOutline.GetWidth(), btnOutline.GetHeight());
@@ -1073,9 +1098,7 @@ int playerSeekPrompt(char * seekfile) {
 	btn1.SetState(STATE_SELECTED);
 	btn1.SetEffectGrow();
 
-	GuiText btn2Txt("Start from beginning", 22, (XeColor) {
-		255, 255, 255, 255
-	});
+	GuiText btn2Txt("Start from beginning", 22, (XeColor){{255, 255, 255, 255}});
 	GuiImage btn2Img(&btnOutline);
 	GuiImage btn2ImgOver(&btnOutlineOver);
 	GuiButton btn2(btnOutline.GetWidth(), btnOutline.GetHeight());
@@ -1109,14 +1132,13 @@ int playerSeekPrompt(char * seekfile) {
 	btn2.ResetState();
 	while (choice == -2) {
 		update();
-		if (menuBtn.GetState() == STATE_CLICKED) { 
+		if (menuBtn.GetState() == STATE_CLICKED) {
 			choice = -1;
-		} else {	
+		} else {
 			if (btn1.GetState() == STATE_CLICKED) {
 				choice = 1;
 				playerSeekChoice = 1;
-			}
-			else if (btn2.GetState() == STATE_CLICKED) {
+			} else if (btn2.GetState() == STATE_CLICKED) {
 				choice = 0;
 				playerSeekChoice = 0;
 			}
@@ -1131,13 +1153,15 @@ int playerSeekPrompt(char * seekfile) {
 }
 
 /** to do **/
-static void loadRessources() {
+static void loadRessources()
+{
 	loadHomeRessources();
 	loadBrowserRessources();
 	loadOsdRessources();
 }
 
-static void common_setup() {
+static void common_setup()
+{
 	trigA = new GuiTrigger();
 
 	trigA->SetSimpleTrigger(-1, 0, PAD_BUTTON_A);
@@ -1160,7 +1184,8 @@ static int last_level = 0;
 
 static char tmpbuff[1024];
 
-extern "C" void mplayer_osd_open() {
+extern "C" void mplayer_osd_open()
+{
 	got_metadata = 0;
 
 	if (osd_show == 0) {
@@ -1176,7 +1201,7 @@ extern "C" void mplayer_osd_open() {
 
 		sprintf(tmpbuff, "%s %s", _("Video Bitrate:"), playetGetMetaData(META_VIDEO_BITRATE));
 		video_osd_infobar_text_bitrate->SetText(tmpbuff);
-		
+
 		sprintf(tmpbuff, "%s %s", _("Audio Codec:"), playetGetMetaData(META_AUDIO_CODEC));
 		video_osd_infobar_text_a_codec->SetText(tmpbuff);
 
@@ -1231,259 +1256,317 @@ extern "C" void mplayer_osd_open() {
 	osd_pad_right = 0;
 	osd_pad_left = 0;
 }
-static void osdSubtitlesOptions() {
-bool firstRun = true;
-char *osd_sub_name = "";
-float osd_subdelay;
-  if ((osd_display_option_audio == 0) && (osd_display_option_video == 0)) { 
-if (osd_display_option_subtitle) {
-	osd_options_window->SetFocus(0);
-	osd_options_headline->SetText("Subtitle Options");
-	osd_options_subtitle_window->SetVisible(true);
-	osd_options_subtitle_window->SetFocus(1);
-	osd_options_subtitle->SetFocus(1);
-	Menu_Frame();
-	UpdatePads();	
-	for (int i = 0; i < 4; i++) {
-		mainWindow->Update(&userInput[i]);
-	}
-	int ret = osd_options_subtitle->GetClickedOption();
-	switch (ret) {
-		case 0: {
-			playerSwitchSubtitle();
-			break;
-		}
-		case 1: {
-			sub_visibility = (sub_visibility == 1) ? 0 : 1;
-			break;
-		}
-		case 5: {
-			osd_display_option_subtitle = 0;
-			osd_options_menu_subtitle_btn->SetState(STATE_SELECTED);
-			break;		
-		}
-	}
-	int het = osd_options_subtitle->GetSelectedOption();
-	if (osd_pad_left == 1) { 
-		switch (het) {
-			case 2: { 
-				if (!ass_enabled) {				
-					sub_pos--;
-					if (sub_pos<0) { sub_pos = 100; }
-				}				
+
+static void osdSubtitlesOptions()
+{
+	bool firstRun = true;
+	char *osd_sub_name = "";
+	float osd_subdelay;
+	if ((osd_display_option_audio == 0) && (osd_display_option_video == 0)) {
+		if (osd_display_option_subtitle) {
+			osd_options_window->SetFocus(0);
+			osd_options_headline->SetText("Subtitle Options");
+			osd_options_subtitle_window->SetVisible(true);
+			osd_options_subtitle_window->SetFocus(1);
+			osd_options_subtitle->SetFocus(1);
+			Menu_Frame();
+			UpdatePads();
+			for (int i = 0; i < 4; i++) {
+				mainWindow->Update(&userInput[i]);
+			}
+			int ret = osd_options_subtitle->GetClickedOption();
+			switch (ret) {
+			case 0:
+			{
+				playerSwitchSubtitle();
 				break;
 			}
-			case 3: {
-				sub_delay += 0.1;
+			case 1:
+			{
+				sub_visibility = (sub_visibility == 1) ? 0 : 1;
 				break;
 			}
-			case 4: {
-				if (ass_enabled) {			
-					ass_font_scale -= 0.1;
-					if (ass_font_scale < 0) { ass_font_scale = 100; }
-					ass_force_reload = 1;
+			case 5:
+			{
+				osd_display_option_subtitle = 0;
+				osd_options_menu_subtitle_btn->SetState(STATE_SELECTED);
+				break;
+			}
+			}
+			int het = osd_options_subtitle->GetSelectedOption();
+			if (osd_pad_left == 1) {
+				switch (het) {
+				case 2:
+				{
+					if (!ass_enabled) {
+						sub_pos--;
+						if (sub_pos < 0) {
+							sub_pos = 100;
+						}
+					}
+					break;
+				}
+				case 3:
+				{
+					sub_delay += 0.1;
+					break;
+				}
+				case 4:
+				{
+					if (ass_enabled) {
+						ass_font_scale -= 0.1;
+						if (ass_font_scale < 0) {
+							ass_font_scale = 100;
+						}
+						ass_force_reload = 1;
+					} else {
+						text_font_scale_factor -= 0.1;
+						if (text_font_scale_factor < 0) {
+							text_font_scale_factor = 100;
+						}
+						force_load_font = 1;
+					}
+					break;
+				}
+				}
+				osd_pad_left = 0;
+			} else if (osd_pad_right == 1) {
+				switch (het) {
+				case 2:
+				{
+					if (!ass_enabled) {
+						sub_pos++;
+						if (sub_pos > 100) {
+							sub_pos = 0;
+						}
+					}
+					break;
+				}
+				case 3:
+				{
+					sub_delay -= 0.1;
+					break;
+				}
+				case 4:
+				{
+					if (ass_enabled) {
+						ass_font_scale += 0.1;
+						if (ass_font_scale > 100) {
+							ass_font_scale = 0;
+						}
+						ass_force_reload = 1;
+					} else {
+						text_font_scale_factor += 0.1;
+						if (text_font_scale_factor > 100) {
+							text_font_scale_factor = 0;
+						}
+						force_load_font = 1;
+					}
+					break;
+				}
+				}
+				osd_pad_right = 0;
+			}
+			if (ret >= 0 || firstRun) {
+				firstRun = false;
+				osd_sub_name = playerGetSubtitle();
+				osd_subdelay = (sub_delay * -1000);
+				if ((osd_subdelay < 5) && (osd_subdelay > -5)) {
+					osd_subdelay = 0;
+				}
+				sprintf(subtitle_option_list.value[0], osd_sub_name);
+				sprintf(subtitle_option_list.value[1], "%s", sub_visibility == 1 ? "Enabled" : "Disabled");
+				if (!ass_enabled) {
+					sprintf(subtitle_option_list.value[2], "%d", sub_pos);
 				} else {
-					text_font_scale_factor -= 0.1;
-					if (text_font_scale_factor < 0) { text_font_scale_factor = 100; }
-					force_load_font = 1;
+					sprintf(subtitle_option_list.value[2], "%s", "Disabled");
 				}
-				break;		
+				sprintf(subtitle_option_list.value[3], "%.0f ms", osd_subdelay);
+				sprintf(subtitle_option_list.value[4], "%.2f", ass_enabled == 1 ? ass_font_scale : text_font_scale_factor);
+				osd_options_subtitle->TriggerUpdate();
 			}
+		} else {
+			osd_options_headline->SetText(NULL);
+			osd_options_subtitle_window->SetVisible(false);
+			osd_options_subtitle_window->SetFocus(0);
+			osd_options_subtitle->SetFocus(0);
+			osd_options_window->SetFocus(1);
 		}
-	osd_pad_left = 0;
-	} else if (osd_pad_right == 1) {
-		switch (het) {
-			case 2: { 
-				if (!ass_enabled) {				
-				sub_pos++;
-				if (sub_pos>100) { sub_pos = 0; }
+	}
+}
+
+static void osdAudioOptions()
+{
+	bool firstRun = true;
+	char *osd_mute = "";
+	char *osd_balance = "";
+	char *osd_volume = "";
+	float osd_audiodelay;
+	if ((osd_display_option_subtitle == 0) && (osd_display_option_video == 0)) {
+		if (osd_display_option_audio) {
+			osd_options_window->SetFocus(0);
+			osd_options_headline->SetText("Audio Options");
+			osd_options_audio_window->SetVisible(true);
+			osd_options_audio_window->SetFocus(1);
+			osd_options_audio->SetFocus(1);
+			Menu_Frame();
+			UpdatePads();
+			for (int i = 0; i < 4; i++) {
+				mainWindow->Update(&userInput[i]);
+			}
+			int ret = osd_options_audio->GetClickedOption();
+			switch (ret) {
+			case 0:
+			{
+				playerSwitchAudio();
+				break;
+			}
+			case 3:
+			{
+				playerSwitchMute();
+				break;
+			}
+			case 5:
+			{
+				osd_display_option_audio = 0;
+				osd_options_menu_audio_channel_btn->SetState(STATE_SELECTED);
+				break;
+			}
+			}
+			int het = osd_options_audio->GetSelectedOption();
+			if (osd_pad_left == 1) {
+				switch (het) {
+				case 1:
+				{
+					playerSwitchVolume(0);
+					break;
+				}
+				case 2:
+				{
+					playerSwitchBalance(1);
+					break;
+				}
+				case 4:
+				{
+					audio_delay += 0.1;
+					break;
+				}
+				}
+				osd_pad_left = 0;
+			} else if (osd_pad_right == 1) {
+				switch (het) {
+				case 1:
+				{
+					playerSwitchVolume(1);
+					break;
+				}
+				case 2:
+				{
+					playerSwitchBalance(0);
+					break;
+				}
+				case 4:
+				{
+					audio_delay -= 0.1;
+					break;
+				}
+				}
+				osd_pad_right = 0;
+			}
+			if (ret >= 0 || firstRun) {
+				firstRun = false;
+				osd_volume = playerGetVolume();
+				osd_balance = playerGetBalance();
+				osd_mute = playerGetMute();
+				osd_audiodelay = (audio_delay * -1000);
+				if ((osd_audiodelay < 5) && (osd_audiodelay > -5)) {
+					osd_audiodelay = 0;
+				}
+				sprintf(audio_option_list.value[1], osd_volume);
+				sprintf(audio_option_list.value[2], osd_balance);
+				sprintf(audio_option_list.value[3], osd_mute);
+				sprintf(audio_option_list.value[4], "%.0f ms", osd_audiodelay);
+				osd_options_audio->TriggerUpdate();
+			}
+		} else {
+			osd_options_headline->SetText(NULL);
+			osd_options_audio_window->SetVisible(false);
+			osd_options_audio_window->SetFocus(0);
+			osd_options_audio->SetFocus(0);
+			osd_options_window->SetFocus(1);
+		}
+	}
+}
+
+static void osdVideoOptions()
+{
+	bool firstRun = true;
+	char* osd_framedrop = "";
+	if ((osd_display_option_subtitle == 0) && (osd_display_option_audio == 0)) {
+		if (osd_display_option_video) {
+			osd_options_window->SetFocus(0);
+			osd_options_headline->SetText("Video Options");
+			osd_options_video_window->SetVisible(true);
+			osd_options_video_window->SetFocus(1);
+			osd_options_video->SetFocus(1);
+			Menu_Frame();
+			UpdatePads();
+			for (int i = 0; i < 4; i++) {
+				mainWindow->Update(&userInput[i]);
+			}
+			int ret = osd_options_video->GetClickedOption();
+			switch (ret) {
+			case 0:
+			{
+				playerSwitchFullscreen();
+				break;
+			}
+			case 1:
+			{
+				frame_dropping++;
+				if (frame_dropping > 2) {
+					frame_dropping = 0;
 				}
 				break;
 			}
-			case 3: {
-				sub_delay -= 0.1;
+			case 2:
+			{
+				vo_vsync = !vo_vsync;
 				break;
 			}
-			case 4: {
-				if (ass_enabled) {			
-					ass_font_scale += 0.1;
-					if (ass_font_scale > 100) { ass_font_scale = 0; }
-					ass_force_reload = 1;
+			case 3:
+			{
+				osd_display_option_video = 0;
+				osd_options_menu_pan_btn->SetState(STATE_SELECTED);
+				break;
+			}
+			}
+			if (ret >= 0 || firstRun) {
+				firstRun = false;
+				if (frame_dropping == 2) {
+					osd_framedrop = "Hard";
+				} else if (frame_dropping == 1) {
+					osd_framedrop = "Enabled";
 				} else {
-					text_font_scale_factor += 0.1;
-					if (text_font_scale_factor > 100) { text_font_scale_factor = 0; }
-					force_load_font = 1;
+					osd_framedrop = "Disabled";
 				}
-				break;		
+				sprintf(video_option_list.value[0], "%s", vo_fs == 1 ? "Enabled" : "Disabled");
+				sprintf(video_option_list.value[1], osd_framedrop);
+				sprintf(video_option_list.value[2], "%s", vo_vsync == 1 ? "Enabled" : "Disabled");
+				osd_options_video->TriggerUpdate();
 			}
+		} else {
+			osd_options_headline->SetText(NULL);
+			osd_options_video_window->SetVisible(false);
+			osd_options_video_window->SetFocus(0);
+			osd_options_video->SetFocus(0);
+			osd_options_window->SetFocus(1);
 		}
-	osd_pad_right = 0;	
 	}
-	if (ret >= 0 || firstRun)  {
-		firstRun = false;
-		osd_sub_name = playerGetSubtitle();
-		osd_subdelay = (sub_delay * -1000);
-                if ((osd_subdelay < 5) && (osd_subdelay > -5)) { osd_subdelay = 0; }
-		sprintf(subtitle_option_list.value[0], osd_sub_name);
-		sprintf(subtitle_option_list.value[1], "%s", sub_visibility == 1 ? "Enabled" : "Disabled");
-		if (!ass_enabled) { sprintf(subtitle_option_list.value[2], "%d", sub_pos); } else { sprintf(subtitle_option_list.value[2], "%s", "Disabled"); }
-		sprintf(subtitle_option_list.value[3], "%.0f ms", osd_subdelay);
-		sprintf(subtitle_option_list.value[4], "%.2f", ass_enabled == 1 ? ass_font_scale : text_font_scale_factor);
-		osd_options_subtitle->TriggerUpdate();
-	}
-   } else {
-	osd_options_headline->SetText(NULL); 
-	osd_options_subtitle_window->SetVisible(false);
-	osd_options_subtitle_window->SetFocus(0);
-	osd_options_subtitle->SetFocus(0);
-	osd_options_window->SetFocus(1);
-	}
-   }
 }
-static void osdAudioOptions() {
-bool firstRun = true;
-char *osd_mute = "";
-char *osd_balance = "";
-char *osd_volume = "";
-float osd_audiodelay;
-   if ((osd_display_option_subtitle == 0) && (osd_display_option_video == 0)) {
-if (osd_display_option_audio) {
-	osd_options_window->SetFocus(0);
-	osd_options_headline->SetText("Audio Options");
-	osd_options_audio_window->SetVisible(true);
-	osd_options_audio_window->SetFocus(1);
-	osd_options_audio->SetFocus(1);
-	Menu_Frame();
-	UpdatePads();	
-	for (int i = 0; i < 4; i++) {
-		mainWindow->Update(&userInput[i]);
-	}
-	int ret = osd_options_audio->GetClickedOption();
-	switch (ret) {
-		case 0: {
-			playerSwitchAudio();
-			break;
-		}
-		case 3: {
-			playerSwitchMute();
-			break;	
-		}
-		case 5: {
-			osd_display_option_audio = 0;
-			osd_options_menu_audio_channel_btn->SetState(STATE_SELECTED);
-			break;		
-		}
-	}
-	int het = osd_options_audio->GetSelectedOption();
-	if (osd_pad_left == 1) { 
-		switch (het) {
-			case 1: { 
-				playerSwitchVolume(0);
-				break;
-			}
-			case 2: {
-				playerSwitchBalance(1);
-				break;
-			}
-			case 4: {
-				audio_delay += 0.1; 
-				break;		
-			}
-		}
-	osd_pad_left = 0;
-	} else if (osd_pad_right == 1) {
-		switch (het) {
-			case 1: { 
-				playerSwitchVolume(1);
-				break;
-			}
-			case 2: {
-				playerSwitchBalance(0);		
-				break;
-			}
-			case 4: {
-				audio_delay -= 0.1; 
-				break;		
-			}
-		}
-	osd_pad_right = 0;	
-	}
-	if (ret >= 0 || firstRun)  {
-		firstRun = false;
-		osd_volume = playerGetVolume();
-		osd_balance = playerGetBalance();
-		osd_mute = playerGetMute();
-		osd_audiodelay = (audio_delay * -1000);
-                if ((osd_audiodelay < 5) && (osd_audiodelay > -5)) { osd_audiodelay = 0; }
-		sprintf(audio_option_list.value[1], osd_volume);
-		sprintf(audio_option_list.value[2], osd_balance);
-		sprintf(audio_option_list.value[3], osd_mute);
-		sprintf(audio_option_list.value[4], "%.0f ms", osd_audiodelay);
-		osd_options_audio->TriggerUpdate();
-	}
-   } else {
-	osd_options_headline->SetText(NULL); 
-	osd_options_audio_window->SetVisible(false);
-	osd_options_audio_window->SetFocus(0);
-	osd_options_audio->SetFocus(0);
-	osd_options_window->SetFocus(1);
-	}
-  }
-}
-static void osdVideoOptions() {
-bool firstRun = true;
-char* osd_framedrop = "";
-   if ((osd_display_option_subtitle == 0) && (osd_display_option_audio == 0)) {
-if (osd_display_option_video) {
-	osd_options_window->SetFocus(0);
-	osd_options_headline->SetText("Video Options");
-	osd_options_video_window->SetVisible(true);
-	osd_options_video_window->SetFocus(1);
-	osd_options_video->SetFocus(1);
-	Menu_Frame();
-	UpdatePads();	
-	for (int i = 0; i < 4; i++) {
-		mainWindow->Update(&userInput[i]);
-	}
-	int ret = osd_options_video->GetClickedOption();
-	switch (ret) {
-		case 0: {
-			playerSwitchFullscreen();
-			break;
-		}
-		case 1: {
-			frame_dropping++;
-			if (frame_dropping > 2) { frame_dropping = 0; }
-			break;
-		}
-		case 2: {
-			vo_vsync = !vo_vsync;
-			break;
-		}
-		case 3: {
-			osd_display_option_video = 0;
-			osd_options_menu_pan_btn->SetState(STATE_SELECTED);
-			break;		
-		}
-	}
-	if (ret >= 0 || firstRun)  {
-		firstRun = false;
-		if (frame_dropping == 2) { osd_framedrop = "Hard"; } else if (frame_dropping == 1) { osd_framedrop = "Enabled"; } else { osd_framedrop = "Disabled"; }
-		sprintf(video_option_list.value[0], "%s", vo_fs == 1 ? "Enabled" : "Disabled");
-		sprintf(video_option_list.value[1], osd_framedrop);
-		sprintf(video_option_list.value[2], "%s", vo_vsync == 1 ? "Enabled" : "Disabled");
-		osd_options_video->TriggerUpdate();
-	}
-   } else {
-	osd_options_headline->SetText(NULL); 
-	osd_options_video_window->SetVisible(false);
-	osd_options_video_window->SetFocus(0);
-	osd_options_video->SetFocus(0);
-	osd_options_window->SetFocus(1);
-	}
-  }
-}
-extern "C" void mplayer_osd_close() {
+
+extern "C" void mplayer_osd_close()
+{
 	if (osd_show) {
 
 		struct XenosSurface * img = video_osd_progress_bar_front->GetImage();
@@ -1523,15 +1606,19 @@ extern "C" void mplayer_osd_close() {
 	osd_display_option_video = 0;
 	last_level = -1;
 }
-static void format_time(char * dest, double time) {
-        int min, sec, hr;        
-	hr = (time / 3600);
-        min = fmod(time, 3600) / 60;
-        sec = fmod(time, 60);
 
-        sprintf(dest, "%d:%02d:%02d", hr, min, sec);
+static void format_time(char * dest, double time)
+{
+	int min, sec, hr;
+	hr = (time / 3600);
+	min = fmod(time, 3600) / 60;
+	sec = fmod(time, 60);
+
+	sprintf(dest, "%d:%02d:%02d", hr, min, sec);
 }
-extern "C" void mplayer_osd_draw(int level) {
+
+extern "C" void mplayer_osd_draw(int level)
+{
 	//Y-osd button used because libmenu is off
 	GuiTrigger osdMenu;
 	osdMenu.SetButtonOnlyTrigger(-1, 0, PAD_BUTTON_Y);
@@ -1572,30 +1659,30 @@ extern "C" void mplayer_osd_draw(int level) {
 		video_osd_prev->SetVisible(false);
 
 		switch (playerGetStatus()) {
-			case 1:
-				video_osd_play->SetVisible(true);
-				break;
-			case 2:
-				video_osd_pause->SetVisible(true);
-				break;
-			case 3:
-				video_osd_stop->SetVisible(true);
-				break;
-			case 4:
-				video_osd_rewind->SetVisible(true);
-				break;
-			case 5:
-				video_osd_forward->SetVisible(true);
-				break;
-			case 6:
-				video_osd_next->SetVisible(true);
-				break;
-			case 7:
-				video_osd_prev->SetVisible(true);
-				break;
+		case 1:
+			video_osd_play->SetVisible(true);
+			break;
+		case 2:
+			video_osd_pause->SetVisible(true);
+			break;
+		case 3:
+			video_osd_stop->SetVisible(true);
+			break;
+		case 4:
+			video_osd_rewind->SetVisible(true);
+			break;
+		case 5:
+			video_osd_forward->SetVisible(true);
+			break;
+		case 6:
+			video_osd_next->SetVisible(true);
+			break;
+		case 7:
+			video_osd_prev->SetVisible(true);
+			break;
 
-			default:
-				break;
+		default:
+			break;
 		}
 
 		// show file info
@@ -1625,10 +1712,10 @@ extern "C" void mplayer_osd_draw(int level) {
 	osdAudioOptions();
 	osdVideoOptions();
 	Menu_Frame();
-	last_level = level;	
+	last_level = level;
 	mainWindow->Draw();
 	if (level == 3) { //this fixes non intended key-presses when osd is not 3 (like when seekbar is present)
-	UpdatePads();	
+		UpdatePads();
 		for (int i = 0; i < 4; i++) {
 			mainWindow->Update(&userInput[i]);
 		}
@@ -1639,37 +1726,39 @@ extern "C" void mplayer_osd_draw(int level) {
 	mainWindow->Remove(&osdBtn);
 }
 
-static void Browser(const char * title, const char * root) {
+static void Browser(const char * title, const char * root)
+{
 	// apply correct icon
 	switch (current_menu) {
-		case BROWSE_AUDIO:
-			browser_folder_icon = browser_music_folder_icon;
-			extValid = extIsValidAudioExt;
-			break;
-		case BROWSE_VIDEO:
-			browser_folder_icon = browser_video_folder_icon;
-			extValid = extIsValidVideoExt;
-			break;
-		case BROWSE_PICTURE:
-			browser_folder_icon = browser_photo_folder_icon;
-			extValid = extIsValidPictureExt;
-			break;
-		default:
-			extValid = extAlwaysValid;
-			break;
+	case BROWSE_AUDIO:
+		browser_folder_icon = browser_music_folder_icon;
+		extValid = extIsValidAudioExt;
+		break;
+	case BROWSE_VIDEO:
+		browser_folder_icon = browser_video_folder_icon;
+		extValid = extIsValidVideoExt;
+		break;
+	case BROWSE_PICTURE:
+		browser_folder_icon = browser_photo_folder_icon;
+		extValid = extIsValidPictureExt;
+		break;
+	default:
+		extValid = extAlwaysValid;
+		break;
 	}
 	ResetBrowser();
 	if ((strlen(exited_dir_array[current_menu]) != 0) && (exited_root == root)) {
-browser_select:	BrowseDevice(exited_dir_array[current_menu], root);
-		gui_browser->ResetState();	
+browser_select:
+		BrowseDevice(exited_dir_array[current_menu], root);
+		gui_browser->ResetState();
 		browser.selIndex = exited_item[current_menu];
 		browser.pageIndex = exited_page[current_menu];
-		gui_browser->fileList[exited_i[current_menu]]->SetState(STATE_SELECTED);		
+		gui_browser->fileList[exited_i[current_menu]]->SetState(STATE_SELECTED);
 	} else {
 		BrowseDevice("/", root);
 		gui_browser->ResetState();
 		gui_browser->fileList[0]->SetState(STATE_SELECTED);
-	}				
+	}
 	gui_browser->TriggerUpdate();
 
 	mainWindow->Append(gui_browser);
@@ -1710,8 +1799,8 @@ browser_select:	BrowseDevice(exited_dir_array[current_menu], root);
 	mainWindow->Append(browser_headline);
 	mainWindow->Append(browser_subheadline);
 	mainWindow->Append(browser_pagecounter);
-	mainWindow->Append(&browser_sortBtn);	
-	mainWindow->Append(browser_sortText);	
+	mainWindow->Append(&browser_sortBtn);
+	mainWindow->Append(browser_sortText);
 
 	mainWindow->Append(browser_up_icon);
 	mainWindow->Append(browser_down_icon);
@@ -1743,11 +1832,12 @@ browser_select:	BrowseDevice(exited_dir_array[current_menu], root);
 
 	while (current_menu == last_menu) {
 		if (last_sel_item != browser.selIndex) {
-browser_counter:	sprintf(tmp, "%d/%d", browser.selIndex + 1, browser.numEntries);
+browser_counter:
+			sprintf(tmp, "%d/%d", browser.selIndex + 1, browser.numEntries);
 			browser_pagecounter->SetText(tmp);
 		}
-	
-	last_sel_item = browser.selIndex;
+
+		last_sel_item = browser.selIndex;
 
 		if (browser.pageIndex) {
 			// draw prev
@@ -1755,13 +1845,13 @@ browser_counter:	sprintf(tmp, "%d/%d", browser.selIndex + 1, browser.numEntries)
 		} else {
 			browser_up_icon->SetVisible(false);
 		}
-		if ((browser.numEntries > 9) && (browser.selIndex + 3 < browser.numEntries)) { 
+		if ((browser.numEntries > 9) && (browser.selIndex + 3 < browser.numEntries)) {
 			browser_down_icon->SetVisible(true);
 		} else {
 			browser_down_icon->SetVisible(false);
 		}
-	exited_item[current_menu] = browser.selIndex;
-	exited_page[current_menu] = browser.pageIndex;
+		exited_item[current_menu] = browser.selIndex;
+		exited_page[current_menu] = browser.pageIndex;
 		// update file browser based on arrow xenon_buttons
 		// set MENU_EXIT if A xenon_button pressed on a file
 		for (int i = 0; i < gui_browser->GetPageSize(); i++) {
@@ -1782,33 +1872,33 @@ browser_counter:	sprintf(tmp, "%d/%d", browser.selIndex + 1, browser.numEntries)
 					}
 				} else {
 					sprintf(mplayer_filename, "%s/%s/%s", rootdir, browser.dir, browserList[browser.selIndex].filename);
-					sprintf(exited_dir, "%s/", browser.dir); 
-					sprintf(seek_filename, "%smplayer/cache/elapsed/%s%s", device_list[0], browserList[browser.selIndex].filename, ".txt");					
-					CleanupPath(mplayer_filename);								
-					CleanupPath(exited_dir); 
+					sprintf(exited_dir, "%s/", browser.dir);
+					sprintf(seek_filename, "%s/cache/elapsed/%s%s", MPLAYER_DATADIR, browserList[browser.selIndex].filename, ".txt");
+					CleanupPath(mplayer_filename);
+					CleanupPath(exited_dir);
 					strncpy(exited_dir_array[current_menu], exited_dir, 2048);
 					exited_root = root;
 					ShutoffRumble();
-					gui_browser->ResetState();		
+					gui_browser->ResetState();
 					if (file_type(mplayer_filename) == BROWSER_TYPE_ELF) {
 						current_menu = MENU_ELF;
-					/*} else if (file_type(mplayer_filename) == BROWSER_TYPE_AUDIO) {
-						audio_gui = 1;
-						current_menu = MENU_MPLAYER;*/
+						/*} else if (file_type(mplayer_filename) == BROWSER_TYPE_AUDIO) {
+							audio_gui = 1;
+							current_menu = MENU_MPLAYER;*/
 					} else {
-						if ((file_exists(seek_filename)) && (playerSeekPrompt(seek_filename) == -1)) { 
+						if ((file_exists(seek_filename)) && (playerSeekPrompt(seek_filename) == -1)) {
 							goto browser_select;
 						} else {
-						    if ((file_exists(seek_filename)) && (playerSeekChoice == 1)) {
-							char* seek_time = playerSeekOpen(seek_filename);
-							asprintf(&playerSeekTime, "seek %s 2", seek_time);
+							if ((file_exists(seek_filename)) && (playerSeekChoice == 1)) {
+								double seek_time = playerSeekOpen(seek_filename);
+								sprintf(playerSeekTime, "seek %f 2", seek_time);
 							} else {
-							playerSeekTime = "seek 0 2";
+								strcpy(playerSeekTime, "seek 0 2");
 							}
-						remove(seek_filename);
-						current_menu = MENU_MPLAYER;	
+							remove(seek_filename);
+							current_menu = MENU_MPLAYER;
 						}
-						
+
 					}
 				}
 			}
@@ -1818,32 +1908,33 @@ browser_counter:	sprintf(tmp, "%d/%d", browser.selIndex + 1, browser.numEntries)
 			XMPlayerCfg.sort_order++;
 			if (XMPlayerCfg.sort_order > 3) {
 				XMPlayerCfg.sort_order = 0;
-			} 
-                        SavePrefs(true); //save to xmplayer.xml
-			sprintf(exited_dir, "%s/", browser.dir); 
+			}
+			SavePrefs(true); //save to xmplayer.xml
+			sprintf(exited_dir, "%s/", browser.dir);
 			CleanupPath(exited_dir);
 			strncpy(exited_dir_array[current_menu], exited_dir, 2048);
 			goto browser_select;
 		}
 		if (bBtn.GetState() == STATE_CLICKED) {
-		      if (strcmp(browserList[0].filename, "..") == 0) {
-			bBtn.ResetState();
-			browser.selIndex = 0;
-			BrowserChangeFolder();
-			gui_browser->ResetState();
-			gui_browser->fileList[0]->SetState(STATE_SELECTED);
-			gui_browser->TriggerUpdate();
-			goto browser_counter;
-		      } else {
-			goto browser_exit;
-		      }		
+			if (strcmp(browserList[0].filename, "..") == 0) {
+				bBtn.ResetState();
+				browser.selIndex = 0;
+				BrowserChangeFolder();
+				gui_browser->ResetState();
+				gui_browser->fileList[0]->SetState(STATE_SELECTED);
+				gui_browser->TriggerUpdate();
+				goto browser_counter;
+			} else {
+				goto browser_exit;
+			}
 		}
 		if (backBtn.GetState() == STATE_CLICKED) {
-browser_exit:	sprintf(exited_dir, "%s/", browser.dir); 
-		CleanupPath(exited_dir);
-		strncpy(exited_dir_array[current_menu], exited_dir, 2048);	
-		exited_root = root;
-		current_menu = MENU_BACK;
+browser_exit:
+			sprintf(exited_dir, "%s/", browser.dir);
+			CleanupPath(exited_dir);
+			strncpy(exited_dir_array[current_menu], exited_dir, 2048);
+			exited_root = root;
+			current_menu = MENU_BACK;
 		}
 		update();
 	}
@@ -1858,18 +1949,19 @@ browser_exit:	sprintf(exited_dir, "%s/", browser.dir);
 	mainWindow->Remove(gui_browser);
 	mainWindow->Remove(&bBtn);
 	mainWindow->Remove(&backBtn);
-	mainWindow->Remove(&browser_sortBtn);	
+	mainWindow->Remove(&browser_sortBtn);
 	mainWindow->Remove(browser_sortText);
 	mainWindow->Remove(browser_sort_up);
-	mainWindow->Remove(browser_sort_down);	
+	mainWindow->Remove(browser_sort_down);
 }
 
-static void HomePage() {
+static void HomePage()
+{
 	static int last_selected_value = 0; // Video
 
 	mainWindow->Append(home_left);
 	mainWindow->Append(home_main_function_frame_bg);
-	
+
 	home_video_txt ->SetText("Videos");
 	home_all_txt ->SetText("All");
 	home_music_txt ->SetText("Music");
@@ -1926,30 +2018,30 @@ static void HomePage() {
 
 		if (menuBtn.GetState() == STATE_CLICKED) {
 			switch (home_list_v->GetValue()) {
-				case 0:
-					current_menu = BROWSE_ALL;
-					break;
-				case 1:
-					current_menu = BROWSE_VIDEO;
-					break;
-					//				case 2:
-					//					current_menu = BROWSE_AUDIO;
-					//					break;
-					//				case 3:
-					//					current_menu = BROWSE_PICTURE;
-					//					break;
-				case 4:
-					current_menu = SETTINGS;
-					break;
-				case 5:
-					xenon_smc_power_reboot();
-					break;
-				case 6:
-					xenon_smc_power_shutdown();
-					break;
-				default:
-					WindowPrompt("Warning", "Not implemented yet", "Ok", NULL);
-					break;
+			case 0:
+				current_menu = BROWSE_ALL;
+				break;
+			case 1:
+				current_menu = BROWSE_VIDEO;
+				break;
+				//				case 2:
+				//					current_menu = BROWSE_AUDIO;
+				//					break;
+				//				case 3:
+				//					current_menu = BROWSE_PICTURE;
+				//					break;
+			case 4:
+				current_menu = SETTINGS;
+				break;
+			case 5:
+				xenon_smc_power_reboot();
+				break;
+			case 6:
+				xenon_smc_power_shutdown();
+				break;
+			default:
+				WindowPrompt("Warning", "Not implemented yet", "Ok", NULL);
+				break;
 			}
 
 			last_selected_value = home_list_v->GetValue();
@@ -1973,13 +2065,15 @@ static void HomePage() {
 	home_list_v->Remove(home_music_btn);
 	home_list_v->Remove(home_photo_btn);
 	home_list_v->Remove(home_setting_btn);
-	home_list_v->Remove(home_restart_btn); 
+	home_list_v->Remove(home_restart_btn);
 	home_list_v->Remove(home_shutdown_btn);
 	mainWindow->Remove(home_curitem);
 }
 
 //SETTINGS MENU
-static int XMPSettings() {
+
+static int XMPSettings()
+{
 
 	int menu = SETTINGS;
 	int ret;
@@ -2029,18 +2123,18 @@ static int XMPSettings() {
 		ret = optionBrowser.GetClickedOption();
 
 		switch (ret) {
-			case 0:
-				XMPlayerCfg.exit_action++;
-				if (XMPlayerCfg.exit_action > 1)
-					XMPlayerCfg.exit_action = 0;
-				break;
-			case 1:
-				XMPlayerCfg.language++;
+		case 0:
+			XMPlayerCfg.exit_action++;
+			if (XMPlayerCfg.exit_action > 1)
+				XMPlayerCfg.exit_action = 0;
+			break;
+		case 1:
+			XMPlayerCfg.language++;
 
-				if (XMPlayerCfg.language >= LANG_LENGTH)
-					XMPlayerCfg.language = 0;
+			if (XMPlayerCfg.language >= LANG_LENGTH)
+				XMPlayerCfg.language = 0;
 
-				break;
+			break;
 		}
 
 		if (ret >= 0 || firstRun) {
@@ -2054,12 +2148,12 @@ static int XMPSettings() {
 				sprintf(options.value[0], "Shutdown");
 
 			switch (XMPlayerCfg.language) {
-				case LANG_ENGLISH: sprintf(options.value[1], "English");
-					gettextCleanUp();
-					break;
-				case LANG_FRENCH: sprintf(options.value[1], "French");
-					LoadLanguage((char*) fr_lang, fr_lang_size);
-					break;
+			case LANG_ENGLISH: sprintf(options.value[1], "English");
+				gettextCleanUp();
+				break;
+			case LANG_FRENCH: sprintf(options.value[1], "French");
+				LoadLanguage((char*) fr_lang, fr_lang_size);
+				break;
 			}
 
 			optionBrowser.TriggerUpdate();
@@ -2080,7 +2174,8 @@ static int XMPSettings() {
 	return menu;
 }
 
-static void do_mplayer(char * filename) {
+static void do_mplayer(char * filename)
+{
 	static int mplayer_need_init = 1;
 	if (mplayer_need_init) {
 		char * argv[] = {
@@ -2098,17 +2193,19 @@ static void do_mplayer(char * filename) {
 		// will never be here !!!
 	} else {
 		mplayer_load(filename);
-		mplayer_return_to_player();		
+		mplayer_return_to_player();
 	}
 }
 
-void MenuMplayer() {
+void MenuMplayer()
+{
 	//sprintf(foldername, "%s/", browser.dir);
 	printf("filename:%s\r\n", mplayer_filename);
 	do_mplayer(mplayer_filename);
 }
 
-void ElfLoader() {
+void ElfLoader()
+{
 	printf("Load Elf:%s\r\n", mplayer_filename);
 	char * argv[] = {
 		mplayer_filename,
@@ -2121,7 +2218,8 @@ void ElfLoader() {
 
 static int need_gui = 1;
 
-static void gui_loop() {
+static void gui_loop()
+{
 	while (need_gui) {
 		if (current_menu == HOME_PAGE) {
 			HomePage();
@@ -2145,7 +2243,8 @@ static void gui_loop() {
 	}
 }
 
-static void findDevices() {
+static void findDevices()
+{
 	for (int i = 3; i < STD_MAX; i++) {
 		if (devoptab_list[i]->structSize) {
 			//strcpy(device_list[device_list_size],devoptab_list[i]->name);
@@ -2162,10 +2261,11 @@ extern "C" void mount_all_devices();
 
 static int loading_thread_finished = 0;
 static int end_loading_thread = 0;
-static unsigned char thread_stack[6][0x10000] __attribute__ ((aligned (256)));
+static unsigned char thread_stack[6][0x10000] __attribute__((aligned(256)));
 static unsigned int loadingThreadLock = 0;
 
-void loadingThread() {
+void loadingThread()
+{
 	int i = 0;
 	logo = loadPNGFromMemory((unsigned char*) logo_png);
 	loading[0] = loadPNGFromMemory((unsigned char*) loading_0_png);
@@ -2192,7 +2292,8 @@ void loadingThread() {
 	unlock(&loadingThreadLock);
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char** argv)
+{
 	xenon_make_it_faster(XENON_SPEED_FULL);
 	//	
 	// Init Video
@@ -2213,7 +2314,7 @@ int main(int argc, char** argv) {
 	// fs
 	mount_all_devices();
 	findDevices();
-	
+
 	InitFreeType((u8*) font_ttf, font_ttf_size);
 	SetupPads();
 	ChangeFontSize(26);
@@ -2228,23 +2329,23 @@ int main(int argc, char** argv) {
 		udelay(25);
 		unlock(&loadingThreadLock);
 	}
-	
+
 	// init mplayer
 	init_mplayer();
-	
+
 	// preference
 	if (LoadPrefs() == false)
 		SavePrefs(true);
 
 	// Init gui
 	switch (XMPlayerCfg.language) {
-		case LANG_FRENCH:
-			LoadLanguage((char*) fr_lang, fr_lang_size);
-			break;
+	case LANG_FRENCH:
+		LoadLanguage((char*) fr_lang, fr_lang_size);
+		break;
 	}
 
 	current_menu = HOME_PAGE;
-	
+
 	while (1) {
 		// never exit !!
 		need_gui = 1;
@@ -2257,7 +2358,9 @@ int main(int argc, char** argv) {
 /**
  * return to gui - doesn't exit mplayer process
  */
-extern "C" void mplayer_return_to_gui() {
+extern "C" void mplayer_return_to_gui()
+{
+	TR
 	need_gui = 1;
 
 	// always sync
@@ -2271,12 +2374,13 @@ extern "C" void mplayer_return_to_gui() {
 	current_menu = last_menu;
 
 	gui_loop();
-	
+
 }
 
 /**
  * return to mplayer
  */
-extern "C" void mplayer_return_to_player() {
+extern "C" void mplayer_return_to_player()
+{
 	need_gui = 0;
 }

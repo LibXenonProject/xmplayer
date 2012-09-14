@@ -6,4 +6,4 @@
  * Description: This file is included in mplayer.c,
  * so we can use functions and variables from menu.cpp
  */
-extern char * playerSeekTime;
+extern char playerSeekTime[100];

@@ -257,9 +257,9 @@ static void getDate(time_t time, char * out) {
 int ParseDirectory() {
 	DIR *dir = NULL;
 	char fulldir[MAXPATHLEN];
+	char file_path[MAXPATHLEN];
 	struct dirent *entry;
 	char * ext = NULL;
-	char* file_path = "";
 	if (extValid == NULL)
 		extValid = extAlwaysValid;
 
@@ -316,13 +316,11 @@ int ParseDirectory() {
 
 		strncpy(browserList[entryNum].filename, entry->d_name, MAXJOLIET);
 
-		asprintf(&file_path, "%s/%s", fulldir, entry->d_name);
+		sprintf(file_path, "%s/%s", fulldir, entry->d_name);
 		
 		getDate(entry->d_mtime, browserList[entryNum].moddate);
 		getDate(entry->d_ctime, browserList[entryNum].order_date);
-			
-		free(file_path);
-		//
+		
 		ext = strrchr(entry->d_name, '.');
 		if (extValid(ext) || entry->d_type == DT_DIR) {
 			

@@ -35,6 +35,11 @@ void init_mplayer(){
 				sprintf(MPLAYER_DATADIR,"%s:/mplayer",devoptab_list[i]->name);
 				sprintf(MPLAYER_CONFDIR,"%s:/mplayer",devoptab_list[i]->name);
 				sprintf(MPLAYER_LIBDIR,"%s:/mplayer",devoptab_list[i]->name);
+				// create cache dirs if not exists
+				sprintf(tmp_dir, "%s:/mplayer/cache/", devoptab_list[i]->name);
+				mkdir(tmp_dir, 0x777);
+				sprintf(tmp_dir, "%s:/mplayer/cache/elapsed/", devoptab_list[i]->name);
+				mkdir(tmp_dir, 0x777);
 				found ++;
 				break;
 			}

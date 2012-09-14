@@ -4306,13 +4306,16 @@ void playerGuiAsked() {
 	osd_level = 1; //remove osd before exit
 	double elapsed = demuxer_get_current_time(mpctx->demuxer);
 	int seconds = elapsed;
-        mpctx->eof=1;
+	mpctx->eof=1;
+	
 	if (seconds > 60) {	
-	char * file = "";
-	asprintf(&file, "%s/cache/elapsed/%s%s", MPLAYER_CONFDIR, mp_basename(filename), ".txt"); //saves last position
-	FILE *fd = fopen(file, "w+");
-	fprintf(fd, "%d", seconds);
-	fclose(fd); 
-	free(file);	
+		char file[100];
+		asprintf(file, "%s/cache/elapsed/%s%s", MPLAYER_CONFDIR, mp_basename(filename), ".txt"); //saves last position
+		FILE *fd = fopen(file, "w+");
+		if( fd )
+		{
+			fprintf(fd, "%d", seconds);
+			fclose(fd);
+		}
 	}
 }
