@@ -17,9 +17,9 @@ include $(DEVKITXENON)/rules
 #---------------------------------------------------------------------------------
 TARGET		:=	$(notdir $(CURDIR))
 BUILD		:=	build
-SOURCES		:=	source source/libwiigui source/tinyxml
-DATA		:=	data source/lang
-INCLUDES		:=	-I$(LIBXENON_INC)/freetype2
+SOURCES		:=	source source/libwiigui source/tinyxml data source/lang
+DATA		:=	
+INCLUDES	:=	
 MPLAYER		:=	$(CURDIR)/mplayer
 #---------------------------------------------------------------------------------
 # options for code generation
@@ -70,13 +70,14 @@ export DEPSDIR	:=	$(CURDIR)/$(BUILD)
 # automatically build a list of object files for our project
 #---------------------------------------------------------------------------------
 CFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.c)))
-CPPFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.cpp)))
+CPPFILES	:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.cpp)))
 sFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.s)))
 SFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.S)))
-BINFILES		:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.*)))
-PNGFILES		:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.png)))
-TTFFILES		:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.ttf)))
-LANGFILES	:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.lang)))
+BINFILES	:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.*)))
+TTFFILES	:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.ttf)))
+LANGFILES	:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.lang)))
+PNGFILES	:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.png)))
+PCMFILES	:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.pcm)))
 
 #---------------------------------------------------------------------------------
 # use CXX for linking C++ projects, CC for standard C
@@ -88,9 +89,12 @@ else
 endif
 
 export OFILES	:=	$(addsuffix .o,$(BINFILES)) \
+			$(TTFFILES:.ttf=.ttf.o) \
+			$(LANGFILES:.lang=.lang.o) \
+			$(PNGFILES:.png=.png.o) \
+			$(PCMFILES:.pcm=.pcm.o) \
 			$(CPPFILES:.cpp=.o) $(CFILES:.c=.o) \
-			$(sFILES:.s=.o) $(SFILES:.S=.o) \
-			$(LANGFILES:.lang=.lang.o)
+			$(sFILES:.s=.o) $(SFILES:.S=.o)
 
 #---------------------------------------------------------------------------------
 # build a list of include paths
@@ -121,14 +125,17 @@ export OUTPUT	:=	$(CURDIR)/$(TARGET)
 #---------------------------------------------------------------------------------
 $(BUILD):
 	@echo build player
-	cd mplayer; $(MAKE) -f Makefile lib; cd ../..
+	cd mplayer; $(MAKE) -f Makefile lib -j4; cd ../..
 	@[ -d $@ ] || mkdir -p $@
 	@make --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile -j4
 
 #---------------------------------------------------------------------------------
 clean:
-	@echo clean ...
+	@echo clean ... do make fullclean to clean everything
 	@rm -fr $(BUILD) $(OUTPUT).elf $(OUTPUT).elf32
+	
+fullclean: clean
+	@echo clean mplayer and libav
 	cd mplayer; $(MAKE) -f Makefile clean;
 
 #---------------------------------------------------------------------------------
@@ -147,12 +154,15 @@ $(OUTPUT).elf: $(OFILES)
 %.png.o : %.png
 	@echo $(notdir $<)
 	@$(bin2o)
+	
 %.ttf.o : %.ttf
 	@echo $(notdir $<)
 	$(bin2o)
+	
 %.lang.o : %.lang
 	@echo $(notdir $<)
 	$(bin2o)
+	
 %.elf:
 	@echo linking ... $(notdir $@)
 	$(LD)  $^ $(LDFLAGS) $(LIBPATHS) $(LIBS) -n -T $(LDSCRIPT) -o $@
