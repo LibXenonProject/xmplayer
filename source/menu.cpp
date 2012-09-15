@@ -2223,26 +2223,24 @@ static void SubtitleSettings() {
 		switch (ret) {
 			case 0: {
 				if (strcmp(XMPlayerCfg.subcolor, "FFFFFF00") == 0) {
-					sprintf(ass_color, "00000000");	//black
+					sprintf(XMPlayerCfg.subcolor, "00000000");	//black
 				} else if (strcmp(XMPlayerCfg.subcolor, "00000000") == 0) {
-					sprintf(ass_color, "FFFF0000"); //yellow
+					sprintf(XMPlayerCfg.subcolor, "FFFF0000"); //yellow
 				} else if (strcmp(XMPlayerCfg.subcolor, "FFFF0000") == 0) {
-					sprintf(ass_color, "FF000000"); //red
+					sprintf(XMPlayerCfg.subcolor, "FF000000"); //red
 				} else {
-					sprintf(ass_color, "FFFFFF00"); //white
+					sprintf(XMPlayerCfg.subcolor, "FFFFFF00"); //white
 				}
-				sprintf(XMPlayerCfg.subcolor, ass_color);
-				printf("Settings: subcolor %s \n", XMPlayerCfg.subcolor);
+				sprintf(ass_color, XMPlayerCfg.subcolor);
 				break;
 				}
 			case 1: {
-				if (strcmp(XMPlayerCfg.sub_bcolor, "FFFFFF00") == 0) {
-					sprintf(ass_border_color, "00000000");
+				if (strcmp(XMPlayerCfg.border_color, "FFFFFF00") == 0) {
+					sprintf(XMPlayerCfg.border_color, "00000000");
 				} else {
-					sprintf(ass_border_color, "FFFFFF00");
+					sprintf(XMPlayerCfg.border_color, "FFFFFF00");
 				}
-				sprintf(XMPlayerCfg.sub_bcolor, ass_border_color);
-				printf("Settings: sub_bcolor %s \n", XMPlayerCfg.sub_bcolor);				
+				sprintf(ass_border_color, XMPlayerCfg.border_color);
 				break;
 				}
 			case 2: {	
@@ -2280,7 +2278,7 @@ static void SubtitleSettings() {
 					sprintf(options.value[0], "Red");
 				}
 				
-				if (strcmp(XMPlayerCfg.sub_bcolor, "FFFFFF00") == 0) {
+				if (strcmp(XMPlayerCfg.border_color, "FFFFFF00") == 0) {
 					sprintf(options.value[1], "White");
 				} else {
 					sprintf(options.value[1], "Black");
@@ -2381,7 +2379,7 @@ static void XMPSettings() {
 }
 static void init_mplayer_settings() {
 	ass_color = XMPlayerCfg.subcolor;
-	ass_border_color = XMPlayerCfg.sub_bcolor;		
+	ass_border_color = XMPlayerCfg.border_color;		
 	sub_cp = XMPlayerCfg.subcp;
 	dvdsub_lang = XMPlayerCfg.sublang;			
 }

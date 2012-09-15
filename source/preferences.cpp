@@ -35,8 +35,8 @@ void FixInvalidSettings() {
 	if (!XMPlayerCfg.subcolor) {
 		sprintf(XMPlayerCfg.subcolor, "FFFFFF00");
 	}
-	if (!XMPlayerCfg.sub_bcolor) {
-		sprintf(XMPlayerCfg.sub_bcolor, "00000000");		
+	if (!XMPlayerCfg.border_color) {
+		sprintf(XMPlayerCfg.border_color, "00000000");		
 	}
 	if (!XMPlayerCfg.subcp) {
 		sprintf(XMPlayerCfg.subcp, "ISO-8859-1");
@@ -62,7 +62,7 @@ static void DefaultSettings() {
 		XMPlayerCfg.exit_action = 0;
 		XMPlayerCfg.sort_order = 0;
 		sprintf(XMPlayerCfg.subcolor, "FFFFFF00");
-		sprintf(XMPlayerCfg.sub_bcolor, "00000000");		
+		sprintf(XMPlayerCfg.border_color, "00000000");		
 		sprintf(XMPlayerCfg.subcp, "ISO-8859-1");
 		sprintf(XMPlayerCfg.subcp_desc, "Western European");
 		sprintf(XMPlayerCfg.sublang, "en");
@@ -117,9 +117,9 @@ bool SavePrefs(bool silent) {
 	subtitles->LinkEndChild(subcolor);
 	subcolor->SetAttribute("value", XMPlayerCfg.subcolor);
 
-	TiXmlElement* sub_bcolor = new TiXmlElement("border_color");
-	subtitles->LinkEndChild(sub_bcolor);
-	sub_bcolor->SetAttribute("value", XMPlayerCfg.sub_bcolor);
+	TiXmlElement* border_color = new TiXmlElement("border_color");
+	subtitles->LinkEndChild(border_color);
+	border_color->SetAttribute("value", XMPlayerCfg.border_color);
 
 	TiXmlElement* subcp = new TiXmlElement("codepage");
 	subtitles->LinkEndChild(subcp);
@@ -189,7 +189,7 @@ bool LoadPrefs() {
 			if (strcmp(elemName, "sub_color") == 0) {
                              sprintf(XMPlayerCfg.subcolor, elem->Attribute("value"));
                        } else if (strcmp(elemName, "border_color") == 0) {
-                             sprintf(XMPlayerCfg.sub_bcolor, elem->Attribute("value"));
+                             sprintf(XMPlayerCfg.border_color, elem->Attribute("value"));
                        } else if (strcmp(elemName, "codepage") == 0) {
                              sprintf(XMPlayerCfg.subcp, elem->Attribute("value"));
                              sprintf(XMPlayerCfg.subcp_desc, elem->Attribute("desc"));
