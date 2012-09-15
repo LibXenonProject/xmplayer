@@ -1046,7 +1046,7 @@ double playerSeekPrompt(char * seekfile)
 	char seekstring[100];
 	double seektime = 0;
 	xmplayer_seek_information * seek = playerSeekOpen(seekfile);
-	if (seek
+	if (seek)
 		seektime = seek->seek_time;		
 		
 	hr = (seektime / 3600);
