@@ -147,7 +147,7 @@ int FileSortCallback(const void *f1, const void *f2) {
 		if ( ((BROWSERENTRY *) f2)->date == ((BROWSERENTRY *) f1)->date) { //if date is the same order by filename
 			return stricmp(((BROWSERENTRY *) f2)->filename, ((BROWSERENTRY *) f1)->filename);
 		} else {
-			return ((BROWSERENTRY *) f2)->date - ((BROWSERENTRY *) f1)->date;
+			return ((BROWSERENTRY *) f1)->date - ((BROWSERENTRY *) f2)->date;
 		}
 	}
 	//Date Descending
@@ -155,7 +155,7 @@ int FileSortCallback(const void *f1, const void *f2) {
 		if ( ((BROWSERENTRY *) f2)->date == ((BROWSERENTRY *) f1)->date) { //if date is the same order by filename
 			return stricmp(((BROWSERENTRY *) f1)->filename, ((BROWSERENTRY *) f2)->filename);
 		} else {
-			return ((BROWSERENTRY *) f1)->date - ((BROWSERENTRY *) f2)->date;
+			return ((BROWSERENTRY *) f2)->date - ((BROWSERENTRY *) f1)->date;
 		}
 	}
 }
