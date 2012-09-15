@@ -1,6 +1,17 @@
 <?xml version="1.0" ?>
 <settings>
     <file app="XMPlayer" version="0.0.1" />
-    <menu exit_action="0" language="0" />
-    <filebrowser sort_order="0" />
+    <global>
+        <exit value="0" />
+        <language value="0" />
+    </global>
+    <filebrowser>
+        <sort value="0" />
+    </filebrowser>
+    <subtitles>
+        <sub_color value="FFFFFF00" />
+        <border_color value="00000000" />
+        <codepage value="ISO-8859-1" desc="Western European" />
+        <language value="en" desc="English" />
+    </subtitles>
 </settings>

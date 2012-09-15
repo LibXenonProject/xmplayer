@@ -31,6 +31,25 @@ static const char * toStr(int i) {
 void FixInvalidSettings() {
 	if (XMPlayerCfg.language < 0 || XMPlayerCfg.language >= LANG_LENGTH)
 		XMPlayerCfg.language = LANG_ENGLISH;
+
+	if (!XMPlayerCfg.subcolor) {
+		sprintf(XMPlayerCfg.subcolor, "FFFFFF00");
+	}
+	if (!XMPlayerCfg.border_color) {
+		sprintf(XMPlayerCfg.border_color, "00000000");		
+	}
+	if (!XMPlayerCfg.subcp) {
+		sprintf(XMPlayerCfg.subcp, "ISO-8859-1");
+	}
+	if (!XMPlayerCfg.subcp_desc) {
+		sprintf(XMPlayerCfg.subcp_desc, "Western European");
+	}
+	if (!XMPlayerCfg.sublang) {
+		sprintf(XMPlayerCfg.sublang, "en");
+	}
+	if (!XMPlayerCfg.sublang_desc) {
+		sprintf(XMPlayerCfg.sublang_desc, "English");
+	}	
 }
 
 /****************************************************************************
@@ -39,7 +58,15 @@ void FixInvalidSettings() {
  * Sets all the defaults!
  ***************************************************************************/
 static void DefaultSettings() {
-	memset(&XMPlayerCfg, 0, sizeof (XMPlayerCfg_t));
+		XMPlayerCfg.language = 0;
+		XMPlayerCfg.exit_action = 0;
+		XMPlayerCfg.sort_order = 0;
+		sprintf(XMPlayerCfg.subcolor, "FFFFFF00");
+		sprintf(XMPlayerCfg.border_color, "00000000");		
+		sprintf(XMPlayerCfg.subcp, "ISO-8859-1");
+		sprintf(XMPlayerCfg.subcp_desc, "Western European");
+		sprintf(XMPlayerCfg.sublang, "en");
+		sprintf(XMPlayerCfg.sublang_desc, "English");
 }
 
 /****************************************************************************
@@ -64,17 +91,45 @@ bool SavePrefs(bool silent) {
         
         file->SetAttribute("app", APPNAME);
         file->SetAttribute("version", APPVERSION);
+	//Global
+        TiXmlElement* global = new TiXmlElement("global");
+	settings->LinkEndChild(global);
 	
-        TiXmlElement* menu = new TiXmlElement("menu");
-	settings->LinkEndChild(menu);
+	TiXmlElement* exit = new TiXmlElement("exit");
+	global->LinkEndChild(exit);
+	exit->SetAttribute("value", toStr(XMPlayerCfg.exit_action));
 	
-	menu->SetAttribute("exit_action", toStr(XMPlayerCfg.exit_action));
-        menu->SetAttribute("language", toStr(XMPlayerCfg.language));
-		
+	TiXmlElement* language = new TiXmlElement("language");
+	global->LinkEndChild(language);
+        language->SetAttribute("value", toStr(XMPlayerCfg.language));
+	//File browser		
 	TiXmlElement* filebrowser = new TiXmlElement("filebrowser");
 	settings->LinkEndChild(filebrowser);
 	
-	filebrowser->SetAttribute("sort_order", toStr(XMPlayerCfg.sort_order));
+	TiXmlElement* sort = new TiXmlElement("sort");
+	filebrowser->LinkEndChild(sort);
+	sort->SetAttribute("value", toStr(XMPlayerCfg.sort_order));
+	//Subtitles
+	TiXmlElement* subtitles = new TiXmlElement("subtitles");
+	settings->LinkEndChild(subtitles);
+	
+	TiXmlElement* subcolor = new TiXmlElement("sub_color");
+	subtitles->LinkEndChild(subcolor);
+	subcolor->SetAttribute("value", XMPlayerCfg.subcolor);
+
+	TiXmlElement* border_color = new TiXmlElement("border_color");
+	subtitles->LinkEndChild(border_color);
+	border_color->SetAttribute("value", XMPlayerCfg.border_color);
+
+	TiXmlElement* subcp = new TiXmlElement("codepage");
+	subtitles->LinkEndChild(subcp);
+	subcp->SetAttribute("value", XMPlayerCfg.subcp);
+	subcp->SetAttribute("desc", XMPlayerCfg.subcp_desc);
+	
+	TiXmlElement* sublang = new TiXmlElement("language");
+	subtitles->LinkEndChild(sublang);
+	sublang->SetAttribute("value", XMPlayerCfg.sublang);
+	sublang->SetAttribute("desc", XMPlayerCfg.sublang_desc);
 	
 	bool success = doc.SaveFile(filepath);
 	
@@ -100,27 +155,49 @@ bool LoadPrefs() {
 	sprintf(filepath, "%s/%s", MPLAYER_DATADIR, PREF_FILE_NAME);
         
         TiXmlDocument doc;
-        
+
         bool loadOkay = doc.LoadFile(filepath);
 	if (loadOkay) {
                 FixInvalidSettings();
-                TiXmlElement* settings = doc.FirstChildElement();
+	        TiXmlHandle docu(&doc);
+                TiXmlElement* settings = docu.FirstChildElement().Element();
                 if (settings == NULL) {
                        goto noheader;
                 }
-                for(TiXmlElement* elem = settings->FirstChildElement(); elem != NULL; elem = elem->NextSiblingElement()) {
+                TiXmlHandle handle(0);
+                TiXmlElement* elem;
+                handle = TiXmlHandle(settings);
+                elem = handle.FirstChild("global").FirstChild().Element();
+                for(elem; elem; elem = elem->NextSiblingElement()) {
                        const char* elemName = elem->Value();
-                       const char* attr;
-                       if (strcmp(elemName, "menu") == 0) {
-                             attr = elem->Attribute("exit_action");
-                             XMPlayerCfg.exit_action = atoi(attr);
-                             attr = elem->Attribute("language");
-                             XMPlayerCfg.language = atoi(attr);
-                       } else if (strcmp(elemName, "filebrowser") == 0) { 		
-                             attr = elem->Attribute("sort_order");
-                             XMPlayerCfg.sort_order = atoi(attr);
+                       if (strcmp(elemName, "exit") == 0) {
+                             XMPlayerCfg.exit_action = atoi(elem->Attribute("value"));
+                       } else if (strcmp(elemName, "language") == 0) {
+                             XMPlayerCfg.language = atoi(elem->Attribute("value"));
+               	       }
+               	}
+               	elem = handle.FirstChild("filebrowser").FirstChild().Element();
+                for(elem; elem; elem = elem->NextSiblingElement()) {
+                       const char* elemName = elem->Value();
+                       if (strcmp(elemName, "sort") == 0) { 		
+                             XMPlayerCfg.sort_order = atoi(elem->Attribute("value"));
                        }
                 }
+               	elem = handle.FirstChild("subtitles").FirstChild().Element();                
+                for(elem; elem; elem = elem->NextSiblingElement()) {
+                       const char* elemName = elem->Value();
+			if (strcmp(elemName, "sub_color") == 0) {
+                             sprintf(XMPlayerCfg.subcolor, elem->Attribute("value"));
+                       } else if (strcmp(elemName, "border_color") == 0) {
+                             sprintf(XMPlayerCfg.border_color, elem->Attribute("value"));
+                       } else if (strcmp(elemName, "codepage") == 0) {
+                             sprintf(XMPlayerCfg.subcp, elem->Attribute("value"));
+                             sprintf(XMPlayerCfg.subcp_desc, elem->Attribute("desc"));
+                       } else if (strcmp(elemName, "language") == 0) {
+                             sprintf(XMPlayerCfg.sublang, elem->Attribute("value"));
+                             sprintf(XMPlayerCfg.sublang_desc, elem->Attribute("desc"));
+               	       }
+               	}                
 		doc.Clear();
                 prefLoaded = true;
                 

@@ -47,7 +47,7 @@ void init_mplayer(){
 	}
 	// Display an error message
 	if (found == 0) {
-		cErrorPrompt("Can't found required files, exit");
+		cErrorPrompt("Cannot find required files, exit");
 	}
 	
 	setenv("HOME",MPLAYER_ENV,1);
