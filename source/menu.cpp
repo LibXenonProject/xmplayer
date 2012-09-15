@@ -1024,19 +1024,6 @@ extern "C" void cErrorPrompt(const char *msg)
 	ExitMplayer();
 }
 
-void playerSeekFormatTime(char * dest, double time)
-{
-	int min, sec, hr;
-	hr = (time / 3600);
-	min = fmod(time, 3600) / 60;
-	sec = fmod(time, 60);
-	if (time < 3600) {
-		sprintf(dest, "%s %02d:%02d", _("Resume from"), min, sec);
-	} else {
-		sprintf(dest, "%s %d:%02d:%02d", _("Resume from"), hr, min, sec);
-	}
-}
-
 xmplayer_seek_information * playerSeekOpen(char * file)
 {
 	xmplayer_seek_information * seek = NULL;
@@ -1044,92 +1031,30 @@ xmplayer_seek_information * playerSeekOpen(char * file)
 	return seek;
 }
 
-int playerSeekPrompt(char * seekfile)
+double playerSeekPrompt(char * seekfile)
 {
-	int choice = -2;
+	int min, sec, hr;
 	char seekstring[100];
 	double seektime = 0;
 	xmplayer_seek_information * seek = playerSeekOpen(seekfile);
 	if (seek)
-		seektime = seek->seek_time;
-	
-	playerSeekFormatTime(seekstring, seektime);
-	GuiWindow promptWindow(300, 72);
-	promptWindow.SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);
-	promptWindow.SetPosition(0, 0);
-	GuiImageData btnOutline(button_p_seek_png);
-	GuiImageData btnOutlineOver(button_p_seek_select_png);
-
-	GuiImageData dialogBox(p_seek_bg_png);
-	GuiImage dialogBoxImg(&dialogBox);
-	dialogBoxImg.SetPosition(0, 20);
-	dialogBoxImg.SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);
-
-	GuiText btn1Txt(seekstring, 22, (XeColor) {{255, 255, 255, 255 }});
-	GuiImage btn1Img(&btnOutline);
-	GuiImage btn1ImgOver(&btnOutlineOver);
-	GuiButton btn1(btnOutline.GetWidth(), btnOutline.GetHeight());
-	btn1.SetAlignment(ALIGN_CENTRE, ALIGN_BOTTOM);
-	btn1.SetPosition(0, -22);
-	btn1.SetLabel(&btn1Txt);
-	btn1.SetImage(&btn1Img);
-	btn1.SetImageOver(&btn1ImgOver);
-	btn1.SetTrigger(trigA);
-	btn1.SetState(STATE_SELECTED);
-	btn1.SetEffectGrow();
-
-	GuiText btn2Txt("Start from beginning", 22, (XeColor){{255, 255, 255, 255}});
-	GuiImage btn2Img(&btnOutline);
-	GuiImage btn2ImgOver(&btnOutlineOver);
-	GuiButton btn2(btnOutline.GetWidth(), btnOutline.GetHeight());
-	btn2.SetAlignment(ALIGN_CENTRE, ALIGN_BOTTOM);
-	btn2.SetPosition(0, 22);
-	btn2.SetLabel(&btn2Txt);
-	btn2.SetImage(&btn2Img);
-	btn2.SetImageOver(&btn2ImgOver);
-	btn2.SetTrigger(trigA);
-	btn2.SetEffectGrow();
-
-	GuiTrigger trigMenu;
-	trigMenu.SetButtonOnlyTrigger(-1, 0, PAD_BUTTON_B);
-	GuiButton menuBtn(20, 20);
-	menuBtn.SetAlignment(ALIGN_LEFT, ALIGN_BOTTOM);
-	menuBtn.SetPosition(100, 100);
-	menuBtn.SetTrigger(&trigMenu);
-	menuBtn.SetEffectGrow();
-	menuBtn.SetSelectable(false);
-
-	promptWindow.Append(&dialogBoxImg);
-	promptWindow.Append(&btn1);
-	promptWindow.Append(&btn2);
-	promptWindow.Append(&menuBtn);
-
-	mainWindow->SetState(STATE_DISABLED);
-	mainWindow->Append(&promptWindow);
-	mainWindow->ChangeFocus(&promptWindow);
-
-	btn1.SetState(STATE_SELECTED);
-	btn2.ResetState();
-	while (choice == -2) {
-		update();
-		if (menuBtn.GetState() == STATE_CLICKED) {
-			choice = -1;
-		} else {
-			if (btn1.GetState() == STATE_CLICKED) {
-				choice = 1;
-				playerSeekChoice = 1;
-			} else if (btn2.GetState() == STATE_CLICKED) {
-				choice = 0;
-				playerSeekChoice = 0;
-			}
-		}
+		seektime = seek->seek_time;		
+		
+	hr = (seektime / 3600);
+	min = fmod(seektime, 3600) / 60;
+	sec = fmod(seektime, 60);
+	if (seektime < 3600) {
+		sprintf(seekstring, "%s %02d:%02d", _("Do you want to resume at last position"), min, sec);
+	} else {
+		sprintf(seekstring, "%s %d:%02d:%02d", _("Do you want to resume at last position"), hr, min, sec);
 	}
-	while (promptWindow.GetEffect() > 0) {
-		update();
+		
+	if (WindowPrompt("", "Do you want to resume at last position", "Yes" , "No")) {
+		return seektime;
 	}
-	mainWindow->Remove(&promptWindow);
-	mainWindow->SetState(STATE_DEFAULT);
-	return choice;
+	else {
+		return 0;
+	}
 }
 
 /** to do **/
@@ -1708,6 +1633,7 @@ extern "C" void mplayer_osd_draw(int level)
 
 static void Browser(const char * title, const char * root)
 {
+	int _working_menu = current_menu;
 	// apply correct icon
 	switch (current_menu) {
 	case BROWSE_AUDIO:
@@ -1728,7 +1654,6 @@ static void Browser(const char * title, const char * root)
 	}
 	ResetBrowser();
 	if ((strlen(exited_dir_array[current_menu]) != 0) && (exited_root == root)) {
-browser_select:
 		BrowseDevice(exited_dir_array[current_menu], root);
 		gui_browser->ResetState();
 		browser.selIndex = exited_item[current_menu];
@@ -1788,35 +1713,40 @@ browser_select:
 	mainWindow->Append(browser_sort_up);
 	mainWindow->Append(browser_sort_down);
 
-	if (XMPlayerCfg.sort_order == 0) {
-		browser_sortText->SetText("Sort by: Name");
-		browser_sort_up->SetVisible(true);
-		browser_sort_down->SetVisible(false);
-	} else if (XMPlayerCfg.sort_order == 1) {
-		browser_sortText->SetText("Sort by: Name");
-		browser_sort_down->SetVisible(true);
-		browser_sort_up->SetVisible(false);
-	} else if (XMPlayerCfg.sort_order == 2) {
-		browser_sortText->SetText("Sort by: Date");
-		browser_sort_up->SetVisible(true);
-		browser_sort_down->SetVisible(false);
-	} else if (XMPlayerCfg.sort_order == 3) {
-		browser_sortText->SetText("Sort by: Date");
-		browser_sort_down->SetVisible(true);
-		browser_sort_up->SetVisible(false);
-	}
 	last_menu = current_menu;
 	int last_sel_item = -1;
-
+	int last_sort = -1;
+	int browser_exit = 0;
 	char tmp[256];
 
 	while (current_menu == last_menu) {
 		if (last_sel_item != browser.selIndex) {
-browser_counter:
 			sprintf(tmp, "%d/%d", browser.selIndex + 1, browser.numEntries);
 			browser_pagecounter->SetText(tmp);
 		}
+		
+		// filebrowser sort icons
+		if (last_sort != XMPlayerCfg.sort_order) {
+			if (XMPlayerCfg.sort_order == 0) {
+				browser_sortText->SetText("Sort by: Name");
+				browser_sort_up->SetVisible(true);
+				browser_sort_down->SetVisible(false);
+			} else if (XMPlayerCfg.sort_order == 1) {
+				browser_sortText->SetText("Sort by: Name");
+				browser_sort_down->SetVisible(true);
+				browser_sort_up->SetVisible(false);
+			} else if (XMPlayerCfg.sort_order == 2) {
+				browser_sortText->SetText("Sort by: Date");
+				browser_sort_up->SetVisible(true);
+				browser_sort_down->SetVisible(false);
+			} else if (XMPlayerCfg.sort_order == 3) {
+				browser_sortText->SetText("Sort by: Date");
+				browser_sort_down->SetVisible(true);
+				browser_sort_up->SetVisible(false);
+			}
+		}
 
+		last_sort = XMPlayerCfg.sort_order;
 		last_sel_item = browser.selIndex;
 
 		if (browser.pageIndex) {
@@ -1830,8 +1760,11 @@ browser_counter:
 		} else {
 			browser_down_icon->SetVisible(false);
 		}
+		
+		
 		exited_item[current_menu] = browser.selIndex;
 		exited_page[current_menu] = browser.pageIndex;
+		
 		// update file browser based on arrow xenon_buttons
 		// set MENU_EXIT if A xenon_button pressed on a file
 		for (int i = 0; i < gui_browser->GetPageSize(); i++) {
@@ -1846,19 +1779,14 @@ browser_counter:
 						gui_browser->ResetState();
 						gui_browser->fileList[0]->SetState(STATE_SELECTED);
 						gui_browser->TriggerUpdate();
-						goto browser_counter;
+						last_sel_item = -1;
 					} else {
 						break;
 					}
 				} else {
-					TR
 					sprintf(mplayer_filename, "%s/%s/%s", rootdir, browser.dir, browserList[browser.selIndex].filename);
-					sprintf(exited_dir, "%s/", browser.dir);
-					sprintf(seek_filename, "%s/cache/elapsed/%s%s.bin", MPLAYER_CONFDIR, browserList[browser.selIndex].filename);
 					CleanupPath(mplayer_filename);
-					CleanupPath(exited_dir);
-					strncpy(exited_dir_array[current_menu], exited_dir, 2048);
-					exited_root = root;
+					sprintf(seek_filename, "%s/cache/elapsed/%s.bin", MPLAYER_CONFDIR, browserList[browser.selIndex].filename);
 					ShutoffRumble();
 					gui_browser->ResetState();
 					if (file_type(mplayer_filename) == BROWSER_TYPE_ELF) {
@@ -1866,60 +1794,57 @@ browser_counter:
 						/*} else if (file_type(mplayer_filename) == BROWSER_TYPE_AUDIO) {
 							audio_gui = 1;
 							current_menu = MENU_MPLAYER;*/
-					} else {
-						if ((file_exists(seek_filename)) && (playerSeekPrompt(seek_filename) == -1)) {
-							goto browser_select;
-						} else {
-							xmplayer_seek_information * seek = playerSeekOpen(seek_filename);
-							if (playerSeekChoice == 1 && seek) {
-								double seek_time = seek->seek_time;
-								sprintf(playerSeekTime, "seek %f 2", seek_time);
-							} else {
-								strcpy(playerSeekTime, "seek 0 2");
-							}
+					} else {						
+						current_menu = MENU_MPLAYER;
+						strcpy(playerSeekTime, "seek 0 2");
+						if (file_exists(seek_filename)) {
+							double seek_time = playerSeekPrompt(seek_filename);
+							sprintf(playerSeekTime, "seek %f 2", seek_time);
 							remove(seek_filename);
-							current_menu = MENU_MPLAYER;
 						}
-
 					}
 				}
 			}
 		}
 		//Sort button selection
 		if (browser_sortBtn.GetState() == STATE_CLICKED) {
+			browser_sortBtn.ResetState();
+			gui_browser->TriggerUpdate();
 			XMPlayerCfg.sort_order++;
 			if (XMPlayerCfg.sort_order > 3) {
 				XMPlayerCfg.sort_order = 0;
 			}
-			SavePrefs(true); //save to xmplayer.xml
-			sprintf(exited_dir, "%s/", browser.dir);
-			CleanupPath(exited_dir);
-			strncpy(exited_dir_array[current_menu], exited_dir, 2048);
-			goto browser_select;
+			last_sort = -1;
+			BrowserSortList();
+	
+			// save pref
+			SavePrefs(true);			
 		}
 		if (bBtn.GetState() == STATE_CLICKED) {
 			if (strcmp(browserList[0].filename, "..") == 0) {
 				bBtn.ResetState();
 				browser.selIndex = 0;
+				last_sel_item = -1;
 				BrowserChangeFolder();
+				
 				gui_browser->ResetState();
 				gui_browser->fileList[0]->SetState(STATE_SELECTED);
 				gui_browser->TriggerUpdate();
-				goto browser_counter;
 			} else {
-				goto browser_exit;
+				current_menu = MENU_BACK;
 			}
 		}
 		if (backBtn.GetState() == STATE_CLICKED) {
-browser_exit:
-			sprintf(exited_dir, "%s/", browser.dir);
-			CleanupPath(exited_dir);
-			strncpy(exited_dir_array[current_menu], exited_dir, 2048);
-			exited_root = root;
 			current_menu = MENU_BACK;
 		}
 		update();
 	}
+	
+	// exit dir						
+	sprintf(exited_dir, "%s/", browser.dir);					
+	CleanupPath(exited_dir);
+	strncpy(exited_dir_array[_working_menu], exited_dir, 2048);
+	exited_root = root;
 
 	mainWindow->Remove(browser_up_icon);
 	mainWindow->Remove(browser_down_icon);

@@ -133,25 +133,29 @@ int FileSortCallback(const void *f1, const void *f2) {
 	/* If one is a file and one is a directory the directory is first. */
 	if (((BROWSERENTRY *) f1)->isdir && !(((BROWSERENTRY *) f2)->isdir)) return -1;
 	if (!(((BROWSERENTRY *) f1)->isdir) && ((BROWSERENTRY *) f2)->isdir) return 1;
+	
 	//Ascending Name
 	if (XMPlayerCfg.sort_order == 0) {
 		return stricmp(((BROWSERENTRY *) f1)->filename, ((BROWSERENTRY *) f2)->filename);
+	}
 	//Descending Name
-	} else if (XMPlayerCfg.sort_order == 1) {
+	else if (XMPlayerCfg.sort_order == 1) {
 		return stricmp(((BROWSERENTRY *) f2)->filename, ((BROWSERENTRY *) f1)->filename);
+	}
 	//Date Ascending
-	} else if (XMPlayerCfg.sort_order == 2) {
-	if (stricmp(((BROWSERENTRY *) f2)->order_date, ((BROWSERENTRY *) f1)->order_date) == 0) { //if date is the same order by filename
-			return stricmp(((BROWSERENTRY *) f1)->filename, ((BROWSERENTRY *) f2)->filename);
+	else if (XMPlayerCfg.sort_order == 2) {
+		if ( ((BROWSERENTRY *) f2)->date == ((BROWSERENTRY *) f1)->date) { //if date is the same order by filename
+			return stricmp(((BROWSERENTRY *) f2)->filename, ((BROWSERENTRY *) f1)->filename);
 		} else {
-			return stricmp(((BROWSERENTRY *) f1)->order_date, ((BROWSERENTRY *) f2)->order_date);
+			return ((BROWSERENTRY *) f2)->date - ((BROWSERENTRY *) f1)->date;
 		}
+	}
 	//Date Descending
-	} else if (XMPlayerCfg.sort_order == 3) {
-		if (stricmp(((BROWSERENTRY *) f2)->order_date, ((BROWSERENTRY *) f1)->order_date) == 0) { 
+	else if (XMPlayerCfg.sort_order == 3) {
+		if ( ((BROWSERENTRY *) f2)->date == ((BROWSERENTRY *) f1)->date) { //if date is the same order by filename
 			return stricmp(((BROWSERENTRY *) f1)->filename, ((BROWSERENTRY *) f2)->filename);
 		} else {
-			return stricmp(((BROWSERENTRY *) f2)->order_date, ((BROWSERENTRY *) f1)->order_date);
+			return ((BROWSERENTRY *) f1)->date - ((BROWSERENTRY *) f2)->date;
 		}
 	}
 }
@@ -319,7 +323,7 @@ int ParseDirectory() {
 		sprintf(file_path, "%s/%s", fulldir, entry->d_name);
 		
 		getDate(entry->d_mtime, browserList[entryNum].moddate);
-		getDate(entry->d_ctime, browserList[entryNum].order_date);
+		browserList[entryNum].date = entry->d_mtime;
 		
 		ext = strrchr(entry->d_name, '.');
 		if (extValid(ext) || entry->d_type == DT_DIR) {
@@ -347,6 +351,11 @@ int ParseDirectory() {
 
 	browser.numEntries = entryNum;
 	return entryNum;
+}
+
+
+void BrowserSortList() {
+	qsort(browserList, browser.numEntries, sizeof (BROWSERENTRY), FileSortCallback);
 }
 
 /****************************************************************************

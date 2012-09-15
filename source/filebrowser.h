@@ -41,7 +41,7 @@ typedef struct {
 	char filename[MAXJOLIET + 1]; // full filename
 	char displayname[MAXDISPLAY + 1]; // name for browser display
 	char moddate[20];
-	char order_date[20];
+	time_t date;
 	BROWSER_TYPE type;
 } BROWSERENTRY;
 
@@ -51,6 +51,7 @@ extern char rootdir[10];
 
 int UpdateDirName(int method);
 int FileSortCallback(const void *f1, const void *f2);
+void BrowserSortList();
 void ResetBrowser();
 int BrowserChangeFolder();
 int BrowseDevice();
