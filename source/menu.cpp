@@ -1026,7 +1026,6 @@ extern "C" void cErrorPrompt(const char *msg)
 
 void playerSeekFormatTime(char * dest, double time)
 {
-	TR
 	int min, sec, hr;
 	hr = (time / 3600);
 	min = fmod(time, 3600) / 60;
@@ -1036,43 +1035,24 @@ void playerSeekFormatTime(char * dest, double time)
 	} else {
 		sprintf(dest, "%s %d:%02d:%02d", _("Resume from"), hr, min, sec);
 	}
-	TR
 }
 
-bool file_exists(const char * filename)
+xmplayer_seek_information * playerSeekOpen(char * file)
 {
-	FILE * fd = fopen(filename, "rb");
-	if (fd != NULL) {
-		fclose(fd);
-		return true;
-	}
-	return false;
-}
-
-double playerSeekOpen(char * file)
-{
-	TR
-	double time = 0;
-	char seektime[8];
-	FILE * fd = fopen(file, "r");
-	if( fd ) {
-		fgets(seektime, 8, fd);
-		if (seektime[strlen(seektime) - 1] == '\n') {
-			seektime[strlen(seektime) - 1] = '\0';
-		}
-		fclose(fd);
-		time = atof(seektime);
-	}
-	TR
-	return time;
+	xmplayer_seek_information * seek = NULL;
+	load_file(file, (void**)&seek, NULL);
+	return seek;
 }
 
 int playerSeekPrompt(char * seekfile)
 {
-	TR
 	int choice = -2;
 	char seekstring[100];
-	double seektime = playerSeekOpen(seekfile);	
+	double seektime = 0;
+	xmplayer_seek_information * seek = playerSeekOpen(seekfile);
+	if (seek)
+		seektime = seek->seek_time;
+	
 	playerSeekFormatTime(seekstring, seektime);
 	GuiWindow promptWindow(300, 72);
 	promptWindow.SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);
@@ -1501,7 +1481,7 @@ static void osdAudioOptions()
 static void osdVideoOptions()
 {
 	bool firstRun = true;
-	char* osd_framedrop = "";
+	char osd_framedrop[100] = {};
 	if ((osd_display_option_subtitle == 0) && (osd_display_option_audio == 0)) {
 		if (osd_display_option_video) {
 			osd_options_window->SetFocus(0);
@@ -1544,11 +1524,11 @@ static void osdVideoOptions()
 			if (ret >= 0 || firstRun) {
 				firstRun = false;
 				if (frame_dropping == 2) {
-					osd_framedrop = "Hard";
+					strcpy(osd_framedrop, "Hard");
 				} else if (frame_dropping == 1) {
-					osd_framedrop = "Enabled";
+					strcpy(osd_framedrop, "Enabled");
 				} else {
-					osd_framedrop = "Disabled";
+					strcpy(osd_framedrop, "Disabled");
 				}
 				sprintf(video_option_list.value[0], "%s", vo_fs == 1 ? "Enabled" : "Disabled");
 				sprintf(video_option_list.value[1], osd_framedrop);
@@ -1860,7 +1840,7 @@ browser_counter:
 			}
 			if (gui_browser->fileList[i]->GetState() == STATE_CLICKED) {
 				gui_browser->fileList[i]->ResetState();
-				// check corresponding browser entry
+				// check corresponding browser entry 
 				if (browserList[browser.selIndex].isdir) {
 					if (BrowserChangeFolder()) {
 						gui_browser->ResetState();
@@ -1871,9 +1851,10 @@ browser_counter:
 						break;
 					}
 				} else {
+					TR
 					sprintf(mplayer_filename, "%s/%s/%s", rootdir, browser.dir, browserList[browser.selIndex].filename);
 					sprintf(exited_dir, "%s/", browser.dir);
-					sprintf(seek_filename, "%s/cache/elapsed/%s%s", MPLAYER_DATADIR, browserList[browser.selIndex].filename, ".txt");
+					sprintf(seek_filename, "%s/cache/elapsed/%s%s.bin", MPLAYER_CONFDIR, browserList[browser.selIndex].filename);
 					CleanupPath(mplayer_filename);
 					CleanupPath(exited_dir);
 					strncpy(exited_dir_array[current_menu], exited_dir, 2048);
@@ -1889,8 +1870,9 @@ browser_counter:
 						if ((file_exists(seek_filename)) && (playerSeekPrompt(seek_filename) == -1)) {
 							goto browser_select;
 						} else {
-							if ((file_exists(seek_filename)) && (playerSeekChoice == 1)) {
-								double seek_time = playerSeekOpen(seek_filename);
+							xmplayer_seek_information * seek = playerSeekOpen(seek_filename);
+							if (playerSeekChoice == 1 && seek) {
+								double seek_time = seek->seek_time;
 								sprintf(playerSeekTime, "seek %f 2", seek_time);
 							} else {
 								strcpy(playerSeekTime, "seek 0 2");

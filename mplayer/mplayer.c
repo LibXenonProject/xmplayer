@@ -4124,6 +4124,19 @@ goto_next_file:  // don't jump here after ao/vo/getch initialization!
  * shared with mplayer
  * use that to load a new file
  */
+ #include "../source/mplayer_seek.h"
+ 
+static char osd_sub[200];
+static char osd_mute[200];
+static char osd_volume_balance[200];
+static char osd_volume[200];
+
+// mplayer_func.c
+// load save return 0 if fail, 1 on success
+int save_file(const char * filename, void * in, int size);
+int load_file(const char * filename, void * buf, int * size);
+int file_exists(const char * filename);
+
 void mplayer_load(char * _filename) 
 {
 	filename = _filename;
@@ -4152,68 +4165,63 @@ const char * playetGetMetaData(metadata_t type){
 }
 
 char* playerGetSubtitle() {
-	char* osd_sub = "";
+	 int tracks;
+	char *sub_name;
+	char *tmp;
 	if ((subdata) || (ass_track)) {
-        int tracks;
-        char *sub_name;
+       
         if (subdata) {
-                sub_name = subdata->filename;
-                tracks =  mpctx->set_of_sub_pos + 1;
-            } else {
-                sub_name = ass_track->name;
-                tracks =  mpctx->set_of_sub_size;
-            }
-       const char *tmp = mp_basename(sub_name);
-            asprintf(&osd_sub, "(%d) %s%s",
-                     tracks,
-                     strlen(tmp) < 15 ? "" : "..",
-                     strlen(tmp) < 15 ? tmp : tmp + strlen(tmp) - 14);
-	    return osd_sub;
-	    free(osd_sub);
+			sub_name = subdata->filename;
+			tracks =  mpctx->set_of_sub_pos + 1;
+		} else {
+			sub_name = ass_track->name;
+			tracks =  mpctx->set_of_sub_size;
+		}
+		tmp = mp_basename(sub_name);
+		sprintf(osd_sub, "(%d) %s%s",
+				 tracks,
+				 strlen(tmp) < 15 ? "" : "..",
+				 strlen(tmp) < 15 ? tmp : tmp + strlen(tmp) - 14);
+		return osd_sub;
     } else {
-	    osd_sub = "Disabled";
+	    strcpy(osd_sub, "Disabled");
 	    return osd_sub;
 	}
 }
 
-char* playerGetMute() {
-	char* osd_mute = "";
+char* playerGetMute() {	
 	if (mpctx->mixer.muted) {
-	 	osd_mute = "Enabled";
+	 	strcpy(osd_mute, "Enabled");
 	} else {
-		osd_mute = "Disabled";
+		strcpy(osd_mute, "Disabled");
 	}
-return osd_mute;
+	return osd_mute;
 }
 
 char* playerGetBalance() {
 	float bal;
-	char* str;
 	mixer_getbalance(&mpctx->mixer, &bal);
-	    if (bal == 0.f) {
-		str = strdup("Center");
-		return str;
-	    } else if (bal == -1.f) {
-		str = strdup("Left only");
-		return str;
-	    } else if (bal == 1.f) {
-		str = strdup("Right only");
-		return str;
-	    } else {
+	if (bal == 0.f) {
+		strcpy(osd_volume_balance, "Center");
+		return osd_volume_balance;
+	} else if (bal == -1.f) {
+		strcpy(osd_volume_balance, "Left only");
+		return osd_volume_balance;
+	} else if (bal == 1.f) {
+		strcpy(osd_volume_balance, "Right only");
+		return osd_volume_balance;
+	} else {
 		unsigned right = (bal + 1.f) / 2.f * 100.f;
-		asprintf(&str, "L: %d%%, R: %d%%", 100 - right, right);
-		return str;
-		free (str);
-	    }
+		sprintf(osd_volume_balance, "L: %d%%, R: %d%%", 100 - right, right);
+		return osd_volume_balance;
+	}
 }
 
 char* playerGetVolume() {
-	char* osd_volume = "";
 	float vol;
 	mixer_getbothvolume(&mpctx->mixer, &vol);
-	asprintf(&osd_volume, "%.2f", (double)vol);
+	sprintf(osd_volume, "%.2f", (double)vol);
 	return osd_volume;
-	free(osd_volume);
 }
 int playerGetPause() {
 	if(mpctx->was_paused == 1) {
@@ -4255,8 +4263,8 @@ void playerSwitchAudio(){
 }
 
 void playerSwitchSubtitle(){ 
-        // cycle
-        mp_input_queue_cmd(mp_input_parse_cmd("pausing_keep sub_select"));
+	// cycle
+	mp_input_queue_cmd(mp_input_parse_cmd("pausing_keep sub_select"));
 }
 
 void playerSwitchFullscreen(){
@@ -4278,14 +4286,14 @@ int playerSwitchLoop(){
 	}
 }
 void playerSwitchMute() {
- mixer_mute(&mpctx->mixer);
+	mixer_mute(&mpctx->mixer);
 }
 
 void playerSwitchBalance(int left) {
 	if (left == 1) {
         mp_input_queue_cmd(mp_input_parse_cmd("pausing_keep balance -0.1"));
 	} else {
-	mp_input_queue_cmd(mp_input_parse_cmd("pausing_keep balance +0.1"));
+		mp_input_queue_cmd(mp_input_parse_cmd("pausing_keep balance +0.1"));
 	}
 }
 
@@ -4293,29 +4301,30 @@ void playerSwitchVolume(int up) {
 	if (up == 1) {
         mp_input_queue_cmd(mp_input_parse_cmd("pausing_keep volume 1"));
 	} else {
-	mp_input_queue_cmd(mp_input_parse_cmd("pausing_keep volume -1"));
+		mp_input_queue_cmd(mp_input_parse_cmd("pausing_keep volume -1"));
 	}
 }
 
 void playerTurnOffSubtitle(){
-        mp_input_queue_cmd(mp_input_parse_cmd("sub_visibility"));
+	mp_input_queue_cmd(mp_input_parse_cmd("sub_visibility"));
 }
 //Exit
 // try to play next file to go to gui, and save last position of file
 void playerGuiAsked() {	
-	osd_level = 1; //remove osd before exit
-	double elapsed = demuxer_get_current_time(mpctx->demuxer);
-	int seconds = elapsed;
+	xmplayer_seek_information seek;
+	seek.last_date_played = time(NULL);
+	seek.seek_time = demuxer_get_current_time(mpctx->demuxer);
+	
+	//remove osd before exit
+	osd_level = 1;
+	// finish playing
 	mpctx->eof=1;
 	
-	if (seconds > 60) {	
-		char file[100];
-		asprintf(file, "%s/cache/elapsed/%s%s", MPLAYER_CONFDIR, mp_basename(filename), ".txt"); //saves last position
-		FILE *fd = fopen(file, "w+");
-		if( fd )
-		{
-			fprintf(fd, "%d", seconds);
-			fclose(fd);
-		}
+	printf("seek.seek_time = %f\n", seek.seek_time);
+	
+	if (seek.seek_time > 60) {	
+		char file[MAXPATHLEN];
+		sprintf(file, "%s/cache/elapsed/%s.bin", MPLAYER_CONFDIR, mp_basename(filename)); //saves last position
+		save_file(file, &seek, sizeof(xmplayer_seek_information));
 	}
 }

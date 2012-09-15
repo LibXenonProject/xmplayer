@@ -53,3 +53,78 @@ void init_mplayer(){
 	setenv("HOME",MPLAYER_ENV,1);
 }
 
+
+int load_file(const char * filename, void ** buf, int * psize) {
+	int size = 0;
+	FILE * fd = NULL;
+	char fname[MAXPATHLEN];
+	if (strchr(filename,':')) {
+		strcpy(fname, filename);
+	}
+	else {
+		sprintf(fname, "%s/%s", MPLAYER_ENV, filename);
+	}
+	fd = fopen(fname, "rb");
+	if (fd == NULL)
+	{
+		// file not found
+		return 0;
+	}
+	// take file size
+	fseek(fd, 0, SEEK_END);
+	size = ftell(fd);
+	fseek(fd, 0, SEEK_SET);
+	
+	// alloc buf
+	*buf = malloc(size);
+		
+	// read file
+	fread(*buf, size, 1, fd);
+	
+	fclose(fd);
+	
+	if(psize)
+		*psize = size;
+		
+	return 1;
+}
+
+int save_file(const char * filename, void * in, int size) {
+	char fname[MAXPATHLEN];
+	FILE * fd = NULL;
+	if (strchr(filename,':')) {
+		strcpy(fname, filename);
+	}
+	else {
+		sprintf(fname, "%s/%s", MPLAYER_ENV, filename);
+	}
+	fd = fopen(fname, "wb");
+	if (fd == NULL)
+	{
+		// file not found
+		return 0;
+	}
+	// read file
+	fwrite(in, size, 1, fd);
+	
+	fclose(fd);
+	return 1;
+}
+
+int file_exists(const char * filename) {
+	char fname[MAXPATHLEN];
+	FILE * fd = NULL;
+	if (strchr(filename,':')) {
+		strcpy(fname, filename);
+	}
+	else {
+		sprintf(fname, "%s/%s", MPLAYER_ENV, filename);
+	}
+	fd = fopen(fname, "rb");
+	if (fd != NULL) {
+		fclose(fd);
+		return 1;
+	}
+	return 0;
+}
+
