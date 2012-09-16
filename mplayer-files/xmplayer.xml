@@ -8,6 +8,10 @@
     <filebrowser>
         <sort value="0" />
     </filebrowser>
+    <video>
+        <framedrop value="0" />
+        <vsync value="0" />
+    </video>
     <subtitles>
         <sub_color value="FFFFFF00" />
         <border_color value="00000000" />

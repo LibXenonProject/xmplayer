@@ -173,7 +173,7 @@ CP codepages[CODEPAGE_SIZE] = {
         { "ISO-8859-14", "Celtic" },
         { "Windows-1250", "Central/Eastern European" },
         { "Windows-1251", "Cyrillic alphabets" },
-        { "Windows-1252", "Western European" },
+        { "Windows-1252", "Western European 2" },
         { "Windows-1253", "Greek 2" },
         { "Windows-1254", "Turkish 2" },
         { "Windows-1255", "Hebrew 2" },

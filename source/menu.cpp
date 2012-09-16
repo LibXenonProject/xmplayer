@@ -1007,7 +1007,7 @@ int WindowPrompt(const char *title, const char *msg, const char *btn1Label, cons
 
 	if (btn2Label) {
 		btn1.ResetState();
-		btn2.SetState(STATE_SELECTED);
+		btn1.SetState(STATE_SELECTED);
 	}
 
 	while (choice == -1) {
@@ -2082,6 +2082,96 @@ static void GlobalSettings() {
 	SavePrefs(true);
 }
 
+static void VideoSettings() {
+	int ret;
+	int i = 0;
+	bool firstRun = true;
+	char framedrop[100] = {};	
+	OptionList options;
+
+	sprintf(options.name[i++], "Frame Dropping");
+	sprintf(options.name[i++], "Vsync");
+	options.length = i;
+
+	for (i = 0; i < options.length; i++)
+		options.value[i][0] = 0;
+
+	GuiText titleTxt("Video Settings", 26, 0xfffa9600);
+	titleTxt.SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+	titleTxt.SetPosition(50, 50);
+
+	GuiImageData btnOutline(button_blue_png);
+	GuiImageData btnOutlineOver(button_green_png);
+
+	GuiText backBtnTxt("Back", 22, 0xFFFFFFFF);
+	GuiImage backBtnImg(&btnOutline);
+	GuiImage backBtnImgOver(&btnOutlineOver);
+	GuiButton backBtn(btnOutline.GetWidth(), btnOutline.GetHeight());
+	backBtn.SetAlignment(ALIGN_LEFT, ALIGN_BOTTOM);
+	backBtn.SetPosition(90, -35);
+	backBtn.SetLabel(&backBtnTxt);
+	backBtn.SetImage(&backBtnImg);
+	backBtn.SetImageOver(&backBtnImgOver);
+	backBtn.SetTrigger(trigA);
+	backBtn.SetEffectGrow();
+
+	GuiOptionBrowser optionBrowser(980, 426, new GuiImageData(browser_list_btn_png), &options);
+	optionBrowser.SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);
+	optionBrowser.SetCol2Position(275);
+
+	GuiWindow w(screenwidth, screenheight);
+	w.Append(&backBtn);
+	mainWindow->Append(&optionBrowser);
+	mainWindow->Append(&w);
+	mainWindow->Append(&titleTxt);
+
+	while (current_menu == SETTINGS_VIDEO) {
+		update();
+
+		ret = optionBrowser.GetClickedOption();
+
+		switch (ret) {
+			case 0:
+			{
+				XMPlayerCfg.framedrop++;
+				if (XMPlayerCfg.framedrop > 2) {
+					XMPlayerCfg.framedrop = 0;
+				}
+				frame_dropping = XMPlayerCfg.framedrop;
+				break;
+			}
+			case 1:
+			{
+				XMPlayerCfg.vsync = !XMPlayerCfg.vsync;
+				vo_vsync = XMPlayerCfg.vsync;
+				break;
+			}
+		}
+			if (ret >= 0 || firstRun) {
+				firstRun = false;
+				if (XMPlayerCfg.framedrop == 2) {
+					strcpy(framedrop, "Hard");
+				} else if (XMPlayerCfg.framedrop == 1) {
+					strcpy(framedrop, "Enabled");
+				} else {
+					strcpy(framedrop, "Disabled");
+				}
+				sprintf(options.value[0], framedrop);
+				sprintf(options.value[1], "%s", XMPlayerCfg.vsync == 1 ? "Enabled" : "Disabled");
+			}
+			optionBrowser.TriggerUpdate();
+		if (backBtn.GetState() == STATE_CLICKED) {
+			current_menu = SETTINGS;
+		}
+	}
+	mainWindow->Remove(&optionBrowser);
+	mainWindow->Remove(&w);
+	mainWindow->Remove(&titleTxt);
+
+	// save settings
+	SavePrefs(true);
+}
+
 static int GetCodepageIndex() {
 	for(int i=0; i < CODEPAGE_SIZE; i++)
 		if(strcmp(XMPlayerCfg.subcp, codepages[i].cpname) == 0)
@@ -2169,7 +2259,7 @@ static void SubtitleSettings() {
 				}
 			case 2: {	
 				int cp = GetCodepageIndex();								
-				codepages[cp++];
+				cp++;
 				if (cp >= CODEPAGE_SIZE) {
 					cp = 0;
 				}
@@ -2180,7 +2270,7 @@ static void SubtitleSettings() {
 				} 
 			case 3:	{
 				int sp = GetLangIndex();				
-				languages[sp++];
+				sp++;
 				if (sp >= LANGUAGE_SIZE) {
 					sp = 0;
 				}
@@ -2189,8 +2279,88 @@ static void SubtitleSettings() {
 				dvdsub_lang = XMPlayerCfg.sublang;			
 				break;
 				}
-		}								
-		if (ret >= 0 || firstRun) {
+		}	
+		int het = optionBrowser.GetSelectedOption();		
+		if (osd_pad_right == 1) {			
+			switch (het) {	
+				case 0: {
+					if (strcmp(XMPlayerCfg.subcolor, "FFFFFF00") == 0) {
+						sprintf(XMPlayerCfg.subcolor, "00000000");	//black
+					} else if (strcmp(XMPlayerCfg.subcolor, "00000000") == 0) {
+						sprintf(XMPlayerCfg.subcolor, "FFFF0000"); //yellow
+					} else if (strcmp(XMPlayerCfg.subcolor, "FFFF0000") == 0) {
+						sprintf(XMPlayerCfg.subcolor, "FF000000"); //red
+					} else {
+						sprintf(XMPlayerCfg.subcolor, "FFFFFF00"); //white
+					}
+					sprintf(ass_color, XMPlayerCfg.subcolor);
+					break;
+					}
+				case 2: {	
+					int cp = GetCodepageIndex();								
+					cp++;
+					if (cp >= CODEPAGE_SIZE) {
+						cp = 0;
+					}
+					sprintf(XMPlayerCfg.subcp, codepages[cp].cpname);
+					sprintf(XMPlayerCfg.subcp_desc, codepages[cp].language);				
+					sub_cp = XMPlayerCfg.subcp;
+					break;
+					} 
+				case 3:	{
+					int sp = GetLangIndex();				
+					sp++;
+					if (sp >= LANGUAGE_SIZE) {
+						sp = 0;
+					}
+					sprintf(XMPlayerCfg.sublang, languages[sp].abbrev);
+					sprintf(XMPlayerCfg.sublang_desc, languages[sp].language);				
+					dvdsub_lang = XMPlayerCfg.sublang;			
+					break;
+					}			
+			}
+		osd_pad_right = 0;											
+		} else if (osd_pad_left == 1) { 												
+			switch (het) {	
+				case 0: {
+					if (strcmp(XMPlayerCfg.subcolor, "FFFFFF00") == 0) {
+						sprintf(XMPlayerCfg.subcolor, "FF000000");	//red
+					} else if (strcmp(XMPlayerCfg.subcolor, "FF000000") == 0) {
+						sprintf(XMPlayerCfg.subcolor, "FFFF0000"); //yellow
+					} else if (strcmp(XMPlayerCfg.subcolor, "FFFF0000") == 0) {
+						sprintf(XMPlayerCfg.subcolor, "00000000"); //black
+					} else {
+						sprintf(XMPlayerCfg.subcolor, "FFFFFF00"); //white
+					}
+					sprintf(ass_color, XMPlayerCfg.subcolor);
+					break;
+					}
+				case 2: {	
+					int cp = GetCodepageIndex();								
+					cp--;
+					if (cp < 0) {
+						cp = CODEPAGE_SIZE-1;
+					}
+					sprintf(XMPlayerCfg.subcp, codepages[cp].cpname);
+					sprintf(XMPlayerCfg.subcp_desc, codepages[cp].language);				
+					sub_cp = XMPlayerCfg.subcp;
+					break;
+					} 
+				case 3:	{
+					int sp = GetLangIndex();				
+					sp--;
+					if (sp < 0) {
+						sp = LANGUAGE_SIZE-1;
+					}
+					sprintf(XMPlayerCfg.sublang, languages[sp].abbrev);
+					sprintf(XMPlayerCfg.sublang_desc, languages[sp].language);				
+					dvdsub_lang = XMPlayerCfg.sublang;			
+					break;
+					}			
+			}
+		osd_pad_left = 0;
+		}
+		if (ret >= 0 || het >= 0 || firstRun) {
 			firstRun = false;
 				if (strcmp(XMPlayerCfg.subcolor, "FFFFFF00") == 0) {
 					sprintf(options.value[0], "White");
@@ -2281,10 +2451,10 @@ static void XMPSettings() {
 				break;
 	/*		case 1:
 				current_menu = SETTINGS_AUDIO;
-				break;
+				break; */
 			case 2:
 				current_menu = SETTINGS_VIDEO;
-				break;*/
+				break;
 			case 3:
 				current_menu = SETTINGS_SUBTITLES;
 				break;
@@ -2301,21 +2471,32 @@ static void XMPSettings() {
 	mainWindow->Remove(&w);
 	mainWindow->Remove(&titleTxt);
 }
-static void init_mplayer_settings() {
+static void init_mplayer_settings(void) {
 	ass_color = XMPlayerCfg.subcolor;
 	ass_border_color = XMPlayerCfg.border_color;		
 	sub_cp = XMPlayerCfg.subcp;
-	dvdsub_lang = XMPlayerCfg.sublang;			
+	dvdsub_lang = XMPlayerCfg.sublang; 			
 }
 static void do_mplayer(char * filename)
 {
 	static int mplayer_need_init = 1;
 	if (mplayer_need_init) {
+		char* vsync = "-novsync";
+		char* framedrop = "-noframedrop";		
+		if (XMPlayerCfg.vsync == 1) 
+			vsync = "-vsync";
+		if (XMPlayerCfg.framedrop == 1)
+			framedrop = "-framedrop";
+		if (XMPlayerCfg.framedrop == 2)
+			framedrop = "-hardframedrop";					
+		
 		char * argv[] = {
 			"mplayer.xenon",
 			//"-really-quiet",
 			//"-demuxer","mkv",
 			//"-menu",
+			vsync,
+			framedrop,
 			"-lavdopts", "skiploopfilter=all:threads=5",
 			filename,
 		};
@@ -2376,11 +2557,11 @@ static void gui_loop()
 			GlobalSettings();
 		} else if (current_menu == SETTINGS_SUBTITLES) { 
 			SubtitleSettings();
-		} /*else if (current_menu == SETTINGS_AUDIO) {
-			AudioSettings();
+		/*} else if (current_menu == SETTINGS_AUDIO) {
+			AudioSettings(); */
 		} else if (current_menu == SETTINGS_VIDEO) {
 			VideoSettings();
-		} else if (current_menu == SETTINGS_NETWORK) {
+		} /*else if (current_menu == SETTINGS_NETWORK) {
 			NetworkSettings();
 		} */
 	}
