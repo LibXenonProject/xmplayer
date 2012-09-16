@@ -999,7 +999,7 @@ int WindowPrompt(const char *title, const char *msg, const char *btn1Label, cons
 	if (btn2Label)
 		promptWindow.Append(&btn2);
 
-	promptWindow.SetEffect(EFFECT_SLIDE_TOP | EFFECT_SLIDE_IN, 50);
+	//promptWindow.SetEffect(EFFECT_SLIDE_TOP | EFFECT_SLIDE_IN, 50);
 
 	mainWindow->SetState(STATE_DISABLED);
 	mainWindow->Append(&promptWindow);
@@ -1018,10 +1018,10 @@ int WindowPrompt(const char *title, const char *msg, const char *btn1Label, cons
 			choice = 0;
 	}
 
-	promptWindow.SetEffect(EFFECT_SLIDE_TOP | EFFECT_SLIDE_OUT, 50);
+	/*promptWindow.SetEffect(EFFECT_SLIDE_TOP | EFFECT_SLIDE_OUT, 50);
 	while (promptWindow.GetEffect() > 0) {
 		update();
-	}
+	}*/
 	mainWindow->Remove(&promptWindow);
 	mainWindow->SetState(STATE_DEFAULT);
 	return choice;
@@ -1053,12 +1053,12 @@ double playerSeekPrompt(char * seekfile)
 	min = fmod(seektime, 3600) / 60;
 	sec = fmod(seektime, 60);
 	if (seektime < 3600) {
-		sprintf(seekstring, "%s %02d:%02d", _("Do you want to resume at last position"), min, sec);
+		sprintf(seekstring, "%s %02d:%02d", _("Resume from"), min, sec);
 	} else {
-		sprintf(seekstring, "%s %d:%02d:%02d", _("Do you want to resume at last position"), hr, min, sec);
+		sprintf(seekstring, "%s %d:%02d:%02d", _("Resume from"), hr, min, sec);
 	}
 		
-	if (WindowPrompt("", "Do you want to resume at last position", "Yes" , "No")) {
+	if (WindowPrompt("", seekstring, "Yes" , "No")) {
 		return seektime;
 	}
 	else {
