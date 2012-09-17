@@ -926,8 +926,8 @@ static void ExitMplayer()
 {
 	// save settings
 	SavePrefs(true);
-
-	if (XMPlayerCfg.exit_action == 0) {
+	// restart to xell or shutdown, it will always restart to xell if mplayer cannot initiate
+	if ((XMPlayerCfg.exit_action == 0) || (strlen(MPLAYER_CONFDIR) <= 0)) {
 		exit(0);
 	} else {
 		xenon_smc_power_shutdown();
@@ -1956,7 +1956,7 @@ static void HomePage()
 				xenon_smc_power_reboot();
 				break;
 			case 6:
-				xenon_smc_power_shutdown();
+				ExitMplayer();
 				break;
 			default:
 				WindowPrompt("Warning", "Not implemented yet", "Ok", NULL);

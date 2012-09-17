@@ -2,7 +2,7 @@
 <settings>
     <file app="XMPlayer" version="0.0.1" />
     <global>
-        <exit value="0" />
+        <exit value="1" />
         <language value="0" />
     </global>
     <filebrowser>

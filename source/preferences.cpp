@@ -32,6 +32,12 @@ void FixInvalidSettings() {
 	if (XMPlayerCfg.language < 0 || XMPlayerCfg.language >= LANG_LENGTH)
 		XMPlayerCfg.language = LANG_ENGLISH;
 
+	if (XMPlayerCfg.exit_action < 0 || XMPlayerCfg.exit_action > 1)
+		XMPlayerCfg.exit_action = 1;
+
+	if (XMPlayerCfg.sort_order < 0 || XMPlayerCfg.sort_order > 3)		
+		XMPlayerCfg.sort_order = 0;
+
 	if (!XMPlayerCfg.subcolor) 
 		sprintf(XMPlayerCfg.subcolor, "FFFFFF00");
 	
@@ -78,7 +84,7 @@ void FixInvalidSettings() {
 static void DefaultSettings() {
 		//global
 		XMPlayerCfg.language = LANG_ENGLISH;
-		XMPlayerCfg.exit_action = 0;
+		XMPlayerCfg.exit_action = 1;
 		XMPlayerCfg.sort_order = 0;
 		//subtitles
 		sprintf(XMPlayerCfg.subcolor, "FFFFFF00");
