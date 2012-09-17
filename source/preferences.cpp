@@ -54,7 +54,20 @@ void FixInvalidSettings() {
 		XMPlayerCfg.framedrop = 0;
 		
 	if (XMPlayerCfg.vsync < 0 || XMPlayerCfg.vsync > 1)
-		XMPlayerCfg.vsync = 0;		
+		XMPlayerCfg.vsync = 0;
+		
+	if (!XMPlayerCfg.alang) 
+		sprintf(XMPlayerCfg.alang, "eng");
+
+	if (!XMPlayerCfg.alang_desc)
+		sprintf(XMPlayerCfg.alang_desc, "English");		
+
+	if (XMPlayerCfg.volume < 0 || XMPlayerCfg.volume > 100)
+		XMPlayerCfg.volume = 80;
+	
+	if (XMPlayerCfg.softvol < 0 || XMPlayerCfg.softvol > 1000)
+		XMPlayerCfg.softvol = 300;						
+		
 }
 
 /****************************************************************************
@@ -77,6 +90,11 @@ static void DefaultSettings() {
 		//video
 		XMPlayerCfg.framedrop = 0;
 		XMPlayerCfg.vsync = 0;						
+		//audio
+		sprintf(XMPlayerCfg.alang, "eng");
+		sprintf(XMPlayerCfg.alang_desc, "English");	
+		XMPlayerCfg.volume = 80;			
+		XMPlayerCfg.softvol = 300;	
 }
 
 /****************************************************************************
@@ -119,7 +137,23 @@ bool SavePrefs(bool silent) {
 	TiXmlElement* sort = new TiXmlElement("sort");
 	filebrowser->LinkEndChild(sort);
 	sort->SetAttribute("value", toStr(XMPlayerCfg.sort_order));
+	//Audio
+	TiXmlElement* audio = new TiXmlElement("audio");
+	settings->LinkEndChild(audio);
 	
+	TiXmlElement* alang = new TiXmlElement("language");
+	audio->LinkEndChild(alang);
+	alang->SetAttribute("value", XMPlayerCfg.alang);
+	alang->SetAttribute("desc", XMPlayerCfg.alang_desc);	
+	
+	TiXmlElement* volume = new TiXmlElement("volume");
+	audio->LinkEndChild(volume);
+	volume->SetAttribute("value", toStr(XMPlayerCfg.volume));	
+
+	TiXmlElement* softvol = new TiXmlElement("softvol");
+	audio->LinkEndChild(softvol);
+	softvol->SetAttribute("value", toStr(XMPlayerCfg.softvol));
+		
 	//Video
 	TiXmlElement* video = new TiXmlElement("video");
 	settings->LinkEndChild(video);
@@ -130,8 +164,7 @@ bool SavePrefs(bool silent) {
 
 	TiXmlElement* vsync = new TiXmlElement("vsync");
 	video->LinkEndChild(vsync);
-	vsync->SetAttribute("value", toStr(XMPlayerCfg.vsync));
-		
+	vsync->SetAttribute("value", toStr(XMPlayerCfg.vsync));		
 	//Subtitles
 	TiXmlElement* subtitles = new TiXmlElement("subtitles");
 	settings->LinkEndChild(subtitles);
@@ -205,6 +238,18 @@ bool LoadPrefs() {
                        if (strcmp(elemName, "sort") == 0) { 		
                              XMPlayerCfg.sort_order = atoi(elem->Attribute("value"));
                        }
+                }
+                elem = handle.FirstChild("audio").FirstChild().Element();
+                for(elem; elem; elem = elem->NextSiblingElement()) {
+                       const char* elemName = elem->Value();
+                       if (strcmp(elemName, "language") == 0) { 		
+                             sprintf(XMPlayerCfg.alang, elem->Attribute("value"));
+                             sprintf(XMPlayerCfg.alang_desc, elem->Attribute("desc"));                             
+                       } else if (strcmp(elemName, "volume") == 0) { 		
+                             XMPlayerCfg.volume = atoi(elem->Attribute("value"));
+                       } else if (strcmp(elemName, "softvol") == 0) { 		
+                             XMPlayerCfg.softvol = atoi(elem->Attribute("value"));
+                       } 
                 }
                 elem = handle.FirstChild("video").FirstChild().Element();
                 for(elem; elem; elem = elem->NextSiblingElement()) {

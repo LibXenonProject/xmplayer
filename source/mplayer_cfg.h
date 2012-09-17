@@ -21,7 +21,11 @@ typedef struct {
 	char subcolor[20];
 	char border_color[20];
 	int vsync;
-	int framedrop;	
+	int framedrop;
+	char alang[100];
+	char alang_desc[100];	
+	int volume;
+	int softvol;
 } XMPlayerCfg_t;
 
 extern XMPlayerCfg_t XMPlayerCfg;

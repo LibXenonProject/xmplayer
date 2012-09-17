@@ -128,6 +128,7 @@
 #include "osdep/getch2.h"
 #include "osdep/timer.h"
 #include "../source/mplayer_common.h"
+#include "../source/mplayer_cfg.h"
 #include "osdep/osdep_xenon.h"
 #include "stream/unrar.h"
 #include "udp_sync.h"
@@ -3620,7 +3621,9 @@ goto_enable_cache:
         update_osd_msg();
 
 //================ SETUP AUDIO ==========================
-
+	start_volume = XMPlayerCfg.volume;
+	soft_vol = 1; //always on or volume doesn't work
+	soft_vol_max = XMPlayerCfg.softvol;		
         if (mpctx->sh_audio) {
             reinit_audio_chain();
             if (mpctx->sh_audio && mpctx->sh_audio->codec)

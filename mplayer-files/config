@@ -1,15 +1,4 @@
 # =====================
-# Audio and Video
-# =====================
-# Enabled soft volume
-softvol=1
-# Set max soft volume
-softvol-max=300
-# Start volume (0-100)
-volume=80
-# Virtual Sync
-vsync=no
-# =====================
 # Text-based subtitles
 # =====================
 #<<==Subfont settings==>>

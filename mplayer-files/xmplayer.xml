@@ -8,6 +8,11 @@
     <filebrowser>
         <sort value="0" />
     </filebrowser>
+    <audio>
+        <language value="eng" desc="English" />
+        <volume value="80" />
+        <softvol value="300" />
+    </audio>
     <video>
         <framedrop value="0" />
         <vsync value="0" />

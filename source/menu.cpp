@@ -909,6 +909,9 @@ extern "C" char* sub_cp;
 extern "C" char* dvdsub_lang;
 //Mplayer's audio variables
 extern "C" float audio_delay;
+extern "C" char* audio_lang;
+extern "C" float soft_vol_max;
+extern "C" float start_volume;
 //Mplayer's video variables
 extern "C" int vo_fs;
 extern "C" int vo_vsync;
@@ -2082,6 +2085,173 @@ static void GlobalSettings() {
 	SavePrefs(true);
 }
 
+static int GetALangIndex() {
+        for(int i=0; i < LANGUAGE_SIZE; i++)
+                if(strcmp(XMPlayerCfg.alang, languages[i].abbrev2) == 0)
+                        return i;
+        return 0;
+}
+static void AudioSettings() {
+	int ret;
+	int i = 0;
+	bool firstRun = true;
+	OptionList options;
+
+	sprintf(options.name[i++], "Language");
+	sprintf(options.name[i++], "Volume");
+	sprintf(options.name[i++], "Soft Volume");	
+	options.length = i;
+
+	for (i = 0; i < options.length; i++)
+		options.value[i][0] = 0;
+
+	GuiText titleTxt("Audio Settings", 26, 0xfffa9600);
+	titleTxt.SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+	titleTxt.SetPosition(50, 50);
+
+	GuiImageData btnOutline(button_blue_png);
+	GuiImageData btnOutlineOver(button_green_png);
+
+	GuiText backBtnTxt("Back", 22, 0xFFFFFFFF);
+	GuiImage backBtnImg(&btnOutline);
+	GuiImage backBtnImgOver(&btnOutlineOver);
+	GuiButton backBtn(btnOutline.GetWidth(), btnOutline.GetHeight());
+	backBtn.SetAlignment(ALIGN_LEFT, ALIGN_BOTTOM);
+	backBtn.SetPosition(90, -35);
+	backBtn.SetLabel(&backBtnTxt);
+	backBtn.SetImage(&backBtnImg);
+	backBtn.SetImageOver(&backBtnImgOver);
+	backBtn.SetTrigger(trigA);
+	backBtn.SetEffectGrow();
+
+	GuiOptionBrowser optionBrowser(980, 426, new GuiImageData(browser_list_btn_png), &options);
+	optionBrowser.SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);
+	optionBrowser.SetCol2Position(275);
+
+	GuiWindow w(screenwidth, screenheight);
+	w.Append(&backBtn);
+	mainWindow->Append(&optionBrowser);
+	mainWindow->Append(&w);
+	mainWindow->Append(&titleTxt);
+
+	while (current_menu == SETTINGS_AUDIO) {
+		update();
+
+		ret = optionBrowser.GetClickedOption();
+
+		switch (ret) {
+			case 0: {
+				int al = GetALangIndex();				
+				al++;
+				if (al >= LANGUAGE_SIZE) {
+					al = 0;		
+				}	
+				sprintf(XMPlayerCfg.alang, languages[al].abbrev2);
+				sprintf(XMPlayerCfg.alang_desc, languages[al].language);				
+				audio_lang = XMPlayerCfg.alang;					
+				break;
+				}
+			case 1: {
+				XMPlayerCfg.volume++;
+				if (XMPlayerCfg.volume > 100) {
+					XMPlayerCfg.volume = 0;
+				}
+				start_volume = XMPlayerCfg.volume;				
+				break;
+				} 
+			case 2: {
+				XMPlayerCfg.softvol++;
+				if (XMPlayerCfg.softvol > 1000) {
+					XMPlayerCfg.softvol = 10;
+				}
+				soft_vol_max = XMPlayerCfg.softvol;				
+				break;
+				} 
+		}	
+		int het = optionBrowser.GetSelectedOption();		
+		if (osd_pad_right == 1) {			
+			switch (het) {	
+				case 0: {
+					int al = GetALangIndex();				
+					al++;
+					if (al >= LANGUAGE_SIZE) {
+						al = 0;		
+					}	
+					sprintf(XMPlayerCfg.alang, languages[al].abbrev2);
+					sprintf(XMPlayerCfg.alang_desc, languages[al].language);				
+					audio_lang = XMPlayerCfg.alang;					
+					break;
+					}
+				case 1: {
+					XMPlayerCfg.volume++;
+					if (XMPlayerCfg.volume > 100) {
+						XMPlayerCfg.volume = 0;
+					}
+					start_volume = XMPlayerCfg.volume;				
+					break;
+					} 
+				case 2: {
+					XMPlayerCfg.softvol++;
+					if (XMPlayerCfg.softvol > 1000) {
+						XMPlayerCfg.softvol = 10;
+					}
+					soft_vol_max = XMPlayerCfg.softvol;					
+					break;
+					} 			
+			}
+		osd_pad_right = 0;											
+		} else if (osd_pad_left == 1) { 												
+			switch (het) {	
+				case 0: {
+					int al = GetALangIndex();				
+					al--;
+					if (al < 0) {
+						al = LANGUAGE_SIZE-1;		
+					}	
+					sprintf(XMPlayerCfg.alang, languages[al].abbrev2);
+					sprintf(XMPlayerCfg.alang_desc, languages[al].language);				
+					audio_lang = XMPlayerCfg.alang;					
+					break;
+					}
+				case 1: {
+					XMPlayerCfg.volume--;
+					if (XMPlayerCfg.volume < 0) {
+						XMPlayerCfg.volume = 100;
+					}
+					start_volume = XMPlayerCfg.volume;				
+					break;
+					} 
+				case 2: {
+					XMPlayerCfg.softvol--;
+					if (XMPlayerCfg.softvol < 10) {
+						XMPlayerCfg.softvol = 1000;
+					}
+					soft_vol_max = XMPlayerCfg.softvol;				
+					break;	
+					} 
+			}
+		osd_pad_left = 0;
+		}
+		if (ret >= 0 || het >= 0 || firstRun) {
+			firstRun = false;	
+			sprintf(options.value[0], XMPlayerCfg.alang_desc);
+			sprintf(options.value[1], "%d", XMPlayerCfg.volume);
+			sprintf(options.value[2], "%d", XMPlayerCfg.softvol);
+			optionBrowser.TriggerUpdate();
+		}
+
+		if (backBtn.GetState() == STATE_CLICKED) {
+			current_menu = SETTINGS;
+		}
+	}
+	mainWindow->Remove(&optionBrowser);
+	mainWindow->Remove(&w);
+	mainWindow->Remove(&titleTxt);
+
+	// save settings
+	SavePrefs(true);
+}
+
 static void VideoSettings() {
 	int ret;
 	int i = 0;
@@ -2449,9 +2619,9 @@ static void XMPSettings() {
 			case 0:
 				current_menu = SETTINGS_GLOBAL;
 				break;
-	/*		case 1:
+			case 1:
 				current_menu = SETTINGS_AUDIO;
-				break; */
+				break;
 			case 2:
 				current_menu = SETTINGS_VIDEO;
 				break;
@@ -2475,26 +2645,25 @@ static void init_mplayer_settings(void) {
 	ass_color = XMPlayerCfg.subcolor;
 	ass_border_color = XMPlayerCfg.border_color;		
 	sub_cp = XMPlayerCfg.subcp;
-	dvdsub_lang = XMPlayerCfg.sublang; 			
+	dvdsub_lang = XMPlayerCfg.sublang; 
+	audio_lang = XMPlayerCfg.alang;	
 }
 static void do_mplayer(char * filename)
 {
 	static int mplayer_need_init = 1;
 	if (mplayer_need_init) {
-		char* vsync = "-novsync";
-		char* framedrop = "-noframedrop";		
+		char vsync[50] = "-novsync";
+		char framedrop[50] = "-noframedrop";
+
 		if (XMPlayerCfg.vsync == 1) 
-			vsync = "-vsync";
+			sprintf(vsync, "-vsync");
 		if (XMPlayerCfg.framedrop == 1)
-			framedrop = "-framedrop";
+			sprintf(framedrop, "-framedrop");
 		if (XMPlayerCfg.framedrop == 2)
-			framedrop = "-hardframedrop";					
-		
+			sprintf(framedrop, "-hardframedrop");				
+
 		char * argv[] = {
 			"mplayer.xenon",
-			//"-really-quiet",
-			//"-demuxer","mkv",
-			//"-menu",
 			vsync,
 			framedrop,
 			"-lavdopts", "skiploopfilter=all:threads=5",
@@ -2557,8 +2726,8 @@ static void gui_loop()
 			GlobalSettings();
 		} else if (current_menu == SETTINGS_SUBTITLES) { 
 			SubtitleSettings();
-		/*} else if (current_menu == SETTINGS_AUDIO) {
-			AudioSettings(); */
+		} else if (current_menu == SETTINGS_AUDIO) {
+			AudioSettings();
 		} else if (current_menu == SETTINGS_VIDEO) {
 			VideoSettings();
 		} /*else if (current_menu == SETTINGS_NETWORK) {
