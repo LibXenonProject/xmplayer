@@ -32,24 +32,48 @@ void FixInvalidSettings() {
 	if (XMPlayerCfg.language < 0 || XMPlayerCfg.language >= LANG_LENGTH)
 		XMPlayerCfg.language = LANG_ENGLISH;
 
-	if (!XMPlayerCfg.subcolor) {
+	if (XMPlayerCfg.exit_action < 0 || XMPlayerCfg.exit_action > 1)
+		XMPlayerCfg.exit_action = 1;
+
+	if (XMPlayerCfg.sort_order < 0 || XMPlayerCfg.sort_order > 3)		
+		XMPlayerCfg.sort_order = 0;
+
+	if (!XMPlayerCfg.subcolor) 
 		sprintf(XMPlayerCfg.subcolor, "FFFFFF00");
-	}
-	if (!XMPlayerCfg.border_color) {
+	
+	if (!XMPlayerCfg.border_color) 
 		sprintf(XMPlayerCfg.border_color, "00000000");		
-	}
-	if (!XMPlayerCfg.subcp) {
+	
+	if (!XMPlayerCfg.subcp) 
 		sprintf(XMPlayerCfg.subcp, "ISO-8859-1");
-	}
-	if (!XMPlayerCfg.subcp_desc) {
+	
+	if (!XMPlayerCfg.subcp_desc) 
 		sprintf(XMPlayerCfg.subcp_desc, "Western European");
-	}
-	if (!XMPlayerCfg.sublang) {
+	
+	if (!XMPlayerCfg.sublang) 
 		sprintf(XMPlayerCfg.sublang, "en");
-	}
-	if (!XMPlayerCfg.sublang_desc) {
+
+	if (!XMPlayerCfg.sublang_desc)
 		sprintf(XMPlayerCfg.sublang_desc, "English");
-	}	
+	
+	if (XMPlayerCfg.framedrop < 0 || XMPlayerCfg.framedrop >= 3)
+		XMPlayerCfg.framedrop = 0;
+		
+	if (XMPlayerCfg.vsync < 0 || XMPlayerCfg.vsync > 1)
+		XMPlayerCfg.vsync = 0;
+		
+	if (!XMPlayerCfg.alang) 
+		sprintf(XMPlayerCfg.alang, "eng");
+
+	if (!XMPlayerCfg.alang_desc)
+		sprintf(XMPlayerCfg.alang_desc, "English");		
+
+	if (XMPlayerCfg.volume < 0 || XMPlayerCfg.volume > 100)
+		XMPlayerCfg.volume = 80;
+	
+	if (XMPlayerCfg.softvol < 0 || XMPlayerCfg.softvol > 1000)
+		XMPlayerCfg.softvol = 300;						
+		
 }
 
 /****************************************************************************
@@ -58,15 +82,25 @@ void FixInvalidSettings() {
  * Sets all the defaults!
  ***************************************************************************/
 static void DefaultSettings() {
-		XMPlayerCfg.language = 0;
-		XMPlayerCfg.exit_action = 0;
+		//global
+		XMPlayerCfg.language = LANG_ENGLISH;
+		XMPlayerCfg.exit_action = 1;
 		XMPlayerCfg.sort_order = 0;
+		//subtitles
 		sprintf(XMPlayerCfg.subcolor, "FFFFFF00");
 		sprintf(XMPlayerCfg.border_color, "00000000");		
 		sprintf(XMPlayerCfg.subcp, "ISO-8859-1");
 		sprintf(XMPlayerCfg.subcp_desc, "Western European");
 		sprintf(XMPlayerCfg.sublang, "en");
 		sprintf(XMPlayerCfg.sublang_desc, "English");
+		//video
+		XMPlayerCfg.framedrop = 0;
+		XMPlayerCfg.vsync = 0;						
+		//audio
+		sprintf(XMPlayerCfg.alang, "eng");
+		sprintf(XMPlayerCfg.alang_desc, "English");	
+		XMPlayerCfg.volume = 80;			
+		XMPlayerCfg.softvol = 300;	
 }
 
 /****************************************************************************
@@ -109,6 +143,34 @@ bool SavePrefs(bool silent) {
 	TiXmlElement* sort = new TiXmlElement("sort");
 	filebrowser->LinkEndChild(sort);
 	sort->SetAttribute("value", toStr(XMPlayerCfg.sort_order));
+	//Audio
+	TiXmlElement* audio = new TiXmlElement("audio");
+	settings->LinkEndChild(audio);
+	
+	TiXmlElement* alang = new TiXmlElement("language");
+	audio->LinkEndChild(alang);
+	alang->SetAttribute("value", XMPlayerCfg.alang);
+	alang->SetAttribute("desc", XMPlayerCfg.alang_desc);	
+	
+	TiXmlElement* volume = new TiXmlElement("volume");
+	audio->LinkEndChild(volume);
+	volume->SetAttribute("value", toStr(XMPlayerCfg.volume));	
+
+	TiXmlElement* softvol = new TiXmlElement("softvol");
+	audio->LinkEndChild(softvol);
+	softvol->SetAttribute("value", toStr(XMPlayerCfg.softvol));
+		
+	//Video
+	TiXmlElement* video = new TiXmlElement("video");
+	settings->LinkEndChild(video);
+	
+	TiXmlElement* framedrop = new TiXmlElement("framedrop");
+	video->LinkEndChild(framedrop);
+	framedrop->SetAttribute("value", toStr(XMPlayerCfg.framedrop));
+
+	TiXmlElement* vsync = new TiXmlElement("vsync");
+	video->LinkEndChild(vsync);
+	vsync->SetAttribute("value", toStr(XMPlayerCfg.vsync));		
 	//Subtitles
 	TiXmlElement* subtitles = new TiXmlElement("subtitles");
 	settings->LinkEndChild(subtitles);
@@ -181,6 +243,27 @@ bool LoadPrefs() {
                        const char* elemName = elem->Value();
                        if (strcmp(elemName, "sort") == 0) { 		
                              XMPlayerCfg.sort_order = atoi(elem->Attribute("value"));
+                       }
+                }
+                elem = handle.FirstChild("audio").FirstChild().Element();
+                for(elem; elem; elem = elem->NextSiblingElement()) {
+                       const char* elemName = elem->Value();
+                       if (strcmp(elemName, "language") == 0) { 		
+                             sprintf(XMPlayerCfg.alang, elem->Attribute("value"));
+                             sprintf(XMPlayerCfg.alang_desc, elem->Attribute("desc"));                             
+                       } else if (strcmp(elemName, "volume") == 0) { 		
+                             XMPlayerCfg.volume = atoi(elem->Attribute("value"));
+                       } else if (strcmp(elemName, "softvol") == 0) { 		
+                             XMPlayerCfg.softvol = atoi(elem->Attribute("value"));
+                       } 
+                }
+                elem = handle.FirstChild("video").FirstChild().Element();
+                for(elem; elem; elem = elem->NextSiblingElement()) {
+                       const char* elemName = elem->Value();
+                       if (strcmp(elemName, "framedrop") == 0) { 		
+                             XMPlayerCfg.framedrop = atoi(elem->Attribute("value"));
+                       } else if (strcmp(elemName, "vsync") == 0) { 		
+                             XMPlayerCfg.vsync = atoi(elem->Attribute("value"));
                        }
                 }
                	elem = handle.FirstChild("subtitles").FirstChild().Element();                

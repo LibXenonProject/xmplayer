@@ -1,6 +1,3 @@
-This is a fork of xmplayer by Ced2911 (and now the Libxenon team) with my own customizations.
-My customizations, compared to original release, are at the moment (05/09/2012):
-
 Initial:
 -Quick fix: Subtitles stays on screen when playing a new video without subs, after exiting a video with subs
 -Fixed: "Return to Gui" and starting a video leads to crash 
@@ -83,6 +80,9 @@ Changed: The audio delay option in osd is more logical, a audio_delay of 100 ms 
 05/09/2012:
 -Fixed: some bugs with osd displaying delay as -0 because of it being close to zero
 -Added: set ass=yes and vf=ass in mplayer config, with vf=ass it looks stable, haven't experienced freezes. This means it can be disabled and subfont can be used if wished
+
+17/09/2012:
+-Added: Global, audio, video and subtitles settings in menu (no need to play with mplayer config files anymore)
 
 TODO:
 -Get mplayer to seek through large files (>2gb)

@@ -1,15 +1,4 @@
 # =====================
-# Audio and Video
-# =====================
-# Enabled soft volume
-softvol=1
-# Set max soft volume
-softvol-max=300
-# Start volume (0-100)
-volume=80
-# Virtual Sync
-vsync=no
-# =====================
 # Text-based subtitles
 # =====================
 #<<==Subfont settings==>>
@@ -24,8 +13,6 @@ subpos=90
 # ASS Subtitles switch
 ass=yes
 vf=ass
-# Subtitle Color
-ass-color=ffffff00
 # Subtitle font style (MarginV is the number of pixels between bottom of screen and sub)
 ass-force-style=Outline=1,Shadow=1,FontSize=16,MarginV=5,Alignment=2
 #
@@ -37,36 +24,3 @@ subfont-encoding=unicode
 # Subtitle file encoding
 utf8=yes
 unicode=yes
-# Subtitle Codepage
-subcp=ISO-8859-1
-# Default selected sub lang
-slang=en
-# =====================
-#Subtitle Readme
-# =====================
-#Change the subcp value to ISO-8859-2 for Slavic and so forth.
-#It can be it doesn't work, there are alot of different codes, and sometimes a "slang" (slang="en" etc.) has to be set.
-#Use google to search for help if it doesn't work, there are a lot of solutions: google.com: "mplayer latin subtitles"
-#
-#Taken from http://www.terena.org/activities/multiling/ml-docs/iso-8859.html:
-#
-#ISO-8859-1 - Latin 1
-#Western Europe and Americas: Afrikaans, Basque, Catalan, Danish, Dutch, English, Faeroese, Finnish, French, Galician, German, Icelandic, Irish, Italian, Norwegian, #Portuguese, Spanish and Swedish.
-#ISO-8859-2 Latin 2
-#Latin-written Slavic and Central European languages: Czech, German, Hungarian, Polish, Romanian, Croatian, Slovak, Slovene.
-#ISO-8859-3 - Latin 3
-#Esperanto, Galician, Maltese, and Turkish.
-#ISO-8859-4 - Latin 4
-#Scandinavia/Baltic (mostly covered by 8859-1 also): Estonian, Latvian, and Lithuanian. It is an incomplete predecessor of Latin 6.
-#ISO-8859-5 - Cyrillic
-#Bulgarian, Byelorussian, Macedonian, Russian, Serbian and Ukrainian.
-#ISO-8859-6 - Arabic
-#Non-accented Arabic.
-#ISO-8859-7- Modern Greek
-#Greek.
-#ISO-8859-8 - Hebrew
-#Non-accented Hebrew.
-#ISO-8859-9 - Latin 5
-#Same as 8859-1 except for Turkish instead of Icelandic
-#ISO-8859-10 - Latin 6
-#Latin6, for Lappish/Nordic/Eskimo languages: Adds the last Inuit (Greenlandic) and Sami (Lappish) letters that were missing in Latin 4 to cover the entire Nordic area.              

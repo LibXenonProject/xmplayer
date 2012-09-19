@@ -2,12 +2,21 @@
 <settings>
     <file app="XMPlayer" version="0.0.1" />
     <global>
-        <exit value="0" />
+        <exit value="1" />
         <language value="0" />
     </global>
     <filebrowser>
         <sort value="0" />
     </filebrowser>
+    <audio>
+        <language value="eng" desc="English" />
+        <volume value="80" />
+        <softvol value="300" />
+    </audio>
+    <video>
+        <framedrop value="0" />
+        <vsync value="0" />
+    </video>
     <subtitles>
         <sub_color value="FFFFFF00" />
         <border_color value="00000000" />
