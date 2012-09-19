@@ -79,6 +79,18 @@
 #include "../build/folder_photo_icon_png.h"
 #include "../build/browser_video_icon_f_png.h"
 
+//xbox360 buttons
+#include "../build/btn_a_png.h"
+#include "../build/btn_b_png.h"
+#include "../build/btn_x_png.h"
+#include "../build/btn_y_png.h"
+#include "../build/btn_bk_png.h"
+//#include "../build/btn_st_png.h"
+//#include "../build/btn_lt_png.h"
+//#include "../build/btn_rt_png.h"
+//#include "../build/btn_lb_png.h"
+//#include "../build/btn_rb_png.h"
+
 // osd 3
 #include "../build/options_menu_audio_channel_icon_f_png.h"
 #include "../build/options_menu_audio_channel_icon_n_png.h"
@@ -166,6 +178,8 @@ static XenosSurface * loading[4] = {NULL};
 static GuiImage * bgImg = NULL;
 static GuiWindow * mainWindow = NULL;
 static GuiTrigger * trigA;
+static GuiTrigger * trigB;
+static GuiTrigger * trigBk;
 
 /**
  * video osd
@@ -306,6 +320,31 @@ static GuiButton * osd_options_menu_subtitle_btn = NULL;
 static GuiButton * osd_options_menu_zoomin_btn = NULL;
 static GuiButton * osd_options_menu_zoomout_btn = NULL;
 
+/**
+ * Xbox 360 buttons
+ **/
+static GuiText * btn_a_text = NULL;
+static GuiText * btn_b_text = NULL;
+static GuiText * btn_x_text = NULL;
+static GuiText * btn_y_text = NULL;
+static GuiText * btn_bk_text = NULL;
+//static GuiText * btn_st_text = NULL;
+//static GuiText * btn_lt_text = NULL;
+//static GuiText * btn_rt_text = NULL;
+//static GuiText * btn_lb_text = NULL;
+//static GuiText * btn_rt_text = NULL;
+
+static GuiImage * btn_a = NULL;
+static GuiImage * btn_b = NULL;
+static GuiImage * btn_x = NULL;
+static GuiImage * btn_y = NULL;
+static GuiImage * btn_bk = NULL;
+//static GuiImage * btn_st = NULL;
+//static GuiImage * btn_lt = NULL;
+//static GuiImage * btn_rt = NULL;
+//static GuiImage * btn_lb = NULL;
+//static GuiImage * btn_rt = NULL;
+ 
 //browser sorting
 static GuiText * browser_sortText = NULL;
 static GuiImage * browser_sort_up = NULL;
@@ -343,7 +382,7 @@ char playerSeekTime[100] = {};
 static int audio_gui = 0;
 
 static int last_menu;
-
+static int last_settings_menu = 0;
 static int current_menu = HOME_PAGE;
 
 static void update()
@@ -593,6 +632,45 @@ static void loadBrowserRessources()
 	gui_browser->SetFontSize(20);
 	gui_browser->SetSelectedFontSize(24);
 	gui_browser->SetPageSize(10);
+}
+
+static void loadXboxButtons()
+{
+	btn_a = new GuiImage(new GuiImageData(btn_a_png));
+	btn_a->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+	btn_a->SetPosition(155, 670);
+	
+	btn_a_text = new GuiText("Select", 18, 0xFFFFFFFF);
+	btn_a_text->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+	btn_a_text->SetPosition(190, 673);
+	btn_a_text->SetEffectGrow();	
+
+	btn_b = new GuiImage(new GuiImageData(btn_b_png));
+	btn_b->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+	btn_b->SetPosition(280, 670);
+
+	btn_b_text = new GuiText("Back", 18, 0xFFFFFFFF);
+	btn_b_text->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+	btn_b_text->SetPosition(315, 673);
+	btn_b_text->SetEffectGrow();		
+	
+	btn_x = new GuiImage(new GuiImageData(btn_x_png));
+	btn_x->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+	btn_x->SetPosition(405, 670);
+
+	btn_x_text = new GuiText("Sort", 18, 0xFFFFFFFF);
+	btn_x_text->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+	btn_x_text->SetPosition(440, 673);
+	btn_x_text->SetEffectGrow();		
+
+	btn_bk = new GuiImage(new GuiImageData(btn_bk_png));
+	btn_bk->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+	btn_bk->SetPosition(530, 670);			
+	
+	btn_bk_text = new GuiText("Home", 18, 0xFFFFFFFF);
+	btn_bk_text->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+	btn_bk_text->SetPosition(565, 673);
+	btn_bk_text->SetEffectGrow();	
 }
 
 static void loadOsdRessources()
@@ -1002,8 +1080,6 @@ int WindowPrompt(const char *title, const char *msg, const char *btn1Label, cons
 	if (btn2Label)
 		promptWindow.Append(&btn2);
 
-	//promptWindow.SetEffect(EFFECT_SLIDE_TOP | EFFECT_SLIDE_IN, 50);
-
 	mainWindow->SetState(STATE_DISABLED);
 	mainWindow->Append(&promptWindow);
 	mainWindow->ChangeFocus(&promptWindow);
@@ -1021,10 +1097,65 @@ int WindowPrompt(const char *title, const char *msg, const char *btn1Label, cons
 			choice = 0;
 	}
 
-	/*promptWindow.SetEffect(EFFECT_SLIDE_TOP | EFFECT_SLIDE_OUT, 50);
-	while (promptWindow.GetEffect() > 0) {
-		update();
-	}*/
+	mainWindow->Remove(&promptWindow);
+	mainWindow->SetState(STATE_DEFAULT);
+	return choice;
+}
+
+int smallWindowPrompt(const char *btn1Label, const char *btn2Label)
+{
+	int choice = -1;
+	GuiWindow promptWindow(300, 72);
+	promptWindow.SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);
+	promptWindow.SetPosition(0, 0);
+	GuiImageData btnOutline(button_p_seek_png);
+	GuiImageData btnOutlineOver(button_p_seek_select_png);
+
+	GuiImageData dialogBox(p_seek_bg_png);
+	GuiImage dialogBoxImg(&dialogBox);
+	dialogBoxImg.SetPosition(0, 20);
+	dialogBoxImg.SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);
+
+	GuiText btn1Txt(btn1Label, 22, (XeColor) {{255, 255, 255, 255 }});
+	GuiImage btn1Img(&btnOutline);
+	GuiImage btn1ImgOver(&btnOutlineOver);
+	GuiButton btn1(btnOutline.GetWidth(), btnOutline.GetHeight());
+	btn1.SetAlignment(ALIGN_CENTRE, ALIGN_BOTTOM);
+	btn1.SetPosition(0, -22);
+	btn1.SetLabel(&btn1Txt);
+	btn1.SetImage(&btn1Img);
+	btn1.SetImageOver(&btn1ImgOver);
+	btn1.SetTrigger(trigA);
+	btn1.SetState(STATE_SELECTED);
+
+	GuiText btn2Txt(btn2Label, 22, (XeColor){{255, 255, 255, 255}});
+	GuiImage btn2Img(&btnOutline);
+	GuiImage btn2ImgOver(&btnOutlineOver);
+	GuiButton btn2(btnOutline.GetWidth(), btnOutline.GetHeight());
+	btn2.SetAlignment(ALIGN_CENTRE, ALIGN_BOTTOM);
+	btn2.SetPosition(0, 22);
+	btn2.SetLabel(&btn2Txt);
+	btn2.SetImage(&btn2Img);
+	btn2.SetImageOver(&btn2ImgOver);
+	btn2.SetTrigger(trigA);
+
+	promptWindow.Append(&dialogBoxImg);
+	promptWindow.Append(&btn1);
+	promptWindow.Append(&btn2);
+
+	mainWindow->SetState(STATE_DISABLED);
+	mainWindow->Append(&promptWindow);
+	mainWindow->ChangeFocus(&promptWindow);
+
+	btn1.SetState(STATE_SELECTED);
+	btn2.ResetState();
+	while (choice == -1) {
+		update();		
+		if (btn1.GetState() == STATE_CLICKED)
+			choice = 1;
+		else if (btn2.GetState() == STATE_CLICKED) 
+			choice = 0;
+	}
 	mainWindow->Remove(&promptWindow);
 	mainWindow->SetState(STATE_DEFAULT);
 	return choice;
@@ -1061,7 +1192,7 @@ double playerSeekPrompt(char * seekfile)
 		sprintf(seekstring, "%s %d:%02d:%02d", _("Resume from"), hr, min, sec);
 	}
 		
-	if (WindowPrompt("", seekstring, "Yes" , "No")) {
+	if (smallWindowPrompt(seekstring, "Start from beginning")) {
 		return seektime;
 	}
 	else {
@@ -1074,14 +1205,21 @@ static void loadRessources()
 {
 	loadHomeRessources();
 	loadBrowserRessources();
+	loadXboxButtons();
 	loadOsdRessources();
+	
 }
 
 static void common_setup()
 {
 	trigA = new GuiTrigger();
-
 	trigA->SetSimpleTrigger(-1, 0, PAD_BUTTON_A);
+	
+	trigB = new GuiTrigger();
+	trigB->SetButtonOnlyTrigger(-1, 0, PAD_BUTTON_B);	
+
+	trigBk = new GuiTrigger();
+	trigBk->SetButtonOnlyTrigger(-1, 0, PAD_BUTTON_BACK);	
 
 	GuiImageData * background = new GuiImageData(welcome_background_bg_png);
 	mainWindow = new GuiWindow(screenwidth, screenheight);
@@ -1680,23 +1818,15 @@ static void Browser(const char * title, const char * root)
 
 	mainWindow->Append(gui_browser);
 
-	GuiTrigger bMenu;
-	bMenu.SetButtonOnlyTrigger(-1, 0, PAD_BUTTON_B);
-
 	GuiButton bBtn(20, 20);
 	bBtn.SetAlignment(ALIGN_LEFT, ALIGN_BOTTOM);
 	bBtn.SetPosition(50, -35);
-	bBtn.SetTrigger(&bMenu);
-	bBtn.SetEffectGrow();
-
-	GuiTrigger backMenu;
-	backMenu.SetButtonOnlyTrigger(-1, 0, PAD_BUTTON_BACK);
+	bBtn.SetTrigger(trigB);
 
 	GuiButton backBtn(20, 20);
 	backBtn.SetAlignment(ALIGN_LEFT, ALIGN_BOTTOM);
 	backBtn.SetPosition(10, -35);
-	backBtn.SetTrigger(&backMenu);
-	backBtn.SetEffectGrow();
+	backBtn.SetTrigger(trigBk);
 
 	GuiTrigger sortMenu;
 	sortMenu.SetButtonOnlyTrigger(-1, 0, PAD_BUTTON_X);
@@ -1705,7 +1835,6 @@ static void Browser(const char * title, const char * root)
 	browser_sortBtn.SetAlignment(ALIGN_LEFT, ALIGN_BOTTOM);
 	browser_sortBtn.SetPosition(30, -35);
 	browser_sortBtn.SetTrigger(&sortMenu);
-	browser_sortBtn.SetEffectGrow();
 
 	mainWindow->Append(&bBtn);
 	mainWindow->Append(&backBtn);
@@ -1724,6 +1853,18 @@ static void Browser(const char * title, const char * root)
 
 	mainWindow->Append(browser_sort_up);
 	mainWindow->Append(browser_sort_down);
+
+	btn_bk->SetPosition(530, 670);
+	btn_bk_text->SetPosition(565, 673);
+
+	mainWindow->Append(btn_a);
+	mainWindow->Append(btn_b);
+	mainWindow->Append(btn_x);
+	mainWindow->Append(btn_bk);					
+	mainWindow->Append(btn_a_text);
+	mainWindow->Append(btn_b_text);
+	mainWindow->Append(btn_x_text);
+	mainWindow->Append(btn_bk_text);					
 
 	last_menu = current_menu;
 	int last_sel_item = -1;
@@ -1812,7 +1953,6 @@ static void Browser(const char * title, const char * root)
 						if (file_exists(seek_filename)) {
 							double seek_time = playerSeekPrompt(seek_filename);
 							sprintf(playerSeekTime, "seek %f 2", seek_time);
-							remove(seek_filename);
 						}
 					}
 				}
@@ -1872,6 +2012,14 @@ static void Browser(const char * title, const char * root)
 	mainWindow->Remove(browser_sortText);
 	mainWindow->Remove(browser_sort_up);
 	mainWindow->Remove(browser_sort_down);
+	mainWindow->Remove(btn_a);
+	mainWindow->Remove(btn_b);
+	mainWindow->Remove(btn_x);
+	mainWindow->Remove(btn_bk);					
+	mainWindow->Remove(btn_a_text);
+	mainWindow->Remove(btn_b_text);
+	mainWindow->Remove(btn_x_text);
+	mainWindow->Remove(btn_bk_text);							
 }
 
 static void HomePage()
@@ -2009,24 +2157,31 @@ static void GlobalSettings() {
 	GuiImageData btnOutline(button_blue_png);
 	GuiImageData btnOutlineOver(button_green_png);
 
-	GuiText backBtnTxt("Back", 22, 0xFFFFFFFF);
-	GuiImage backBtnImg(&btnOutline);
-	GuiImage backBtnImgOver(&btnOutlineOver);
-	GuiButton backBtn(btnOutline.GetWidth(), btnOutline.GetHeight());
+	GuiButton bBtn(20, 20);
+	bBtn.SetAlignment(ALIGN_LEFT, ALIGN_BOTTOM);
+	bBtn.SetPosition(10, -35);
+	bBtn.SetTrigger(trigB);
+
+	GuiButton backBtn(20, 20);
 	backBtn.SetAlignment(ALIGN_LEFT, ALIGN_BOTTOM);
-	backBtn.SetPosition(90, -35);
-	backBtn.SetLabel(&backBtnTxt);
-	backBtn.SetImage(&backBtnImg);
-	backBtn.SetImageOver(&backBtnImgOver);
-	backBtn.SetTrigger(trigA);
-	backBtn.SetEffectGrow();
+	backBtn.SetPosition(50, -35);
+	backBtn.SetTrigger(trigBk);
 
 	GuiOptionBrowser optionBrowser(980, 426, new GuiImageData(browser_list_btn_png), &options);
 	optionBrowser.SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);
 	optionBrowser.SetCol2Position(275);
 
 	GuiWindow w(screenwidth, screenheight);
+	btn_bk->SetPosition(405, 670);
+	btn_bk_text->SetPosition(440, 673);
+	w.Append(&bBtn);
 	w.Append(&backBtn);
+	w.Append(btn_a);
+	w.Append(btn_a_text);	
+	w.Append(btn_b);
+	w.Append(btn_b_text);
+	w.Append(btn_bk);
+	w.Append(btn_bk_text);	
 	mainWindow->Append(&optionBrowser);
 	mainWindow->Append(&w);
 	mainWindow->Append(&titleTxt);
@@ -2073,8 +2228,10 @@ static void GlobalSettings() {
 			optionBrowser.TriggerUpdate();
 		}
 
-		if (backBtn.GetState() == STATE_CLICKED) {
+		if (bBtn.GetState() == STATE_CLICKED) {
 			current_menu = SETTINGS;
+		} else if (backBtn.GetState() == STATE_CLICKED) {
+			current_menu = HOME_PAGE;
 		}
 	}
 	mainWindow->Remove(&optionBrowser);
@@ -2112,24 +2269,31 @@ static void AudioSettings() {
 	GuiImageData btnOutline(button_blue_png);
 	GuiImageData btnOutlineOver(button_green_png);
 
-	GuiText backBtnTxt("Back", 22, 0xFFFFFFFF);
-	GuiImage backBtnImg(&btnOutline);
-	GuiImage backBtnImgOver(&btnOutlineOver);
-	GuiButton backBtn(btnOutline.GetWidth(), btnOutline.GetHeight());
+	GuiButton bBtn(20, 20);
+	bBtn.SetAlignment(ALIGN_LEFT, ALIGN_BOTTOM);
+	bBtn.SetPosition(10, -35);
+	bBtn.SetTrigger(trigB);
+
+	GuiButton backBtn(20, 20);
 	backBtn.SetAlignment(ALIGN_LEFT, ALIGN_BOTTOM);
-	backBtn.SetPosition(90, -35);
-	backBtn.SetLabel(&backBtnTxt);
-	backBtn.SetImage(&backBtnImg);
-	backBtn.SetImageOver(&backBtnImgOver);
-	backBtn.SetTrigger(trigA);
-	backBtn.SetEffectGrow();
+	backBtn.SetPosition(50, -35);
+	backBtn.SetTrigger(trigBk);
 
 	GuiOptionBrowser optionBrowser(980, 426, new GuiImageData(browser_list_btn_png), &options);
 	optionBrowser.SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);
 	optionBrowser.SetCol2Position(275);
 
 	GuiWindow w(screenwidth, screenheight);
+	btn_bk->SetPosition(405, 670);
+	btn_bk_text->SetPosition(440, 673);
+	w.Append(&bBtn);
 	w.Append(&backBtn);
+	w.Append(btn_a);
+	w.Append(btn_a_text);	
+	w.Append(btn_b);
+	w.Append(btn_b_text);
+	w.Append(btn_bk);
+	w.Append(btn_bk_text);	
 	mainWindow->Append(&optionBrowser);
 	mainWindow->Append(&w);
 	mainWindow->Append(&titleTxt);
@@ -2240,8 +2404,10 @@ static void AudioSettings() {
 			optionBrowser.TriggerUpdate();
 		}
 
-		if (backBtn.GetState() == STATE_CLICKED) {
+		if (bBtn.GetState() == STATE_CLICKED) {
 			current_menu = SETTINGS;
+		} else if (backBtn.GetState() == STATE_CLICKED) {
+			current_menu = HOME_PAGE;
 		}
 	}
 	mainWindow->Remove(&optionBrowser);
@@ -2273,24 +2439,31 @@ static void VideoSettings() {
 	GuiImageData btnOutline(button_blue_png);
 	GuiImageData btnOutlineOver(button_green_png);
 
-	GuiText backBtnTxt("Back", 22, 0xFFFFFFFF);
-	GuiImage backBtnImg(&btnOutline);
-	GuiImage backBtnImgOver(&btnOutlineOver);
-	GuiButton backBtn(btnOutline.GetWidth(), btnOutline.GetHeight());
+	GuiButton bBtn(20, 20);
+	bBtn.SetAlignment(ALIGN_LEFT, ALIGN_BOTTOM);
+	bBtn.SetPosition(10, -35);
+	bBtn.SetTrigger(trigB);
+
+	GuiButton backBtn(20, 20);
 	backBtn.SetAlignment(ALIGN_LEFT, ALIGN_BOTTOM);
-	backBtn.SetPosition(90, -35);
-	backBtn.SetLabel(&backBtnTxt);
-	backBtn.SetImage(&backBtnImg);
-	backBtn.SetImageOver(&backBtnImgOver);
-	backBtn.SetTrigger(trigA);
-	backBtn.SetEffectGrow();
+	backBtn.SetPosition(50, -35);
+	backBtn.SetTrigger(trigBk);
 
 	GuiOptionBrowser optionBrowser(980, 426, new GuiImageData(browser_list_btn_png), &options);
 	optionBrowser.SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);
 	optionBrowser.SetCol2Position(275);
 
 	GuiWindow w(screenwidth, screenheight);
+	btn_bk->SetPosition(405, 670);
+	btn_bk_text->SetPosition(440, 673);
+	w.Append(&bBtn);
 	w.Append(&backBtn);
+	w.Append(btn_a);
+	w.Append(btn_a_text);	
+	w.Append(btn_b);
+	w.Append(btn_b_text);
+	w.Append(btn_bk);
+	w.Append(btn_bk_text);	
 	mainWindow->Append(&optionBrowser);
 	mainWindow->Append(&w);
 	mainWindow->Append(&titleTxt);
@@ -2330,8 +2503,10 @@ static void VideoSettings() {
 				sprintf(options.value[1], "%s", XMPlayerCfg.vsync == 1 ? "Enabled" : "Disabled");
 			}
 			optionBrowser.TriggerUpdate();
-		if (backBtn.GetState() == STATE_CLICKED) {
+		if (bBtn.GetState() == STATE_CLICKED) {
 			current_menu = SETTINGS;
+		} else if (backBtn.GetState() == STATE_CLICKED) {
+			current_menu = HOME_PAGE;
 		}
 	}
 	mainWindow->Remove(&optionBrowser);
@@ -2377,24 +2552,31 @@ static void SubtitleSettings() {
 	GuiImageData btnOutline(button_blue_png);
 	GuiImageData btnOutlineOver(button_green_png);
 
-	GuiText backBtnTxt("Back", 22, 0xFFFFFFFF);
-	GuiImage backBtnImg(&btnOutline);
-	GuiImage backBtnImgOver(&btnOutlineOver);
-	GuiButton backBtn(btnOutline.GetWidth(), btnOutline.GetHeight());
+	GuiButton bBtn(20, 20);
+	bBtn.SetAlignment(ALIGN_LEFT, ALIGN_BOTTOM);
+	bBtn.SetPosition(10, -35);
+	bBtn.SetTrigger(trigB);
+
+	GuiButton backBtn(20, 20);
 	backBtn.SetAlignment(ALIGN_LEFT, ALIGN_BOTTOM);
-	backBtn.SetPosition(90, -35);
-	backBtn.SetLabel(&backBtnTxt);
-	backBtn.SetImage(&backBtnImg);
-	backBtn.SetImageOver(&backBtnImgOver);
-	backBtn.SetTrigger(trigA);
-	backBtn.SetEffectGrow();
+	backBtn.SetPosition(50, -35);
+	backBtn.SetTrigger(trigBk);
 
 	GuiOptionBrowser optionBrowser(980, 426, new GuiImageData(browser_list_btn_png), &options);
 	optionBrowser.SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);
 	optionBrowser.SetCol2Position(275);
 
 	GuiWindow w(screenwidth, screenheight);
+	btn_bk->SetPosition(405, 670);
+	btn_bk_text->SetPosition(440, 673);							
+	w.Append(&bBtn);
 	w.Append(&backBtn);
+	w.Append(btn_a);
+	w.Append(btn_a_text);	
+	w.Append(btn_b);
+	w.Append(btn_b_text);
+	w.Append(btn_bk);
+	w.Append(btn_bk_text);	
 	mainWindow->Append(&optionBrowser);
 	mainWindow->Append(&w);
 	mainWindow->Append(&titleTxt);
@@ -2552,8 +2734,10 @@ static void SubtitleSettings() {
 			optionBrowser.TriggerUpdate();
 		}
 
-		if (backBtn.GetState() == STATE_CLICKED) {
+		if (bBtn.GetState() == STATE_CLICKED) {
 			current_menu = SETTINGS;
+		} else if (backBtn.GetState() == STATE_CLICKED) {
+			current_menu = HOME_PAGE;
 		}
 	}
 	ass_force_reload = 1;	
@@ -2584,28 +2768,34 @@ static void XMPSettings() {
 	GuiText titleTxt("Settings", 26, 0xfffa9600);
 	titleTxt.SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	titleTxt.SetPosition(50, 50);
-
+	
 	GuiImageData btnOutline(button_blue_png);
 	GuiImageData btnOutlineOver(button_green_png);
 
-	GuiText backBtnTxt("Back", 22, 0xFFFFFFFF);
-	GuiImage backBtnImg(&btnOutline);
-	GuiImage backBtnImgOver(&btnOutlineOver);
-	GuiButton backBtn(btnOutline.GetWidth(), btnOutline.GetHeight());
+	GuiButton bBtn(20, 20);
+	bBtn.SetAlignment(ALIGN_LEFT, ALIGN_BOTTOM);
+	bBtn.SetPosition(10, -35);
+	bBtn.SetTrigger(trigB);
+
+	GuiButton backBtn(20, 20);
 	backBtn.SetAlignment(ALIGN_LEFT, ALIGN_BOTTOM);
-	backBtn.SetPosition(90, -35);
-	backBtn.SetLabel(&backBtnTxt);
-	backBtn.SetImage(&backBtnImg);
-	backBtn.SetImageOver(&backBtnImgOver);
-	backBtn.SetTrigger(trigA);
-	backBtn.SetEffectGrow();
+	backBtn.SetPosition(50, -35);
+	backBtn.SetTrigger(trigBk);	
 
 	GuiOptionBrowser optionBrowser(980, 426, new GuiImageData(browser_list_btn_png), &options);
 	optionBrowser.SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);
 	optionBrowser.SetCol2Position(275);
-
 	GuiWindow w(screenwidth, screenheight);
+	btn_bk->SetPosition(405, 670);
+	btn_bk_text->SetPosition(440, 673);							
+	w.Append(&bBtn);
 	w.Append(&backBtn);
+	w.Append(btn_a);
+	w.Append(btn_a_text);	
+	w.Append(btn_b);
+	w.Append(btn_b_text);
+	w.Append(btn_bk);
+	w.Append(btn_bk_text);															
 	mainWindow->Append(&optionBrowser);
 	mainWindow->Append(&w);
 	mainWindow->Append(&titleTxt);
@@ -2633,10 +2823,11 @@ static void XMPSettings() {
 				break;  					*/				
 		}
 
-		if (backBtn.GetState() == STATE_CLICKED) {
+		if ((bBtn.GetState() == STATE_CLICKED) || (backBtn.GetState() == STATE_CLICKED)) {
 			current_menu = HOME_PAGE;
 		}
 	}
+	last_settings_menu = ret;
 	mainWindow->Remove(&optionBrowser);
 	mainWindow->Remove(&w);
 	mainWindow->Remove(&titleTxt);
@@ -2791,7 +2982,7 @@ int main(int argc, char** argv)
 	//	
 	// Init Video
 	InitVideo();
-
+	
 	/** loading **/
 	end_loading_thread = 0;
 
