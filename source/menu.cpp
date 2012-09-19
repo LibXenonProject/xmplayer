@@ -1947,13 +1947,15 @@ static void Browser(const char * title, const char * root)
 						/*} else if (file_type(mplayer_filename) == BROWSER_TYPE_AUDIO) {
 							audio_gui = 1;
 							current_menu = MENU_MPLAYER;*/
-					} else {						
+					} else if (file_type(mplayer_filename) == BROWSER_TYPE_VIDEO) {						
 						current_menu = MENU_MPLAYER;
 						strcpy(playerSeekTime, "seek 0 2");
 						if (file_exists(seek_filename)) {
 							double seek_time = playerSeekPrompt(seek_filename);
 							sprintf(playerSeekTime, "seek %f 2", seek_time);
 						}
+					} else {
+						gui_browser->fileList[exited_i[current_menu]]->SetState(STATE_SELECTED);	
 					}
 				}
 			}
