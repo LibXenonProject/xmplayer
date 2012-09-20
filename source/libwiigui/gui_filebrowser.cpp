@@ -81,7 +81,7 @@ void GuiFileBrowser::SetPageSize(int size) {
 			0xff, 0xff, 0xff, 0xff
 		});
 		fileListModDate[i]->SetAlignment(ALIGN_LEFT, ALIGN_MIDDLE);
-		fileListModDate[i]->SetPosition(850, 0);
+		fileListModDate[i]->SetPosition(870, 0);
 		fileListModDate[i]->SetMaxWidth(150);
 
 		fileListBg[i] = new GuiImage(bgFileSelectionEntry);
