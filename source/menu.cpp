@@ -186,25 +186,28 @@ static void resetController()
 	}
 }
 
-static int GetALangIndex() {
-        for(int i=0; i < LANGUAGE_SIZE; i++)
-			if(strcmp(XMPlayerCfg.alang, languages[i].abbrev2) == 0)
-				return i;
-        return 0;
-}
-
-static int GetCodepageIndex() {
-	for(int i=0; i < CODEPAGE_SIZE; i++)
-		if(strcmp(XMPlayerCfg.subcp, codepages[i].cpname) == 0)
+static int GetALangIndex()
+{
+	for (int i = 0; i < LANGUAGE_SIZE; i++)
+		if (strcmp(XMPlayerCfg.alang, languages[i].abbrev2) == 0)
 			return i;
 	return 0;
 }
 
-static int GetLangIndex() {
-        for(int i=0; i < LANGUAGE_SIZE; i++)
-			if(strcmp(XMPlayerCfg.sublang, languages[i].abbrev) == 0)
-				return i;
-        return 0;
+static int GetCodepageIndex()
+{
+	for (int i = 0; i < CODEPAGE_SIZE; i++)
+		if (strcmp(XMPlayerCfg.subcp, codepages[i].cpname) == 0)
+			return i;
+	return 0;
+}
+
+static int GetLangIndex()
+{
+	for (int i = 0; i < LANGUAGE_SIZE; i++)
+		if (strcmp(XMPlayerCfg.sublang, languages[i].abbrev) == 0)
+			return i;
+	return 0;
 }
 
 /**
@@ -381,16 +384,22 @@ int WindowPrompt(const char *title, const char *msg, const char *btn1Label, cons
 	GuiImageData dialogBox(dialogue_box_png);
 	GuiImage dialogBoxImg(&dialogBox);
 
-	GuiText titleTxt(title, 26, (XeColor){{ 255, 255, 255, 255}});
+	GuiText titleTxt(title, 26, (XeColor)
+	{
+		{ 255, 255, 255, 255}});
 	titleTxt.SetAlignment(ALIGN_CENTRE, ALIGN_TOP);
 	titleTxt.SetPosition(0, 14);
 
-	GuiText msgTxt(msg, 26, (XeColor){{  255, 255, 255, 255 }});
+	GuiText msgTxt(msg, 26, (XeColor)
+	{
+		{ 255, 255, 255, 255}});
 	msgTxt.SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);
 	msgTxt.SetPosition(0, -20);
 	msgTxt.SetWrap(true, 430);
 
-	GuiText btn1Txt(btn1Label, 22, (XeColor){{255, 255, 255, 255}});
+	GuiText btn1Txt(btn1Label, 22, (XeColor)
+	{
+		{255, 255, 255, 255}});
 	GuiImage btn1Img(&btnOutline);
 	GuiImage btn1ImgOver(&btnOutlineOver);
 	GuiButton btn1(btnOutline.GetWidth(), btnOutline.GetHeight());
@@ -410,7 +419,9 @@ int WindowPrompt(const char *title, const char *msg, const char *btn1Label, cons
 	btn1.SetState(STATE_SELECTED);
 	btn1.SetEffectGrow();
 
-	GuiText btn2Txt(btn2Label, 22, (XeColor){{255, 0, 0, 0}});
+	GuiText btn2Txt(btn2Label, 22, (XeColor)
+	{
+		{255, 0, 0, 0}});
 	GuiImage btn2Img(&btnOutline);
 	GuiImage btn2ImgOver(&btnOutlineOver);
 	GuiButton btn2(btnOutline.GetWidth(), btnOutline.GetHeight());
@@ -463,7 +474,6 @@ extern "C" void cErrorPrompt(const char *msg)
 	WindowPrompt("Error", msg, "Quit", NULL);
 	ExitMplayer();
 }
-
 
 /** to do **/
 static void loadRessources()
@@ -580,7 +590,7 @@ static void Browser(const char * title, const char * root)
 			sprintf(tmp, "%d/%d", browser.selIndex + 1, browser.numEntries);
 			browser_pagecounter->SetText(tmp);
 		}
-		
+
 		// filebrowser sort icons
 		if (last_sort != XMPlayerCfg.sort_order) {
 			if (XMPlayerCfg.sort_order == 0) {
@@ -616,11 +626,11 @@ static void Browser(const char * title, const char * root)
 		} else {
 			browser_down_icon->SetVisible(false);
 		}
-		
-		
+
+
 		exited_item[current_menu] = browser.selIndex;
 		exited_page[current_menu] = browser.pageIndex;
-		
+
 		// update file browser based on arrow xenon_buttons
 		// set MENU_EXIT if A xenon_button pressed on a file
 		for (int i = 0; i < gui_browser->GetPageSize(); i++) {
@@ -650,7 +660,7 @@ static void Browser(const char * title, const char * root)
 						/*} else if (file_type(mplayer_filename) == BROWSER_TYPE_AUDIO) {
 							audio_gui = 1;
 							current_menu = MENU_MPLAYER;*/
-					} else {						
+					} else {
 						current_menu = MENU_MPLAYER;
 						strcpy(mplayer_seek_time, "seek 0 2");
 						if (file_exists(seek_filename)) {
@@ -672,9 +682,9 @@ static void Browser(const char * title, const char * root)
 			}
 			last_sort = -1;
 			BrowserSortList();
-	
+
 			// save pref
-			SavePrefs(true);			
+			SavePrefs(true);
 		}
 		if (bBtn.GetState() == STATE_CLICKED) {
 			if (strcmp(browserList[0].filename, "..") == 0) {
@@ -682,7 +692,7 @@ static void Browser(const char * title, const char * root)
 				browser.selIndex = 0;
 				last_sel_item = -1;
 				BrowserChangeFolder();
-				
+
 				gui_browser->ResetState();
 				gui_browser->fileList[0]->SetState(STATE_SELECTED);
 				gui_browser->TriggerUpdate();
@@ -695,9 +705,9 @@ static void Browser(const char * title, const char * root)
 		}
 		update();
 	}
-	
+
 	// exit dir						
-	sprintf(exited_dir, "%s/", browser.dir);					
+	sprintf(exited_dir, "%s/", browser.dir);
 	CleanupPath(exited_dir);
 	strncpy(exited_dir_array[_working_menu], exited_dir, 2048);
 	exited_root = root;
@@ -833,7 +843,8 @@ static void HomePage()
 	mainWindow->Remove(home_curitem);
 }
 
-static void GlobalSettings() {
+static void GlobalSettings()
+{
 	int ret;
 	int i = 0;
 	bool firstRun = true;
@@ -881,18 +892,18 @@ static void GlobalSettings() {
 		ret = optionBrowser.GetClickedOption();
 
 		switch (ret) {
-			case 0:
-				XMPlayerCfg.exit_action++;
-				if (XMPlayerCfg.exit_action > 1)
-					XMPlayerCfg.exit_action = 0;
-				break;
-			case 1:
-				XMPlayerCfg.language++;
+		case 0:
+			XMPlayerCfg.exit_action++;
+			if (XMPlayerCfg.exit_action > 1)
+				XMPlayerCfg.exit_action = 0;
+			break;
+		case 1:
+			XMPlayerCfg.language++;
 
-				if (XMPlayerCfg.language >= LANG_LENGTH)
-					XMPlayerCfg.language = 0;
+			if (XMPlayerCfg.language >= LANG_LENGTH)
+				XMPlayerCfg.language = 0;
 
-				break;
+			break;
 		}
 
 		if (ret >= 0 || firstRun) {
@@ -906,12 +917,12 @@ static void GlobalSettings() {
 				sprintf(options.value[0], "Shutdown");
 
 			switch (XMPlayerCfg.language) {
-				case LANG_ENGLISH: sprintf(options.value[1], "English");
-					gettextCleanUp();
-					break;
-				case LANG_FRENCH: sprintf(options.value[1], "French");
-					LoadLanguage((char*) fr_lang, fr_lang_size);
-					break;
+			case LANG_ENGLISH: sprintf(options.value[1], "English");
+				gettextCleanUp();
+				break;
+			case LANG_FRENCH: sprintf(options.value[1], "French");
+				LoadLanguage((char*) fr_lang, fr_lang_size);
+				break;
 			}
 
 			optionBrowser.TriggerUpdate();
@@ -929,7 +940,8 @@ static void GlobalSettings() {
 	SavePrefs(true);
 }
 
-static void AudioSettings() {
+static void AudioSettings()
+{
 	int ret;
 	int i = 0;
 	bool firstRun = true;
@@ -937,11 +949,20 @@ static void AudioSettings() {
 
 	sprintf(options.name[i++], "Language");
 	sprintf(options.name[i++], "Volume");
-	sprintf(options.name[i++], "Soft Volume");	
+	sprintf(options.name[i++], "Soft Volume");
 	options.length = i;
 
 	for (i = 0; i < options.length; i++)
 		options.value[i][0] = 0;
+
+
+	options.v[0].curr = GetALangIndex();
+	options.v[1].curr = XMPlayerCfg.volume;
+	options.v[2].curr = XMPlayerCfg.softvol;
+
+	options.v[0].max = LANGUAGE_SIZE;
+	options.v[1].max = 100;
+	options.v[2].max = 100;
 
 	GuiText titleTxt("Audio Settings", 26, 0xfffa9600);
 	titleTxt.SetAlignment(ALIGN_LEFT, ALIGN_TOP);
@@ -975,103 +996,32 @@ static void AudioSettings() {
 	while (current_menu == SETTINGS_AUDIO) {
 		update();
 
+		int option_value = optionBrowser.GetClickedValueOption();
 		ret = optionBrowser.GetClickedOption();
 
-		switch (ret) {
-			case 0: {
-				int al = GetALangIndex();				
-				al++;
-				if (al >= LANGUAGE_SIZE) {
-					al = 0;		
-				}	
-				sprintf(XMPlayerCfg.alang, languages[al].abbrev2);
-				sprintf(XMPlayerCfg.alang_desc, languages[al].language);				
-				audio_lang = XMPlayerCfg.alang;					
+		if ((ret >= 0) && (option_value >= 0)) {
+			switch (ret) {
+			case 0:
+			{
+				sprintf(XMPlayerCfg.alang, languages[option_value].abbrev2);
+				sprintf(XMPlayerCfg.alang_desc, languages[option_value].language);
+				audio_lang = XMPlayerCfg.alang;
 				break;
-				}
-			case 1: {
-				XMPlayerCfg.volume++;
-				if (XMPlayerCfg.volume > 100) {
-					XMPlayerCfg.volume = 0;
-				}
-				start_volume = XMPlayerCfg.volume;				
-				break;
-				} 
-			case 2: {
-				XMPlayerCfg.softvol++;
-				if (XMPlayerCfg.softvol > 1000) {
-					XMPlayerCfg.softvol = 10;
-				}
-				soft_vol_max = XMPlayerCfg.softvol;				
-				break;
-				} 
-		}	
-		int het = optionBrowser.GetSelectedOption();		
-		if (osd_pad_right == 1) {			
-			switch (het) {	
-				case 0: {
-					int al = GetALangIndex();				
-					al++;
-					if (al >= LANGUAGE_SIZE) {
-						al = 0;		
-					}	
-					sprintf(XMPlayerCfg.alang, languages[al].abbrev2);
-					sprintf(XMPlayerCfg.alang_desc, languages[al].language);				
-					audio_lang = XMPlayerCfg.alang;					
-					break;
-					}
-				case 1: {
-					XMPlayerCfg.volume++;
-					if (XMPlayerCfg.volume > 100) {
-						XMPlayerCfg.volume = 0;
-					}
-					start_volume = XMPlayerCfg.volume;				
-					break;
-					} 
-				case 2: {
-					XMPlayerCfg.softvol++;
-					if (XMPlayerCfg.softvol > 1000) {
-						XMPlayerCfg.softvol = 10;
-					}
-					soft_vol_max = XMPlayerCfg.softvol;					
-					break;
-					} 			
 			}
-		osd_pad_right = 0;											
-		} else if (osd_pad_left == 1) { 												
-			switch (het) {	
-				case 0: {
-					int al = GetALangIndex();				
-					al--;
-					if (al < 0) {
-						al = LANGUAGE_SIZE-1;		
-					}	
-					sprintf(XMPlayerCfg.alang, languages[al].abbrev2);
-					sprintf(XMPlayerCfg.alang_desc, languages[al].language);				
-					audio_lang = XMPlayerCfg.alang;					
-					break;
-					}
-				case 1: {
-					XMPlayerCfg.volume--;
-					if (XMPlayerCfg.volume < 0) {
-						XMPlayerCfg.volume = 100;
-					}
-					start_volume = XMPlayerCfg.volume;				
-					break;
-					} 
-				case 2: {
-					XMPlayerCfg.softvol--;
-					if (XMPlayerCfg.softvol < 10) {
-						XMPlayerCfg.softvol = 1000;
-					}
-					soft_vol_max = XMPlayerCfg.softvol;				
-					break;	
-					} 
+			case 1:
+			{
+				start_volume = XMPlayerCfg.volume = options.v[1].curr;
+				break;
 			}
-		osd_pad_left = 0;
+			case 2:
+			{
+				soft_vol_max = XMPlayerCfg.softvol = options.v[2].curr;
+				break;
+			}
+			}
 		}
-		if (ret >= 0 || het >= 0 || firstRun) {
-			firstRun = false;	
+		if (ret >= 0 || firstRun) {
+			firstRun = false;
 			sprintf(options.value[0], XMPlayerCfg.alang_desc);
 			sprintf(options.value[1], "%d", XMPlayerCfg.volume);
 			sprintf(options.value[2], "%d", XMPlayerCfg.softvol);
@@ -1090,11 +1040,12 @@ static void AudioSettings() {
 	SavePrefs(true);
 }
 
-static void VideoSettings() {
+static void VideoSettings()
+{
 	int ret;
 	int i = 0;
 	bool firstRun = true;
-	char framedrop[100] = {};	
+	char framedrop[100] = {};
 	OptionList options;
 
 	sprintf(options.name[i++], "Frame Dropping");
@@ -1139,35 +1090,35 @@ static void VideoSettings() {
 		ret = optionBrowser.GetClickedOption();
 
 		switch (ret) {
-			case 0:
-			{
-				XMPlayerCfg.framedrop++;
-				if (XMPlayerCfg.framedrop > 2) {
-					XMPlayerCfg.framedrop = 0;
-				}
-				frame_dropping = XMPlayerCfg.framedrop;
-				break;
+		case 0:
+		{
+			XMPlayerCfg.framedrop++;
+			if (XMPlayerCfg.framedrop > 2) {
+				XMPlayerCfg.framedrop = 0;
 			}
-			case 1:
-			{
-				XMPlayerCfg.vsync = !XMPlayerCfg.vsync;
-				vo_vsync = XMPlayerCfg.vsync;
-				break;
-			}
+			frame_dropping = XMPlayerCfg.framedrop;
+			break;
 		}
-			if (ret >= 0 || firstRun) {
-				firstRun = false;
-				if (XMPlayerCfg.framedrop == 2) {
-					strcpy(framedrop, "Hard");
-				} else if (XMPlayerCfg.framedrop == 1) {
-					strcpy(framedrop, "Enabled");
-				} else {
-					strcpy(framedrop, "Disabled");
-				}
-				sprintf(options.value[0], framedrop);
-				sprintf(options.value[1], "%s", XMPlayerCfg.vsync == 1 ? "Enabled" : "Disabled");
+		case 1:
+		{
+			XMPlayerCfg.vsync = !XMPlayerCfg.vsync;
+			vo_vsync = XMPlayerCfg.vsync;
+			break;
+		}
+		}
+		if (ret >= 0 || firstRun) {
+			firstRun = false;
+			if (XMPlayerCfg.framedrop == 2) {
+				strcpy(framedrop, "Hard");
+			} else if (XMPlayerCfg.framedrop == 1) {
+				strcpy(framedrop, "Enabled");
+			} else {
+				strcpy(framedrop, "Disabled");
 			}
-			optionBrowser.TriggerUpdate();
+			sprintf(options.value[0], framedrop);
+			sprintf(options.value[1], "%s", XMPlayerCfg.vsync == 1 ? "Enabled" : "Disabled");
+		}
+		optionBrowser.TriggerUpdate();
 		if (backBtn.GetState() == STATE_CLICKED) {
 			current_menu = SETTINGS;
 		}
@@ -1180,32 +1131,32 @@ static void VideoSettings() {
 	SavePrefs(true);
 }
 
-
-typedef struct {
+typedef struct
+{
 	//RRGGBB00
 	unsigned int hex;
-	char  * string;
+	char * string;
 } color;
 
 // tmp buffer
 char unknow_color[10] = {};
 color colors[] = {
-	{ 0xFFFFFF00, "White" },
-	{ 0x00000000, "Black" },
-	{ 0xFFFF0000, "Yellow" },
-	{ 0xFF000000, "Red" },
+	{ 0xFFFFFF00, "White"},
+	{ 0x00000000, "Black"},
+	{ 0xFFFF0000, "Yellow"},
+	{ 0xFF000000, "Red"},
 };
 
-char * getColorFromHex(unsigned int hex, color * pColor, int max) {
+char * getColorFromHex(unsigned int hex, color * pColor, int max)
+{
 	char * dest = NULL;
-	for (int i=0; i<max; i++)
-	{
+	for (int i = 0; i < max; i++) {
 		if (pColor[i].hex == hex) {
 			dest = pColor[i].string;
 			break;
 		}
 	}
-	if (dest==NULL) {
+	if (dest == NULL) {
 		// set it to temp buffer
 		dest = unknow_color;
 		// set it to the hexadecimal value of the color
@@ -1214,17 +1165,18 @@ char * getColorFromHex(unsigned int hex, color * pColor, int max) {
 	return dest;
 }
 
-unsigned int getColorFromString(char * str, color * pColor, int max) {
+unsigned int getColorFromString(char * str, color * pColor, int max)
+{
 	unsigned int dest = 0;
-	for (int i=0; i<max; i++)
-	{
+	for (int i = 0; i < max; i++) {
 		if (strcmp(str, pColor[i].string) == 0) {
 			dest = pColor[i].hex;
 			break;
 		}
-	}	
+	}
 	return dest;
 }
+
 /*
 int getColorIndex(char *str, color * pColor, int max) {
 	for (int i=0; i<max; i++)
@@ -1235,24 +1187,25 @@ int getColorIndex(char *str, color * pColor, int max) {
 	}	
 	return -1;
 }
-* */
-int getColorIndex(unsigned int hex, color * pColor, int max) {
-	for (int i=0; i<max; i++)
-	{
+ * */
+int getColorIndex(unsigned int hex, color * pColor, int max)
+{
+	for (int i = 0; i < max; i++) {
 		if (pColor[i].hex == hex) {
 			return i;
 		}
-	}	
+	}
 	return -1;
 }
 
-static void SubtitleSettings() {
+static void SubtitleSettings()
+{
 	int ret;
 	int i = 0;
 	bool firstRun = true;
-	OptionList options;	
-	
-	int nbColors = sizeof(colors)/sizeof(color);
+	OptionList options;
+
+	int nbColors = sizeof (colors) / sizeof (color);
 	printf("nbColors : %d\n", nbColors);
 	sprintf(options.name[i++], "Color");
 	sprintf(options.name[i++], "Border Color");
@@ -1262,11 +1215,11 @@ static void SubtitleSettings() {
 
 	for (i = 0; i < options.length; i++)
 		options.value[i][0] = 0;
-	
-	options.v[0].curr = getColorIndex(XMPlayerCfg.subcolor, colors, sizeof(colors));
-	options.v[1].curr = getColorIndex(XMPlayerCfg.border_color, colors, sizeof(colors));	
+
+	options.v[0].curr = getColorIndex(XMPlayerCfg.subcolor, colors, sizeof (colors));
+	options.v[1].curr = getColorIndex(XMPlayerCfg.border_color, colors, sizeof (colors));
 	options.v[2].curr = GetCodepageIndex();
-	options.v[3].curr = GetLangIndex();	
+	options.v[3].curr = GetLangIndex();
 
 	options.v[0].max = nbColors;
 	options.v[1].max = nbColors;
@@ -1310,37 +1263,41 @@ static void SubtitleSettings() {
 			// option_value should always been >= 0
 			if (option_value >= 0) {
 				switch (ret) {
-					case 0: {
-						sprintf(ass_color, "%08x", colors[option_value].string);
-						XMPlayerCfg.subcolor = colors[option_value].hex;
-						break;
-						}
-					case 1: {				
-						sprintf(ass_border_color, "%08x", colors[option_value].string);
-						XMPlayerCfg.border_color = colors[option_value].hex;
-						break;
-						}
-					case 2: {
-						strcpy(XMPlayerCfg.subcp, codepages[option_value].cpname);
-						strcpy(XMPlayerCfg.subcp_desc, codepages[option_value].language);				
-						sub_cp = XMPlayerCfg.subcp;
-						break;
-						} 
-					case 3:	{
-						strcpy(XMPlayerCfg.sublang, languages[option_value].abbrev);
-						strcpy(XMPlayerCfg.sublang_desc, languages[option_value].language);				
-						dvdsub_lang = XMPlayerCfg.sublang;			
-						break;
-						}
+				case 0:
+				{
+					sprintf(ass_color, "%08x", colors[option_value].string);
+					XMPlayerCfg.subcolor = colors[option_value].hex;
+					break;
+				}
+				case 1:
+				{
+					sprintf(ass_border_color, "%08x", colors[option_value].string);
+					XMPlayerCfg.border_color = colors[option_value].hex;
+					break;
+				}
+				case 2:
+				{
+					strcpy(XMPlayerCfg.subcp, codepages[option_value].cpname);
+					strcpy(XMPlayerCfg.subcp_desc, codepages[option_value].language);
+					sub_cp = XMPlayerCfg.subcp;
+					break;
+				}
+				case 3:
+				{
+					strcpy(XMPlayerCfg.sublang, languages[option_value].abbrev);
+					strcpy(XMPlayerCfg.sublang_desc, languages[option_value].language);
+					dvdsub_lang = XMPlayerCfg.sublang;
+					break;
+				}
 				}
 			}
 		}
 		if (ret >= 0 || firstRun) {
 			firstRun = false;
-							
-			strcpy(options.value[0], getColorFromHex(XMPlayerCfg.subcolor, colors, sizeof(colors)));
-			strcpy(options.value[1], getColorFromHex(XMPlayerCfg.border_color, colors, sizeof(colors)));		
-			
+
+			strcpy(options.value[0], getColorFromHex(XMPlayerCfg.subcolor, colors, sizeof (colors)));
+			strcpy(options.value[1], getColorFromHex(XMPlayerCfg.border_color, colors, sizeof (colors)));
+
 			strcpy(options.value[2], XMPlayerCfg.subcp_desc);
 			strcpy(options.value[3], XMPlayerCfg.sublang_desc);
 			optionBrowser.TriggerUpdate();
@@ -1350,7 +1307,7 @@ static void SubtitleSettings() {
 			current_menu = SETTINGS;
 		}
 	}
-	ass_force_reload = 1;	
+	ass_force_reload = 1;
 	mainWindow->Remove(&optionBrowser);
 	mainWindow->Remove(&w);
 	mainWindow->Remove(&titleTxt);
@@ -1360,7 +1317,9 @@ static void SubtitleSettings() {
 }
 
 //SETTINGS MENU
-static void XMPSettings() {
+
+static void XMPSettings()
+{
 	int ret;
 	int i = 0;
 	OptionList options;
@@ -1410,21 +1369,21 @@ static void XMPSettings() {
 		ret = optionBrowser.GetClickedOption();
 
 		switch (ret) {
-			case 0:
-				current_menu = SETTINGS_GLOBAL;
-				break;
-			case 1:
-				current_menu = SETTINGS_AUDIO;
-				break;
-			case 2:
-				current_menu = SETTINGS_VIDEO;
-				break;
-			case 3:
-				current_menu = SETTINGS_SUBTITLES;
-				break;
-	/*		case 4:
-				current_menu = SETTINGS_NETWORK;
-				break;  					*/				
+		case 0:
+			current_menu = SETTINGS_GLOBAL;
+			break;
+		case 1:
+			current_menu = SETTINGS_AUDIO;
+			break;
+		case 2:
+			current_menu = SETTINGS_VIDEO;
+			break;
+		case 3:
+			current_menu = SETTINGS_SUBTITLES;
+			break;
+			/*		case 4:
+						current_menu = SETTINGS_NETWORK;
+						break;  					*/
 		}
 
 		if (backBtn.GetState() == STATE_CLICKED) {
@@ -1436,14 +1395,15 @@ static void XMPSettings() {
 	mainWindow->Remove(&titleTxt);
 }
 
-static void init_mplayer_settings(void) {
+static void init_mplayer_settings(void)
+{
 	/*
 	ass_color = XMPlayerCfg.subcolor;
 	ass_border_color = XMPlayerCfg.border_color;		
-	*/ 
+	 */
 	sub_cp = XMPlayerCfg.subcp;
-	dvdsub_lang = XMPlayerCfg.sublang; 
-	audio_lang = XMPlayerCfg.alang;	
+	dvdsub_lang = XMPlayerCfg.sublang;
+	audio_lang = XMPlayerCfg.alang;
 }
 
 static void do_mplayer(char * filename)
@@ -1453,15 +1413,15 @@ static void do_mplayer(char * filename)
 		char vsync[50] = "-novsync";
 		char framedrop[50] = "-noframedrop";
 
-		if (XMPlayerCfg.vsync == 1) 
+		if (XMPlayerCfg.vsync == 1)
 			strcpy(vsync, "-vsync");
 		else
 			strcpy(vsync, "-vsync");
-			
+
 		if (XMPlayerCfg.framedrop == 1)
 			strcpy(framedrop, "-framedrop");
 		else if (XMPlayerCfg.framedrop == 2)
-			strcpy(framedrop, "-hardframedrop");				
+			strcpy(framedrop, "-hardframedrop");
 
 		char * argv[] = {
 			"mplayer.xenon",
@@ -1523,7 +1483,7 @@ static void gui_loop()
 			XMPSettings();
 		} else if (current_menu == SETTINGS_GLOBAL) {
 			GlobalSettings();
-		} else if (current_menu == SETTINGS_SUBTITLES) { 
+		} else if (current_menu == SETTINGS_SUBTITLES) {
 			SubtitleSettings();
 		} else if (current_menu == SETTINGS_AUDIO) {
 			AudioSettings();

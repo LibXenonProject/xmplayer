@@ -11,7 +11,7 @@
 #include "gui.h"
 #include "../w_input.h"
 #include "../gui_debug.h"
-int osd_pad_left = 0 , osd_pad_right = 0;
+
 /**
  * Constructor for the GuiOptionBrowser class.
  */
