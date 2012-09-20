@@ -657,6 +657,20 @@ const std::string* TiXmlElement::Attribute( const std::string& name, double* d )
 }
 #endif
 
+const char* TiXmlElement::Attribute( const char* name, unsigned int* h ) const
+{
+	const TiXmlAttribute* attrib = attributeSet.Find( name );
+	const char* result = 0;
+
+	if ( attrib ) {
+		result = attrib->Value();
+		if ( h ) {
+			attrib->QueryUnsignedIntValue( h );
+		}
+	}
+	return result;
+}
+
 
 int TiXmlElement::QueryIntAttribute( const char* name, int* ival ) const
 {
@@ -775,6 +789,14 @@ void TiXmlElement::SetDoubleAttribute( const std::string& name, double val )
 	}
 }
 #endif 
+
+void TiXmlElement::SetUnsignedIntAttribute( const char * name, unsigned int val )
+{	
+	TiXmlAttribute* attrib = attributeSet.FindOrCreate( name );
+	if ( attrib ) {
+		attrib->SetUnsignedIntValue( val );
+	}
+}
 
 
 void TiXmlElement::SetAttribute( const char * cname, const char * cvalue )
@@ -1247,6 +1269,13 @@ int TiXmlAttribute::QueryDoubleValue( double* dval ) const
 	return TIXML_WRONG_TYPE;
 }
 
+int TiXmlAttribute::QueryUnsignedIntValue( unsigned int* dval ) const
+{
+	if ( TIXML_SSCANF( value.c_str(), "%08x", dval ) == 1 )
+		return TIXML_SUCCESS;
+	return TIXML_WRONG_TYPE;
+}
+
 void TiXmlAttribute::SetIntValue( int _value )
 {
 	char buf [64];
@@ -1269,6 +1298,17 @@ void TiXmlAttribute::SetDoubleValue( double _value )
 	SetValue (buf);
 }
 
+void TiXmlAttribute::SetUnsignedIntValue( unsigned int _value )
+{
+	char buf [256];
+	#if defined(TIXML_SNPRINTF)		
+		TIXML_SNPRINTF( buf, sizeof(buf), "%08x", _value);
+	#else
+		sprintf (buf, "%08x", _value);
+	#endif
+	SetValue (buf);
+}
+
 int TiXmlAttribute::IntValue() const
 {
 	return atoi (value.c_str ());
@@ -1279,6 +1319,10 @@ double  TiXmlAttribute::DoubleValue() const
 	return atof (value.c_str ());
 }
 
+unsigned int TiXmlAttribute::UnsignedIntValue() const
+{
+	return strtoul(value.c_str (), NULL, 16);
+}
 
 TiXmlComment::TiXmlComment( const TiXmlComment& copy ) : TiXmlNode( TiXmlNode::TINYXML_COMMENT )
 {

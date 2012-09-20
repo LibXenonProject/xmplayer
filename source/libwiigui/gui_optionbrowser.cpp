@@ -11,8 +11,7 @@
 #include "gui.h"
 #include "../w_input.h"
 #include "../gui_debug.h"
-int osd_pad_right = 0;
-int osd_pad_left = 0;
+int osd_pad_left = 0 , osd_pad_right = 0;
 /**
  * Constructor for the GuiOptionBrowser class.
  */
@@ -27,19 +26,7 @@ GuiOptionBrowser::GuiOptionBrowser(int w, int h, GuiImageData * bg_entry, Option
     focus = 0; // allow focus
 
     trigA = new GuiTrigger;
-    //	trigA->SetSimpleTrigger(-1, WPAD_BUTTON_A | WPAD_CLASSIC_BUTTON_A, PAD_BUTTON_A);
     trigA->SetSimpleTrigger(-1, 0, PAD_BUTTON_A);
-    trig2 = new GuiTrigger;
-    //	trig2->SetSimpleTrigger(-1, WPAD_BUTTON_2, 0);
-    trig2->SetSimpleTrigger(-1, 0, 0);
-
-    //btnSoundOver = new GuiSound(button_over_pcm, button_over_pcm_size, SOUND_PCM);
-    //btnSoundClick = new GuiSound(button_click_pcm, button_click_pcm_size, SOUND_PCM);
-
-//    bgOptions = new GuiImageData(xenon_filebrowser_png);
-//    bgOptionsImg = new GuiImage(bgOptions);
-//    bgOptionsImg->SetParent(this);
-//    bgOptionsImg->SetAlignment(ALIGN_LEFT, ALIGN_MIDDLE);
 
     bgOptionsEntry = bg_entry;
 
@@ -62,8 +49,6 @@ GuiOptionBrowser::GuiOptionBrowser(int w, int h, GuiImageData * bg_entry, Option
         optionBtn[i]->SetImageOver(optionBg[i]);
         optionBtn[i]->SetPosition(2, bg_entry->GetHeight() * i );
         optionBtn[i]->SetTrigger(trigA);
-        optionBtn[i]->SetTrigger(trig2);
-        //optionBtn[i]->SetSoundClick(btnSoundClick);
     }
 }
 
@@ -71,16 +56,8 @@ GuiOptionBrowser::GuiOptionBrowser(int w, int h, GuiImageData * bg_entry, Option
  * Destructor for the GuiOptionBrowser class.
  */
 GuiOptionBrowser::~GuiOptionBrowser() {
-
-//    delete bgOptionsImg;
-//
-//    delete bgOptions;
     delete bgOptionsEntry;
-
     delete trigA;
-    delete trig2;
-    //delete btnSoundOver;
-    //delete btnSoundClick;
 
     for (int i = 0; i < PAGESIZE; i++) {
         delete optionTxt[i];
@@ -142,6 +119,20 @@ int GuiOptionBrowser::GetSelectedOption() {
     }
     return found;
 }
+
+int GuiOptionBrowser::GetClickedValueOption() {
+	int found = -1;
+	int value = -1;
+    for (int i = 0; i < PAGESIZE; i++) {
+        if (optionBtn[i]->GetState() == STATE_CLICKED) {
+            found = optionIndex[i];
+            value = options->v[found].curr;
+            break;
+        }
+    }
+    return value;
+}
+
 /****************************************************************************
  * FindMenuItem
  *
@@ -166,8 +157,6 @@ int GuiOptionBrowser::FindMenuItem(int currentItem, int direction) {
 void GuiOptionBrowser::Draw() {
     if (!this->IsVisible())
         return;
-
-//    bgOptionsImg->Draw();
 
     int next = listOffset;
 
@@ -249,6 +238,8 @@ void GuiOptionBrowser::Update(GuiTrigger * t) {
     if (!focus)
         return; // skip navigation
 
+	int selectedOption = optionIndex[selectedItem];
+
     if (t->Down()) {
         next = this->FindMenuItem(optionIndex[selectedItem], 1);
 
@@ -277,11 +268,30 @@ void GuiOptionBrowser::Update(GuiTrigger * t) {
                 --selectedItem;
             }
         }
-    } else if (t->Right()) {
-	osd_pad_right = 1;
-    } else if (t->Left()) { 
-	osd_pad_left = 1;
     }
+    // navigation with < and >
+    else if (optionBtn[selectedItem]->GetState() == STATE_SELECTED && optionBtn[selectedItem]->GetState() != STATE_CLICKED) {	
+		if (t->Right()) {			
+			options->v[selectedOption].curr++;
+			optionBtn[selectedItem]->ResetState();
+			optionBtn[selectedItem]->SetState(STATE_CLICKED, t->chan);
+			
+		} else if (t->Left()) {
+			options->v[selectedOption].curr--;
+			optionBtn[selectedItem]->ResetState();
+			optionBtn[selectedItem]->SetState(STATE_CLICKED, t->chan);
+		}
+	} 
+	else if(optionBtn[selectedItem]->GetState() == STATE_SELECTED && optionBtn[selectedItem]->GetState() == STATE_CLICKED) {
+		options->v[selectedOption].curr++;		
+	}
+	
+	if (options->v[selectedOption].curr < 0)
+		options->v[selectedOption].curr = 0;
+	
+	if (options->v[selectedOption].curr >= options->v[selectedOption].max)
+		options->v[selectedOption].curr = (options->v[selectedOption].max - 1);
+		
     if (updateCB)
         updateCB(this);
 }

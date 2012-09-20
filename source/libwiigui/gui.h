@@ -64,6 +64,7 @@ extern FreeTypeGX *fontSystem[];
 #define FILE_PAGESIZE 		16
 #define PAGESIZE 		16
 #define MAX_OPTIONS 		150
+#define	MAX_OPTIONS_VALUE	150
 #define MAX_KEYBOARD_DISPLAY	32
 #define SAVELISTSIZE            12
 #define MAX_SAVES               100
@@ -923,11 +924,10 @@ typedef struct _optionlist {
 	char value[MAX_OPTIONS][50];
 
 	// inner
-
 	struct {
 		int max; //maximum
 		int curr; //current value
-	} v[50];
+	} v[MAX_OPTIONS];
 
 } OptionList;
 
@@ -942,6 +942,8 @@ public:
 	int FindMenuItem(int c, int d);
 	int GetClickedOption();
 	int GetSelectedOption();
+	/** new return the value of the clicked option **/
+	int GetClickedValueOption();
 	void ResetState();
 	void SetFocus(int f);
 	void Draw();
@@ -967,7 +969,6 @@ protected:
 //	GuiSound * btnSoundOver;
 //	GuiSound * btnSoundClick;
 	GuiTrigger * trigA;
-	GuiTrigger * trig2;
 
 	bool listChanged;
 };

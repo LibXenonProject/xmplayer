@@ -815,6 +815,7 @@ public:
 	#endif
 	int				IntValue() const;									///< Return the value of this attribute, converted to an integer.
 	double			DoubleValue() const;								///< Return the value of this attribute, converted to a double.
+	unsigned int 	UnsignedIntValue() const;							///< Return the value of this attribute, converted to an unsigned integer.
 
 	// Get the tinyxml string representation
 	const TIXML_STRING& NameTStr() const { return name; }
@@ -831,12 +832,14 @@ public:
 	int QueryIntValue( int* _value ) const;
 	/// QueryDoubleValue examines the value string. See QueryIntValue().
 	int QueryDoubleValue( double* _value ) const;
+	int QueryUnsignedIntValue( unsigned int* _value ) const;
 
 	void SetName( const char* _name )	{ name = _name; }				///< Set the name of this attribute.
 	void SetValue( const char* _value )	{ value = _value; }				///< Set the value.
 
 	void SetIntValue( int _value );										///< Set the value from an integer.
 	void SetDoubleValue( double _value );								///< Set the value from a double.
+	void SetUnsignedIntValue( unsigned int _value );					///< Set the value from an unsigned integer.
 
     #ifdef TIXML_USE_STL
 	/// STL std::string form.
@@ -974,6 +977,14 @@ public:
 		is non-null.
 	*/
 	const char* Attribute( const char* name, double* d ) const;
+	
+	/** Given an attribute name, Attribute() returns the value
+		for the attribute of that name, or null if none exists.
+		If the attribute exists and can be converted to an double,
+		the double value will be put in the return 'd', if 'd'
+		is non-null.
+	*/
+	const char* Attribute( const char* name, unsigned int* d ) const;
 
 	/** QueryIntAttribute examines the attribute - it is an alternative to the
 		Attribute() method with richer error checking.
@@ -1073,6 +1084,11 @@ public:
 		will be created if it does not exist, or changed if it does.
 	*/
 	void SetDoubleAttribute( const char * name, double value );
+	
+	/** Sets an attribute of name to a given value. The attribute
+		will be created if it does not exist, or changed if it does.
+	*/
+	void SetUnsignedIntAttribute( const char * name, unsigned int value );
 
 	/** Deletes an attribute with the given name.
 	*/

@@ -19,7 +19,7 @@ TARGET		:=	$(notdir $(CURDIR))
 BUILD		:=	build
 SOURCES		:=	source source/libwiigui source/tinyxml data source/lang
 DATA		:=	
-INCLUDES	:=	
+INCLUDES	:=	mplayer
 MPLAYER		:=	$(CURDIR)/mplayer
 #---------------------------------------------------------------------------------
 # options for code generation

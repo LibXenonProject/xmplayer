@@ -129,6 +129,7 @@
 #include "osdep/timer.h"
 #include "../source/mplayer_common.h"
 #include "../source/mplayer_cfg.h"
+#include "../source/mplayer_seek.h"
 #include "osdep/osdep_xenon.h"
 #include "stream/unrar.h"
 #include "udp_sync.h"
@@ -152,6 +153,7 @@ double start_pts   = MP_NOPTS_VALUE;
 char *heartbeat_cmd;
 static int max_framesize;
 int noconsolecontrols;
+char mplayer_seek_time[100] = {NULL};
 
 //**************************************************************************//
 
@@ -2782,7 +2784,7 @@ int mplayer_main(int argc, char *argv[])
         cfg_read();
     }
 #endif
-	mp_input_queue_cmd(mp_input_parse_cmd(playerSeekTime)); //for resume-playback function
+	mp_input_queue_cmd(mp_input_parse_cmd(mplayer_seek_time)); //for resume-playback function
     mpctx->playtree = m_config_parse_mp_command_line(mconfig, argc, argv);
     if (mpctx->playtree == NULL) {
         opt_exit = 1;
@@ -4126,8 +4128,7 @@ goto_next_file:  // don't jump here after ao/vo/getch initialization!
 /**
  * shared with mplayer
  * use that to load a new file
- */
- #include "../source/mplayer_seek.h"
+ */ 
  
 static char osd_sub[200];
 static char osd_mute[200];
@@ -4143,7 +4144,7 @@ int file_exists(const char * filename);
 void mplayer_load(char * _filename) 
 {
 	filename = _filename;
-	mp_input_queue_cmd(mp_input_parse_cmd(playerSeekTime)); 
+	mp_input_queue_cmd(mp_input_parse_cmd(mplayer_seek_time)); 
 	//mp_input_queue_cmd(mp_input_parse_cmd("sub_visibility"));
 }
 //Player Get functions
