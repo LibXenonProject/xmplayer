@@ -235,7 +235,7 @@ static void osd_options_sub_callback(void * data)
 /**
  * Load ressources
  **/
-void loadOsdRessources()
+void LoadOsdRessources()
 { // OSD
 	video_osd_progress_bar_front = new GuiImage(new GuiImageData(video_player_time_played_line_n_01_png));
 	video_osd_progress_bar_back = new GuiImage(new GuiImageData(video_control_time_played_line_bg_png));
@@ -608,7 +608,7 @@ extern "C" void mplayer_osd_open()
 	last_level = -1;
 }
 
-static void osdSubtitlesOptions()
+static void OsdSubtitlesOptions()
 {
 	bool firstRun = true;
 	char *osd_sub_name = "";
@@ -744,7 +744,7 @@ static void osdSubtitlesOptions()
 	}
 }
 
-static void osdAudioOptions()
+static void OsdAudioOptions()
 {
 	bool firstRun = true;
 	char *osd_mute = "";
@@ -845,7 +845,7 @@ static void osdAudioOptions()
 	}
 }
 
-static void osdVideoOptions()
+static void OsdVideoOptions()
 {
 	bool firstRun = true;
 	char osd_framedrop[100] = {};
@@ -1045,9 +1045,9 @@ extern "C" void mplayer_osd_draw(int level)
 	} else {
 		osd_display_info = 0;
 	}
-	osdSubtitlesOptions();
-	osdAudioOptions();
-	osdVideoOptions();
+	OsdSubtitlesOptions();
+	OsdAudioOptions();
+	OsdVideoOptions();
 	Menu_Frame();
 	last_level = level;
 	mainWindow->Draw();
@@ -1063,175 +1063,3 @@ extern "C" void mplayer_osd_draw(int level)
 	mainWindow->Remove(&osdBtn);
 }
 
-
-/**
- * Dont't know where to put that
- **/
-
-LANG languages[LANGUAGE_SIZE] = {
-	{ "Abkhazian", "ab", "abk"},
-	{ "Afar", "aa", "aar"},
-	{ "Afrikaans", "af", "afr"},
-	{ "Albanian", "sq", "sqi"},
-	{ "Amharic", "am", "amh"},
-	{ "Arabic", "ar", "ara"},
-	{ "Aragonese", "an", "arg"},
-	{ "Armenian", "hy", "hye"},
-	{ "Assamese", "as", "asm"},
-	{ "Avestan", "ae", "ave"},
-	{ "Aymara", "ay", "aym"},
-	{ "Azerbaijani", "az", "aze"},
-	{ "Bashkir", "ba", "bak"},
-	{ "Basque", "eu", "baq"},
-	{ "Belarusian", "be", "bel"},
-	{ "Bengali", "bn", "ben"},
-	{ "Bihari", "bh", "bih"},
-	{ "Bislama", "bi", "bis"},
-	{ "Bosnian", "bs", "bos"},
-	{ "Breton", "br", "bre"},
-	{ "Bulgarian", "bg", "bul"},
-	{ "Burmese", "my", "mya"},
-	{ "Cambodian", "km", "khm"},
-	{ "Catalan", "ca", "cat"},
-	{ "Chinese", "zh", "chi"},
-	{ "Corsican", "co", "cos"},
-	{ "Ceske", "cs", "cze"},
-	{ "Dansk", "da", "dan"},
-	{ "Deutsch", "de", "ger"},
-	{ "English", "en", "eng"},
-	{ "Esperanto", "eo", "epo"},
-	{ "Español", "es", "spa"},
-	{ "Estonian", "et", "est"},
-	{ "Finnish", "fi", "fin"},
-	{ "Fiji", "fj", "fij"},
-	{ "Faroese", "fo", "fao"},
-	{ "Français", "fr", "fre"},
-	{ "Frisian", "fy", "fry"},
-	{ "Galician", "gl", "glg"},
-	{ "Georgian", "ka", "geo"},
-	{ "Greek", "el", "gre"},
-	{ "Greenlandic", "kl", "kal"},
-	{ "Guarani", "gn", "grn"},
-	{ "Gujarati", "gu", "guj"},
-	{ "Hausa", "ha", "hau"},
-	{ "Hebrew", "he", "heb"},
-	{ "Hindi", "hi", "hin"},
-	{ "Hrvatski", "hr", "scr"},
-	{ "Indonesian", "id", "ind"},
-	{ "Interlingue", "ie", "ile"},
-	{ "Inupiak", "ik", "ipk"},
-	{ "Irish", "ga", "gle"},
-	{ "Islenska", "is", "ice"},
-	{ "Italiano", "it", "ita"},
-	{ "Inuktitut", "iu", "iku"},
-	{ "Japanese", "ja", "jpn"},
-	{ "Javanese", "jw", "jav"},
-	{ "Kannada", "kn", "kan"},
-	{ "Kashmiri", "ks", "kas"},
-	{ "Kazakh", "kk", "kaz"},
-	{ "Korean", "ko", "kor"},
-	{ "Kurdish", "ku", "kur"},
-	{ "Kinyarwanda", "rw", "kin"},
-	{ "Kirghiz", "ky", "kir"},
-	{ "Kirundi", "rn", "run"},
-	{ "Latin", "la", "lat"},
-	{ "Lingala", "ln", "lin"},
-	{ "Laothian", "lo", "lao"},
-	{ "Lithuanian", "lt", "lit"},
-	{ "Latvian", "lv", "lav"},
-	{ "Macedonian", "mk", "mac"},
-	{ "Magyar", "hu", "hun"},
-	{ "Malagasy", "mg", "mlg"},
-	{ "Malay", "ms", "may"},
-	{ "Malayalam", "ml", "mal"},
-	{ "Maltese", "mt", "mlt"},
-	{ "Maori", "mi", "mao"},
-	{ "Marathi", "mr", "mar"},
-	{ "Moldavian", "mo", "mol"},
-	{ "Mongolian", "mn", "mon"},
-	{ "Nauru", "na", "nau"},
-	{ "Nederlands", "nl", "dut"},
-	{ "Nepali", "ne", "nep"},
-	{ "Norsk", "no", "nno"},
-	{ "Occitan", "oc", "oci"},
-	{ "Oriya", "or", "ori"},
-	{ "Oromo", "om", "orm"},
-	{ "Pashto", "ps", "pus"},
-	{ "Persian", "fa", "per"},
-	{ "Polish", "pl", "pol"},
-	{ "Portugues", "pt", "por"},
-	{ "Panjabi", "pa", "pan"},
-	{ "Quechua", "qu", "que"},
-	{ "Romanian", "ro", "rum"},
-	{ "Russian", "ru", "rus"},
-	{ "Sangho", "sg", "sag"},
-	{ "Samoan", "sm", "smo"},
-	{ "Sanskrit", "sa", "san"},
-	{ "Scots", "gd", "sco"},
-	{ "Serbian", "sr", "scc"},
-	{ "Shona", "sn", "sna"},
-	{ "Sinhalese", "si", "sin"},
-	{ "Sindhi", "sd", "snd"},
-	{ "Slovak", "sk", "slo"},
-	{ "Slovenian", "sl", "slv"},
-	{ "Somali", "so", "som"},
-	{ "Sundanese", "su", "sun"},
-	{ "Swahili", "sw", "swa"},
-	{ "Swedish", "sv", "swe"},
-	{ "Tagalog", "tl", "tgl"},
-	{ "Tajik", "tg", "tgk"},
-	{ "Tamil", "ta", "tam"},
-	{ "Tatar", "tt", "tat"},
-	{ "Telugu", "te", "tel"},
-	{ "Thai", "th", "tha"},
-	{ "Tibetan", "bo", "tib"},
-	{ "Tigrinya", "ti", "tir"},
-	{ "Tonga", "to", "ton"},
-	{ "Tsonga", "ts", "tso"},
-	{ "Turkish", "tr", "tur"},
-	{ "Turkmen", "tk", "tuk"},
-	{ "Twi", "tw", "twi"},
-	{ "Uighur", "ug", "uig"},
-	{ "Ukrainian", "uk", "ukr"},
-	{ "Urdu", "ur", "urd"},
-	{ "Uzbek", "uz", "uzb"},
-	{ "Vietnamese", "ui", "vie"},
-	{ "Volapuk", "vo", "Vol"},
-	{ "Welsh", "cy", "wel"},
-	{ "Wolof", "wo", "wol"},
-	{ "Xhosa", "xh", "xho"},
-	{ "Yiddish", "yi", "yid"},
-	{ "Yoruba", "yo", "yor"},
-	{ "Zhuang", "za", "zha"},
-	{ "Zulu", "zu", "zul"}
-};
-
-CP codepages[CODEPAGE_SIZE] = {
-	{ "utf-8", "UTF-8"},
-	{ "ISO-8859-1", "Western European"},
-	{ "ISO-8859-2", "Eastern European"},
-	{ "ISO-8859-3", "South European"},
-	{ "ISO-8859-4", "North European"},
-	{ "ISO-8859-5", "Cyrillic alphabets"},
-	{ "ISO-8859-6", "Arabic"},
-	{ "ISO-8859-7", "Greek"},
-	{ "ISO-8859-8", "Hebrew"},
-	{ "ISO-8859-9", "Turkish"},
-	{ "ISO-8859-10", "Nordic"},
-	{ "ISO-8859-11", "Thai"},
-	{ "ISO-8859-13", "Baltic and Polish"},
-	{ "ISO-8859-14", "Celtic"},
-	{ "Windows-1250", "Central/Eastern European"},
-	{ "Windows-1251", "Cyrillic alphabets"},
-	{ "Windows-1252", "Western European 2"},
-	{ "Windows-1253", "Greek 2"},
-	{ "Windows-1254", "Turkish 2"},
-	{ "Windows-1255", "Hebrew 2"},
-	{ "Windows-1256", "Arabic 2"},
-	{ "Windows-1257", "Baltic 2"},
-	{ "Windows-1258", "Vietnamese"},
-	{ "shift_jis", "Japanese (Shift JIS)"},
-	{ "gb2312", "Chinese Simplified (GB2312)"},
-	{ "big5", "Chinese Traditional (Big5)"},
-	{ "cp949", "Korean (CP949)"}
-};

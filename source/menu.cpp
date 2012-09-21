@@ -172,7 +172,7 @@ static int exited_i[64];
 static int last_menu;
 static int current_menu = HOME_PAGE;
 
-static void update()
+static void Update()
 {
 	UpdatePads();
 	mainWindow->Draw();
@@ -182,7 +182,7 @@ static void update()
 	}
 }
 
-static void resetController()
+static void ResetController()
 {
 	int i = 0;
 	for (i = 0; i < 4; i++) {
@@ -191,34 +191,10 @@ static void resetController()
 	}
 }
 
-static int GetALangIndex()
-{
-	for (int i = 0; i < LANGUAGE_SIZE; i++)
-		if (strcmp(XMPlayerCfg.alang, languages[i].abbrev2) == 0)
-			return i;
-	return 0;
-}
-
-static int GetCodepageIndex()
-{
-	for (int i = 0; i < CODEPAGE_SIZE; i++)
-		if (strcmp(XMPlayerCfg.subcp, codepages[i].cpname) == 0)
-			return i;
-	return 0;
-}
-
-static int GetLangIndex()
-{
-	for (int i = 0; i < LANGUAGE_SIZE; i++)
-		if (strcmp(XMPlayerCfg.sublang, languages[i].abbrev) == 0)
-			return i;
-	return 0;
-}
-
 /**
  * Load ressources
  **/
-static void loadHomeRessources()
+static void LoadHomeRessources()
 {
 	home_left = new GuiImage(new GuiImageData(home_left_png));
 
@@ -287,7 +263,7 @@ static void loadHomeRessources()
 	home_shutdown_btn->SetLabel(home_shutdown_txt);
 }
 
-static void loadBrowserRessources()
+static void LoadBrowserRessources()
 {
 
 	// Browser
@@ -458,7 +434,7 @@ int WindowPrompt(const char *title, const char *msg, const char *btn1Label, cons
 	}
 
 	while (choice == -1) {
-		update();
+		Update();
 		if (btn1.GetState() == STATE_CLICKED)
 			choice = 1;
 		else if (btn2.GetState() == STATE_CLICKED)
@@ -467,28 +443,28 @@ int WindowPrompt(const char *title, const char *msg, const char *btn1Label, cons
 
 	/*promptWindow.SetEffect(EFFECT_SLIDE_TOP | EFFECT_SLIDE_OUT, 50);
 	while (promptWindow.GetEffect() > 0) {
-		update();
+		Update();
 	}*/
 	mainWindow->Remove(&promptWindow);
 	mainWindow->SetState(STATE_DEFAULT);
 	return choice;
 }
 
-extern "C" void cErrorPrompt(const char *msg)
+extern "C" void error_prompt(const char *msg)
 {
 	WindowPrompt("Error", msg, "Quit", NULL);
 	ExitMplayer();
 }
 
 /** to do **/
-static void loadRessources()
+static void LoadRessources()
 {
-	loadHomeRessources();
-	loadBrowserRessources();
-	loadOsdRessources();
+	LoadHomeRessources();
+	LoadBrowserRessources();
+	LoadOsdRessources();
 }
 
-static void common_setup()
+static void CommonSetup()
 {
 	trigA = new GuiTrigger();
 
@@ -499,7 +475,7 @@ static void common_setup()
 	bgImg = new GuiImage(background);
 	mainWindow->Append(bgImg);
 
-	loadRessources();
+	LoadRessources();
 }
 
 static void Browser(const char * title, const char * root)
@@ -708,7 +684,7 @@ static void Browser(const char * title, const char * root)
 		if (backBtn.GetState() == STATE_CLICKED) {
 			current_menu = MENU_BACK;
 		}
-		update();
+		Update();
 	}
 
 	// exit dir						
@@ -824,7 +800,7 @@ static void HomePage()
 
 			last_selected_value = home_list_v->GetValue();
 		}
-		update();
+		Update();
 	}
 
 	root_dev = device_list[home_list_h->GetValue()];
@@ -892,7 +868,7 @@ static void GlobalSettings()
 	mainWindow->Append(&titleTxt);
 
 	while (current_menu == SETTINGS_GLOBAL) {
-		update();
+		Update();
 
 		ret = optionBrowser.GetClickedOption();
 
@@ -961,7 +937,7 @@ static void AudioSettings()
 		options.value[i][0] = 0;
 
 
-	options.v[0].curr = GetALangIndex();
+	options.v[0].curr = GetAudioLangIndex();
 	options.v[1].curr = XMPlayerCfg.volume;
 	options.v[2].curr = XMPlayerCfg.softvol;
 
@@ -999,7 +975,7 @@ static void AudioSettings()
 	mainWindow->Append(&titleTxt);
 
 	while (current_menu == SETTINGS_AUDIO) {
-		update();
+		Update();
 
 		int option_value = optionBrowser.GetClickedValueOption();
 		ret = optionBrowser.GetClickedOption();
@@ -1090,7 +1066,7 @@ static void VideoSettings()
 	mainWindow->Append(&titleTxt);
 
 	while (current_menu == SETTINGS_VIDEO) {
-		update();
+		Update();
 
 		ret = optionBrowser.GetClickedOption();
 
@@ -1136,73 +1112,6 @@ static void VideoSettings()
 	SavePrefs(true);
 }
 
-typedef struct
-{
-	//RRGGBB00
-	unsigned int hex;
-	char * string;
-} color;
-
-// tmp buffer
-char unknow_color[10] = {};
-color colors[] = {
-	{ 0xFFFFFF00, "White"},
-	{ 0x00000000, "Black"},
-	{ 0xFFFF0000, "Yellow"},
-	{ 0xFF000000, "Red"},
-};
-
-char * getColorFromHex(unsigned int hex, color * pColor, int max)
-{
-	char * dest = NULL;
-	for (int i = 0; i < max; i++) {
-		if (pColor[i].hex == hex) {
-			dest = pColor[i].string;
-			break;
-		}
-	}
-	if (dest == NULL) {
-		// set it to temp buffer
-		dest = unknow_color;
-		// set it to the hexadecimal value of the color
-		sprintf(dest, "%08x", hex);
-	}
-	return dest;
-}
-
-unsigned int getColorFromString(char * str, color * pColor, int max)
-{
-	unsigned int dest = 0;
-	for (int i = 0; i < max; i++) {
-		if (strcmp(str, pColor[i].string) == 0) {
-			dest = pColor[i].hex;
-			break;
-		}
-	}
-	return dest;
-}
-
-/*
-int getColorIndex(char *str, color * pColor, int max) {
-	for (int i=0; i<max; i++)
-	{
-		if (strcmp(str, pColor[i].string) == 0) {
-			return i;
-		}
-	}	
-	return -1;
-}
- * */
-int getColorIndex(unsigned int hex, color * pColor, int max)
-{
-	for (int i = 0; i < max; i++) {
-		if (pColor[i].hex == hex) {
-			return i;
-		}
-	}
-	return -1;
-}
-
 static void SubtitleSettings()
 {
 	int ret;
@@ -1210,8 +1119,6 @@ static void SubtitleSettings()
 	bool firstRun = true;
 	OptionList options;
 
-	int nbColors = sizeof (colors) / sizeof (color);
-	printf("nbColors : %d\n", nbColors);
 	sprintf(options.name[i++], "Color");
 	sprintf(options.name[i++], "Border Color");
 	sprintf(options.name[i++], "Code Page");
@@ -1224,10 +1131,10 @@ static void SubtitleSettings()
 	options.v[0].curr = getColorIndex(XMPlayerCfg.subcolor, colors, sizeof (colors));
 	options.v[1].curr = getColorIndex(XMPlayerCfg.border_color, colors, sizeof (colors));
 	options.v[2].curr = GetCodepageIndex();
-	options.v[3].curr = GetLangIndex();
+	options.v[3].curr = GetSubLangIndex();
 
-	options.v[0].max = nbColors;
-	options.v[1].max = nbColors;
+	options.v[0].max = NB_COLOR;
+	options.v[1].max = NB_COLOR;
 	options.v[2].max = CODEPAGE_SIZE;
 	options.v[3].max = LANGUAGE_SIZE;
 
@@ -1261,7 +1168,7 @@ static void SubtitleSettings()
 	mainWindow->Append(&titleTxt);
 
 	while (current_menu == SETTINGS_SUBTITLES) {
-		update();
+		Update();
 		int option_value = optionBrowser.GetClickedValueOption();
 		ret = optionBrowser.GetClickedOption();
 		if (ret >= 0) {
@@ -1370,7 +1277,7 @@ static void XMPSettings()
 	mainWindow->Append(&titleTxt);
 
 	while (current_menu == SETTINGS) {
-		update();
+		Update();
 
 		ret = optionBrowser.GetClickedOption();
 
@@ -1401,7 +1308,7 @@ static void XMPSettings()
 	mainWindow->Remove(&titleTxt);
 }
 
-static void init_mplayer_settings(void)
+static void InitMplayerSettings(void)
 {
 	ass_color = _ass_color;
 	ass_border_color = _ass_border_color;
@@ -1410,8 +1317,9 @@ static void init_mplayer_settings(void)
 	audio_lang = XMPlayerCfg.alang;
 }
 
-static void do_mplayer(char * filename)
+void MenuMplayer()
 {
+	printf("filename:%s\r\n", mplayer_filename);
 	static int mplayer_need_init = 1;
 	if (mplayer_need_init) {
 		char vsync[50] = "-novsync";
@@ -1432,7 +1340,7 @@ static void do_mplayer(char * filename)
 			vsync,
 			framedrop,
 			"-lavdopts", "skiploopfilter=all:threads=5",
-			filename,
+			mplayer_filename,
 		};
 		mplayer_need_init = 0;
 		int argc = sizeof (argv) / sizeof (char *);
@@ -1440,16 +1348,9 @@ static void do_mplayer(char * filename)
 		mplayer_main(argc, argv);
 		// will never be here !!!
 	} else {
-		mplayer_load(filename);
+		mplayer_load(mplayer_filename);
 		mplayer_return_to_player();
 	}
-}
-
-void MenuMplayer()
-{
-	//sprintf(foldername, "%s/", browser.dir);
-	printf("filename:%s\r\n", mplayer_filename);
-	do_mplayer(mplayer_filename);
 }
 
 void ElfLoader()
@@ -1464,7 +1365,7 @@ void ElfLoader()
 	elf_runFromDisk(mplayer_filename);
 }
 
-static void gui_loop()
+static void GuiLoop()
 {
 	while (need_gui) {
 		if (current_menu == HOME_PAGE) {
@@ -1499,7 +1400,7 @@ static void gui_loop()
 	}
 }
 
-static void findDevices()
+static void FindDevices()
 {
 	for (int i = 3; i < STD_MAX; i++) {
 		if (devoptab_list[i]->structSize) {
@@ -1513,7 +1414,7 @@ static void findDevices()
 	root_dev = device_list[0];
 }
 
-void loadingThread()
+void LoadingThread()
 {
 	int i = 0;
 	logo = loadPNGFromMemory((unsigned char*) logo_png);
@@ -1552,7 +1453,7 @@ int main(int argc, char** argv)
 	end_loading_thread = 0;
 
 	// run in a thread ....
-	xenon_run_thread_task(2, thread_stack[2], (void*) loadingThread);
+	xenon_run_thread_task(2, thread_stack[2], (void*) LoadingThread);
 
 	// Init devices
 	usb_init();
@@ -1562,12 +1463,12 @@ int main(int argc, char** argv)
 
 	// fs
 	mount_all_devices();
-	findDevices();
+	FindDevices();
 
 	InitFreeType((u8*) font_ttf, font_ttf_size);
 	SetupPads();
 	ChangeFontSize(26);
-	common_setup();
+	CommonSetup();
 
 	// signal end of loading thread
 	lock(&loadingThreadLock);
@@ -1581,7 +1482,7 @@ int main(int argc, char** argv)
 
 	// init mplayer
 	init_mplayer();
-	init_mplayer_settings();
+	InitMplayerSettings();
 	
 	// preference
 	if (LoadPrefs() == false)
@@ -1599,7 +1500,7 @@ int main(int argc, char** argv)
 	while (1) {
 		// never exit !!
 		need_gui = 1;
-		gui_loop();
+		GuiLoop();
 	}
 
 	return (EXIT_SUCCESS);
@@ -1619,10 +1520,10 @@ extern "C" void mplayer_return_to_gui()
 
 	// make sur to leave the gui
 	mplayer_osd_close();
-	resetController(); //resets buttons, so pushes from mplayer doesn't get reconized in browser
+	ResetController(); //resets buttons, so pushes from mplayer doesn't get reconized in browser
 	current_menu = last_menu;
 
-	gui_loop();
+	GuiLoop();
 
 }
 

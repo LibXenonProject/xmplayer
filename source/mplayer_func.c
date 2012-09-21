@@ -10,7 +10,7 @@
 #include <xenon_soc/xenon_power.h>
 #include <debug.h>
 
-extern void cErrorPrompt(const char *msg);
+extern void error_prompt(const char *msg);
 
 static char MPLAYER_ENV[100];
 char MPLAYER_DATADIR[100]; 
@@ -47,7 +47,7 @@ void init_mplayer(){
 	}
 	// Display an error message
 	if (found == 0) {
-		cErrorPrompt("Cannot find required files!");
+		error_prompt("Cannot find required files!");
 	}
 	
 	setenv("HOME",MPLAYER_ENV,1);

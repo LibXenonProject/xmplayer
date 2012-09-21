@@ -78,8 +78,31 @@ typedef struct _lang {
 extern LANG languages[LANGUAGE_SIZE];
 extern CP codepages[CODEPAGE_SIZE];
 
+int GetAudioLangIndex();
+int GetSubLangIndex();
+int GetCodepageIndex();
+
+/** 
+ * Color 
+ **/
+typedef struct
+{
+	//RRGGBB00
+	unsigned int hex;
+	char * string;
+} color;
+
+#define NB_COLOR 4
+
+extern color colors[NB_COLOR];
+
+char * getColorFromHex(unsigned int hex, color * pColor, int max);
+unsigned int getColorFromString(char * str, color * pColor, int max);
+int getColorIndex(unsigned int hex, color * pColor, int max);
+
+
 // menu_osd.cpp
-void loadOsdRessources();
+void LoadOsdRessources();
 // menu.cpp
 double playerSeekPrompt(char * seekfile);
 xmplayer_seek_information * playerSeekOpen(char * file);
