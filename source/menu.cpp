@@ -384,7 +384,6 @@ char playerSeekTime[100] = {};
 static int audio_gui = 0;
 
 static int last_menu;
-static int last_settings_menu = 0;
 static int current_menu = HOME_PAGE;
 
 static void update()
@@ -2161,9 +2160,6 @@ static void GlobalSettings() {
 	titleTxt.SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	titleTxt.SetPosition(150, 35);
 
-	GuiImageData btnOutline(button_blue_png);
-	GuiImageData btnOutlineOver(button_green_png);
-
 	GuiButton bBtn(20, 20);
 	bBtn.SetAlignment(ALIGN_LEFT, ALIGN_BOTTOM);
 	bBtn.SetPosition(10, -35);
@@ -2275,9 +2271,6 @@ static void AudioSettings() {
 	GuiText titleTxt("Home > Settings > Audio", 24, 0xfffa9600);
 	titleTxt.SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	titleTxt.SetPosition(150, 35);
-
-	GuiImageData btnOutline(button_blue_png);
-	GuiImageData btnOutlineOver(button_green_png);
 
 	GuiButton bBtn(20, 20);
 	bBtn.SetAlignment(ALIGN_LEFT, ALIGN_BOTTOM);
@@ -2449,9 +2442,6 @@ static void VideoSettings() {
 	titleTxt.SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	titleTxt.SetPosition(150, 35);
 
-	GuiImageData btnOutline(button_blue_png);
-	GuiImageData btnOutlineOver(button_green_png);
-
 	GuiButton bBtn(20, 20);
 	bBtn.SetAlignment(ALIGN_LEFT, ALIGN_BOTTOM);
 	bBtn.SetPosition(10, -35);
@@ -2564,9 +2554,6 @@ static void SubtitleSettings() {
 	GuiText titleTxt("Home > Settings > Subtitle", 24, 0xfffa9600);
 	titleTxt.SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	titleTxt.SetPosition(150, 35);
-
-	GuiImageData btnOutline(button_blue_png);
-	GuiImageData btnOutlineOver(button_green_png);
 
 	GuiButton bBtn(20, 20);
 	bBtn.SetAlignment(ALIGN_LEFT, ALIGN_BOTTOM);
@@ -2787,9 +2774,6 @@ static void XMPSettings() {
 	GuiText titleTxt("Home > Settings", 24, 0xfffa9600);
 	titleTxt.SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	titleTxt.SetPosition(150, 35);
-	
-	GuiImageData btnOutline(button_blue_png);
-	GuiImageData btnOutlineOver(button_green_png);
 
 	GuiButton bBtn(20, 20);
 	bBtn.SetAlignment(ALIGN_LEFT, ALIGN_BOTTOM);
@@ -2848,7 +2832,6 @@ static void XMPSettings() {
 			current_menu = HOME_PAGE;
 		}
 	}
-	last_settings_menu = ret;
 	mainWindow->Remove(&optionBrowser);
 	mainWindow->Remove(&w);
 	mainWindow->Remove(&titleTxt);
