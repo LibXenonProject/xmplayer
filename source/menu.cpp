@@ -153,6 +153,11 @@ static char mplayer_filename[2048];
 //Saved seek
 static char seek_filename[2048];
 
+// ass color buffer
+// since we pass directly color to mplayer we need to allocate them or made them point to a aligned buffer
+static char _ass_color[10];
+static char _ass_border_color[10];
+
 //**************************************************************************
 // Browser variables
 //**************************************************************************
@@ -1261,17 +1266,18 @@ static void SubtitleSettings()
 		ret = optionBrowser.GetClickedOption();
 		if (ret >= 0) {
 			// option_value should always been >= 0
+			printf("option_value : %d\n", option_value);
 			if (option_value >= 0) {
 				switch (ret) {
 				case 0:
 				{
-					sprintf(ass_color, "%08x", colors[option_value].string);
+					sprintf(_ass_color, "%08x", colors[option_value].hex);
 					XMPlayerCfg.subcolor = colors[option_value].hex;
 					break;
 				}
 				case 1:
 				{
-					sprintf(ass_border_color, "%08x", colors[option_value].string);
+					sprintf(_ass_border_color, "%08x", colors[option_value].hex);
 					XMPlayerCfg.border_color = colors[option_value].hex;
 					break;
 				}
@@ -1397,10 +1403,8 @@ static void XMPSettings()
 
 static void init_mplayer_settings(void)
 {
-	/*
-	ass_color = XMPlayerCfg.subcolor;
-	ass_border_color = XMPlayerCfg.border_color;		
-	 */
+	ass_color = _ass_color;
+	ass_border_color = _ass_border_color;
 	sub_cp = XMPlayerCfg.subcp;
 	dvdsub_lang = XMPlayerCfg.sublang;
 	audio_lang = XMPlayerCfg.alang;
@@ -1578,6 +1582,7 @@ int main(int argc, char** argv)
 	// init mplayer
 	init_mplayer();
 	init_mplayer_settings();
+	
 	// preference
 	if (LoadPrefs() == false)
 		SavePrefs(true);

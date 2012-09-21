@@ -973,6 +973,51 @@ protected:
 	bool listChanged;
 };
 
+
+//!Display a list of menu options
+
+class GuiOptionBrowserOsd : public GuiElement {
+public:
+	GuiOptionBrowserOsd(int w, int h, GuiImageData * bg_entry, OptionList * l);
+	~GuiOptionBrowserOsd();
+	void SetCol1Position(int x);
+	void SetCol2Position(int x);
+	int FindMenuItem(int c, int d);
+	int GetClickedOption();
+	int GetSelectedOption();
+	int GetLeft();
+	int GetRight();
+	void ResetState();
+	void SetFocus(int f);
+	void Draw();
+	void TriggerUpdate();
+	void ResetText();
+	void Update(GuiTrigger * t);
+	GuiText * optionVal[PAGESIZE];
+protected:
+	int optionIndex[PAGESIZE];
+	GuiButton * optionBtn[PAGESIZE];
+	GuiText * optionTxt[PAGESIZE];
+	GuiImage * optionBg[PAGESIZE];
+
+	int selectedItem;
+	int listOffset;
+	int right;
+	int left;
+	OptionList * options;
+
+//	GuiImage * bgOptionsImg;
+
+	GuiImageData * bgOptions;
+	GuiImageData * bgOptionsEntry;
+
+//	GuiSound * btnSoundOver;
+//	GuiSound * btnSoundClick;
+	GuiTrigger * trigA;
+
+	bool listChanged;
+};
+
 //!Display a list of files
 
 class GuiFileBrowser : public GuiElement {

@@ -4181,16 +4181,18 @@ char* playerGetSubtitle() {
 			sub_name = ass_track->name;
 			tracks =  mpctx->set_of_sub_size;
 		}
-		tmp = mp_basename(sub_name);
-		sprintf(osd_sub, "(%d) %s%s",
-				 tracks,
-				 strlen(tmp) < 15 ? "" : "..",
-				 strlen(tmp) < 15 ? tmp : tmp + strlen(tmp) - 14);
-		return osd_sub;
-    } else {
-	    strcpy(osd_sub, "Disabled");
-	    return osd_sub;
-	}
+		if (sub_name) {
+			tmp = mp_basename(sub_name);
+			sprintf(osd_sub, "(%d) %s%s",
+					 tracks,
+					 strlen(tmp) < 15 ? "" : "..",
+					 strlen(tmp) < 15 ? tmp : tmp + strlen(tmp) - 14);
+			return osd_sub;
+		}
+    }
+    
+	strcpy(osd_sub, "Disabled");
+	return osd_sub;
 }
 
 char* playerGetMute() {	

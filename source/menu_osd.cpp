@@ -38,8 +38,6 @@
 //**************************************************************************
 // D-Pad direction for OSD Settings
 //**************************************************************************
-extern int osd_pad_right; //from gui_optionbrowser.cpp
-extern int osd_pad_left; //from gui_optionbrowser.cpp
 extern int osd_level;
 
 //**************************************************************************
@@ -122,15 +120,15 @@ static GuiButton * osd_options_menu_zoomout_btn = NULL;
 
 //osd subtitle options
 static GuiWindow * osd_options_subtitle_window = NULL;
-static GuiOptionBrowser * osd_options_subtitle = NULL;
+static GuiOptionBrowserOsd * osd_options_subtitle = NULL;
 static OptionList subtitle_option_list;
 //osd audio options
 static GuiWindow * osd_options_audio_window = NULL;
-static GuiOptionBrowser * osd_options_audio = NULL;
+static GuiOptionBrowserOsd * osd_options_audio = NULL;
 static OptionList audio_option_list;
 //osd video options
 static GuiWindow * osd_options_video_window = NULL;
-static GuiOptionBrowser * osd_options_video = NULL;
+static GuiOptionBrowserOsd * osd_options_video = NULL;
 static OptionList video_option_list;
 
 static GuiText * osd_options_headline = NULL;
@@ -478,13 +476,14 @@ void loadOsdRessources()
 		subtitle_option_list.value[i][0] = 0;
 
 	osd_options_subtitle_window = new GuiWindow(405, 280);
-	osd_options_subtitle = new GuiOptionBrowser(400, 275, new GuiImageData(osd_options_browser_btn_png), &subtitle_option_list);
+	osd_options_subtitle = new GuiOptionBrowserOsd(400, 275, new GuiImageData(osd_options_browser_btn_png), &subtitle_option_list);
 	osd_options_subtitle->SetPosition(0, 40);
 	osd_options_subtitle->SetCol2Position(150);
 	osd_options_subtitle_window->SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);
 
 	osd_options_subtitle_window->Append(new GuiImage(new GuiImageData(osd_options_browser_bg_png)));
 	osd_options_subtitle_window->Append(osd_options_subtitle);
+	
 	/**
 	 * Osd Audio window
 	 */
@@ -501,15 +500,16 @@ void loadOsdRessources()
 		audio_option_list.value[d][0] = 0;
 
 	osd_options_audio_window = new GuiWindow(405, 280);
-	osd_options_audio = new GuiOptionBrowser(400, 275, new GuiImageData(osd_options_browser_btn_png), &audio_option_list);
+	osd_options_audio = new GuiOptionBrowserOsd(400, 275, new GuiImageData(osd_options_browser_btn_png), &audio_option_list);
 	osd_options_audio->SetPosition(0, 40);
 	osd_options_audio->SetCol2Position(150);
 	osd_options_audio_window->SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);
 
 	osd_options_audio_window->Append(new GuiImage(new GuiImageData(osd_options_browser_bg_png)));
 	osd_options_audio_window->Append(osd_options_audio);
+	
 	/**
-	 * Osd Audio window
+	 * Osd Video window
 	 */
 	int g = 0;
 	sprintf(video_option_list.name[g++], "Fullscreen:");
@@ -522,7 +522,7 @@ void loadOsdRessources()
 		video_option_list.value[g][0] = 0;
 
 	osd_options_video_window = new GuiWindow(405, 280);
-	osd_options_video = new GuiOptionBrowser(400, 275, new GuiImageData(osd_options_browser_btn_png), &video_option_list);
+	osd_options_video = new GuiOptionBrowserOsd(400, 275, new GuiImageData(osd_options_browser_btn_png), &video_option_list);
 	osd_options_video->SetPosition(0, 40);
 	osd_options_video->SetCol2Position(150);
 	osd_options_video_window->SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);
@@ -606,8 +606,6 @@ extern "C" void mplayer_osd_open()
 	}
 	osd_show = 1;
 	last_level = -1;
-	osd_pad_right = 0;
-	osd_pad_left = 0;
 }
 
 static void osdSubtitlesOptions()
@@ -629,25 +627,25 @@ static void osdSubtitlesOptions()
 			}
 			int ret = osd_options_subtitle->GetClickedOption();
 			switch (ret) {
-			case 0:
-			{
-				playerSwitchSubtitle();
-				break;
-			}
-			case 1:
-			{
-				sub_visibility = (sub_visibility == 1) ? 0 : 1;
-				break;
-			}
-			case 5:
-			{
-				osd_display_option_subtitle = 0;
-				osd_options_menu_subtitle_btn->SetState(STATE_SELECTED);
-				break;
-			}
+				case 0:
+				{
+					playerSwitchSubtitle();
+					break;
+				}
+				case 1:
+				{
+					sub_visibility = (sub_visibility == 1) ? 0 : 1;
+					break;
+				}
+				case 5:
+				{
+					osd_display_option_subtitle = 0;
+					osd_options_menu_subtitle_btn->SetState(STATE_SELECTED);
+					break;
+				}
 			}
 			int het = osd_options_subtitle->GetSelectedOption();
-			if (osd_pad_left == 1) {
+			if (osd_options_subtitle->GetLeft() == 1) {
 				switch (het) {
 				case 2:
 				{
@@ -682,8 +680,7 @@ static void osdSubtitlesOptions()
 					break;
 				}
 				}
-				osd_pad_left = 0;
-			} else if (osd_pad_right == 1) {
+			} else if (osd_options_subtitle->GetRight() == 1) {
 				switch (het) {
 				case 2:
 				{
@@ -718,7 +715,6 @@ static void osdSubtitlesOptions()
 					break;
 				}
 				}
-				osd_pad_right = 0;
 			}
 			if (ret >= 0 || firstRun) {
 				firstRun = false;
@@ -769,25 +765,25 @@ static void osdAudioOptions()
 			}
 			int ret = osd_options_audio->GetClickedOption();
 			switch (ret) {
-			case 0:
-			{
-				playerSwitchAudio();
-				break;
-			}
-			case 3:
-			{
-				playerSwitchMute();
-				break;
-			}
-			case 5:
-			{
-				osd_display_option_audio = 0;
-				osd_options_menu_audio_channel_btn->SetState(STATE_SELECTED);
-				break;
-			}
+				case 0:
+				{
+					playerSwitchAudio();
+					break;
+				}
+				case 3:
+				{
+					playerSwitchMute();
+					break;
+				}
+				case 5:
+				{
+					osd_display_option_audio = 0;
+					osd_options_menu_audio_channel_btn->SetState(STATE_SELECTED);
+					break;
+				}
 			}
 			int het = osd_options_audio->GetSelectedOption();
-			if (osd_pad_left == 1) {
+			if (osd_options_audio->GetLeft() == 1) {
 				switch (het) {
 				case 1:
 				{
@@ -805,8 +801,7 @@ static void osdAudioOptions()
 					break;
 				}
 				}
-				osd_pad_left = 0;
-			} else if (osd_pad_right == 1) {
+			} else if (osd_options_audio->GetRight() == 1) {
 				switch (het) {
 				case 1:
 				{
@@ -824,7 +819,6 @@ static void osdAudioOptions()
 					break;
 				}
 				}
-				osd_pad_right = 0;
 			}
 			if (ret >= 0 || firstRun) {
 				firstRun = false;
@@ -869,30 +863,30 @@ static void osdVideoOptions()
 			}
 			int ret = osd_options_video->GetClickedOption();
 			switch (ret) {
-			case 0:
-			{
-				playerSwitchFullscreen();
-				break;
-			}
-			case 1:
-			{
-				frame_dropping++;
-				if (frame_dropping > 2) {
-					frame_dropping = 0;
+				case 0:
+				{
+					playerSwitchFullscreen();
+					break;
 				}
-				break;
-			}
-			case 2:
-			{
-				vo_vsync = !vo_vsync;
-				break;
-			}
-			case 3:
-			{
-				osd_display_option_video = 0;
-				osd_options_menu_pan_btn->SetState(STATE_SELECTED);
-				break;
-			}
+				case 1:
+				{
+					frame_dropping++;
+					if (frame_dropping > 2) {
+						frame_dropping = 0;
+					}
+					break;
+				}
+				case 2:
+				{
+					vo_vsync = !vo_vsync;
+					break;
+				}
+				case 3:
+				{
+					osd_display_option_video = 0;
+					osd_options_menu_pan_btn->SetState(STATE_SELECTED);
+					break;
+				}
 			}
 			if (ret >= 0 || firstRun) {
 				firstRun = false;
@@ -1073,171 +1067,171 @@ extern "C" void mplayer_osd_draw(int level)
 /**
  * Dont't know where to put that
  **/
- 
+
 LANG languages[LANGUAGE_SIZE] = {
-        { "Abkhazian", "ab", "abk" },
-        { "Afar", "aa", "aar" },
-        { "Afrikaans", "af", "afr" },
-        { "Albanian", "sq", "sqi" },
-        { "Amharic", "am", "amh" },
-        { "Arabic", "ar", "ara" },
-        { "Aragonese", "an", "arg" },
-        { "Armenian", "hy", "hye" },
-        { "Assamese", "as", "asm" },
-        { "Avestan", "ae", "ave" },
-        { "Aymara", "ay", "aym" },
-        { "Azerbaijani", "az", "aze" },
-        { "Bashkir", "ba", "bak" },
-        { "Basque", "eu", "baq" },
-        { "Belarusian", "be", "bel" },
-        { "Bengali", "bn", "ben" },
-        { "Bihari", "bh", "bih" },
-        { "Bislama", "bi", "bis" },
-        { "Bosnian", "bs", "bos" },
-        { "Breton", "br", "bre" },
-        { "Bulgarian", "bg", "bul" },
-        { "Burmese", "my", "mya" },
-        { "Cambodian", "km", "khm" },
-        { "Catalan", "ca", "cat" },
-        { "Chinese", "zh", "chi" },
-        { "Corsican", "co", "cos" },
-        { "Ceske", "cs", "cze" },
-        { "Dansk", "da", "dan" },
-        { "Deutsch", "de", "ger" },
-        { "English", "en", "eng" },
-        { "Esperanto", "eo", "epo" },
-        { "Español", "es", "spa" },
-        { "Estonian", "et", "est" },
-        { "Finnish", "fi", "fin" },
-        { "Fiji", "fj", "fij" },
-        { "Faroese", "fo", "fao" },
-        { "Français", "fr", "fre" },
-        { "Frisian", "fy", "fry" },
-        { "Galician", "gl", "glg" },
-        { "Georgian", "ka", "geo" },
-        { "Greek", "el", "gre" },
-        { "Greenlandic", "kl", "kal" },
-        { "Guarani", "gn", "grn" },
-        { "Gujarati", "gu", "guj" },
-        { "Hausa", "ha", "hau" },
-        { "Hebrew", "he", "heb" },
-        { "Hindi", "hi", "hin" },
-        { "Hrvatski", "hr", "scr" },
-        { "Indonesian", "id", "ind" },
-        { "Interlingue", "ie", "ile" },
-        { "Inupiak", "ik", "ipk" },
-        { "Irish", "ga", "gle" },
-        { "Islenska", "is", "ice" },
-        { "Italiano", "it", "ita" },
-        { "Inuktitut", "iu", "iku" },
-        { "Japanese", "ja", "jpn" },
-        { "Javanese", "jw", "jav" },
-        { "Kannada", "kn", "kan" },
-        { "Kashmiri", "ks", "kas" },
-        { "Kazakh", "kk", "kaz" },
-        { "Korean", "ko", "kor" },
-        { "Kurdish", "ku", "kur" },
-        { "Kinyarwanda", "rw", "kin" },
-        { "Kirghiz", "ky", "kir" },
-        { "Kirundi", "rn", "run" },
-        { "Latin", "la", "lat" },
-        { "Lingala", "ln", "lin" },
-        { "Laothian", "lo", "lao" },
-        { "Lithuanian", "lt", "lit" },
-        { "Latvian", "lv", "lav" },
-        { "Macedonian", "mk", "mac" },
-        { "Magyar", "hu", "hun" },
-        { "Malagasy", "mg", "mlg" },
-        { "Malay", "ms", "may" },
-        { "Malayalam", "ml", "mal" },
-        { "Maltese", "mt", "mlt" },
-        { "Maori", "mi", "mao" },
-        { "Marathi", "mr", "mar" },
-        { "Moldavian", "mo", "mol" },
-        { "Mongolian", "mn", "mon" },
-        { "Nauru", "na", "nau" },
-        { "Nederlands", "nl", "dut" },
-        { "Nepali", "ne", "nep" },
-        { "Norsk", "no", "nno" },
-        { "Occitan", "oc", "oci" },
-        { "Oriya", "or", "ori" },
-        { "Oromo", "om", "orm" },
-        { "Pashto", "ps", "pus" },
-        { "Persian", "fa", "per" },
-        { "Polish", "pl", "pol" },
-        { "Portugues", "pt", "por" },
-        { "Panjabi", "pa", "pan" },
-        { "Quechua", "qu", "que" },
-        { "Romanian", "ro", "rum" },
-        { "Russian", "ru", "rus" },
-        { "Sangho", "sg", "sag" },
-        { "Samoan", "sm", "smo" },
-        { "Sanskrit", "sa", "san" },
-        { "Scots", "gd", "sco" },
-        { "Serbian", "sr", "scc" },
-        { "Shona", "sn", "sna" },
-        { "Sinhalese", "si", "sin" },
-        { "Sindhi", "sd", "snd" },
-        { "Slovak", "sk", "slo" },
-        { "Slovenian", "sl", "slv" },
-        { "Somali", "so", "som" },
-        { "Sundanese", "su", "sun" },
-        { "Swahili", "sw", "swa" },
-        { "Swedish", "sv", "swe" },
-        { "Tagalog", "tl", "tgl" },
-        { "Tajik", "tg", "tgk" },
-        { "Tamil", "ta", "tam" },
-        { "Tatar", "tt", "tat" },
-        { "Telugu", "te", "tel" },
-        { "Thai", "th", "tha" },
-        { "Tibetan", "bo", "tib" },
-        { "Tigrinya", "ti", "tir" },
-        { "Tonga", "to", "ton" },
-        { "Tsonga", "ts", "tso" },
-        { "Turkish", "tr", "tur" },
-        { "Turkmen", "tk", "tuk" },
-        { "Twi", "tw", "twi" },
-        { "Uighur", "ug", "uig" },
-        { "Ukrainian", "uk", "ukr" },
-        { "Urdu", "ur", "urd" },
-        { "Uzbek", "uz", "uzb" },
-        { "Vietnamese", "ui", "vie" },
-        { "Volapuk", "vo", "Vol" },
-        { "Welsh", "cy", "wel" },
-        { "Wolof", "wo", "wol" },
-        { "Xhosa", "xh", "xho" },
-        { "Yiddish", "yi", "yid" },
-        { "Yoruba", "yo", "yor" },
-        { "Zhuang", "za", "zha" },
-        { "Zulu", "zu", "zul" }
+	{ "Abkhazian", "ab", "abk"},
+	{ "Afar", "aa", "aar"},
+	{ "Afrikaans", "af", "afr"},
+	{ "Albanian", "sq", "sqi"},
+	{ "Amharic", "am", "amh"},
+	{ "Arabic", "ar", "ara"},
+	{ "Aragonese", "an", "arg"},
+	{ "Armenian", "hy", "hye"},
+	{ "Assamese", "as", "asm"},
+	{ "Avestan", "ae", "ave"},
+	{ "Aymara", "ay", "aym"},
+	{ "Azerbaijani", "az", "aze"},
+	{ "Bashkir", "ba", "bak"},
+	{ "Basque", "eu", "baq"},
+	{ "Belarusian", "be", "bel"},
+	{ "Bengali", "bn", "ben"},
+	{ "Bihari", "bh", "bih"},
+	{ "Bislama", "bi", "bis"},
+	{ "Bosnian", "bs", "bos"},
+	{ "Breton", "br", "bre"},
+	{ "Bulgarian", "bg", "bul"},
+	{ "Burmese", "my", "mya"},
+	{ "Cambodian", "km", "khm"},
+	{ "Catalan", "ca", "cat"},
+	{ "Chinese", "zh", "chi"},
+	{ "Corsican", "co", "cos"},
+	{ "Ceske", "cs", "cze"},
+	{ "Dansk", "da", "dan"},
+	{ "Deutsch", "de", "ger"},
+	{ "English", "en", "eng"},
+	{ "Esperanto", "eo", "epo"},
+	{ "Español", "es", "spa"},
+	{ "Estonian", "et", "est"},
+	{ "Finnish", "fi", "fin"},
+	{ "Fiji", "fj", "fij"},
+	{ "Faroese", "fo", "fao"},
+	{ "Français", "fr", "fre"},
+	{ "Frisian", "fy", "fry"},
+	{ "Galician", "gl", "glg"},
+	{ "Georgian", "ka", "geo"},
+	{ "Greek", "el", "gre"},
+	{ "Greenlandic", "kl", "kal"},
+	{ "Guarani", "gn", "grn"},
+	{ "Gujarati", "gu", "guj"},
+	{ "Hausa", "ha", "hau"},
+	{ "Hebrew", "he", "heb"},
+	{ "Hindi", "hi", "hin"},
+	{ "Hrvatski", "hr", "scr"},
+	{ "Indonesian", "id", "ind"},
+	{ "Interlingue", "ie", "ile"},
+	{ "Inupiak", "ik", "ipk"},
+	{ "Irish", "ga", "gle"},
+	{ "Islenska", "is", "ice"},
+	{ "Italiano", "it", "ita"},
+	{ "Inuktitut", "iu", "iku"},
+	{ "Japanese", "ja", "jpn"},
+	{ "Javanese", "jw", "jav"},
+	{ "Kannada", "kn", "kan"},
+	{ "Kashmiri", "ks", "kas"},
+	{ "Kazakh", "kk", "kaz"},
+	{ "Korean", "ko", "kor"},
+	{ "Kurdish", "ku", "kur"},
+	{ "Kinyarwanda", "rw", "kin"},
+	{ "Kirghiz", "ky", "kir"},
+	{ "Kirundi", "rn", "run"},
+	{ "Latin", "la", "lat"},
+	{ "Lingala", "ln", "lin"},
+	{ "Laothian", "lo", "lao"},
+	{ "Lithuanian", "lt", "lit"},
+	{ "Latvian", "lv", "lav"},
+	{ "Macedonian", "mk", "mac"},
+	{ "Magyar", "hu", "hun"},
+	{ "Malagasy", "mg", "mlg"},
+	{ "Malay", "ms", "may"},
+	{ "Malayalam", "ml", "mal"},
+	{ "Maltese", "mt", "mlt"},
+	{ "Maori", "mi", "mao"},
+	{ "Marathi", "mr", "mar"},
+	{ "Moldavian", "mo", "mol"},
+	{ "Mongolian", "mn", "mon"},
+	{ "Nauru", "na", "nau"},
+	{ "Nederlands", "nl", "dut"},
+	{ "Nepali", "ne", "nep"},
+	{ "Norsk", "no", "nno"},
+	{ "Occitan", "oc", "oci"},
+	{ "Oriya", "or", "ori"},
+	{ "Oromo", "om", "orm"},
+	{ "Pashto", "ps", "pus"},
+	{ "Persian", "fa", "per"},
+	{ "Polish", "pl", "pol"},
+	{ "Portugues", "pt", "por"},
+	{ "Panjabi", "pa", "pan"},
+	{ "Quechua", "qu", "que"},
+	{ "Romanian", "ro", "rum"},
+	{ "Russian", "ru", "rus"},
+	{ "Sangho", "sg", "sag"},
+	{ "Samoan", "sm", "smo"},
+	{ "Sanskrit", "sa", "san"},
+	{ "Scots", "gd", "sco"},
+	{ "Serbian", "sr", "scc"},
+	{ "Shona", "sn", "sna"},
+	{ "Sinhalese", "si", "sin"},
+	{ "Sindhi", "sd", "snd"},
+	{ "Slovak", "sk", "slo"},
+	{ "Slovenian", "sl", "slv"},
+	{ "Somali", "so", "som"},
+	{ "Sundanese", "su", "sun"},
+	{ "Swahili", "sw", "swa"},
+	{ "Swedish", "sv", "swe"},
+	{ "Tagalog", "tl", "tgl"},
+	{ "Tajik", "tg", "tgk"},
+	{ "Tamil", "ta", "tam"},
+	{ "Tatar", "tt", "tat"},
+	{ "Telugu", "te", "tel"},
+	{ "Thai", "th", "tha"},
+	{ "Tibetan", "bo", "tib"},
+	{ "Tigrinya", "ti", "tir"},
+	{ "Tonga", "to", "ton"},
+	{ "Tsonga", "ts", "tso"},
+	{ "Turkish", "tr", "tur"},
+	{ "Turkmen", "tk", "tuk"},
+	{ "Twi", "tw", "twi"},
+	{ "Uighur", "ug", "uig"},
+	{ "Ukrainian", "uk", "ukr"},
+	{ "Urdu", "ur", "urd"},
+	{ "Uzbek", "uz", "uzb"},
+	{ "Vietnamese", "ui", "vie"},
+	{ "Volapuk", "vo", "Vol"},
+	{ "Welsh", "cy", "wel"},
+	{ "Wolof", "wo", "wol"},
+	{ "Xhosa", "xh", "xho"},
+	{ "Yiddish", "yi", "yid"},
+	{ "Yoruba", "yo", "yor"},
+	{ "Zhuang", "za", "zha"},
+	{ "Zulu", "zu", "zul"}
 };
 
 CP codepages[CODEPAGE_SIZE] = {
-        { "utf-8", "UTF-8" },
-        { "ISO-8859-1", "Western European" },
-        { "ISO-8859-2", "Eastern European" },
-        { "ISO-8859-3", "South European" },
-        { "ISO-8859-4", "North European" },
-        { "ISO-8859-5", "Cyrillic alphabets" },
-        { "ISO-8859-6", "Arabic" },
-        { "ISO-8859-7", "Greek" },
-        { "ISO-8859-8", "Hebrew" },
-        { "ISO-8859-9", "Turkish" },
-        { "ISO-8859-10", "Nordic" },
-        { "ISO-8859-11", "Thai" },
-        { "ISO-8859-13", "Baltic and Polish" },
-        { "ISO-8859-14", "Celtic" },
-        { "Windows-1250", "Central/Eastern European" },
-        { "Windows-1251", "Cyrillic alphabets" },
-        { "Windows-1252", "Western European 2" },
-        { "Windows-1253", "Greek 2" },
-        { "Windows-1254", "Turkish 2" },
-        { "Windows-1255", "Hebrew 2" },
-        { "Windows-1256", "Arabic 2" },
-        { "Windows-1257", "Baltic 2" },
-        { "Windows-1258", "Vietnamese" },
-        { "shift_jis", "Japanese (Shift JIS)" },
-        { "gb2312", "Chinese Simplified (GB2312)" },
-        { "big5", "Chinese Traditional (Big5)" },
-        { "cp949", "Korean (CP949)" }
-}; 
+	{ "utf-8", "UTF-8"},
+	{ "ISO-8859-1", "Western European"},
+	{ "ISO-8859-2", "Eastern European"},
+	{ "ISO-8859-3", "South European"},
+	{ "ISO-8859-4", "North European"},
+	{ "ISO-8859-5", "Cyrillic alphabets"},
+	{ "ISO-8859-6", "Arabic"},
+	{ "ISO-8859-7", "Greek"},
+	{ "ISO-8859-8", "Hebrew"},
+	{ "ISO-8859-9", "Turkish"},
+	{ "ISO-8859-10", "Nordic"},
+	{ "ISO-8859-11", "Thai"},
+	{ "ISO-8859-13", "Baltic and Polish"},
+	{ "ISO-8859-14", "Celtic"},
+	{ "Windows-1250", "Central/Eastern European"},
+	{ "Windows-1251", "Cyrillic alphabets"},
+	{ "Windows-1252", "Western European 2"},
+	{ "Windows-1253", "Greek 2"},
+	{ "Windows-1254", "Turkish 2"},
+	{ "Windows-1255", "Hebrew 2"},
+	{ "Windows-1256", "Arabic 2"},
+	{ "Windows-1257", "Baltic 2"},
+	{ "Windows-1258", "Vietnamese"},
+	{ "shift_jis", "Japanese (Shift JIS)"},
+	{ "gb2312", "Chinese Simplified (GB2312)"},
+	{ "big5", "Chinese Traditional (Big5)"},
+	{ "cp949", "Korean (CP949)"}
+};
