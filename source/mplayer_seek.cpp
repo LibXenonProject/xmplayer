@@ -34,7 +34,7 @@ double playerSeekPrompt(char * seekfile)
 		sprintf(seekstring, "%s %d:%02d:%02d", _("Resume from"), hr, min, sec);
 	}
 		
-	if (WindowPrompt("", seekstring, "Yes" , "No")) {
+	if (SmallWindowPrompt(seekstring, "Start from beginning")) {
 		return seektime;
 	}
 	else {

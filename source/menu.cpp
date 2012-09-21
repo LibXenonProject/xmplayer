@@ -49,13 +49,6 @@ static int need_gui = 1;
 extern "C" void mount_all_devices();
 
 //**************************************************************************
-// D-Pad direction for OSD Settings
-//**************************************************************************
-extern int osd_pad_right; //from gui_optionbrowser.cpp
-extern int osd_pad_left; //from gui_optionbrowser.cpp
-extern int osd_level;
-
-//**************************************************************************
 // Device information
 //**************************************************************************
 static char * root_dev = NULL;
@@ -1114,10 +1107,10 @@ static void AudioSettings()
 	options.v[2].curr = XMPlayerCfg.softvol;
 
 	options.v[0].max = LANGUAGE_SIZE;
-	options.v[1].max = 100;
-	options.v[2].max = 100;
+	options.v[1].max = 101;
+	options.v[2].max = 1001;
 
-	GuiText titleTxt("Home > Settings > Audio", 26, 0xfffa9600);
+	GuiText titleTxt("Home > Settings > Audio", 24, 0xfffa9600);
 
 	titleTxt.SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	titleTxt.SetPosition(150, 35);
@@ -1535,8 +1528,6 @@ void MenuMplayer()
 		char framedrop[50] = "-noframedrop";
 
 		if (XMPlayerCfg.vsync == 1)
-			strcpy(vsync, "-vsync");
-		else
 			strcpy(vsync, "-vsync");
 
 		if (XMPlayerCfg.framedrop == 1)
