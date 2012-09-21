@@ -176,7 +176,7 @@ static void osd_options_vsync_callback(void * data)
 {
 	GuiButton *button = (GuiButton *) data;
 	if (button->GetState() == STATE_CLICKED) {
-		playerSwitchVsync();
+		mplayer_switch_vsync();
 		button->ResetState();
 		button->SetState(STATE_SELECTED);
 	}
@@ -188,7 +188,7 @@ static void osd_options_next_callback(void * data)
 	if (button->GetState() == STATE_CLICKED) {
 		button->ResetState();
 		//playerTurnOffSubtitle(); //turns off subs, atm if not, subs will be freezed on a video without them
-		playerGuiAsked(); //playback resume
+		mplayer_gui_asked(); //playback resume
 		button->SetState(STATE_SELECTED);
 	}
 }
@@ -543,22 +543,22 @@ extern "C" void mplayer_osd_open()
 
 	if (osd_show == 0) {
 		/** video infobar **/
-		sprintf(tmpbuff, "%s %s", _("Filename:"), playetGetMetaData(META_NAME));
+		sprintf(tmpbuff, "%s %s", _("Filename:"), mplayet_get_meta_data(META_NAME));
 		video_osd_infobar_text_filename->SetText(tmpbuff);
 
-		sprintf(tmpbuff, "%s %s", _("Resolution:"), playetGetMetaData(META_VIDEO_RESOLUTION));
+		sprintf(tmpbuff, "%s %s", _("Resolution:"), mplayet_get_meta_data(META_VIDEO_RESOLUTION));
 		video_osd_infobar_text_resolution->SetText(tmpbuff);
 
-		sprintf(tmpbuff, "%s %s", _("Video Codec:"), playetGetMetaData(META_VIDEO_CODEC));
+		sprintf(tmpbuff, "%s %s", _("Video Codec:"), mplayet_get_meta_data(META_VIDEO_CODEC));
 		video_osd_infobar_text_trackinfo->SetText(tmpbuff);
 
-		sprintf(tmpbuff, "%s %s", _("Video Bitrate:"), playetGetMetaData(META_VIDEO_BITRATE));
+		sprintf(tmpbuff, "%s %s", _("Video Bitrate:"), mplayet_get_meta_data(META_VIDEO_BITRATE));
 		video_osd_infobar_text_bitrate->SetText(tmpbuff);
 
-		sprintf(tmpbuff, "%s %s", _("Audio Codec:"), playetGetMetaData(META_AUDIO_CODEC));
+		sprintf(tmpbuff, "%s %s", _("Audio Codec:"), mplayet_get_meta_data(META_AUDIO_CODEC));
 		video_osd_infobar_text_a_codec->SetText(tmpbuff);
 
-		sprintf(tmpbuff, "%s %s", _("Audio Bitrate:"), playetGetMetaData(META_AUDIO_BITRATE));
+		sprintf(tmpbuff, "%s %s", _("Audio Bitrate:"), mplayet_get_meta_data(META_AUDIO_BITRATE));
 		video_osd_infobar_text_a_bitrate->SetText(tmpbuff);
 
 		video_osd_infobar->SetVisible(false);
@@ -629,7 +629,7 @@ static void OsdSubtitlesOptions()
 			switch (ret) {
 				case 0:
 				{
-					playerSwitchSubtitle();
+					mplayer_switch_subtitle();
 					break;
 				}
 				case 1:
@@ -718,7 +718,7 @@ static void OsdSubtitlesOptions()
 			}
 			if (ret >= 0 || firstRun) {
 				firstRun = false;
-				osd_sub_name = playerGetSubtitle();
+				osd_sub_name = mplayer_get_subtitle();
 				osd_subdelay = (sub_delay * -1000);
 				if ((osd_subdelay < 5) && (osd_subdelay > -5)) {
 					osd_subdelay = 0;
@@ -767,12 +767,12 @@ static void OsdAudioOptions()
 			switch (ret) {
 				case 0:
 				{
-					playerSwitchAudio();
+					mplayer_switch_audio();
 					break;
 				}
 				case 3:
 				{
-					playerSwitchMute();
+					mplayer_switch_mute();
 					break;
 				}
 				case 5:
@@ -787,12 +787,12 @@ static void OsdAudioOptions()
 				switch (het) {
 				case 1:
 				{
-					playerSwitchVolume(0);
+					mplayer_switch_volume(0);
 					break;
 				}
 				case 2:
 				{
-					playerSwitchBalance(1);
+					mplayer_switch_balance(1);
 					break;
 				}
 				case 4:
@@ -805,12 +805,12 @@ static void OsdAudioOptions()
 				switch (het) {
 				case 1:
 				{
-					playerSwitchVolume(1);
+					mplayer_switch_volume(1);
 					break;
 				}
 				case 2:
 				{
-					playerSwitchBalance(0);
+					mplayer_switch_balance(0);
 					break;
 				}
 				case 4:
@@ -822,9 +822,9 @@ static void OsdAudioOptions()
 			}
 			if (ret >= 0 || firstRun) {
 				firstRun = false;
-				osd_volume = playerGetVolume();
-				osd_balance = playerGetBalance();
-				osd_mute = playerGetMute();
+				osd_volume = mplayer_get_volume();
+				osd_balance = mplayer_get_balance();
+				osd_mute = mplayer_get_mute();
 				osd_audiodelay = (audio_delay * -1000);
 				if ((osd_audiodelay < 5) && (osd_audiodelay > -5)) {
 					osd_audiodelay = 0;
@@ -865,7 +865,7 @@ static void OsdVideoOptions()
 			switch (ret) {
 				case 0:
 				{
-					playerSwitchFullscreen();
+					mplayer_switch_fullscreen();
 					break;
 				}
 				case 1:
@@ -965,8 +965,8 @@ extern "C" void mplayer_osd_draw(int level)
 	mainWindow->Append(&osdBtn);
 	if (osd_show) {
 
-		double duration = playerGetDuration();
-		double elapsed = playerGetElapsed();
+		double duration = mplayer_get_duration();
+		double elapsed = mplayer_get_elapsed();
 
 		struct XenosSurface * img = video_osd_progress_bar_front->GetImage();
 		float pourcents = (float) (elapsed * 100) / (float) duration;
@@ -980,7 +980,7 @@ extern "C" void mplayer_osd_draw(int level)
 		video_osd_info_duration->SetText(osd_duration);
 
 		if (last_level != level) {
-			video_osd_info_filename->SetText(playerGetFilename());
+			video_osd_info_filename->SetText(mplayer_get_filename());
 			video_osd_info_filename->SetMaxWidth(644);
 			video_osd_info_filename->SetScroll(SCROLL_HORIZONTAL);
 		}
@@ -995,7 +995,7 @@ extern "C" void mplayer_osd_draw(int level)
 		video_osd_next->SetVisible(false);
 		video_osd_prev->SetVisible(false);
 
-		switch (playerGetStatus()) {
+		switch (mplayer_get_status()) {
 		case 1:
 			video_osd_play->SetVisible(true);
 			break;
@@ -1056,7 +1056,7 @@ extern "C" void mplayer_osd_draw(int level)
 		for (int i = 0; i < 4; i++) {
 			mainWindow->Update(&userInput[i]);
 		}
-		if ((playerGetPause() == 1) && (osdBtn.GetState() == STATE_CLICKED)) {
+		if ((mplayer_get_pause() == 1) && (osdBtn.GetState() == STATE_CLICKED)) {
 			osd_level = 1;
 		}
 	}

@@ -357,7 +357,7 @@ static void LoadBrowserRessources()
 	gui_browser->SetPageSize(15);
 }
 
-static void loadXboxButtons()
+static void LoadXboxButtons()
 {
 	btn_a = new GuiImage(new GuiImageData(btn_a_png));
 	btn_a->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
@@ -510,7 +510,7 @@ int WindowPrompt(const char *title, const char *msg, const char *btn1Label, cons
 	return choice;
 }
 
-int smallWindowPrompt(const char *btn1Label, const char *btn2Label)
+int SmallWindowPrompt(const char *btn1Label, const char *btn2Label)
 {
 	int choice = -1;
 	GuiWindow promptWindow(300, 72);
@@ -578,7 +578,7 @@ extern "C" void error_prompt(const char *msg)
 /** to do **/
 static void LoadRessources()
 {
-	loadXboxButtons();
+	LoadXboxButtons();
 	LoadHomeRessources();
 	LoadBrowserRessources();
 	LoadOsdRessources();

@@ -2741,7 +2741,7 @@ int run_command(MPContext *mpctx, mp_cmd_t *cmd)
             break;
 
         case MP_CMD_QUIT:
-	    playerGuiAsked(); 
+	    mplayer_gui_asked(); 
 	    //mpctx->eof=1; 
             //exit_player_with_rc(EXIT_QUIT,
               //                  (cmd->nargs > 0) ? cmd->args[0].v.i : 0);

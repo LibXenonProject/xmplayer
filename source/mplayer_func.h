@@ -60,28 +60,28 @@ extern "C" {
 	// newmain.cpp
 	void mplayer_return_to_player(void);
 	
-	void playerSwitchAudio(void);
-	void playerSwitchMute(void);
-	void playerSwitchSubtitle(void);
-	void playerSwitchFullscreen(void); 
-	void playerSwitchVsync(void);
-	void playerSwitchBalance(int left); //1 towards left, 0 towards right (broken)
-	void playerSwitchVolume(int up); //1 turns up, 0 turns down
-	void playerTurnOffSubtitle(void);
+	void mplayer_switch_audio(void);
+	void mplayer_switch_mute(void);
+	void mplayer_switch_subtitle(void);
+	void mplayer_switch_fullscreen(void); 
+	void mplayer_switch_vsync(void);
+	void mplayer_switch_balance(int left); //1 towards left, 0 towards right (broken)
+	void mplayer_switch_volume(int up); //1 turns up, 0 turns down
+	void mplayer_turn_off_subtitle(void);
 
-	char* playerGetSubtitle(void);
-	char* playerGetMute(void);	
-	char* playerGetBalance(void);
-	char* playerGetVolume(void);
+	char* mplayer_get_subtitle(void);
+	char* mplayer_get_mute(void);	
+	char* mplayer_get_balance(void);
+	char* mplayer_get_volume(void);
       //  char* playerGetAudioStreams();
-	double playerGetElapsed(void);
-	double playerGetDuration(void);
-	const char * playerGetFilename(void);
-	int playerGetStatus(void);
-	int playerGetPause(void);
-	void playerGuiAsked(void);
+	double mplayer_get_elapsed(void);
+	double mplayer_get_duration(void);
+	const char * mplayer_get_filename(void);
+	int mplayer_get_status(void);
+	int mplayer_get_pause(void);
+	void mplayer_gui_asked(void);
 
-	const char * playetGetMetaData(metadata_t type);
+	const char * mplayet_get_meta_data(metadata_t type);
 
 	void mplayer_osd_close(void);
 	void mplayer_osd_draw(int level);

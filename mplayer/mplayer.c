@@ -3130,7 +3130,7 @@ play_next_file:
             entry = parse_playlist_file(cmd->args[0].v.s);
             break;
         case MP_CMD_QUIT:
-	     playerGuiAsked();
+	     mplayer_gui_asked();
 //	     mpctx->eof=1; 
            // exit_player_with_rc(EXIT_QUIT, (cmd->nargs > 0) ? cmd->args[0].v.i : 0);
             break;
@@ -4147,28 +4147,29 @@ void mplayer_load(char * _filename)
 	mp_input_queue_cmd(mp_input_parse_cmd(mplayer_seek_time)); 
 	//mp_input_queue_cmd(mp_input_parse_cmd("sub_visibility"));
 }
+
 //Player Get functions
-double playerGetElapsed() {
+double mplayer_get_elapsed() {
 	return demuxer_get_current_time(mpctx->demuxer);
 }
 
-double playerGetDuration() {
+double mplayer_get_duration() {
 	return demuxer_get_time_length(mpctx->demuxer);
 }
 
-const char * playerGetFilename() {
+const char * mplayer_get_filename() {
 	return get_metadata(META_NAME);
 }
 
-int playerGetStatus(){
+int mplayer_get_status(){
 	return mpctx->osd_function;
 }
 
-const char * playetGetMetaData(metadata_t type){
+const char * mplayet_get_meta_data(metadata_t type){
 	return get_metadata(type);
 }
 
-char* playerGetSubtitle() {
+char* mplayer_get_subtitle() {
 	 int tracks;
 	char *sub_name;
 	char *tmp;
@@ -4195,7 +4196,7 @@ char* playerGetSubtitle() {
 	return osd_sub;
 }
 
-char* playerGetMute() {	
+char* mplayer_get_mute() {	
 	if (mpctx->mixer.muted) {
 	 	strcpy(osd_mute, "Enabled");
 	} else {
@@ -4204,7 +4205,7 @@ char* playerGetMute() {
 	return osd_mute;
 }
 
-char* playerGetBalance() {
+char* mplayer_get_balance() {
 	float bal;
 	mixer_getbalance(&mpctx->mixer, &bal);
 	if (bal == 0.f) {
@@ -4223,13 +4224,13 @@ char* playerGetBalance() {
 	}
 }
 
-char* playerGetVolume() {
+char* mplayer_get_volume() {
 	float vol;
 	mixer_getbothvolume(&mpctx->mixer, &vol);
 	sprintf(osd_volume, "%.2f", (double)vol);
 	return osd_volume;
 }
-int playerGetPause() {
+int mplayer_get_pause() {
 	if(mpctx->was_paused == 1) {
 		return 1;
 	} else {
@@ -4251,7 +4252,7 @@ int playerGetPause() {
 	free(osd_streams);
 }*/
 //Player switch functions
-void playerSwitchAudio(){
+void mplayer_switch_audio(){
 	static int iparam = 1;
 	demuxer_t *demuxer = mpctx_get_demuxer(mpctx);
 	int audio_strem_size = 0;
@@ -4268,20 +4269,20 @@ void playerSwitchAudio(){
 	mp_property_do("switch_audio",M_PROPERTY_SET,&iparam,mpctx);
 }
 
-void playerSwitchSubtitle(){ 
+void mplayer_switch_subtitle(){ 
 	// cycle
 	mp_input_queue_cmd(mp_input_parse_cmd("pausing_keep sub_select"));
 }
 
-void playerSwitchFullscreen(){
+void mplayer_switch_fullscreen(){
 	mpctx->video_out->control(VOCTRL_FULLSCREEN,NULL);
 }
 
-void playerSwitchVsync(){
+void mplayer_switch_vsync(){
 	vo_vsync = !vo_vsync;
 }
 
-int playerSwitchLoop(){
+int mplayer_switch_loop(){
 	if(mpctx->loop_times<0){
 		// inf
 		mpctx->loop_times=0;
@@ -4291,11 +4292,11 @@ int playerSwitchLoop(){
 		mpctx->loop_times = -1;
 	}
 }
-void playerSwitchMute() {
+void mplayer_switch_mute() {
 	mixer_mute(&mpctx->mixer);
 }
 
-void playerSwitchBalance(int left) {
+void mplayer_switch_balance(int left) {
 	if (left == 1) {
         mp_input_queue_cmd(mp_input_parse_cmd("pausing_keep balance -0.1"));
 	} else {
@@ -4303,7 +4304,7 @@ void playerSwitchBalance(int left) {
 	}
 }
 
-void playerSwitchVolume(int up) {
+void mplayer_switch_volume(int up) {
 	if (up == 1) {
         mp_input_queue_cmd(mp_input_parse_cmd("pausing_keep volume 1"));
 	} else {
@@ -4311,12 +4312,12 @@ void playerSwitchVolume(int up) {
 	}
 }
 
-void playerTurnOffSubtitle(){
+void mplayer_turn_off_subtitle(){
 	mp_input_queue_cmd(mp_input_parse_cmd("sub_visibility"));
 }
 //Exit
 // try to play next file to go to gui, and save last position of file
-void playerGuiAsked() {	
+void mplayer_gui_asked() {	
 	xmplayer_seek_information seek;
 	seek.last_date_played = time(NULL);
 	seek.seek_time = demuxer_get_current_time(mpctx->demuxer);
