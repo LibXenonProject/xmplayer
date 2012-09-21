@@ -7,6 +7,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string>
+#include <algorithm>
 #include <debug.h>
 #include <libfat/fat.h>
 #include <libext2/ext2.h>
@@ -603,6 +605,17 @@ static void CommonSetup()
 	LoadRessources();
 }
 
+
+static void StringRemplaceAll(std::string & src, const std::string find, const std::string replace) 
+{
+	size_t pos = 0;
+	while((pos = src.find(find, pos)) != std::string::npos)
+	{
+		src.replace(pos, find.length(), replace);
+		pos += replace.length();
+	}
+}
+
 static void Browser(const char * title, const char * root)
 {
 	int _working_menu = current_menu;
@@ -749,9 +762,24 @@ static void Browser(const char * title, const char * root)
 				// check corresponding browser entry 
 				if (browserList[browser.selIndex].isdir) {
 					if (BrowserChangeFolder()) {
+						std::string dir;
+						char _dir[MAXPATHLEN];
+						
+						sprintf(_dir, "%s/%s", rootdir, browser.dir);
+						CleanupPath(_dir);
+						
+						dir = _dir;
+						
+						StringRemplaceAll(dir, "/", " > ");
+						StringRemplaceAll(dir, ":", "");
+						
 						gui_browser->ResetState();
 						gui_browser->fileList[0]->SetState(STATE_SELECTED);
 						gui_browser->TriggerUpdate();
+												
+						
+						browser_subheadline->SetText(dir.c_str());
+						
 						last_sel_item = -1;
 					} else {
 						break;
