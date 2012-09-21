@@ -44,6 +44,7 @@
 #include "../build/browser_elf_icon_f_png.h"
 #include "../build/browser_file_icon_f_png.h"
 #include "../build/browser_top_png.h"
+#include "../build/browser_bottom_png.h"
 
 #include "../build/folder_music_icon_png.h"
 #include "../build/folder_photo_icon_png.h"
@@ -92,3 +93,11 @@
 #include "../build/fr_lang.h"
 
 #include "../build/folder_video_icon_png.h"
+
+
+//xbox360 buttons
+#include "../build/btn_a_png.h"
+#include "../build/btn_b_png.h"
+#include "../build/btn_x_png.h"
+#include "../build/btn_y_png.h"
+#include "../build/btn_bk_png.h"
