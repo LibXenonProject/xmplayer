@@ -189,7 +189,22 @@ bool SavePrefs(bool silent)
 	subtitles->LinkEndChild(sublang);
 	sublang->SetAttribute("value", XMPlayerCfg.sublang);
 	sublang->SetAttribute("desc", XMPlayerCfg.sublang_desc);
-
+/*	//Network
+	TiXmlElement* network = new TiXmlElement("network");
+	settings->LinkEndChild(network);
+	
+	for (int j = 0; j < MAX_SHARES; j++) {
+		if (strlen(XMPlayerCfg.smb[j].share) > 0) {
+			TiXmlElement* smb = new TiXmlElement("smb");
+			network->LinkEndChild(smb);
+			smb->SetAttribute("name", XMPlayerCfg.smb[j].name);
+			smb->SetAttribute("share", XMPlayerCfg.smb[j].share);
+			smb->SetAttribute("ip", XMPlayerCfg.smb[j].ip);
+			smb->SetAttribute("user", XMPlayerCfg.smb[j].user);			
+			smb->SetAttribute("pw", XMPlayerCfg.smb[j].pass);			
+		}
+	} */
+	
 	bool success = doc.SaveFile(filepath);
 
 	doc.Clear();
@@ -279,6 +294,19 @@ bool LoadPrefs()
 				sprintf(XMPlayerCfg.sublang_desc, elem->Attribute("desc"));
 			}
 		}
+           /*   elem = handle.FirstChild("network").FirstChild().Element();                
+                for (i = 0; i < MAX_SHARES; i++) {
+                	for(elem; elem; elem = elem->NextSiblingElement()) {
+                        const char* elemName = elem->Value();
+				if (strcmp(elemName, "smb") == 0) {
+		                     sprintf(XMPlayerCfg.smb[i].name, elem->Attribute("name"));
+		                     sprintf(XMPlayerCfg.smb[i].share, elem->Attribute("share"));
+		                     sprintf(XMPlayerCfg.smb[i].ip, elem->Attribute("ip"));
+		                     sprintf(XMPlayerCfg.smb[i].user, elem->Attribute("user"));
+		                     sprintf(XMPlayerCfg.smb[i].pass, elem->Attribute("pw"));
+		                }
+		       }
+               	}   */		
 		doc.Clear();
 		prefLoaded = true;
 

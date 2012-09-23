@@ -3,6 +3,7 @@
 #define APPNAME "XMPlayer"
 #define APPVERSION "0.0.1"
 #define PREF_FILE_NAME 	"xmplayer.xml"
+#define MAX_SHARES 5
 
  #ifdef __cplusplus 
 extern "C" {
@@ -13,6 +14,14 @@ extern "C" {
 		LANG_FRENCH,
 		LANG_LENGTH
 	};
+
+	typedef struct {
+		char ip[81];
+		char share[81];
+		char user[26];
+		char pass[26];
+		char name[41];
+	} SMBSettings;
 
 	typedef struct {
 		int language;
@@ -30,6 +39,7 @@ extern "C" {
 		char alang_desc[100];	
 		int volume;
 		int softvol;
+		SMBSettings smb[MAX_SHARES];
 	} XMPlayerCfg_t;
 
 	extern XMPlayerCfg_t XMPlayerCfg;

@@ -1424,6 +1424,207 @@ static void SubtitleSettings()
 	SavePrefs(true);
 }
 
+/*
+static int shareId = -1;
+static void NetworkSettingsSMB() 
+{
+	int ret;
+	int i = 0;
+	bool firstRun = true;
+	char sharename[100];
+	OptionList options;
+	sprintf(options.name[i++], "Display Name");
+	sprintf(options.name[i++], "Share IP");
+	sprintf(options.name[i++], "Share Name");
+	sprintf(options.name[i++], "Username");
+	sprintf(options.name[i++], "Password");	
+	options.length = i;
+
+	for (i = 0; i < options.length; i++)
+		options.value[i][0] = 0;
+
+	if (shareId < 0) {
+		sprintf(sharename, "New Share");
+		for (int j = 0; j < MAX_SHARES; j++) { //find id for new share
+			if (XMPlayerCfg.smb[j].share[0] == 0) {
+				shareId = j;
+				break;
+			}
+		}
+	} else if (strlen(XMPlayerCfg.smb[shareId].name) > 0) {
+		sprintf(sharename, XMPlayerCfg.smb[shareId].name);
+	} else {
+		sprintf(sharename, XMPlayerCfg.smb[shareId].share);
+	}
+	
+		
+	GuiText titleTxt("Home > Settings > Network > SMB", 24, 0xfffa9600);
+	titleTxt.SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+	titleTxt.SetPosition(150, 35);
+
+	GuiButton bBtn(20, 20);
+	bBtn.SetAlignment(ALIGN_LEFT, ALIGN_BOTTOM);
+	bBtn.SetPosition(10, -35);
+	bBtn.SetTrigger(trigB);
+
+	GuiButton backBtn(20, 20);
+	backBtn.SetAlignment(ALIGN_LEFT, ALIGN_BOTTOM);
+	backBtn.SetPosition(50, -35);
+	backBtn.SetTrigger(trigBk);
+
+	GuiOptionBrowser optionBrowser(980, 426, new GuiImageData(browser_list_btn_png), &options);
+	optionBrowser.SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);
+	optionBrowser.SetCol2Position(275);
+
+	GuiWindow w(screenwidth, screenheight);
+	btn_bk->SetPosition(400, 641);
+	btn_bk_text->SetPosition(435, 643);								
+	w.Append(&bBtn);
+	w.Append(&backBtn);
+	w.Append(btn_a);
+	w.Append(btn_a_text);	
+	w.Append(btn_b);
+	w.Append(btn_b_text);
+	w.Append(btn_bk);
+	w.Append(btn_bk_text);	
+	mainWindow->Append(browser_top_bg);
+	mainWindow->Append(browser_bottom_bg);
+	mainWindow->Append(&optionBrowser);
+	mainWindow->Append(&w);
+	mainWindow->Append(&titleTxt);
+
+	while (current_menu == SETTINGS_NETWORK_SMB) {
+		update();
+
+		ret = optionBrowser.GetClickedOption();
+
+		switch (ret) {
+			case 0: {
+		//		OnScreenKeyboard(XMPlayerCfg.smb[shareId].name, 40);
+				break;
+				}
+			case 1: {
+		//		OnScreenKeyboard(XMPlayerCfg.smb[shareId].ip, 80);
+				break;
+				}
+			case 2: {	
+		//		OnScreenKeyboard(XMPlayerCfg.smb[shareId].share, 80);
+				break;
+				} 
+			case 3:	{
+		//		OnScreenKeyboard(XMPlayerCfg.smb[shareId].user, 25);			
+				break;
+				}
+			case 4:	{
+		//		OnScreenKeyboard(XMPlayerCfg.smb[shareId].pass, 25);			
+				break;
+				}				
+		}		
+		if (ret >= 0 || firstRun) {
+			firstRun = false;
+			sprintf(options.value[0], sharename);
+			sprintf(options.value[1], XMPlayerCfg.smb[shareId].ip);
+			sprintf(options.value[2], XMPlayerCfg.smb[shareId].share);
+			sprintf(options.value[3], XMPlayerCfg.smb[shareId].user);
+			sprintf(options.value[4], XMPlayerCfg.smb[shareId].pass);
+			optionBrowser.TriggerUpdate();
+		}
+
+		if (bBtn.GetState() == STATE_CLICKED) {
+			current_menu = SETTINGS_NETWORK;
+		} else if (backBtn.GetState() == STATE_CLICKED) {
+			current_menu = HOME_PAGE;
+		}
+	}
+	mainWindow->Remove(&optionBrowser);
+	mainWindow->Remove(&w);
+	mainWindow->Remove(&titleTxt);
+	mainWindow->Remove(browser_top_bg);
+	mainWindow->Remove(browser_bottom_bg);
+	//save settings
+	SavePrefs(true);
+}
+
+static void NetworkSettings() 
+{
+	int ret;
+	int i = 0;
+	OptionList options;
+	for (int j = 0; j < MAX_SHARES; j++) {
+		if (strlen(XMPlayerCfg.smb[j].share) > 0) {
+			if (strlen(XMPlayerCfg.smb[j].name) > 0) {
+				sprintf(options.name[i], XMPlayerCfg.smb[j].name);
+			} else {
+				sprintf(options.name[i], XMPlayerCfg.smb[j].share);
+			}
+		i++;	
+		}
+	}
+	sprintf(options.name[i++], "Add");
+	options.length = i;
+
+	for (i = 0; i < options.length; i++)
+		options.value[i][0] = 0;
+
+	GuiText titleTxt("Home > Settings > Network", 24, 0xfffa9600);
+	titleTxt.SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+	titleTxt.SetPosition(150, 35);
+
+	GuiButton bBtn(20, 20);
+	bBtn.SetAlignment(ALIGN_LEFT, ALIGN_BOTTOM);
+	bBtn.SetPosition(10, -35);
+	bBtn.SetTrigger(trigB);
+
+	GuiButton backBtn(20, 20);
+	backBtn.SetAlignment(ALIGN_LEFT, ALIGN_BOTTOM);
+	backBtn.SetPosition(50, -35);
+	backBtn.SetTrigger(trigBk);
+
+	GuiOptionBrowser optionBrowser(980, 426, new GuiImageData(browser_list_btn_png), &options);
+	optionBrowser.SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);
+	optionBrowser.SetCol2Position(275);
+
+	GuiWindow w(screenwidth, screenheight);
+	btn_bk->SetPosition(400, 641);
+	btn_bk_text->SetPosition(435, 643);								
+	w.Append(&bBtn);
+	w.Append(&backBtn);
+	w.Append(btn_a);
+	w.Append(btn_a_text);	
+	w.Append(btn_b);
+	w.Append(btn_b_text);
+	w.Append(btn_bk);
+	w.Append(btn_bk_text);	
+	mainWindow->Append(browser_top_bg);
+	mainWindow->Append(browser_bottom_bg);
+	mainWindow->Append(&optionBrowser);
+	mainWindow->Append(&w);
+	mainWindow->Append(&titleTxt);
+
+	while (current_menu == SETTINGS_NETWORK) {
+		update();
+		ret = optionBrowser.GetClickedOption();
+		if (ret >= 0) {
+			if (ret == options.length) {
+				shareId = -1;				
+			} else {
+				shareId = ret;
+			}
+			current_menu = SETTINGS_NETWORK_SMB;
+		}
+		if (bBtn.GetState() == STATE_CLICKED) {
+			current_menu = SETTINGS;
+		} else if (backBtn.GetState() == STATE_CLICKED) {
+			current_menu = HOME_PAGE;
+		}
+	}
+	mainWindow->Remove(&optionBrowser);
+	mainWindow->Remove(&w);
+	mainWindow->Remove(&titleTxt);
+	mainWindow->Remove(browser_top_bg);
+	mainWindow->Remove(browser_bottom_bg);
+}*/
+
 //SETTINGS MENU
 
 static void XMPSettings()
@@ -1596,6 +1797,8 @@ static void GuiLoop()
 			VideoSettings();
 		} /*else if (current_menu == SETTINGS_NETWORK) {
 			NetworkSettings();
+		} else if (current_menu == SETTINGS_NETWORK_SMB) {
+			NetworkSettingsSMB();
 		} */
 	}
 }
