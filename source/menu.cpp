@@ -1611,9 +1611,9 @@ static void GuiLoop()
 
 static void FindDevices()
 {
+	device_list_size = 0;
 	for (int i = 3; i < STD_MAX; i++) {
 		if (devoptab_list[i]->structSize) {
-			//strcpy(device_list[device_list_size],devoptab_list[i]->name);
 			sprintf(device_list[device_list_size], "%s:/", devoptab_list[i]->name);
 			printf("findDevices : %s\r\n", device_list[device_list_size]);
 			device_list_size++;
@@ -1623,9 +1623,10 @@ static void FindDevices()
 	root_dev = device_list[0];
 }
 
-void LoadingThread()
+static void LoadingThread()
 {
 	int i = 0;
+	float rot = 0;
 	logo = loadPNGFromMemory((unsigned char*) logo_png);
 	loading[0] = loadPNGFromMemory((unsigned char*) loading_0_png);
 	loading[1] = loadPNGFromMemory((unsigned char*) loading_1_png);
@@ -1641,7 +1642,6 @@ void LoadingThread()
 		unlock(&loadingThreadLock);
 
 		mdelay(60);
-
 		i++;
 		if (i >= 4)
 			i = 0;
@@ -1669,7 +1669,7 @@ int main(int argc, char** argv)
 	xenon_ata_init();
 	xenon_atapi_init();
 	usb_do_poll();
-
+			
 	// fs
 	mount_all_devices();
 	FindDevices();
@@ -1683,11 +1683,16 @@ int main(int argc, char** argv)
 	lock(&loadingThreadLock);
 	end_loading_thread = 1;
 	unlock(&loadingThreadLock);
-	while (loading_thread_finished == 0) {
+	do  {
 		lock(&loadingThreadLock);
-		udelay(25);
+		// try to mount undetected devices
+		usb_do_poll();
+		mount_all_devices();
 		unlock(&loadingThreadLock);
-	}
+	} while(loading_thread_finished == 0);
+	
+	// recheck devices
+	FindDevices();
 
 	// init mplayer
 	init_mplayer();

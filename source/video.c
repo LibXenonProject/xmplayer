@@ -296,7 +296,7 @@ static void UpdatesMatrices(f32 xpos, f32 ypos, f32 width, f32 height, f32 degre
         matrixTranslation(&translation, xpos + width, ypos + height, 0);
         matrixScaling(&scale, scaleX, scaleY, 1.0f);
 
-        //    // scale => rotate => translate
+        // scale => rotate => translate
         matrixMultiply(&m, &scale, &rotation);
         matrixMultiply(&WVP, &m, &translation);
 
@@ -321,14 +321,13 @@ void Menu_DrawImg(f32 xpos, f32 ypos, u16 width, u16 height, struct XenosSurface
         y = (float) ypos;
         w = (float) width;
         h = (float) height;
+        
 
-        x = (x / ((float) screenwidth / 2.f)) - 1.f; // 1280/2
-        y = (y / ((float) screenheight / 2.f)) - 1.f; // 720/2
+        x = (x / ((float) (screenwidth-1) / 2.f)) - 1.f; // 1280/2
+        y = (y / ((float) (screenheight-1) / 2.f)) - 1.f; // 720/2
 
-        //y = -y;
-
-        w = (float) w / ((float) screenwidth);
-        h = (float) h / ((float) screenheight);
+        w = (float) w / ((float) screenwidth-1);
+        h = (float) h / ((float) screenheight-1);
 
         color.a = alpha;
         color.r = 0xFF;
@@ -367,11 +366,11 @@ void Menu_DrawRectangle(f32 x, f32 y, f32 width, f32 height, XeColor color, u8 f
         w = (float) width;
         h = (float) height;
 
-        x = (x / ((float) screenwidth / 2.f)) - 1.f; // 1280/2
-        y = (y / ((float) screenheight / 2.f)) - 1.f; // 720/2
+        x = (x / ((float) (screenwidth-1) / 2.f)) - 1.f; // 1280/2
+        y = (y / ((float) (screenheight-1) / 2.f)) - 1.f; // 720/2
 
-        w = (float) w / ((float) screenwidth);
-        h = (float) h / ((float) screenheight);
+        w = (float) w / ((float) (screenwidth-1));
+        h = (float) h / ((float) (screenheight-1));
 
         DrawVerticeFormats* Rect = (DrawVerticeFormats*) Xe_VB_Lock(g_pVideoDevice, vb, nb_vertices, 4 * sizeof (DrawVerticeFormats), XE_LOCK_WRITE);
         {
@@ -403,11 +402,11 @@ void Menu_T(struct XenosSurface * surf, f32 texWidth, f32 texHeight, int16_t scr
         w = (float) texWidth;
         h = (float) texHeight;
 
-        x = (x / ((float) screenwidth / 2.f)) - 1.f; // 1280/2
-        y = (y / ((float) screenheight / 2.f)) - 1.f; // 720/2
+        x = (x / ((float) (screenwidth-1) / 2.f)) - 1.f; // 1280/2
+        y = (y / ((float) (screenheight-1) / 2.f)) - 1.f; // 720/2
 
-        w = (float) w / ((float) screenwidth);
-        h = (float) h / ((float) screenheight);
+        w = (float) w / ((float) (screenwidth-1));
+        h = (float) h / ((float) (screenheight-1));
 
         // Correct aspect ratio
         //    h = h * ((float) screenwidth/(float) screenheight);

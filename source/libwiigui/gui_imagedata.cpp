@@ -52,6 +52,9 @@ GuiImageData::GuiImageData(const u8 * i, int maxw, int maxh) {
         data = loadPNGFromMemory((unsigned char*)i);
         width = data->width;
         height = data->height;
+        data->use_filtering = 0;
+		data->u_addressing = XE_TEXADDR_BORDER_HALF;
+		data->v_addressing = XE_TEXADDR_BORDER_HALF;
     }
 }
 
