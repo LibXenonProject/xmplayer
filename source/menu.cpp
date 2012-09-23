@@ -702,6 +702,20 @@ static void Browser(const char * title, const char * root)
 		if (last_sel_item != browser.selIndex) {
 			sprintf(tmp, "%d/%d", browser.selIndex + 1, browser.numEntries);
 			browser_pagecounter->SetText(tmp);
+			std::string dir;
+			char _dir[MAXPATHLEN];
+						
+			sprintf(_dir, "%s/%s", rootdir, browser.dir);
+			CleanupPath(_dir);
+			if (strlen(_dir) > 100) {
+				_dir[99] = '\0';
+				strcat(_dir, "...");
+			}	
+			dir = _dir;
+						
+			StringRemplaceAll(dir, "/", " > ");
+			StringRemplaceAll(dir, ":", "");	
+			browser_subheadline->SetText(dir.c_str());					
 		}
 
 		// filebrowser sort icons
@@ -755,24 +769,9 @@ static void Browser(const char * title, const char * root)
 				// check corresponding browser entry 
 				if (browserList[browser.selIndex].isdir) {
 					if (BrowserChangeFolder()) {
-						std::string dir;
-						char _dir[MAXPATHLEN];
-						
-						sprintf(_dir, "%s/%s", rootdir, browser.dir);
-						CleanupPath(_dir);
-						
-						dir = _dir;
-						
-						StringRemplaceAll(dir, "/", " > ");
-						StringRemplaceAll(dir, ":", "");
-						
 						gui_browser->ResetState();
 						gui_browser->fileList[0]->SetState(STATE_SELECTED);
 						gui_browser->TriggerUpdate();
-												
-						
-						browser_subheadline->SetText(dir.c_str());
-						
 						last_sel_item = -1;
 					} else {
 						break;
