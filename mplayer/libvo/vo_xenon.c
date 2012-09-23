@@ -174,6 +174,9 @@ static struct XenosShader * g_pVertexShader = NULL;
 static struct XenosShader * g_pPixelTexturedShader = NULL;
 static struct XenosShader * g_pPixeOsdShader = NULL;
 
+static int cur_fb = 0;
+struct XenosSurface * pVideoFrameBuffer[2] = {0};
+
 static struct XenosDevice _xe;
 static YUVSurface * g_pTexture = NULL;
 static struct XenosSurface * g_pOsdSurf = NULL;
@@ -203,6 +206,19 @@ static YUVSurface * video_create_yuvsurf(int width, int height) {
         surf->Y.data = surf->Y.surface->base;
         surf->U.data = surf->U.surface->base;
         surf->V.data = surf->V.surface->base;
+
+/*
+		surf->Y.surface->use_filtering = 0;
+		surf->U.surface->use_filtering = 0;
+		surf->V.surface->use_filtering = 0;
+*/
+
+		surf->Y.surface->u_addressing = XE_TEXADDR_CLAMP;
+		surf->Y.surface->v_addressing = XE_TEXADDR_CLAMP;
+		surf->U.surface->u_addressing = XE_TEXADDR_CLAMP;
+		surf->U.surface->v_addressing = XE_TEXADDR_CLAMP;
+		surf->V.surface->u_addressing = XE_TEXADDR_CLAMP;
+		surf->V.surface->v_addressing = XE_TEXADDR_CLAMP;
 
         return surf;
 }
@@ -435,7 +451,12 @@ static void flip_page(void) {
         }
 
         // Resolve
-        Xe_Resolve(g_pVideoDevice);
+        Xe_Resolve(g_pVideoDevice);        
+        
+         // switch video buffer
+        Xe_SetFrameBufferSurface(g_pVideoDevice, pVideoFrameBuffer[cur_fb]);
+        cur_fb=1-cur_fb;
+        
         // Render in background
         Xe_Execute(g_pVideoDevice);
         //Xe_Sync(g_pVideoDevice);
@@ -457,7 +478,7 @@ static int query_format(uint32_t format) {
 static void create_xenon_texture() {
         g_pTexture = video_create_yuvsurf(image_width, image_height);
         g_pOsdSurf = Xe_CreateTexture(g_pVideoDevice, osd_texture_width, osd_texture_height, 1, XE_FMT_8, 0);
-
+		g_pOsdSurf->use_filtering = 0;
         memset(g_pOsdSurf->base, 0, g_pOsdSurf->wpitch * g_pOsdSurf->hpitch);
 }
 
@@ -668,8 +689,8 @@ static int preinit(const char *arg) {
 
         fb = Xe_GetFramebufferSurface(g_pVideoDevice);
 
-        max_width = fb->width;
-        max_height = fb->height;
+        max_width = fb->width - 1;
+        max_height = fb->height - 1;
 
         Xe_SetRenderTarget(g_pVideoDevice, fb);
 
@@ -697,7 +718,10 @@ static int preinit(const char *arg) {
         vb = GetSharedVertexBuffer();
 
         update_vb();
-
+        
+		pVideoFrameBuffer[0] = Xe_CreateTexture(g_pVideoDevice, fb->width, fb->height, 0, XE_FMT_8888 | XE_FMT_BGRA, 1);
+		pVideoFrameBuffer[1] = Xe_CreateTexture(g_pVideoDevice, fb->width, fb->height, 0, XE_FMT_8888 | XE_FMT_BGRA, 1);
+		
         Xe_SetClearColor(g_pVideoDevice, 0);
 
         return 0;
