@@ -101,3 +101,12 @@
 #include "../build/btn_x_png.h"
 #include "../build/btn_y_png.h"
 #include "../build/btn_bk_png.h"
+
+//keyboard
+#include "../build/keyboard_textbox_png.h"
+#include "../build/keyboard_key_png.h"
+#include "../build/keyboard_key_over_png.h"
+#include "../build/keyboard_mediumkey_png.h"
+#include "../build/keyboard_mediumkey_over_png.h"
+#include "../build/keyboard_largekey_png.h"
+#include "../build/keyboard_largekey_over_png.h"

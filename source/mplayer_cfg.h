@@ -33,6 +33,8 @@ extern "C" {
 		char sublang_desc[100];
 		unsigned int subcolor;
 		unsigned int border_color;
+		int subscale;
+		int subpos;
 		int vsync;
 		int framedrop;
 		char alang[100];

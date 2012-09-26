@@ -97,6 +97,14 @@ static void DefaultSettings()
 	sprintf(XMPlayerCfg.alang_desc, "English");
 	XMPlayerCfg.volume = 80;
 	XMPlayerCfg.softvol = 300;
+	//network
+	for(int i = 0; i < MAX_SHARES; i++) {
+                XMPlayerCfg.smb[i].name[0] = 0;
+                XMPlayerCfg.smb[i].share[0] = 0;
+                XMPlayerCfg.smb[i].ip[0] = 0;                
+                XMPlayerCfg.smb[i].user[0] = 0;
+                XMPlayerCfg.smb[i].pass[0] = 0;        
+        }
 }
 
 /****************************************************************************
@@ -189,7 +197,7 @@ bool SavePrefs(bool silent)
 	subtitles->LinkEndChild(sublang);
 	sublang->SetAttribute("value", XMPlayerCfg.sublang);
 	sublang->SetAttribute("desc", XMPlayerCfg.sublang_desc);
-/*	//Network
+	//Network
 	TiXmlElement* network = new TiXmlElement("network");
 	settings->LinkEndChild(network);
 	
@@ -203,7 +211,7 @@ bool SavePrefs(bool silent)
 			smb->SetAttribute("user", XMPlayerCfg.smb[j].user);			
 			smb->SetAttribute("pw", XMPlayerCfg.smb[j].pass);			
 		}
-	} */
+	}
 	
 	bool success = doc.SaveFile(filepath);
 
@@ -225,7 +233,8 @@ bool LoadPrefs()
 {
 	if (prefLoaded) // already attempted loading
 		return true;
-
+	
+	int i;
 	char filepath[MAXPATHLEN];
 	sprintf(filepath, "%s/%s", MPLAYER_DATADIR, PREF_FILE_NAME);
 
@@ -294,7 +303,7 @@ bool LoadPrefs()
 				sprintf(XMPlayerCfg.sublang_desc, elem->Attribute("desc"));
 			}
 		}
-           /*   elem = handle.FirstChild("network").FirstChild().Element();                
+               	elem = handle.FirstChild("network").FirstChild().Element();                
                 for (i = 0; i < MAX_SHARES; i++) {
                 	for(elem; elem; elem = elem->NextSiblingElement()) {
                         const char* elemName = elem->Value();
@@ -306,7 +315,7 @@ bool LoadPrefs()
 		                     sprintf(XMPlayerCfg.smb[i].pass, elem->Attribute("pw"));
 		                }
 		       }
-               	}   */		
+               	}	
 		doc.Clear();
 		prefLoaded = true;
 

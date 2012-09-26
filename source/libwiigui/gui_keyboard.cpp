@@ -7,7 +7,7 @@
  *
  * GUI class definitions
  ***************************************************************************/
-#if 0
+
 #include "gui.h"
 #include "../w_input.h"
 
@@ -107,7 +107,7 @@ GuiKeyboard::GuiKeyboard(char * t, u32 max) {
     keyTextboxImg->SetPosition(0, 0);
     this->Append(keyTextboxImg);
 
-    kbText = new GuiText(GetDisplayText(kbtextstr), 20, (GXColor) {
+    kbText = new GuiText(GetDisplayText(kbtextstr), 20, (XeColor) {
         0, 0, 0, 0xff});
     kbText->SetAlignment(ALIGN_CENTRE, ALIGN_TOP);
     kbText->SetPosition(0, 13);
@@ -120,8 +120,8 @@ GuiKeyboard::GuiKeyboard(char * t, u32 max) {
     keyLarge = new GuiImageData(keyboard_largekey_png);
     keyLargeOver = new GuiImageData(keyboard_largekey_over_png);
 
-    keySoundOver = new GuiSound(button_over_pcm, button_over_pcm_size, SOUND_PCM);
-    keySoundClick = new GuiSound(button_click_pcm, button_click_pcm_size, SOUND_PCM);
+ //   keySoundOver = new GuiSound(button_over_pcm, button_over_pcm_size, SOUND_PCM);
+ //   keySoundClick = new GuiSound(button_click_pcm, button_click_pcm_size, SOUND_PCM);
 
     trigA = new GuiTrigger;
     //	trigA->SetSimpleTrigger(-1, WPAD_BUTTON_A | WPAD_CLASSIC_BUTTON_A, PAD_BUTTON_A);
@@ -133,14 +133,14 @@ GuiKeyboard::GuiKeyboard(char * t, u32 max) {
     keyBackImg = new GuiImage(keyMedium);
     keyBackOverImg = new GuiImage(keyMediumOver);
 
-    keyBackText = new GuiText("Back", 20, (GXColor) {
+    keyBackText = new GuiText("Back", 20, (XeColor) {
         0, 0, 0, 0xff});
     keyBack = new GuiButton(keyMedium->GetWidth(), keyMedium->GetHeight());
     keyBack->SetImage(keyBackImg);
     keyBack->SetImageOver(keyBackOverImg);
     keyBack->SetLabel(keyBackText);
-    keyBack->SetSoundOver(keySoundOver);
-    keyBack->SetSoundClick(keySoundClick);
+ //   keyBack->SetSoundOver(keySoundOver);
+ //   keyBack->SetSoundClick(keySoundClick);
     keyBack->SetTrigger(trigA);
     keyBack->SetTrigger(trig2);
     keyBack->SetPosition(10 * 42 + 40, 0 * 42 + 80);
@@ -150,14 +150,14 @@ GuiKeyboard::GuiKeyboard(char * t, u32 max) {
     keyCapsImg = new GuiImage(keyMedium);
     keyCapsOverImg = new GuiImage(keyMediumOver);
 
-    keyCapsText = new GuiText("Caps", 20, (GXColor) {
+    keyCapsText = new GuiText("Caps", 20, (XeColor) {
         0, 0, 0, 0xff});
     keyCaps = new GuiButton(keyMedium->GetWidth(), keyMedium->GetHeight());
     keyCaps->SetImage(keyCapsImg);
     keyCaps->SetImageOver(keyCapsOverImg);
     keyCaps->SetLabel(keyCapsText);
-    keyCaps->SetSoundOver(keySoundOver);
-    keyCaps->SetSoundClick(keySoundClick);
+ //   keyCaps->SetSoundOver(keySoundOver);
+ //   keyCaps->SetSoundClick(keySoundClick);
     keyCaps->SetTrigger(trigA);
     keyCaps->SetTrigger(trig2);
     keyCaps->SetPosition(0, 2 * 42 + 80);
@@ -167,14 +167,14 @@ GuiKeyboard::GuiKeyboard(char * t, u32 max) {
     keyShiftImg = new GuiImage(keyMedium);
     keyShiftOverImg = new GuiImage(keyMediumOver);
 
-    keyShiftText = new GuiText("Shift", 20, (GXColor) {
+    keyShiftText = new GuiText("Shift", 20, (XeColor) {
         0, 0, 0, 0xff});
     keyShift = new GuiButton(keyMedium->GetWidth(), keyMedium->GetHeight());
     keyShift->SetImage(keyShiftImg);
     keyShift->SetImageOver(keyShiftOverImg);
     keyShift->SetLabel(keyShiftText);
-    keyShift->SetSoundOver(keySoundOver);
-    keyShift->SetSoundClick(keySoundClick);
+ //   keyShift->SetSoundOver(keySoundOver);
+ //   keyShift->SetSoundClick(keySoundClick);
     keyShift->SetTrigger(trigA);
     keyShift->SetTrigger(trig2);
     keyShift->SetPosition(21, 3 * 42 + 80);
@@ -186,8 +186,8 @@ GuiKeyboard::GuiKeyboard(char * t, u32 max) {
     keySpace = new GuiButton(keyLarge->GetWidth(), keyLarge->GetHeight());
     keySpace->SetImage(keySpaceImg);
     keySpace->SetImageOver(keySpaceOverImg);
-    keySpace->SetSoundOver(keySoundOver);
-    keySpace->SetSoundClick(keySoundClick);
+ //   keySpace->SetSoundOver(keySoundOver);
+ //   keySpace->SetSoundClick(keySoundClick);
     keySpace->SetTrigger(trigA);
     keySpace->SetTrigger(trig2);
     keySpace->SetPosition(0, 4 * 42 + 80);
@@ -204,15 +204,15 @@ GuiKeyboard::GuiKeyboard(char * t, u32 max) {
                 keyImg[i][j] = new GuiImage(key);
                 keyImgOver[i][j] = new GuiImage(keyOver);
 
-                keyTxt[i][j] = new GuiText(txt, 20, (GXColor) {
+                keyTxt[i][j] = new GuiText(txt, 20, (XeColor) {
                     0, 0, 0, 0xff});
                 keyTxt[i][j]->SetAlignment(ALIGN_CENTRE, ALIGN_BOTTOM);
                 keyTxt[i][j]->SetPosition(0, -10);
                 keyBtn[i][j] = new GuiButton(key->GetWidth(), key->GetHeight());
                 keyBtn[i][j]->SetImage(keyImg[i][j]);
                 keyBtn[i][j]->SetImageOver(keyImgOver[i][j]);
-                keyBtn[i][j]->SetSoundOver(keySoundOver);
-                keyBtn[i][j]->SetSoundClick(keySoundClick);
+  //              keyBtn[i][j]->SetSoundOver(keySoundOver);
+  //              keyBtn[i][j]->SetSoundClick(keySoundClick);
                 keyBtn[i][j]->SetTrigger(trigA);
                 keyBtn[i][j]->SetTrigger(trig2);
                 keyBtn[i][j]->SetLabel(keyTxt[i][j]);
@@ -252,8 +252,8 @@ GuiKeyboard::~GuiKeyboard() {
     delete keyMediumOver;
     delete keyLarge;
     delete keyLargeOver;
-    delete keySoundOver;
-    delete keySoundClick;
+ //   delete keySoundOver;
+ //   delete keySoundClick;
     delete trigA;
     delete trig2;
 
@@ -356,4 +356,3 @@ startloop:
             this->MoveSelectionVert(-1);
     }
 }
-#endif

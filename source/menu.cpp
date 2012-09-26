@@ -182,7 +182,9 @@ static int exited_item[64];
 static int exited_page[64];
 static int exited_i[64];
 
-//Audio player
+//network
+static int shareId = -1;
+
 static int last_menu;
 static int current_menu = HOME_PAGE;
 
@@ -562,6 +564,72 @@ int SmallWindowPrompt(const char *btn1Label, const char *btn2Label)
 	mainWindow->Remove(&promptWindow);
 	mainWindow->SetState(STATE_DEFAULT);
 	return choice;
+}
+/****************************************************************************
+ * OnScreenKeyboard
+ *
+ * Opens an on-screen keyboard window, with the data entered being stored
+ * into the specified variable.
+ ***************************************************************************/
+static void OnScreenKeyboard(char * var, u32 maxlen) {
+	int save = -1;
+
+	GuiKeyboard keyboard(var, maxlen);
+
+	GuiImageData btnOutline(button_blue_png);
+	GuiImageData btnOutlineOver(button_green_png);
+
+	GuiText okBtnTxt("OK", 22, (XeColor) {
+		0, 0, 0, 255
+	});
+	GuiImage okBtnImg(&btnOutline);
+	GuiImage okBtnImgOver(&btnOutlineOver);
+	GuiButton okBtn(btnOutline.GetWidth(), btnOutline.GetHeight());
+
+	okBtn.SetAlignment(ALIGN_LEFT, ALIGN_BOTTOM);
+	okBtn.SetPosition(25, -25);
+
+	okBtn.SetLabel(&okBtnTxt);
+	okBtn.SetImage(&okBtnImg);
+	okBtn.SetImageOver(&okBtnImgOver);
+	okBtn.SetTrigger(trigA);
+	okBtn.SetTrigger(trigB);
+	okBtn.SetEffectGrow();
+
+	GuiText cancelBtnTxt("Cancel", 22, (XeColor) {
+		0, 0, 0, 255
+	});
+	GuiImage cancelBtnImg(&btnOutline);
+	GuiImage cancelBtnImgOver(&btnOutlineOver);
+	GuiButton cancelBtn(btnOutline.GetWidth(), btnOutline.GetHeight());
+	cancelBtn.SetAlignment(ALIGN_RIGHT, ALIGN_BOTTOM);
+	cancelBtn.SetPosition(-25, -25);
+	cancelBtn.SetLabel(&cancelBtnTxt);
+	cancelBtn.SetImage(&cancelBtnImg);
+	cancelBtn.SetImageOver(&cancelBtnImgOver);
+	cancelBtn.SetTrigger(trigA);
+	cancelBtn.SetTrigger(trigB);
+	cancelBtn.SetEffectGrow();
+
+	keyboard.Append(&okBtn);
+	keyboard.Append(&cancelBtn);
+
+	mainWindow->SetState(STATE_DISABLED);
+	mainWindow->Append(&keyboard);
+	mainWindow->ChangeFocus(&keyboard);
+	while (save == -1) {
+		if (okBtn.GetState() == STATE_CLICKED)
+			save = 1;
+		else if (cancelBtn.GetState() == STATE_CLICKED)
+			save = 0;
+	}
+
+	if (save) {
+		snprintf(var, maxlen, "%s", keyboard.kbtextstr);
+	}
+
+	mainWindow->Remove(&keyboard);
+	mainWindow->SetState(STATE_DEFAULT);
 }
 
 extern "C" void error_prompt(const char *msg)
@@ -1423,10 +1491,7 @@ static void SubtitleSettings()
 	SavePrefs(true);
 }
 
-/*
-static int shareId = -1;
-static void NetworkSettingsSMB() 
-{
+static void NetworkSettingsSMB() {
 	int ret;
 	int i = 0;
 	bool firstRun = true;
@@ -1455,7 +1520,7 @@ static void NetworkSettingsSMB()
 	} else {
 		sprintf(sharename, XMPlayerCfg.smb[shareId].share);
 	}
-	
+	printf("[Network Settings] SMB ShareId: %d \n", shareId);
 		
 	GuiText titleTxt("Home > Settings > Network > SMB", 24, 0xfffa9600);
 	titleTxt.SetAlignment(ALIGN_LEFT, ALIGN_TOP);
@@ -1493,29 +1558,29 @@ static void NetworkSettingsSMB()
 	mainWindow->Append(&titleTxt);
 
 	while (current_menu == SETTINGS_NETWORK_SMB) {
-		update();
+		Update();
 
 		ret = optionBrowser.GetClickedOption();
 
 		switch (ret) {
 			case 0: {
-		//		OnScreenKeyboard(XMPlayerCfg.smb[shareId].name, 40);
+				OnScreenKeyboard(XMPlayerCfg.smb[shareId].name, 40);
 				break;
 				}
 			case 1: {
-		//		OnScreenKeyboard(XMPlayerCfg.smb[shareId].ip, 80);
+				OnScreenKeyboard(XMPlayerCfg.smb[shareId].ip, 80);
 				break;
 				}
 			case 2: {	
-		//		OnScreenKeyboard(XMPlayerCfg.smb[shareId].share, 80);
+				OnScreenKeyboard(XMPlayerCfg.smb[shareId].share, 80);
 				break;
 				} 
 			case 3:	{
-		//		OnScreenKeyboard(XMPlayerCfg.smb[shareId].user, 25);			
+				OnScreenKeyboard(XMPlayerCfg.smb[shareId].user, 25);			
 				break;
 				}
 			case 4:	{
-		//		OnScreenKeyboard(XMPlayerCfg.smb[shareId].pass, 25);			
+				OnScreenKeyboard(XMPlayerCfg.smb[shareId].pass, 25);			
 				break;
 				}				
 		}		
@@ -1541,11 +1606,10 @@ static void NetworkSettingsSMB()
 	mainWindow->Remove(browser_top_bg);
 	mainWindow->Remove(browser_bottom_bg);
 	//save settings
-	SavePrefs(true);
+	//SavePrefs(true);
 }
 
-static void NetworkSettings() 
-{
+static void NetworkSettings() {
 	int ret;
 	int i = 0;
 	OptionList options;
@@ -1601,10 +1665,10 @@ static void NetworkSettings()
 	mainWindow->Append(&titleTxt);
 
 	while (current_menu == SETTINGS_NETWORK) {
-		update();
+		Update();
 		ret = optionBrowser.GetClickedOption();
 		if (ret >= 0) {
-			if (ret == options.length) {
+			if (ret == (options.length-1)) {
 				shareId = -1;				
 			} else {
 				shareId = ret;
@@ -1622,7 +1686,7 @@ static void NetworkSettings()
 	mainWindow->Remove(&titleTxt);
 	mainWindow->Remove(browser_top_bg);
 	mainWindow->Remove(browser_bottom_bg);
-}*/
+}
 
 //SETTINGS MENU
 
@@ -1694,9 +1758,9 @@ static void XMPSettings()
 		case 3:
 			current_menu = SETTINGS_SUBTITLES;
 			break;
-			/*		case 4:
-						current_menu = SETTINGS_NETWORK;
-						break;  					*/
+		case 4:
+			current_menu = SETTINGS_NETWORK;
+			break;  				
 		}
 
 		if ((bBtn.GetState() == STATE_CLICKED) || (backBtn.GetState() == STATE_CLICKED)) {
@@ -1794,11 +1858,11 @@ static void GuiLoop()
 			AudioSettings();
 		} else if (current_menu == SETTINGS_VIDEO) {
 			VideoSettings();
-		} /*else if (current_menu == SETTINGS_NETWORK) {
+		} else if (current_menu == SETTINGS_NETWORK) {
 			NetworkSettings();
 		} else if (current_menu == SETTINGS_NETWORK_SMB) {
 			NetworkSettingsSMB();
-		} */
+		}
 	}
 }
 
@@ -1839,6 +1903,7 @@ static void LoadingThread()
 		if (i >= 4)
 			i = 0;
 	}
+	delay(2);
 	lock(&loadingThreadLock);
 	loading_thread_finished = 1;
 	unlock(&loadingThreadLock);
@@ -1850,7 +1915,7 @@ int main(int argc, char** argv)
 	//	
 	// Init Video
 	InitVideo();
-	
+
 	/** loading **/
 	end_loading_thread = 0;
 
