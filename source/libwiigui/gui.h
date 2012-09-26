@@ -926,7 +926,7 @@ typedef struct _optionlist {
 	// inner
 	struct {
 		int max; //maximum
-		int curr; //current valuez
+		int curr; //current value
 	} v[MAX_OPTIONS];
 
 } OptionList;

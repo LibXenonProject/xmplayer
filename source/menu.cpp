@@ -1903,7 +1903,6 @@ static void LoadingThread()
 		if (i >= 4)
 			i = 0;
 	}
-	delay(2);
 	lock(&loadingThreadLock);
 	loading_thread_finished = 1;
 	unlock(&loadingThreadLock);
