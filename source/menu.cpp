@@ -861,6 +861,7 @@ static void Browser(const char * title, const char * root)
 						if (file_exists(seek_filename)) {
 							double seek_time = playerSeekPrompt(seek_filename);
 							sprintf(mplayer_seek_time, "seek %f 2", seek_time);
+							remove(seek_filename);
 						}
 					} else {
 						gui_browser->fileList[exited_i[current_menu]]->SetState(STATE_SELECTED);	
@@ -1792,21 +1793,8 @@ void MenuMplayer()
 	printf("filename:%s\r\n", mplayer_filename);
 	static int mplayer_need_init = 1;
 	if (mplayer_need_init) {
-		char vsync[50] = "-novsync";
-		char framedrop[50] = "-noframedrop";
-
-		if (XMPlayerCfg.vsync == 1)
-			strcpy(vsync, "-vsync");
-
-		if (XMPlayerCfg.framedrop == 1)
-			strcpy(framedrop, "-framedrop");
-		else if (XMPlayerCfg.framedrop == 2)
-			strcpy(framedrop, "-hardframedrop");
-
 		char * argv[] = {
 			"mplayer.xenon",
-			vsync,
-			framedrop,
 			"-lavdopts", "skiploopfilter=all:threads=5",
 			mplayer_filename,
 		};
@@ -1907,6 +1895,7 @@ static void LoadingThread()
 		if (i >= 4)
 			i = 0;
 	}
+	delay(2);
 	lock(&loadingThreadLock);
 	loading_thread_finished = 1;
 	unlock(&loadingThreadLock);

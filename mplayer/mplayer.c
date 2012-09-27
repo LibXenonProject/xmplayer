@@ -2761,10 +2761,15 @@ int mplayer_main(int argc, char *argv[])
     m_config_register_options(mconfig, mplayer_opts);
     m_config_register_options(mconfig, common_opts);
     mp_input_register_options(mconfig);
-
-    // Preparse the command line
-    m_config_preparse_command_line(mconfig, argc, argv);
-
+  
+    if (XMPlayerCfg.vsync == 1)
+	    m_config_set_option(mconfig,"vsync", "1");
+    if (XMPlayerCfg.framedrop == 1)
+	    m_config_set_option(mconfig,"framedrop", "1");
+    else if (XMPlayerCfg.framedrop == 2)
+	    m_config_set_option(mconfig,"hardframedrop", "1");
+  // Preparse the command line
+    m_config_preparse_command_line(mconfig, argc, argv);	
 #ifdef CONFIG_TV
     stream_tv_defaults.immediate = 1;
 #endif
