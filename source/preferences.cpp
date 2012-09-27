@@ -34,7 +34,7 @@ void FixInvalidSettings()
 		XMPlayerCfg.sort_order = 0;
 
 	if (!XMPlayerCfg.subcolor)
-		XMPlayerCfg.subcolor = 0xFFFFF00;
+		XMPlayerCfg.subcolor = 0xFFFFFF00;
 
 	if (!XMPlayerCfg.border_color)
 		XMPlayerCfg.border_color = 0x00000000;
@@ -83,7 +83,7 @@ static void DefaultSettings()
 	XMPlayerCfg.exit_action = 1;
 	XMPlayerCfg.sort_order = 0;
 	//subtitles
-	XMPlayerCfg.subcolor = 0xFFFFF00;
+	XMPlayerCfg.subcolor = 0xFFFFFF00;
 	XMPlayerCfg.border_color = 0x00000000;
 	sprintf(XMPlayerCfg.subcp, "ISO-8859-1");
 	sprintf(XMPlayerCfg.subcp_desc, "Western European");

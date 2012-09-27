@@ -676,7 +676,7 @@ static void StringRemplaceAll(std::string & src, const std::string find, const s
 		pos += replace.length();
 	}
 }
-
+extern int gui_input_use;
 static void Browser(const char * title, const char * root)
 {
 	int _working_menu = current_menu;
@@ -852,9 +852,9 @@ static void Browser(const char * title, const char * root)
 					gui_browser->ResetState();
 					if (file_type(mplayer_filename) == BROWSER_TYPE_ELF) {
 						current_menu = MENU_ELF;
-						/*} else if (file_type(mplayer_filename) == BROWSER_TYPE_AUDIO) {
-							audio_gui = 1;
-							current_menu = MENU_MPLAYER;*/
+					/*} else if (file_type(mplayer_filename) == BROWSER_TYPE_AUDIO) {
+						audio_gui = 1;
+						current_menu = MENU_MPLAYER; */
 					} else if (file_type(mplayer_filename) == BROWSER_TYPE_VIDEO) {	
 						current_menu = MENU_MPLAYER;
 						strcpy(mplayer_seek_time, "seek 0 2");
@@ -1439,12 +1439,14 @@ static void SubtitleSettings()
 				{
 					sprintf(_ass_color, "%08x", colors[option_value].hex);
 					XMPlayerCfg.subcolor = colors[option_value].hex;
+					ass_color = _ass_color;
 					break;
 				}
 				case 1:
 				{
 					sprintf(_ass_border_color, "%08x", colors[option_value].hex);
 					XMPlayerCfg.border_color = colors[option_value].hex;
+					ass_border_color = _ass_border_color;					
 					break;
 				}
 				case 2:
@@ -1776,11 +1778,14 @@ static void XMPSettings()
 
 static void InitMplayerSettings(void)
 {
+	sprintf(_ass_color, "%08x", XMPlayerCfg.subcolor);
+	sprintf(_ass_border_color, "%08x", XMPlayerCfg.border_color);
 	ass_color = _ass_color;
 	ass_border_color = _ass_border_color;
 	sub_cp = XMPlayerCfg.subcp;
 	dvdsub_lang = XMPlayerCfg.sublang;
 	audio_lang = XMPlayerCfg.alang;
+	printf("[_ASS_COLOR] %s [ASS_COLOR] %s \n", _ass_color, ass_color);
 }
 
 void MenuMplayer()
@@ -1953,11 +1958,13 @@ int main(int argc, char** argv)
 
 	// init mplayer
 	init_mplayer();
-	InitMplayerSettings();
 	
 	// preference
 	if (LoadPrefs() == false)
 		SavePrefs(true);
+
+	// load mplayer settings
+	InitMplayerSettings();
 
 	// Init gui
 	switch (XMPlayerCfg.language) {
