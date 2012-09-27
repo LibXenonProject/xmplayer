@@ -676,7 +676,7 @@ static void StringRemplaceAll(std::string & src, const std::string find, const s
 		pos += replace.length();
 	}
 }
-extern int gui_input_use;
+
 static void Browser(const char * title, const char * root)
 {
 	int _working_menu = current_menu;
@@ -1785,7 +1785,6 @@ static void InitMplayerSettings(void)
 	sub_cp = XMPlayerCfg.subcp;
 	dvdsub_lang = XMPlayerCfg.sublang;
 	audio_lang = XMPlayerCfg.alang;
-	printf("[_ASS_COLOR] %s [ASS_COLOR] %s \n", _ass_color, ass_color);
 }
 
 void MenuMplayer()
