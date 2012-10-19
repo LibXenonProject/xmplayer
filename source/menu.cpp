@@ -1762,7 +1762,8 @@ static void XMPSettings()
 			current_menu = SETTINGS_SUBTITLES;
 			break;
 		case 4:
-			current_menu = SETTINGS_NETWORK;
+			WindowPrompt("Warning", "Not implemented yet", "Ok", NULL);
+			//current_menu = SETTINGS_NETWORK;
 			break;  				
 		}
 

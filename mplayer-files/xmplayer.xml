@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <settings>
-    <file app="XMPlayer" version="0.0.1" />
+    <file app="XMPlayer" version="0.0.2" />
     <global>
         <exit value="1" />
         <language value="0" />
@@ -18,9 +18,10 @@
         <vsync value="0" />
     </video>
     <subtitles>
-        <sub_color value="FFFFFF00" />
+        <sub_color value="ffffff00" />
         <border_color value="00000000" />
         <codepage value="ISO-8859-1" desc="Western European" />
         <language value="en" desc="English" />
     </subtitles>
+    <network />
 </settings>
