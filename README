@@ -84,5 +84,9 @@ Changed: The audio delay option in osd is more logical, a audio_delay of 100 ms 
 17/09/2012:
 -Added: Global, audio, video and subtitles settings in menu (no need to play with mplayer config files anymore)
 
+01/09/2013:
+-Fixed: When in OSD-menu when paused, pressing (Y) won't remove OSD-menu.
+-Fixed: Endless loading screen by adding new mount code from latest xell.
+
 TODO:
 -Get mplayer to seek through large files (>2gb)
