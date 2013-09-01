@@ -516,17 +516,46 @@ extern int XTAFMount();
  * Parse mbr for filesystem
  */
 
+int hdd_dvd_mounted = 0; //Prevent mounting the DVD and HDD again...
+extern void (*mount_usb_device)(int device);
+
+void mount_usb(int device)
+{
+	switch (device)
+	{
+		case 0:
+			FindPartitions(DEVICE_USB_0);
+			break;
+		case 1:
+			FindPartitions(DEVICE_USB_1);
+			break;
+		case 2:
+			FindPartitions(DEVICE_USB_2);
+			break;
+		default:
+			printf(" ! Mount USB: Unkown USB device... %d\n", device);
+			break;
+	}
+}
+
 void mount_all_devices() {
 	FindPartitions(DEVICE_USB_0);
 	FindPartitions(DEVICE_USB_1);
 	FindPartitions(DEVICE_USB_2);
-	if (xenon_ata_ops.isInserted()) {
-		if (XTAFMount() == 0) {
-			FindPartitions(DEVICE_ATA);
+	mount_usb_device = mount_usb;
+
+	if (hdd_dvd_mounted == 0) //Prevent mounting the DVD and HDD again...
+	{
+		if (xenon_atapi_ops.isInserted()) {
+			FindPartitions(DEVICE_ATAPI);
 		}
-	}
-	if (xenon_atapi_ops.isInserted()) {
-		FindPartitions(DEVICE_ATAPI);
+
+		if (xenon_ata_ops.isInserted()) {
+			if (XTAFMount() == 0) {
+				FindPartitions(DEVICE_ATA);
+			}
+		}
+		hdd_dvd_mounted = 1; //Prevent mounting the DVD and HDD again...
 	}
 }
 

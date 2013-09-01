@@ -1037,10 +1037,10 @@ extern "C" void mplayer_osd_draw(int level)
 		} else {
 			if (osd_options_window->IsVisible())
 				osd_options_window->SetVisible(false);
-			osd_display_info = 0;
-			osd_display_option_subtitle = 0;
-			osd_display_option_audio = 0;
-			osd_display_option_video = 0;
+				osd_display_info = 0;
+				osd_display_option_subtitle = 0;
+				osd_display_option_audio = 0;
+				osd_display_option_video = 0;
 		}
 	} else {
 		osd_display_info = 0;
@@ -1058,6 +1058,11 @@ extern "C" void mplayer_osd_draw(int level)
 		}
 		if ((mplayer_get_pause() == 1) && (osdBtn.GetState() == STATE_CLICKED)) {
 			osd_level = 1;
+			osd_display_info = 0;
+			osd_display_option_subtitle = 0;
+			osd_display_option_audio = 0;
+			osd_display_option_video = 0;
+
 		}
 	}
 	mainWindow->Remove(&osdBtn);

@@ -2834,6 +2834,9 @@ int run_command(MPContext *mpctx, mp_cmd_t *cmd)
 			while (osd_level == 3) { //hack to make the osd be selectable when paused
 			mpctx->video_out->flip_page();
 			}
+			if (osd_level == 1) {
+			mpctx->video_out->flip_page();
+			}
 		}
             }
             break;

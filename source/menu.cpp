@@ -1937,13 +1937,14 @@ int main(int argc, char** argv)
 	do  {
 		lock(&loadingThreadLock);
 		// try to mount undetected devices
-		usb_do_poll();
-		mount_all_devices();
+	//	usb_do_poll();
+	//	mount_all_devices();
+		udelay(25);
 		unlock(&loadingThreadLock);
 	} while(loading_thread_finished == 0);
 	
 	// recheck devices
-	FindDevices();
+	//FindDevices();
 
 	// init mplayer
 	init_mplayer();
