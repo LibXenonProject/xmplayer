@@ -139,7 +139,7 @@ fullclean: clean
 	cd mplayer; $(MAKE) -f Makefile clean;
 	
 dist: fullclean
-  	@rm -f $(TARGET).tar.gz
+	@rm -f $(TARGET).tar.gz
 	@$(MAKE)
 	@mkdir -p release/_DEBUG
 	@cp $(TARGET).elf release/_DEBUG/
