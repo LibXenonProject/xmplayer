@@ -137,6 +137,18 @@ clean:
 fullclean: clean
 	@echo clean mplayer and libav
 	cd mplayer; $(MAKE) -f Makefile clean;
+	
+dist: fullclean
+  	@rm -f $(TARGET).tar.gz
+	@$(MAKE)
+	@mkdir -p release/_DEBUG
+	@cp $(TARGET).elf release/_DEBUG/
+	@cp $(TARGET).elf32 release/xenon.elf
+	@mkdir -p release/mplayer/
+	@cp mplayer-files/* release/mplayer/
+	@cd release; tar czvf $(TARGET).tar.gz *; mv $(TARGET).tar.gz ..
+	@rm -rf release
+	@$(MAKE) clean
 
 #---------------------------------------------------------------------------------
 else
