@@ -150,6 +150,19 @@ static int got_metadata = 0;
 static int last_level = 0;
 static char tmpbuff[1024];
 
+static int first_enter;
+/**
+ * Reset controller
+ **/
+static void ResetController()
+{
+	int i = 0;
+	for (i = 0; i < 4; i++) {
+		struct controller_data_s ctrl_zero = {};
+		set_controller_data(i, &ctrl_zero);
+	}
+}
+
 /**
  * Callback for osd option bar
  **/
@@ -606,6 +619,7 @@ extern "C" void mplayer_osd_open()
 	}
 	osd_show = 1;
 	last_level = -1;
+	first_enter = 1;
 }
 
 static void OsdSubtitlesOptions()
@@ -949,6 +963,10 @@ extern "C" void mplayer_osd_close()
 
 extern "C" void mplayer_osd_draw(int level)
 {
+	if ((mplayer_get_pause() == 1) && (first_enter == 1)) {
+		ResetController();
+		first_enter = 0;
+	}	
 	//Y-osd button used because libmenu is off
 	GuiTrigger osdMenu;
 	osdMenu.SetButtonOnlyTrigger(-1, 0, PAD_BUTTON_Y);
