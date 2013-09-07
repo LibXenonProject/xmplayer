@@ -311,6 +311,8 @@ static int FindPartitions(int device) {
 		for (i = 0; i < 4; i++) {
 			partition = &mbr.partitions[i];
 			part_lba = le32_to_cpu(mbr.partitions[i].lba_start);
+			if (part_lba > interface->sectors())
+				continue;
 
 			debug_printf(
 					"Partition %i: %s, sector %u, type 0x%x\n",
