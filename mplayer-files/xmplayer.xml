@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <settings>
-    <file app="XMPlayer" version="0.0.2" />
+    <file app="XMPlayer" version="0.0.3" />
     <global>
         <exit value="1" />
         <language value="0" />

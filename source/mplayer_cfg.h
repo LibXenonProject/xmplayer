@@ -1,7 +1,7 @@
 #pragma once
 
 #define APPNAME "XMPlayer"
-#define APPVERSION "0.0.2"
+#define APPVERSION "0.0.3"
 #define PREF_FILE_NAME 	"xmplayer.xml"
 #define MAX_SHARES 5
 
