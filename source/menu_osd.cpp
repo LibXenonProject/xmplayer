@@ -720,9 +720,6 @@ static void OsdSubtitlesOptions()
 				firstRun = false;
 				osd_sub_name = mplayer_get_subtitle();
 				osd_subdelay = (sub_delay * -1000);
-				if ((osd_subdelay < 5) && (osd_subdelay > -5)) {
-					osd_subdelay = 0;
-				}
 				sprintf(subtitle_option_list.value[0], osd_sub_name);
 				sprintf(subtitle_option_list.value[1], "%s", sub_visibility == 1 ? "Enabled" : "Disabled");
 				if (!ass_enabled) {
@@ -749,8 +746,7 @@ static void OsdAudioOptions()
 	bool firstRun = true;
 	char *osd_mute = "";
 	char *osd_balance = "";
-	char *osd_volume = "";
-	float osd_audiodelay;
+	float osd_audiodelay, osd_volume;
 	if ((osd_display_option_subtitle == 0) && (osd_display_option_video == 0)) {
 		if (osd_display_option_audio) {
 			osd_options_window->SetFocus(0);
@@ -826,11 +822,8 @@ static void OsdAudioOptions()
 				//osd_balance = mplayer_get_balance();
 				osd_mute = mplayer_get_mute();
 				osd_audiodelay = (audio_delay * -1000);
-				if ((osd_audiodelay < 5) && (osd_audiodelay > -5)) {
-					osd_audiodelay = 0;
-				}
-				sprintf(audio_option_list.value[1], osd_volume);
-				sprintf(audio_option_list.value[2], "DISABLED"); //balance is not working
+				sprintf(audio_option_list.value[1], "%.0f", osd_volume);
+				sprintf(audio_option_list.value[2], "Disabled"); //balance is not working
 				sprintf(audio_option_list.value[3], osd_mute);
 				sprintf(audio_option_list.value[4], "%.0f ms", osd_audiodelay);
 				osd_options_audio->TriggerUpdate();

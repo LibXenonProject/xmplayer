@@ -4229,11 +4229,10 @@ char* mplayer_get_balance() {
 	}
 }
 
-char* mplayer_get_volume() {
+float mplayer_get_volume() {
 	float vol;
 	mixer_getbothvolume(&mpctx->mixer, &vol);
-	sprintf(osd_volume, "%.2f", (double)vol);
-	return osd_volume;
+	return vol;
 }
 int mplayer_get_pause() {
 	if(mpctx->was_paused == 1) {
@@ -4311,9 +4310,9 @@ void mplayer_switch_balance(int left) {
 
 void mplayer_switch_volume(int up) {
 	if (up == 1) {
-        mp_input_queue_cmd(mp_input_parse_cmd("pausing_keep volume 1"));
+	mixer_incvolume(&mpctx->mixer);
 	} else {
-		mp_input_queue_cmd(mp_input_parse_cmd("pausing_keep volume -1"));
+	mixer_decvolume(&mpctx->mixer);
 	}
 }
 

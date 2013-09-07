@@ -72,7 +72,7 @@ extern "C" {
 	char* mplayer_get_subtitle(void);
 	char* mplayer_get_mute(void);	
 	char* mplayer_get_balance(void);
-	char* mplayer_get_volume(void);
+	float mplayer_get_volume(void);
       //  char* playerGetAudioStreams();
 	double mplayer_get_elapsed(void);
 	double mplayer_get_duration(void);
