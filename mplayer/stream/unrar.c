@@ -259,7 +259,7 @@ int rar_init(struct rar_archive *rar)
 	} else if (strlen(buf + i + 0x28) > 0) {
 		file = (buf + i + 0x28);
 		rar->extension = strrchr(file, '.'); 
-	}     
+	} 
     }
 
     // set file basename
@@ -396,8 +396,10 @@ off_t rar_size(struct rar_archive *rar)
 
 char* playerGetRarExt (char * filename) {
     struct rar_archive *rar = rar_open(filename);
-	if (strlen(rar->extension) > 0) {
+	if (rar == NULL) {
+		return "stop";
+	} else if (strlen(rar->extension) > 0) {
 		return rar->extension;
 		rar_free(rar);
-	}
+	} 
 }

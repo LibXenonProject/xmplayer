@@ -145,6 +145,8 @@ dist: fullclean
 	@cp $(TARGET).elf release/_DEBUG/
 	@cp $(TARGET).elf32 release/xenon.elf
 	@mkdir -p release/mplayer/
+	@mkdir -p release/mplayer/cache
+	@mkdir -p release/mplayer/cache/elapsed
 	@cp -r mplayer-files/* release/mplayer/
 	@cp README release/
 	@cd release; tar czvf $(TARGET).tar.gz *; mv $(TARGET).tar.gz ..

@@ -47,7 +47,7 @@ extern "C" {
 
 	// mplayer.c - must be done only 1 time !!!
 	int mplayer_main(int argc, char *argv[]);
-
+	char* playerGetRarExt (char * filename);
 	// use that to load a new file
 	// mplayer.cIf the interface file and object file get out of sync for any reason, t
 	void mplayer_load(char * filename);

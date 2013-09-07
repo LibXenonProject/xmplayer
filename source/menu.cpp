@@ -856,6 +856,14 @@ static void Browser(const char * title, const char * root)
 						audio_gui = 1;
 						current_menu = MENU_MPLAYER; */
 					} else if (file_type(mplayer_filename) == BROWSER_TYPE_VIDEO) {	
+					    char* ext = strrchr(mplayer_filename, '.');
+						if (strcmp(ext, ".rar") == 0) { 	
+							ext = playerGetRarExt(mplayer_filename);
+							if (strcmp(ext, "stop") == 0) { 
+								printf("[browser] Unsupported .rar file(s) \n");
+								goto rar_skip;
+							}
+						}
 						current_menu = MENU_MPLAYER;
 						strcpy(mplayer_seek_time, "seek 0 2");
 						if (file_exists(seek_filename)) {
@@ -864,7 +872,7 @@ static void Browser(const char * title, const char * root)
 							remove(seek_filename);
 						}
 					} else {
-						gui_browser->fileList[exited_i[current_menu]]->SetState(STATE_SELECTED);	
+rar_skip:						gui_browser->fileList[exited_i[current_menu]]->SetState(STATE_SELECTED);	
 					}
 				}
 			}
