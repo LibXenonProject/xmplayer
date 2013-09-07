@@ -2,6 +2,14 @@
 
 Changelog
 ================================================================================
+Version 0.0.4:
+- Fixed: Audio- and subdelay shows -0 ms
+- Fixed: First time you enter osd menu when paused, it removes it again
+- Fixed: Volume not changing in audio settings when paused
+- Fixed: Mplayer crashes if .rar archive is not supported
+- Changed: Disabled balance in osd menu, it doesn't work
+- Added: Support for .rmvb files
+
 Version 0.0.3:
 - Fixed: Updated mount code to work with more usb devices (same as XeLL v0.993)
 - Fixed: OSD bug
@@ -22,7 +30,8 @@ Version 0.0.2:
 - Changed: The (b) button doesn't exit to homescreen any more, it goes one level up, until root then goes to homescreen
 - Changed: [extension.mp4] demuxer=mov to demuxer=lavf in mplayer.conf, lavf handles .mp4 files better than mov
 - Changed: Updated libass to 0.10.0
-- Changed: Ass/ssa is now subtitle default which means outline, color, scale etc. works -Changed: The audio delay option in osd is more logical, a audio_delay of 100 ms doesn't mean audio is 100 ms before video (mplayer standard), but 100 ms after
+- Changed: Ass/ssa is now subtitle default which means outline, color, scale etc. works 
+- Changed: The audio delay option in osd is more logical, a audio_delay of 100 ms doesn't mean audio is 100 ms before video (mplayer standard), but 100 ms after
 - Changed: Replaced mxml with tinyxml, because of loading problems and it seems lighter
 - Changed: Updated GUI with button indicators, changed page size from 10 to 15
 - Added: "Restart" and "Shutdown" buttons
@@ -48,7 +57,8 @@ om crashes in video occurs, set ass=no and change vf=ass to #vf=ass in config
 - Playing .rar can be unstable, sometimes freezing XMPlayer
 - If your subs doesn't show all the characters, try a different font by replacing subfont.ttf in folder
 - XMPlayer does not always mount usb (uda) even though it loads, reload XMPlayer and try again
-- Endless loading screen: Try formatting using Gui Format32, or try placing xenon.elf and symbols.elf on root of xbox's internal hdd. Place the folder on the root of a usb (ntfs, fat), and then run xenon.elf from the internal harddrive via Dashlaunch.
+- Endless loading screen: Try formatting using Gui Format32, or try placing xenon.elf  on root of xbox's internal hdd. 
+Place the folder on the root of a usb (ntfs, fat), and then run xenon.elf from the internal harddrive via Dashlaunch.
 - Can crash while using play'n'charge kit
 - Audio balance not working
 - Pictures and Music are not supported
