@@ -1,92 +1,117 @@
-Initial:
--Quick fix: Subtitles stays on screen when playing a new video without subs, after exiting a video with subs
--Fixed: "Return to Gui" and starting a video leads to crash 
--Fixed: .avi files not playing after a .mkv, .mov or .mp4 file has been played 
-This fix is done via mplayer.conf by adding:
-[extension.avi]
-demuxer=avi
--Added: "Restart" and "Shutdown" buttons 
--Added: "Subtitle Size" under Settings - Atm you can only change size before starting your first video, after that you need to restart before it takes effect
-This is quite simple really, have 3 different fonts sizes from mplayerhq's site. This is temporary until the subscale can be implemented with subfont.ttf
--Vsync is now enabled by default (disable via Gui) <--- CHANGED, see 05/08/2012
+================================================================================
 
-24/07/2012:
--Added: A "smart menu" that saves your last selection and path when exiting a menu or playing a video (using y and then exit!)
+Changelog
+================================================================================
+Version 0.0.3:
+- Fixed: Updated mount code to work with more usb devices (same as XeLL v0.993)
+- Fixed: OSD bug
+- Added: First binary release with Corona support!!
 
-26/07/2012:
--Fixed: When entering a new folder "Item number/All item number" will not update until moving down on d-pad
+Version 0.0.2:
+- Fixed: .avi files not playing after a .mkv, .mov or .mp4 file has been played
+- Fixed: When entering a new folder "Item number/All item number" will not update until moving down on d-pad
+- Fixed: When paused, the osd buttons (y, xbox, x) unpauses video, only (a) pauses/unpauses now
+- Fixed: Osd_show_progression (x) only shows if osd-button (y) hasn't been pressed before
+- Fixed: Lb and Rb doesn't seek -600/+600
+- Fixed:The D-pad being buggy after a video has been played
+- Fixed: Some bugs with osd displaying delay as -0 because of it being close to zero
+- Fixed: Removed the 1 pixel-width line artifact in videos
+- Changed: Osd-button (y) now switches from directly on/off, this means it only needs 1 press to full osd and not 3 presses
+- Changed: When pressing the pause-button (a) progression will also show
+- Changed: The page down icon now only shows, if there are at least more items than a page
+- Changed: The (b) button doesn't exit to homescreen any more, it goes one level up, until root then goes to homescreen
+- Changed: [extension.mp4] demuxer=mov to demuxer=lavf in mplayer.conf, lavf handles .mp4 files better than mov
+- Changed: Updated libass to 0.10.0
+- Changed: Ass/ssa is now subtitle default which means outline, color, scale etc. works -Changed: The audio delay option in osd is more logical, a audio_delay of 100 ms doesn't mean audio is 100 ms before video (mplayer standard), but 100 ms after
+- Changed: Replaced mxml with tinyxml, because of loading problems and it seems lighter
+- Changed: Updated GUI with button indicators, changed page size from 10 to 15
+- Added: "Restart" and "Shutdown" buttons
+- Added: A "smart menu" that saves your last selection and path when exiting a menu or playing a video (resets between devices)
+- Added: Resume-playback function: if you stop a video in the middle of playing, it will save last position and resume from there if desired (more than a minute of video has to be played)
+- Added: All libmenu's working functions available in the main osd, so libmenu will no longer be needed
+- Added: Patch from mplayerdev's mailing list which adds support for playing videos inside multivolume uncompressed rar files
+- Added: If a .rar file loads, it now gets the extension of the archived file, so the true extension profile is loaded
+- Added: The (back) button goes directly back to homepage
+- Added: Sort files. By pressing (x) in the file browser, you can order by Name or Date (day/month/year)
+- Added: ASS settings can be accessed from the subtitle osd menu
+- Added: Set ass=yes and vf=ass in mplayer config. This means it can be disabled and subfont can be used if desired
 
-29/07/2012:
--Fixed: When paused, the osd buttons (y, xbox, x) unpauses video, only "a" pauses/unpauses now
-This is done by adding pausing_keep to the osd binds in mplayer's input.conf
--Changed: The page down icon now only shows, if there are at least more items than a page (10 items pr page) 
+Version 0.0.1:
+-Intial Release
 
-30/07/2012:
--Changed: the subtitle quick fix from initial commit has been updated, it looks more stable now
+Known Issues
+================================================================================
+- Cannot seek in files over 2 gigabytes (split the files for now)
+- Prolonged pausing causes audio to go out of sync, "fix" this by seeking once in the file
+- ASS Subtitle handling can cause freezes and lag. If rand
+om crashes in video occurs, set ass=no and change vf=ass to #vf=ass in config
+- Playing .rar can be unstable, sometimes freezing XMPlayer
+- If your subs doesn't show all the characters, try a different font by replacing subfont.ttf in folder
+- XMPlayer does not always mount usb (uda) even though it loads, reload XMPlayer and try again
+- Endless loading screen: Try formatting using Gui Format32, or try placing xenon.elf and symbols.elf on root of xbox's internal hdd. Place the folder on the root of a usb (ntfs, fat), and then run xenon.elf from the internal harddrive via Dashlaunch.
+- Can crash while using play'n'charge kit
+- Audio balance not working
+- Pictures and Music are not supported
+- No networking!
 
-31/07/2012: 
--Added: Resume-playback function: if you stop a video in the middle of playing, it will save last position and resume from there if desired (more than a minute of video has to be played).
+Install
+================================================================================
+- Copy all files to the root of an usb stick, launch it by xell or latest dashlaunch
 
-05/08/2012:
--Fixed: Osd_show_progression (x) only shows if osd-button (y) hasn't been pressed before
--Fixed: Smart Menu now support multiple devices
-This means that the browser will be reset between devices
--Fixed: Lb and Rb doesn't seek -600/+600
-Also changed the binds of "r" and "l" to "c" and "v" in input.conf (it didn't seem to detect lowercase l and r)
--Changed: Osd-button now switches from 1 to 3, this means it only needs 1 press to full osd and not 3 presses
--Changed: When pressing the pause-button (a) progression will also show
-Bind "a" in input.conf needs to be "pausing_toggle osd_show_progression"
--Removed: Font folder and subtitle size, not needed anymore
-Without font-folder the subfont.ttf works fine, with font-scale working
--Added: Support for multiple subtitle languages
-Supported language depends on subcp, slang and font. See mplayer\config
+Button Binds
+================================================================================
+#In File Browser
+-A: enter
+-B: up one level
+-X: sort by
+-Back: back to homescreen
+-D-pad: direction
+#In video
+-A: pause/play
+-B: exit player
+-X: show progression
+-Y: OSD/Menu
+-Rb: seek 10 min forward
+-Lb: seek 10 min back
+-Rt: seek 10 sec forward
+-Lt: seek 10 sec back
+-Up: seek 1 min forward
+-Down: seek 1 min back
+-Right: seek 10 sek forward
+-Left: seek 10 sek back
 
-06/08/2012:
--Fixed:The D-pad being buggy after a video has been played, every 2nd time you go out and in a menu it won't respond, but the A and B buttons work fine
+Settings
+================================================================================
+#Global
+Exit action: Shutdown Button bind
+Language: Menu language (English/French)
+#Audio
+Language: Set default audio track of video (i.e mkv with multiple languages)
+Volume: Start volume
+Soft Volume: Software volume boost
+#Video
+Frame Dropping: Set default frame dropping option
+Vsync: Set default vertical sync option
+#Subtitles
+Color: Color of the subtitle (only when ass=yes, which is default)
+Border Color: Color of the subtitle border (only when ass=yes, which is default)
+Code Page: the encoding of the subtitles (latin, baltic, arabic etc.)
+Language: Default subtitle language
 
-09/08/2012:
--Added: All libmenu's working functions available in the main osd, so libmenu will no longer be needed
+Thanks to
+================================================================================
+Ced2911
+Aioros
+cancerous
+GliGli
+IceKiller
+Juvenal
+Natelx
+Razkar
+sk1080
+tuxuser
+[c0z]
+siz-
 
-10/08/2012:
--Added: When quiting via libmenu or quit-button (b is binded to quit now), it will now save last position
--Added: Patch from mplayerdev's mailing list which adds support for playing videos inside multivolume uncompressed rar files
-Haven't been tested intensively. 
-
-13/08/2012:
--Changed: The B-button doesn't exit to homepage any more, it goes one level up, until root then goes to homepage
--Added: The Back-button goes directly back to homepage
--Added: [extension.rar] demuxer=lavf in mplayer.conf <-- see 17/08/2012
-
-17/08/2012:
--Removed: [extension.rar] demuxer=lavf in mplayer.conf
--Changed: [extension.mp4] demuxer=mov to demuxer=lavf in mplayer.conf, lavf handles .mp4 files better than mov
--Changed: have disabled libmenu, now that osd menu has the same functions, can cause instability
--Added: if a .rar file loads, it now gets the extension of the archived file, so the true extension profile is loaded
-
-27/08/2012:
-Added: Sort files. By pressing "x" in the file browser, you can order by Name or Date (day/month/year)
-
-28/08/2012:
-Changed: The audio delay option in osd is more logical, a audio_delay of 100 ms doesn't mean audio is 100 ms before video (mplayer standard), but 100 ms after
-
-29/08/2012:
--Changed: Updated libass to 0.10.0
--Changed: ass/ssa is now subtitle default which means outline, color etc. works 
--Added: ass settings can be accessed from the subtitle osd menu (ass can be buggy, video freeze etc.)
-
-04/09/2012:
--Changed: replaced mxml with tinyxml, because of loading problems and it seems lighter
-
-05/09/2012:
--Fixed: some bugs with osd displaying delay as -0 because of it being close to zero
--Added: set ass=yes and vf=ass in mplayer config, with vf=ass it looks stable, haven't experienced freezes. This means it can be disabled and subfont can be used if wished
-
-17/09/2012:
--Added: Global, audio, video and subtitles settings in menu (no need to play with mplayer config files anymore)
-
-01/09/2013:
--Fixed: When in OSD-menu when paused, pressing (Y) won't remove OSD-menu.
--Fixed: Endless loading screen by adding new mount code from latest xell.
-
-TODO:
--Get mplayer to seek through large files (>2gb)
+Remember to support the xbox 360 legal homebrew community!
+www.libxenon.org and #libxenon @ EFNet
