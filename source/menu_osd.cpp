@@ -790,11 +790,11 @@ static void OsdAudioOptions()
 					mplayer_switch_volume(0);
 					break;
 				}
-				case 2:
+				/*case 2:
 				{
 					mplayer_switch_balance(1);
 					break;
-				}
+				} */
 				case 4:
 				{
 					audio_delay += 0.1;
@@ -808,11 +808,11 @@ static void OsdAudioOptions()
 					mplayer_switch_volume(1);
 					break;
 				}
-				case 2:
+				/*case 2:
 				{
 					mplayer_switch_balance(0);
 					break;
-				}
+				}*/
 				case 4:
 				{
 					audio_delay -= 0.1;
@@ -823,14 +823,14 @@ static void OsdAudioOptions()
 			if (ret >= 0 || firstRun) {
 				firstRun = false;
 				osd_volume = mplayer_get_volume();
-				osd_balance = mplayer_get_balance();
+				//osd_balance = mplayer_get_balance();
 				osd_mute = mplayer_get_mute();
 				osd_audiodelay = (audio_delay * -1000);
 				if ((osd_audiodelay < 5) && (osd_audiodelay > -5)) {
 					osd_audiodelay = 0;
 				}
 				sprintf(audio_option_list.value[1], osd_volume);
-				sprintf(audio_option_list.value[2], osd_balance);
+				sprintf(audio_option_list.value[2], "DISABLED"); //balance is not working
 				sprintf(audio_option_list.value[3], osd_mute);
 				sprintf(audio_option_list.value[4], "%.0f ms", osd_audiodelay);
 				osd_options_audio->TriggerUpdate();
