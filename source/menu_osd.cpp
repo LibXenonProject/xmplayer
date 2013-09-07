@@ -734,6 +734,9 @@ static void OsdSubtitlesOptions()
 				firstRun = false;
 				osd_sub_name = mplayer_get_subtitle();
 				osd_subdelay = (sub_delay * -1000);
+				if ((osd_subdelay < 0.100) && (osd_subdelay > -0.100)) {
+					osd_subdelay = 0;
+				}
 				sprintf(subtitle_option_list.value[0], osd_sub_name);
 				sprintf(subtitle_option_list.value[1], "%s", sub_visibility == 1 ? "Enabled" : "Disabled");
 				if (!ass_enabled) {
@@ -836,6 +839,9 @@ static void OsdAudioOptions()
 				//osd_balance = mplayer_get_balance();
 				osd_mute = mplayer_get_mute();
 				osd_audiodelay = (audio_delay * -1000);
+				if ((osd_audiodelay < 0.100) && (osd_audiodelay > -0.100)) {
+					osd_audiodelay = 0;
+				}
 				sprintf(audio_option_list.value[1], "%.0f", osd_volume);
 				sprintf(audio_option_list.value[2], "Disabled"); //balance is not working
 				sprintf(audio_option_list.value[3], osd_mute);
