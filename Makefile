@@ -149,6 +149,7 @@ dist: fullclean
 	@mkdir -p release/mplayer/cache/elapsed
 	@cp -r mplayer-files/* release/mplayer/
 	@cp README release/
+	@cp CHANGELOG release/
 	@cd release; tar czvf $(TARGET).tar.gz *; mv $(TARGET).tar.gz ..
 	@rm -rf release
 	@$(MAKE) clean
