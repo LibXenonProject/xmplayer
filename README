@@ -5,7 +5,7 @@ Known Issues
 - Cannot seek in files over 2 gigabytes (split the files for now)
 - Prolonged pausing causes audio to go out of sync, "fix" this by seeking once in the file
 - ASS Subtitle handling can cause freezes and lag. If rand
-om crashes in video occurs, set ass=no and change vf=ass to #vf=ass in config
+om crashes in video occurs, set ass=no and change vf=ass to #vf=ass in config (ass is disabled by default)
 - Playing .rar can be unstable, sometimes freezing XMPlayer
 - If your subs doesn't show all the characters, try a different font by replacing subfont.ttf in folder
 - XMPlayer does not always mount usb (uda) even though it loads, reload XMPlayer and try again
