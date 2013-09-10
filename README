@@ -10,6 +10,7 @@ Version 0.0.4:
 - Changed: Disabled balance in osd menu, it doesn't work
 - Changed: Libass disabled as default, beware libass makes xmplayer unstable
 - Changed: Subfont from Arial to Dejavu Sans
+- Changed: Removed Music and Photos menu for now, not supported
 - Added: Support for .rmvb files
 - Added: New subtitle shaderwith outline. Increased stability because libass is not needed
 
