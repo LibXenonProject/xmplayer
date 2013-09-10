@@ -8,7 +8,10 @@ Version 0.0.4:
 - Fixed: Volume not changing in audio settings when paused
 - Fixed: Mplayer crashes if .rar archive is not supported
 - Changed: Disabled balance in osd menu, it doesn't work
+- Changed: Libass disabled as default, beware libass makes xmplayer unstable
+- Changed: Subfont from Arial to Dejavu Sans
 - Added: Support for .rmvb files
+- Added: New subtitle shaderwith outline. Increased stability because libass is not needed
 
 Version 0.0.3:
 - Fixed: Updated mount code to work with more usb devices (same as XeLL v0.993)
