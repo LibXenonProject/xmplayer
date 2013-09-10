@@ -245,22 +245,22 @@ static void LoadHomeRessources()
 
 
 	home_video_img = new GuiImage(new GuiImageData(home_video_sm_icon_n_png));
-	home_music_img = new GuiImage(new GuiImageData(home_music_sm_icon_n_png));
-	home_photo_img = new GuiImage(new GuiImageData(home_photo_sm_icon_n_png));
+	//home_music_img = new GuiImage(new GuiImageData(home_music_sm_icon_n_png));
+	//home_photo_img = new GuiImage(new GuiImageData(home_photo_sm_icon_n_png));
 	home_setting_img = new GuiImage(new GuiImageData(home_settings_sm_icon_n_png));
 
 	home_video_txt = new GuiText("Videos", 48, 0xFFFFFFFF);
 	home_all_txt = new GuiText("All", 48, 0xFFFFFFFF);
-	home_music_txt = new GuiText("Music", 48, 0xFFFFFFFF);
-	home_photo_txt = new GuiText("Photos", 48, 0xFFFFFFFF);
+	//home_music_txt = new GuiText("Music", 48, 0xFFFFFFFF);
+	//home_photo_txt = new GuiText("Photos", 48, 0xFFFFFFFF);
 	home_setting_txt = new GuiText("Settings", 48, 0xFFFFFFFF);
 	home_restart_txt = new GuiText("Restart", 48, 0xFFFFFFFF);
 	home_shutdown_txt = new GuiText("Shutdown", 48, 0xFFFFFFFF);
 
 	home_video_btn = new GuiButton(home_video_img->GetWidth(), home_video_img->GetHeight());
 	home_all_btn = new GuiButton(home_video_img->GetWidth(), home_video_img->GetHeight());
-	home_music_btn = new GuiButton(home_music_img->GetWidth(), home_music_img->GetHeight());
-	home_photo_btn = new GuiButton(home_photo_img->GetWidth(), home_photo_img->GetHeight());
+	//home_music_btn = new GuiButton(home_music_img->GetWidth(), home_music_img->GetHeight());
+	//home_photo_btn = new GuiButton(home_photo_img->GetWidth(), home_photo_img->GetHeight());
 	home_setting_btn = new GuiButton(home_setting_img->GetWidth(), home_setting_img->GetHeight());
 	home_restart_btn = new GuiButton(home_setting_img->GetWidth(), home_setting_img->GetHeight());
 	home_shutdown_btn = new GuiButton(home_setting_img->GetWidth(), home_setting_img->GetHeight());
@@ -272,8 +272,8 @@ static void LoadHomeRessources()
 
 	home_video_btn->SetLabel(home_video_txt);
 	home_all_btn->SetLabel(home_all_txt);
-	home_music_btn->SetLabel(home_music_txt);
-	home_photo_btn->SetLabel(home_photo_txt);
+	//home_music_btn->SetLabel(home_music_txt);
+	//home_photo_btn->SetLabel(home_photo_txt);
 	home_setting_btn->SetLabel(home_setting_txt);
 	home_restart_btn->SetLabel(home_restart_txt);
 	home_shutdown_btn->SetLabel(home_shutdown_txt);
@@ -951,16 +951,16 @@ static void HomePage()
 
 	home_video_txt ->SetText("Videos");
 	home_all_txt ->SetText("All");
-	home_music_txt ->SetText("Music");
-	home_photo_txt ->SetText("Photos");
+	//home_music_txt ->SetText("Music");
+	//home_photo_txt ->SetText("Photos");
 	home_setting_txt ->SetText("Settings");
 	home_restart_txt ->SetText("Restart");
 	home_shutdown_txt ->SetText("Shutdown");
 
 	home_list_v->Append(home_all_btn);
 	home_list_v->Append(home_video_btn);
-	home_list_v->Append(home_music_btn);
-	home_list_v->Append(home_photo_btn);
+	//home_list_v->Append(home_music_btn);
+	//home_list_v->Append(home_photo_btn);
 	home_list_v->Append(home_setting_btn);
 	home_list_v->Append(home_restart_btn);
 	home_list_v->Append(home_shutdown_btn);
@@ -1017,13 +1017,13 @@ static void HomePage()
 				//				case 3:
 				//					current_menu = BROWSE_PICTURE;
 				//					break;
-			case 4:
+			case 2:
 				current_menu = SETTINGS;
 				break;
-			case 5:
+			case 3:
 				xenon_smc_power_reboot();
 				break;
-			case 6:
+			case 4:
 				ExitMplayer();
 				break;
 			default:
@@ -1049,8 +1049,8 @@ static void HomePage()
 	}
 
 	home_list_v->Remove(home_video_btn);
-	home_list_v->Remove(home_music_btn);
-	home_list_v->Remove(home_photo_btn);
+	//home_list_v->Remove(home_music_btn);
+	//home_list_v->Remove(home_photo_btn);
 	home_list_v->Remove(home_setting_btn);
 	home_list_v->Remove(home_restart_btn);
 	home_list_v->Remove(home_shutdown_btn);
