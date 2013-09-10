@@ -12,7 +12,7 @@ Version 0.0.4:
 - Changed: Subfont from Arial to Dejavu Sans
 - Changed: Removed Music and Photos menu for now, not supported
 - Added: Support for .rmvb files
-- Added: New subtitle shaderwith outline. Increased stability because libass is not needed
+- Added: New subtitle shader with outline. Increased stability because libass is not needed
 
 Version 0.0.3:
 - Fixed: Updated mount code to work with more usb devices (same as XeLL v0.993)
