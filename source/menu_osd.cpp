@@ -625,7 +625,6 @@ extern "C" void mplayer_osd_open()
 static void OsdSubtitlesOptions()
 {
 	bool firstRun = true;
-	char *osd_sub_name = "";
 	float osd_subdelay;
 	if ((osd_display_option_audio == 0) && (osd_display_option_video == 0)) {
 		if (osd_display_option_subtitle) {
@@ -732,12 +731,12 @@ static void OsdSubtitlesOptions()
 			}
 			if (ret >= 0 || firstRun) {
 				firstRun = false;
-				osd_sub_name = mplayer_get_subtitle();
+				std::string osd_sub_name(mplayer_get_subtitle());
 				osd_subdelay = (sub_delay * -1000);
 				if ((osd_subdelay < 0.100) && (osd_subdelay > -0.100)) {
 					osd_subdelay = 0;
 				}
-				sprintf(subtitle_option_list.value[0], osd_sub_name);
+				sprintf(subtitle_option_list.value[0], osd_sub_name.c_str());
 				sprintf(subtitle_option_list.value[1], "%s", sub_visibility == 1 ? "Enabled" : "Disabled");
 				if (!ass_enabled) {
 					sprintf(subtitle_option_list.value[2], "%d", sub_pos);
@@ -761,8 +760,6 @@ static void OsdSubtitlesOptions()
 static void OsdAudioOptions()
 {
 	bool firstRun = true;
-	char *osd_mute = "";
-	char *osd_balance = "";
 	float osd_audiodelay, osd_volume;
 	if ((osd_display_option_subtitle == 0) && (osd_display_option_video == 0)) {
 		if (osd_display_option_audio) {
@@ -836,15 +833,15 @@ static void OsdAudioOptions()
 			if (ret >= 0 || firstRun) {
 				firstRun = false;
 				osd_volume = mplayer_get_volume();
-				//osd_balance = mplayer_get_balance();
-				osd_mute = mplayer_get_mute();
+				//std::string osd_balance(mplayer_get_balance());
+				std::string osd_mute(mplayer_get_mute());
 				osd_audiodelay = (audio_delay * -1000);
 				if ((osd_audiodelay < 0.100) && (osd_audiodelay > -0.100)) {
 					osd_audiodelay = 0;
 				}
 				sprintf(audio_option_list.value[1], "%.0f", osd_volume);
 				sprintf(audio_option_list.value[2], "Disabled"); //balance is not working
-				sprintf(audio_option_list.value[3], osd_mute);
+				sprintf(audio_option_list.value[3], osd_mute.c_str());
 				sprintf(audio_option_list.value[4], "%.0f ms", osd_audiodelay);
 				osd_options_audio->TriggerUpdate();
 			}
@@ -861,7 +858,7 @@ static void OsdAudioOptions()
 static void OsdVideoOptions()
 {
 	bool firstRun = true;
-	char osd_framedrop[100] = {};
+	std::string osd_framedrop;
 	if ((osd_display_option_subtitle == 0) && (osd_display_option_audio == 0)) {
 		if (osd_display_option_video) {
 			osd_options_window->SetFocus(0);
@@ -904,14 +901,14 @@ static void OsdVideoOptions()
 			if (ret >= 0 || firstRun) {
 				firstRun = false;
 				if (frame_dropping == 2) {
-					strcpy(osd_framedrop, "Hard");
+					osd_framedrop = "Hard";
 				} else if (frame_dropping == 1) {
-					strcpy(osd_framedrop, "Enabled");
+					osd_framedrop = "Enabled";
 				} else {
-					strcpy(osd_framedrop, "Disabled");
+					osd_framedrop = "Disabled";
 				}
 				sprintf(video_option_list.value[0], "%s", vo_fs == 1 ? "Enabled" : "Disabled");
-				sprintf(video_option_list.value[1], osd_framedrop);
+				sprintf(video_option_list.value[1], osd_framedrop.c_str());
 				sprintf(video_option_list.value[2], "%s", vo_vsync == 1 ? "Enabled" : "Disabled");
 				osd_options_video->TriggerUpdate();
 			}
