@@ -2,17 +2,24 @@
 
 Known Issues
 ================================================================================
-- Cannot seek in files over 2 gigabytes (split the files for now)
-- Prolonged pausing causes audio to go out of sync, "fix" this by seeking once in the file
-- ASS Subtitle handling can cause freezes and lag. If rand
-om crashes in video occurs, set ass=no and change vf=ass to #vf=ass in config (ass is disabled by default)
-- Playing .rar can be unstable, sometimes freezing XMPlayer
-- If your subs doesn't show all the characters, try a different font by replacing subfont.ttf in folder
-- XMPlayer does not always mount usb (uda) even though it loads, reload XMPlayer and try again
-- Endless loading screen: Try formatting using Gui Format32, or try placing xenon.elf  on root of xbox's internal hdd. 
-Place the folder on the root of a usb (ntfs, fat), and then run xenon.elf from the internal harddrive via Dashlaunch.
+Mounting:
+- Endless loading screen: First try formatting using Gui Format32. If this doesn't work place xenon.elf 
+on root of internal hdd, and place the "mplayer" folder on the root of a usb (ntfs, fat) then launch
+
+Playing video:
 - Can crash while using play'n'charge kit
-- Audio balance not working
+- Cannot seek in files over 2 gigabytes (split the files for now)
+- Playing .rar can be unstable, sometimes freezing XMPlayer
+- Prolonged pausing causes audio to go out of sync, "fix" this by seeking once in the file
+
+Subtitles:
+- ASS Subtitle handling can cause freezes and lag. If random crashes in video occurs, set ass=no and change 
+vf=ass to #vf=ass in config (ass is disabled by default)
+- If your subs doesn't show all the characters, try a different font by replacing subfont.ttf in "mplayer" folder
+
+
+Not implemented:
+- Audio balance is not supported
 - Pictures and Music are not supported
 - No networking!
 
@@ -22,41 +29,45 @@ Install
 
 Button Binds
 ================================================================================
-#In File Browser
--A: enter
--B: up one level
--X: sort by
--Back: back to homescreen
--D-pad: direction
-#In video
--A: pause/play
--B: exit player
--X: show progression
--Y: OSD/Menu
--Rb: seek 10 min forward
--Lb: seek 10 min back
--Rt: seek 10 sec forward
--Lt: seek 10 sec back
--Up: seek 1 min forward
--Down: seek 1 min back
--Right: seek 10 sek forward
--Left: seek 10 sek back
+- In File Browser
+A: enter
+B: up one level
+X: sort by
+Back: back to homescreen
+D-pad: direction
+
+- In Video
+A: pause/play
+B: exit player
+X: show progression
+Y: OSD/Menu
+Rb: seek 10 min forward
+Lb: seek 10 min back
+Rt: seek 10 sec forward
+Lt: seek 10 sec back
+Up: seek 1 min forward
+Down: seek 1 min back
+Right: seek 10 sek forward
+Left: seek 10 sek back
 
 Settings
 ================================================================================
-#Global
+- Global
 Exit action: Shutdown Button bind
 Language: Menu language (English/French)
-#Audio
+
+- Audio
 Language: Set default audio track of video (i.e mkv with multiple languages)
 Volume: Start volume
 Soft Volume: Software volume boost
-#Video
+
+- Video
 Frame Dropping: Set default frame dropping option
 Vsync: Set default vertical sync option
-#Subtitles
-Color: Color of the subtitle (only when ass=yes, which is default)
-Border Color: Color of the subtitle border (only when ass=yes, which is default)
+
+- Subtitles
+Color: Color of the subtitle (disabled by default, only when ass=yes)
+Border Color: Color of the subtitle border (disabled by default, only when ass=yes)
 Code Page: the encoding of the subtitles (latin, baltic, arabic etc.)
 Language: Default subtitle language
 

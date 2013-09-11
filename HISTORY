@@ -102,6 +102,7 @@ that only works when the video is playing, when paused it queues the commands
 mplayer play the file, we avoid the crash
 
 10/09/2013:
-- Added: New subtitle shader with outline. Increased stability because libass is not needed: added a custom pixel shader to vo_xenon.c, so no need for a power hungry libass
+- Added: New subtitle shader with outline. Increased stability because libass is not needed: added a custom pixel shader to vo_xenon.c, so no need for a power hungry libass. 
+Subtitle color is white and outline color is black
 - Changed: Libass disabled as default, beware libass makes xmplayer unstable: libass uses a lot of CPU power which can make xmplayer unstable, freeze and crash
 - Changed: Subfont from Arial to Dejavu Sans: better looking imo

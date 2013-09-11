@@ -51,7 +51,7 @@ extern "C" void mount_all_devices();
 //**************************************************************************
 // Device information
 //**************************************************************************
-static char * root_dev = NULL;
+static std::string root_dev;
 static int device_list_size = 0;
 static char device_list[STD_MAX][10];
 
@@ -175,7 +175,7 @@ static char _ass_border_color[10];
 //**************************************************************************
 // Browser variables
 //**************************************************************************
-static const char * exited_root = "";
+static std::string exited_root;
 static char exited_dir[MAXPATHLEN];
 static char exited_dir_array[64][MAXPATHLEN];
 static int exited_item[64];
@@ -411,7 +411,7 @@ static void ExitMplayer()
  * Displays a prompt window to user, with information, an error message, or
  * presenting a user with a choice
  ***************************************************************************/
-int WindowPrompt(const char *title, const char *msg, const char *btn1Label, const char *btn2Label)
+int WindowPrompt(const std::string title, const std::string msg, const std::string btn1Label, const std::string btn2Label)
 {
 	int choice = -1;
 
@@ -424,27 +424,27 @@ int WindowPrompt(const char *title, const char *msg, const char *btn1Label, cons
 	GuiImageData dialogBox(dialogue_box_png);
 	GuiImage dialogBoxImg(&dialogBox);
 
-	GuiText titleTxt(title, 26, (XeColor)
+	GuiText titleTxt(title.c_str(), 26, (XeColor)
 	{
 		{ 255, 255, 255, 255}});
 	titleTxt.SetAlignment(ALIGN_CENTRE, ALIGN_TOP);
 	titleTxt.SetPosition(0, 14);
 
-	GuiText msgTxt(msg, 26, (XeColor)
+	GuiText msgTxt(msg.c_str(), 26, (XeColor)
 	{
 		{ 255, 255, 255, 255}});
 	msgTxt.SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);
 	msgTxt.SetPosition(0, -20);
 	msgTxt.SetWrap(true, 430);
 
-	GuiText btn1Txt(btn1Label, 22, (XeColor)
+	GuiText btn1Txt(btn1Label.c_str(), 22, (XeColor)
 	{
 		{255, 255, 255, 255}});
 	GuiImage btn1Img(&btnOutline);
 	GuiImage btn1ImgOver(&btnOutlineOver);
 	GuiButton btn1(btnOutline.GetWidth(), btnOutline.GetHeight());
 
-	if (btn2Label) {
+	if (!btn2Label.empty()) {
 		btn1.SetAlignment(ALIGN_LEFT, ALIGN_BOTTOM);
 		btn1.SetPosition(20, -25);
 	} else {
@@ -459,7 +459,7 @@ int WindowPrompt(const char *title, const char *msg, const char *btn1Label, cons
 	btn1.SetState(STATE_SELECTED);
 	btn1.SetEffectGrow();
 
-	GuiText btn2Txt(btn2Label, 22, (XeColor)
+	GuiText btn2Txt(btn2Label.c_str(), 22, (XeColor)
 	{
 		{255, 0, 0, 0}});
 	GuiImage btn2Img(&btnOutline);
@@ -478,14 +478,14 @@ int WindowPrompt(const char *title, const char *msg, const char *btn1Label, cons
 	promptWindow.Append(&msgTxt);
 	promptWindow.Append(&btn1);
 
-	if (btn2Label)
+	if (!btn2Label.empty())
 		promptWindow.Append(&btn2);
 
 	mainWindow->SetState(STATE_DISABLED);
 	mainWindow->Append(&promptWindow);
 	mainWindow->ChangeFocus(&promptWindow);
 
-	if (btn2Label) {
+	if (!btn2Label.empty()) {
 		btn1.ResetState();
 		btn1.SetState(STATE_SELECTED);
 	}
@@ -507,7 +507,7 @@ int WindowPrompt(const char *title, const char *msg, const char *btn1Label, cons
 	return choice;
 }
 
-int SmallWindowPrompt(const char *btn1Label, const char *btn2Label)
+int SmallWindowPrompt(const std::string btn1Label, const std::string btn2Label)
 {
 	int choice = -1;
 	GuiWindow promptWindow(300, 72);
@@ -521,7 +521,7 @@ int SmallWindowPrompt(const char *btn1Label, const char *btn2Label)
 	dialogBoxImg.SetPosition(0, 20);
 	dialogBoxImg.SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);
 
-	GuiText btn1Txt(btn1Label, 22, (XeColor) {{255, 255, 255, 255 }});
+	GuiText btn1Txt(btn1Label.c_str(), 22, (XeColor) {{255, 255, 255, 255 }});
 	GuiImage btn1Img(&btnOutline);
 	GuiImage btn1ImgOver(&btnOutlineOver);
 	GuiButton btn1(btnOutline.GetWidth(), btnOutline.GetHeight());
@@ -533,7 +533,7 @@ int SmallWindowPrompt(const char *btn1Label, const char *btn2Label)
 	btn1.SetTrigger(trigA);
 	btn1.SetState(STATE_SELECTED);
 
-	GuiText btn2Txt(btn2Label, 22, (XeColor){{255, 255, 255, 255}});
+	GuiText btn2Txt(btn2Label.c_str(), 22, (XeColor){{255, 255, 255, 255}});
 	GuiImage btn2Img(&btnOutline);
 	GuiImage btn2ImgOver(&btnOutlineOver);
 	GuiButton btn2(btnOutline.GetWidth(), btnOutline.GetHeight());
@@ -632,7 +632,7 @@ static void OnScreenKeyboard(char * var, u32 maxlen) {
 	mainWindow->SetState(STATE_DEFAULT);
 }
 
-extern "C" void error_prompt(const char *msg)
+extern "C" void error_prompt(std::string msg)
 {
 	WindowPrompt("Error", msg, "Quit", NULL);
 	ExitMplayer();
@@ -677,7 +677,7 @@ static void StringRemplaceAll(std::string & src, const std::string find, const s
 	}
 }
 
-static void Browser(const char * title, const char * root)
+static void Browser(const std::string title, const std::string root)
 {
 	int _working_menu = current_menu;
 	// apply correct icon
@@ -700,13 +700,13 @@ static void Browser(const char * title, const char * root)
 	}
 	ResetBrowser();
 	if ((strlen(exited_dir_array[current_menu]) != 0) && (exited_root == root)) {
-		BrowseDevice(exited_dir_array[current_menu], root);
+		BrowseDevice(exited_dir_array[current_menu], root.c_str());
 		gui_browser->ResetState();
 		browser.selIndex = exited_item[current_menu];
 		browser.pageIndex = exited_page[current_menu];
 		gui_browser->fileList[exited_i[current_menu]]->SetState(STATE_SELECTED);
 	} else {
-		BrowseDevice("/", root);
+		BrowseDevice("/", root.c_str());
 		gui_browser->ResetState();
 		gui_browser->fileList[0]->SetState(STATE_SELECTED);
 	}
@@ -734,7 +734,7 @@ static void Browser(const char * title, const char * root)
 
 	mainWindow->Append(&bBtn);
 	mainWindow->Append(&backBtn);
-	browser_headline->SetText(title);
+	browser_headline->SetText(title.c_str());
 	browser_subheadline->SetText(rootdir);
 
 	mainWindow->Append(browser_top_bg);
@@ -763,9 +763,8 @@ static void Browser(const char * title, const char * root)
 	last_menu = current_menu;
 	int last_sel_item = -1;
 	int last_sort = -1;
-	int browser_exit = 0;
 	char tmp[256];
-
+	char* ext = NULL;
 	while (current_menu == last_menu) {
 		if (last_sel_item != browser.selIndex) {
 			sprintf(tmp, "%d/%d", browser.selIndex + 1, browser.numEntries);
@@ -856,7 +855,7 @@ static void Browser(const char * title, const char * root)
 						audio_gui = 1;
 						current_menu = MENU_MPLAYER; */
 					} else if (file_type(mplayer_filename) == BROWSER_TYPE_VIDEO) {	
-					    char* ext = strrchr(mplayer_filename, '.');
+					    	ext = strrchr(mplayer_filename, '.');
 						if (strcmp(ext, ".rar") == 0) { 	
 							ext = playerGetRarExt(mplayer_filename);
 							if (strcmp(ext, "stop") == 0) { 
@@ -910,7 +909,7 @@ rar_skip:						gui_browser->fileList[exited_i[current_menu]]->SetState(STATE_SEL
 		}
 		Update();
 	}
-
+	delete ext; 
 	// exit dir						
 	sprintf(exited_dir, "%s/", browser.dir);
 	CleanupPath(exited_dir);
@@ -1400,9 +1399,12 @@ static void SubtitleSettings()
 	options.v[3].max = LANGUAGE_SIZE;
 
 	GuiText titleTxt("Home > Settings > Subtitle", 26, 0xfffa9600);
-
 	titleTxt.SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	titleTxt.SetPosition(150, 35);
+
+	GuiText subNote("Note: Color and Border Color needs ass=yes (unstable)!", 16, 0xfffa9600);
+	subNote.SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+	subNote.SetPosition(160, 290);
 
 	GuiButton bBtn(20, 20);
 	bBtn.SetAlignment(ALIGN_LEFT, ALIGN_BOTTOM);
@@ -1434,6 +1436,7 @@ static void SubtitleSettings()
 	mainWindow->Append(&optionBrowser);
 	mainWindow->Append(&w);
 	mainWindow->Append(&titleTxt);
+	mainWindow->Append(&subNote);
 
 	while (current_menu == SETTINGS_SUBTITLES) {
 		Update();
@@ -1496,6 +1499,7 @@ static void SubtitleSettings()
 	mainWindow->Remove(&optionBrowser);
 	mainWindow->Remove(&w);
 	mainWindow->Remove(&titleTxt);
+	mainWindow->Remove(&subNote);
 	mainWindow->Remove(browser_top_bg);
 	mainWindow->Remove(browser_bottom_bg);
 	// save settings
@@ -1884,7 +1888,6 @@ static void FindDevices()
 static void LoadingThread()
 {
 	int i = 0;
-	float rot = 0;
 	logo = loadPNGFromMemory((unsigned char*) logo_png);
 	loading[0] = loadPNGFromMemory((unsigned char*) loading_0_png);
 	loading[1] = loadPNGFromMemory((unsigned char*) loading_1_png);

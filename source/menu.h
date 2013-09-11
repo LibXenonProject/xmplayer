@@ -1,7 +1,7 @@
 #pragma once
 
 #include "mplayer_func.h"
-
+#include <string>
 // mplayer stuff
 extern "C" {
 	#include "../mplayer/mplayer.h"
@@ -108,5 +108,5 @@ void LoadOsdRessources();
 double playerSeekPrompt(char * seekfile);
 xmplayer_seek_information * playerSeekOpen(char * file);
 void format_time(char * dest, double time);
-int WindowPrompt(const char *title, const char *msg, const char *btn1Label, const char *btn2Label);
-int SmallWindowPrompt(const char *btn1Label, const char *btn2Label);
+int WindowPrompt(const std::string title, const std::string msg, const std::string btn1Label, const std::string btn2Label);
+int SmallWindowPrompt(const std::string btn1Label, const std::string btn2Label);
