@@ -1026,7 +1026,7 @@ static void HomePage()
 				ExitMplayer();
 				break;
 			default:
-				WindowPrompt("Warning", "Not implemented yet", "Ok", NULL);
+				WindowPrompt("Warning", "Not implemented yet", "Ok", "");
 				break;
 			}
 
@@ -1774,7 +1774,7 @@ static void XMPSettings()
 			current_menu = SETTINGS_SUBTITLES;
 			break;
 		case 4:
-			WindowPrompt("Warning", "Not implemented yet", "Ok", NULL);
+			WindowPrompt("Warning", "Not implemented yet", "Ok", "");
 			//current_menu = SETTINGS_NETWORK;
 			break;  				
 		}
