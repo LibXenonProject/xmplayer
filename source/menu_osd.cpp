@@ -962,7 +962,6 @@ extern "C" void mplayer_osd_close()
 	osd_display_option_audio = 0;
 	osd_display_option_video = 0;
 	last_level = -1;
-	force_load_font = 1; //force to reload -> removes last subs on screen
 }
 
 extern "C" void mplayer_osd_draw(int level)

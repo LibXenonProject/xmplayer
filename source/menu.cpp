@@ -764,7 +764,6 @@ static void Browser(const std::string title, const std::string root)
 	int last_sel_item = -1;
 	int last_sort = -1;
 	char tmp[256];
-	char* ext = NULL;
 	while (current_menu == last_menu) {
 		if (last_sel_item != browser.selIndex) {
 			sprintf(tmp, "%d/%d", browser.selIndex + 1, browser.numEntries);
@@ -855,10 +854,10 @@ static void Browser(const std::string title, const std::string root)
 						audio_gui = 1;
 						current_menu = MENU_MPLAYER; */
 					} else if (file_type(mplayer_filename) == BROWSER_TYPE_VIDEO) {	
-					    	ext = strrchr(mplayer_filename, '.');
-						if (strcmp(ext, ".rar") == 0) { 	
-							ext = playerGetRarExt(mplayer_filename);
-							if (strcmp(ext, "stop") == 0) { 
+					    	std::string ext(strrchr(mplayer_filename, '.'));
+						if (ext == ".rar") { 	
+							std::string ext(playerGetRarExt(mplayer_filename));
+							if (ext == "stop") { 
 								printf("[browser] Unsupported .rar file(s) \n");
 								goto rar_skip;
 							}
@@ -909,7 +908,6 @@ rar_skip:						gui_browser->fileList[exited_i[current_menu]]->SetState(STATE_SEL
 		}
 		Update();
 	}
-	delete ext; 
 	// exit dir						
 	sprintf(exited_dir, "%s/", browser.dir);
 	CleanupPath(exited_dir);
