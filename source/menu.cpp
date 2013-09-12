@@ -1799,9 +1799,16 @@ static void InitMplayerSettings(void)
 	audio_lang = XMPlayerCfg.alang;
 }
 
+void GetColorFloat(void)
+{
+colors[getColorIndex(XMPlayerCfg.subcolor, colors, sizeof (colors))].toFloat(vo_xenon_subtitle);
+colors[getColorIndex(XMPlayerCfg.subcolor, colors, sizeof (colors))].toFloat(vo_xenon_outline);
+}
+
 void MenuMplayer()
 {
 	printf("filename:%s\r\n", mplayer_filename);
+	GetColorFloat();
 	static int mplayer_need_init = 1;
 	if (mplayer_need_init) {
 		char * argv[] = {

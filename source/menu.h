@@ -11,6 +11,8 @@ extern "C" {
 	#include "../mplayer/libvo/video_out.h"
 	extern float soft_vol_max;
 	extern float start_volume;
+	extern float vo_xenon_subtitle[4];
+	extern float vo_xenon_outline[4];
 }
 
 // fucked by include path
@@ -88,9 +90,25 @@ int GetCodepageIndex();
  **/
 typedef struct
 {
-	//RRGGBB00
-	unsigned int hex;
-	char * string;
+        //RRGGBB00
+        unsigned int hex;
+        char * string;
+       
+ /*       void fromFloat(float * v) {
+                hex = 0;
+                hex = (v[0] * 255.f) | (v[1] * 255.f) >> 8 | (v[2] * 255.f)>> 16 | (v[3] * 255.f) >> 24;
+        } */
+       
+        void toFloat(float *v) {
+                const float col[4] = {
+                        (float)((hex & 0xFF)) * (1.0f / 255.0f),
+                        (float)((hex & 0xFF00) >> 8) * (1.0f / 255.0f),
+                        (float)((hex & 0xFF0000) >> 16) * (1.0f / 255.0f),
+                        (float)((hex & 0xFF0000000) >> 24) * (1.0f / 255.0f),
+                };
+               
+                memcpy(v, col, 4 * sizeof(float));
+        }
 } color;
 
 #define NB_COLOR 4
