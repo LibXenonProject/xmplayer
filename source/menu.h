@@ -11,8 +11,6 @@ extern "C" {
 	#include "../mplayer/libvo/video_out.h"
 	extern float soft_vol_max;
 	extern float start_volume;
-	extern float vo_xenon_subtitle[4];
-	extern float vo_xenon_outline[4];
 }
 
 // fucked by include path
