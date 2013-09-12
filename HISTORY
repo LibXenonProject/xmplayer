@@ -106,3 +106,10 @@ mplayer play the file, we avoid the crash
 Subtitle color is white and outline color is black
 - Changed: Libass disabled as default, beware libass makes xmplayer unstable: libass uses a lot of CPU power which can make xmplayer unstable, freeze and crash
 - Changed: Subfont from Arial to Dejavu Sans: better looking imo
+
+11/09/2013:
+- Fixed: Elf files not loading after a video has been played: fixed in libxenon, by changing fstat() to stat() in elf.c's load from disk
+- Fixed: Overload buffer and memory leak leading to random crashes: fixed by lots of cleanup of code, mainly changing char* into std::string in .cpp files
+
+12/09/2013: 
+- More code cleanup, adding std::string to libgui functions
