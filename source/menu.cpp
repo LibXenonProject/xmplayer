@@ -1229,8 +1229,8 @@ static void AudioSettings()
 			switch (ret) {
 			case 0:
 			{
-				sprintf(XMPlayerCfg.alang, languages[option_value].abbrev2);
-				sprintf(XMPlayerCfg.alang_desc, languages[option_value].language);
+				sprintf(XMPlayerCfg.alang, languages[option_value].abbrev2.c_str());
+				sprintf(XMPlayerCfg.alang_desc, languages[option_value].language.c_str());
 				audio_lang = XMPlayerCfg.alang;
 				break;
 			}
@@ -1456,15 +1456,15 @@ static void SubtitleSettings()
 				}
 				case 2:
 				{
-					strcpy(XMPlayerCfg.subcp, codepages[option_value].cpname);
-					strcpy(XMPlayerCfg.subcp_desc, codepages[option_value].language);
+					strcpy(XMPlayerCfg.subcp, codepages[option_value].cpname.c_str());
+					strcpy(XMPlayerCfg.subcp_desc, codepages[option_value].language.c_str());
 					sub_cp = XMPlayerCfg.subcp;
 					break;
 				}
 				case 3:
 				{
-					strcpy(XMPlayerCfg.sublang, languages[option_value].abbrev);
-					strcpy(XMPlayerCfg.sublang_desc, languages[option_value].language);
+					strcpy(XMPlayerCfg.sublang, languages[option_value].abbrev.c_str());
+					strcpy(XMPlayerCfg.sublang_desc, languages[option_value].language.c_str());
 					dvdsub_lang = XMPlayerCfg.sublang;
 					break;
 				}
@@ -1474,8 +1474,8 @@ static void SubtitleSettings()
 		if (ret >= 0 || firstRun) {
 			firstRun = false;
 
-			strcpy(options.value[0], getColorFromHex(XMPlayerCfg.subcolor, colors, sizeof (colors)));
-			strcpy(options.value[1], getColorFromHex(XMPlayerCfg.border_color, colors, sizeof (colors)));
+			strcpy(options.value[0], getColorFromHex(XMPlayerCfg.subcolor, colors, sizeof (colors)).c_str());
+			strcpy(options.value[1], getColorFromHex(XMPlayerCfg.border_color, colors, sizeof (colors)).c_str());
 
 			strcpy(options.value[2], XMPlayerCfg.subcp_desc);
 			strcpy(options.value[3], XMPlayerCfg.sublang_desc);

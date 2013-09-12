@@ -63,14 +63,14 @@ enum
 
 
 typedef struct _cp {
-	const char *cpname;
-	const char *language;
+	std::string cpname;
+	std::string language;
 } CP;
 
 typedef struct _lang {
-	const char *language;
-	const char *abbrev;
-	const char *abbrev2;
+	std::string language;
+	std::string abbrev;
+	std::string abbrev2;
 } LANG;
 
 #define LANGUAGE_SIZE 135
@@ -90,7 +90,7 @@ typedef struct
 {
         //RRGGBB00
         unsigned int hex;
-        char * string;
+        std::string string;
        
  /*       void fromFloat(float * v) {
                 hex = 0;
@@ -113,8 +113,8 @@ typedef struct
 
 extern color colors[NB_COLOR];
 
-char * getColorFromHex(unsigned int hex, color * pColor, int max);
-unsigned int getColorFromString(char * str, color * pColor, int max);
+std::string getColorFromHex(unsigned int hex, color * pColor, int max);
+unsigned int getColorFromString(std::string str, color * pColor, int max);
 int getColorIndex(unsigned int hex, color * pColor, int max);
 
 
