@@ -10,8 +10,7 @@ Version 0.0.4:
 - Changed: Subfont from Arial to Dejavu Sans
 - Changed: Removed Music and Photos menu for now, not supported
 - Added: Support for .rmvb files
-- Added: New subtitle shader with white color and black outline. Increased stability because libass is not needed
-- Added: Note in Subtitle Settings that indicates change of color and border color needs libass
+- Added: New subtitle shader with selectable color and selectable outline color. Increased stability because libass is not needed
 
 Version 0.0.3:
 - Fixed: Updated mount code to work with more usb devices (same as XeLL v0.993)

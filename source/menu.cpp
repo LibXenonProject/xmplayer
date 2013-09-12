@@ -1400,10 +1400,6 @@ static void SubtitleSettings()
 	titleTxt.SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	titleTxt.SetPosition(150, 35);
 
-	GuiText subNote("Note: Color and Border Color needs ass=yes (unstable)!", 16, 0xfffa9600);
-	subNote.SetAlignment(ALIGN_LEFT, ALIGN_TOP);
-	subNote.SetPosition(160, 290);
-
 	GuiButton bBtn(20, 20);
 	bBtn.SetAlignment(ALIGN_LEFT, ALIGN_BOTTOM);
 	bBtn.SetPosition(10, -35);
@@ -1434,7 +1430,6 @@ static void SubtitleSettings()
 	mainWindow->Append(&optionBrowser);
 	mainWindow->Append(&w);
 	mainWindow->Append(&titleTxt);
-	mainWindow->Append(&subNote);
 
 	while (current_menu == SETTINGS_SUBTITLES) {
 		Update();
@@ -1497,7 +1492,6 @@ static void SubtitleSettings()
 	mainWindow->Remove(&optionBrowser);
 	mainWindow->Remove(&w);
 	mainWindow->Remove(&titleTxt);
-	mainWindow->Remove(&subNote);
 	mainWindow->Remove(browser_top_bg);
 	mainWindow->Remove(browser_bottom_bg);
 	// save settings
@@ -1802,7 +1796,7 @@ static void InitMplayerSettings(void)
 void GetColorFloat(void)
 {
 colors[getColorIndex(XMPlayerCfg.subcolor, colors, sizeof (colors))].toFloat(vo_xenon_subtitle);
-colors[getColorIndex(XMPlayerCfg.subcolor, colors, sizeof (colors))].toFloat(vo_xenon_outline);
+colors[getColorIndex(XMPlayerCfg.border_color, colors, sizeof (colors))].toFloat(vo_xenon_outline);
 }
 
 void MenuMplayer()

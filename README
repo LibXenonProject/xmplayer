@@ -67,8 +67,8 @@ Frame Dropping: Set default frame dropping option
 Vsync: Set default vertical sync option
 
 - Subtitles
-Color: Color of the subtitle (disabled by default, only when ass=yes)
-Border Color: Color of the subtitle border (disabled by default, only when ass=yes)
+Color: Color of the subtitle
+Border Color: Color of the subtitle border
 Code Page: the encoding of the subtitles (latin, baltic, arabic etc.)
 Language: Default subtitle language
 

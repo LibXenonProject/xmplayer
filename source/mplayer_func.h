@@ -86,8 +86,8 @@ extern "C" {
 	void mplayer_osd_close(void);
 	void mplayer_osd_draw(int level);
 	void mplayer_osd_open(void);
-	float vo_xenon_subtitle[4];
-	float vo_xenon_outline[4];	
+	extern float vo_xenon_subtitle[4];
+	extern float vo_xenon_outline[4];	
 
 	// load save return 0 if fail, 1 on success
 	int save_file(const char * filename, void * in, int size);

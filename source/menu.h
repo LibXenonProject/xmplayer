@@ -99,10 +99,10 @@ typedef struct
        
         void toFloat(float *v) {
                 const float col[4] = {
-                        (float)((hex & 0xFF)) * (1.0f / 255.0f),
-                        (float)((hex & 0xFF00) >> 8) * (1.0f / 255.0f),
-                        (float)((hex & 0xFF0000) >> 16) * (1.0f / 255.0f),
                         (float)((hex & 0xFF0000000) >> 24) * (1.0f / 255.0f),
+			(float)((hex & 0xFF0000) >> 16) * (1.0f / 255.0f),
+                        (float)((hex & 0xFF00) >> 8) * (1.0f / 255.0f),
+                        1.0,
                 };
                
                 memcpy(v, col, 4 * sizeof(float));
