@@ -281,7 +281,6 @@ static void LoadHomeRessources()
 
 static void LoadBrowserRessources()
 {
-
 	// Browser
 	browser_photo_icon = new GuiImageData(browser_photo_icon_f_png);
 	browser_video_icon = new GuiImageData(browser_video_icon_f_png);
@@ -571,7 +570,7 @@ int SmallWindowPrompt(std::string btn1Label, std::string btn2Label)
  * Opens an on-screen keyboard window, with the data entered being stored
  * into the specified variable.
  ***************************************************************************/
-static void OnScreenKeyboard(char * var, u32 maxlen) {
+/*static void OnScreenKeyboard(char * var, u32 maxlen) {
 	int save = -1;
 
 	GuiKeyboard keyboard(var, maxlen);
@@ -630,11 +629,11 @@ static void OnScreenKeyboard(char * var, u32 maxlen) {
 
 	mainWindow->Remove(&keyboard);
 	mainWindow->SetState(STATE_DEFAULT);
-}
+}*/
 
 extern "C" void error_prompt(std::string msg)
 {
-	WindowPrompt("Error", msg, "Quit", NULL);
+	WindowPrompt("Error", msg, "Quit", "");
 	ExitMplayer();
 }
 
@@ -1498,7 +1497,7 @@ static void SubtitleSettings()
 	SavePrefs(true);
 }
 
-static void NetworkSettingsSMB() {
+/*static void NetworkSettingsSMB() {
 	int ret;
 	int i = 0;
 	bool firstRun = true;
@@ -1693,7 +1692,7 @@ static void NetworkSettings() {
 	mainWindow->Remove(&titleTxt);
 	mainWindow->Remove(browser_top_bg);
 	mainWindow->Remove(browser_bottom_bg);
-}
+}*/
 
 //SETTINGS MENU
 
@@ -1862,11 +1861,11 @@ static void GuiLoop()
 			AudioSettings();
 		} else if (current_menu == SETTINGS_VIDEO) {
 			VideoSettings();
-		} else if (current_menu == SETTINGS_NETWORK) {
+		} /*else if (current_menu == SETTINGS_NETWORK) {
 			NetworkSettings();
 		} else if (current_menu == SETTINGS_NETWORK_SMB) {
 			NetworkSettingsSMB();
-		}
+		}*/
 	}
 }
 

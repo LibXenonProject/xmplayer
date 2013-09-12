@@ -56,7 +56,36 @@ GuiText::GuiText(std::string t, int s, XeColor c) {
 		textDyn[i] = NULL;
 }
 
-GuiText::GuiText(const char * t, int s, XeColor c) {
+GuiText::GuiText(std::string t, int s, uint32_t u32c) {
+	XeColor c;
+	c.lcol = u32c;
+	origText = NULL;
+	text = NULL;
+	size = s;
+	color = c;
+	alpha = c.a;
+	style = FTGX_JUSTIFY_CENTER | FTGX_ALIGN_MIDDLE;
+	maxWidth = 0;
+	wrap = false;
+	textDynNum = 0;
+	textScroll = SCROLL_NONE;
+	textScrollPos = 0;
+	textScrollInitialDelay = TEXT_SCROLL_INITIAL_DELAY;
+	textScrollDelay = TEXT_SCROLL_DELAY;
+
+	alignmentHor = ALIGN_CENTRE;
+	alignmentVert = ALIGN_MIDDLE;
+
+	if (!t.empty()) {
+		origText = strdup(t.c_str());
+		text = charToWideChar(gettext(t.c_str()));
+	}
+
+	for (int i = 0; i < 20; i++)
+		textDyn[i] = NULL;
+
+}
+/*GuiText::GuiText(const char * t, int s, XeColor c) {
 	origText = NULL;
 	text = NULL;
 	size = s;
@@ -111,11 +140,38 @@ GuiText::GuiText(const char * t, int s, uint32_t u32c) {
 	for (int i = 0; i < 20; i++)
 		textDyn[i] = NULL;
 
-}
+}*/
 
 /**
  * Constructor for the GuiText class, uses presets
  */
+GuiText::GuiText(std::string t) {
+	origText = NULL;
+	text = NULL;
+	size = presetSize;
+	color = presetColor;
+	alpha = presetColor.a;
+	style = presetStyle;
+	maxWidth = presetMaxWidth;
+	wrap = false;
+	textDynNum = 0;
+	textScroll = SCROLL_NONE;
+	textScrollPos = 0;
+	textScrollInitialDelay = TEXT_SCROLL_INITIAL_DELAY;
+	textScrollDelay = TEXT_SCROLL_DELAY;
+
+	alignmentHor = presetAlignmentHor;
+	alignmentVert = presetAlignmentVert;
+
+	if (!t.empty()) {
+		origText = strdup(t.c_str());
+		text = charToWideChar(gettext(t.c_str()));
+	}
+
+	for (int i = 0; i < 20; i++)
+		textDyn[i] = NULL;
+}
+/*
 GuiText::GuiText(const char * t) {
 	origText = NULL;
 	text = NULL;
@@ -142,7 +198,7 @@ GuiText::GuiText(const char * t) {
 	for (int i = 0; i < 20; i++)
 		textDyn[i] = NULL;
 }
-
+*/
 /**
  * Destructor for the GuiText class.
  */
@@ -182,7 +238,7 @@ void GuiText::SetText(std::string t) {
 		text = charToWideChar(gettext(t.c_str()));
 	}
 }
-
+/*
 void GuiText::SetText(const char * t) {
 	if (origText)
 		free(origText);
@@ -206,7 +262,7 @@ void GuiText::SetText(const char * t) {
 		text = charToWideChar(gettext(t));
 	}
 }
-
+*/
 void GuiText::SetWText(wchar_t * t) {
 	if (origText)
 		free(origText);

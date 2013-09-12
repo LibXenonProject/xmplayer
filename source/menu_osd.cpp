@@ -748,7 +748,7 @@ static void OsdSubtitlesOptions()
 				osd_options_subtitle->TriggerUpdate();
 			}
 		} else {
-			osd_options_headline->SetText(NULL);
+			osd_options_headline->SetText("");
 			osd_options_subtitle_window->SetVisible(false);
 			osd_options_subtitle_window->SetFocus(0);
 			osd_options_subtitle->SetFocus(0);
@@ -846,7 +846,7 @@ static void OsdAudioOptions()
 				osd_options_audio->TriggerUpdate();
 			}
 		} else {
-			osd_options_headline->SetText(NULL);
+			osd_options_headline->SetText("");
 			osd_options_audio_window->SetVisible(false);
 			osd_options_audio_window->SetFocus(0);
 			osd_options_audio->SetFocus(0);
@@ -913,7 +913,7 @@ static void OsdVideoOptions()
 				osd_options_video->TriggerUpdate();
 			}
 		} else {
-			osd_options_headline->SetText(NULL);
+			osd_options_headline->SetText("");
 			osd_options_video_window->SetVisible(false);
 			osd_options_video_window->SetFocus(0);
 			osd_options_video->SetFocus(0);
