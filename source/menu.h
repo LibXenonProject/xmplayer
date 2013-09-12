@@ -108,5 +108,5 @@ void LoadOsdRessources();
 double playerSeekPrompt(char * seekfile);
 xmplayer_seek_information * playerSeekOpen(char * file);
 void format_time(char * dest, double time);
-int WindowPrompt(const std::string title, const std::string msg, const std::string btn1Label, const std::string btn2Label);
-int SmallWindowPrompt(const std::string btn1Label, const std::string btn2Label);
+int WindowPrompt(std::string title, std::string msg, std::string btn1Label, std::string btn2Label);
+int SmallWindowPrompt(std::string btn1Label, std::string btn2Label);

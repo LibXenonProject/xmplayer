@@ -41,6 +41,7 @@
 #include <math.h>
 #include <time.h>
 #include <time/time.h>
+#include <string>
 //#include <asndlib.h>
 //#include <wiiuse/wpad.h>
 
@@ -680,6 +681,7 @@ public:
 	//!\param t Text
 	//!\param s Font size
 	//!\param c Font color
+	GuiText(std::string t, int s, XeColor c);
 	GuiText(const char * t, int s, XeColor c);
 	GuiText(const char * t, int s, uint32_t c);
 	//!\overload
@@ -691,6 +693,7 @@ public:
 	//!Sets the text of the GuiText element
 	//!\param t Text
 	void SetText(const char * t);
+	void SetText(std::string t);
 	//!Sets the text of the GuiText element
 	//!\param t UTF-8 Text
 	void SetWText(wchar_t * t);

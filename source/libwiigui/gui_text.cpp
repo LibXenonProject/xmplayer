@@ -29,6 +29,33 @@ static u16 presetStyle = 0;
 /**
  * Constructor for the GuiText class.
  */
+GuiText::GuiText(std::string t, int s, XeColor c) {
+	origText = NULL;
+	text = NULL;
+	size = s;
+	color = c;
+	alpha = c.a;
+	style = FTGX_JUSTIFY_CENTER | FTGX_ALIGN_MIDDLE;
+	maxWidth = 0;
+	wrap = false;
+	textDynNum = 0;
+	textScroll = SCROLL_NONE;
+	textScrollPos = 0;
+	textScrollInitialDelay = TEXT_SCROLL_INITIAL_DELAY;
+	textScrollDelay = TEXT_SCROLL_DELAY;
+
+	alignmentHor = ALIGN_CENTRE;
+	alignmentVert = ALIGN_MIDDLE;
+
+	if (!t.empty()) {
+		origText = strdup(t.c_str());
+		text = charToWideChar(gettext(t.c_str()));
+	}
+
+	for (int i = 0; i < 20; i++)
+		textDyn[i] = NULL;
+}
+
 GuiText::GuiText(const char * t, int s, XeColor c) {
 	origText = NULL;
 	text = NULL;
@@ -129,6 +156,30 @@ GuiText::~GuiText() {
 		for (int i = 0; i < textDynNum; i++)
 			if (textDyn[i])
 				delete[] textDyn[i];
+	}
+}
+
+void GuiText::SetText(std::string t) {
+	if (origText)
+		free(origText);
+	if (text)
+		delete[] text;
+
+	if (textDynNum > 0) {
+		for (int i = 0; i < textDynNum; i++)
+			if (textDyn[i])
+				delete[] textDyn[i];
+	}
+
+	origText = NULL;
+	text = NULL;
+	textDynNum = 0;
+	textScrollPos = 0;
+	textScrollInitialDelay = TEXT_SCROLL_INITIAL_DELAY;
+
+	if (!t.empty()) {
+		origText = strdup(t.c_str());
+		text = charToWideChar(gettext(t.c_str()));
 	}
 }
 

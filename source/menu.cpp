@@ -411,7 +411,7 @@ static void ExitMplayer()
  * Displays a prompt window to user, with information, an error message, or
  * presenting a user with a choice
  ***************************************************************************/
-int WindowPrompt(const std::string title, const std::string msg, const std::string btn1Label, const std::string btn2Label)
+int WindowPrompt(std::string title, std::string msg, std::string btn1Label, std::string btn2Label)
 {
 	int choice = -1;
 
@@ -424,20 +424,20 @@ int WindowPrompt(const std::string title, const std::string msg, const std::stri
 	GuiImageData dialogBox(dialogue_box_png);
 	GuiImage dialogBoxImg(&dialogBox);
 
-	GuiText titleTxt(title.c_str(), 26, (XeColor)
+	GuiText titleTxt(title, 26, (XeColor)
 	{
 		{ 255, 255, 255, 255}});
 	titleTxt.SetAlignment(ALIGN_CENTRE, ALIGN_TOP);
 	titleTxt.SetPosition(0, 14);
 
-	GuiText msgTxt(msg.c_str(), 26, (XeColor)
+	GuiText msgTxt(msg, 26, (XeColor)
 	{
 		{ 255, 255, 255, 255}});
 	msgTxt.SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);
 	msgTxt.SetPosition(0, -20);
 	msgTxt.SetWrap(true, 430);
 
-	GuiText btn1Txt(btn1Label.c_str(), 22, (XeColor)
+	GuiText btn1Txt(btn1Label, 22, (XeColor)
 	{
 		{255, 255, 255, 255}});
 	GuiImage btn1Img(&btnOutline);
@@ -459,7 +459,7 @@ int WindowPrompt(const std::string title, const std::string msg, const std::stri
 	btn1.SetState(STATE_SELECTED);
 	btn1.SetEffectGrow();
 
-	GuiText btn2Txt(btn2Label.c_str(), 22, (XeColor)
+	GuiText btn2Txt(btn2Label, 22, (XeColor)
 	{
 		{255, 0, 0, 0}});
 	GuiImage btn2Img(&btnOutline);
@@ -507,7 +507,7 @@ int WindowPrompt(const std::string title, const std::string msg, const std::stri
 	return choice;
 }
 
-int SmallWindowPrompt(const std::string btn1Label, const std::string btn2Label)
+int SmallWindowPrompt(std::string btn1Label, std::string btn2Label)
 {
 	int choice = -1;
 	GuiWindow promptWindow(300, 72);
@@ -521,7 +521,7 @@ int SmallWindowPrompt(const std::string btn1Label, const std::string btn2Label)
 	dialogBoxImg.SetPosition(0, 20);
 	dialogBoxImg.SetAlignment(ALIGN_CENTRE, ALIGN_MIDDLE);
 
-	GuiText btn1Txt(btn1Label.c_str(), 22, (XeColor) {{255, 255, 255, 255 }});
+	GuiText btn1Txt(btn1Label, 22, (XeColor) {{255, 255, 255, 255 }});
 	GuiImage btn1Img(&btnOutline);
 	GuiImage btn1ImgOver(&btnOutlineOver);
 	GuiButton btn1(btnOutline.GetWidth(), btnOutline.GetHeight());
@@ -533,7 +533,7 @@ int SmallWindowPrompt(const std::string btn1Label, const std::string btn2Label)
 	btn1.SetTrigger(trigA);
 	btn1.SetState(STATE_SELECTED);
 
-	GuiText btn2Txt(btn2Label.c_str(), 22, (XeColor){{255, 255, 255, 255}});
+	GuiText btn2Txt(btn2Label, 22, (XeColor){{255, 255, 255, 255}});
 	GuiImage btn2Img(&btnOutline);
 	GuiImage btn2ImgOver(&btnOutlineOver);
 	GuiButton btn2(btnOutline.GetWidth(), btnOutline.GetHeight());
@@ -667,7 +667,7 @@ static void CommonSetup()
 }
 
 
-static void StringRemplaceAll(std::string & src, const std::string find, const std::string replace) 
+static void StringRemplaceAll(std::string & src, std::string find, std::string replace) 
 {
 	size_t pos = 0;
 	while((pos = src.find(find, pos)) != std::string::npos)
@@ -677,7 +677,7 @@ static void StringRemplaceAll(std::string & src, const std::string find, const s
 	}
 }
 
-static void Browser(const std::string title, const std::string root)
+static void Browser(std::string title, std::string root)
 {
 	int _working_menu = current_menu;
 	// apply correct icon
@@ -734,7 +734,7 @@ static void Browser(const std::string title, const std::string root)
 
 	mainWindow->Append(&bBtn);
 	mainWindow->Append(&backBtn);
-	browser_headline->SetText(title.c_str());
+	browser_headline->SetText(title);
 	browser_subheadline->SetText(rootdir);
 
 	mainWindow->Append(browser_top_bg);
@@ -781,7 +781,7 @@ static void Browser(const std::string title, const std::string root)
 						
 			StringRemplaceAll(dir, "/", " > ");
 			StringRemplaceAll(dir, ":", "");	
-			browser_subheadline->SetText(dir.c_str());					
+			browser_subheadline->SetText(dir);					
 		}
 
 		// filebrowser sort icons
