@@ -37,7 +37,7 @@ XMPlayer Version: <x.x.x>
 
 ~~BUG~~
 Description: A 'to the point' detailed description of what is wrong 
-Reproduce bug: A description on what you were doing when the bug/crash happend
+Reproduce bug: A description of what you were doing when the bug/crash happend
 
 Red Screen: <Segmentation Fault!/Exception Vector! xxx (600/700)/None>
 Red Screen code: <0x80xxxxxx 0x80xxxxxx 0x80xxxxxx etc./None - Everything below stack dump!>
