@@ -17,7 +17,8 @@ Subtitles:
 - ASS Subtitle handling can cause freezes and lag. If random crashes in video occurs, set ass=no and change 
 vf=ass to #vf=ass in config (ass is disabled by default)
 - If your subs doesn't show all the characters, try a different font by replacing subfont.ttf in "mplayer" folder
-
+- If you exit a video with subtitle-text on the screen, the text will still be there if you play a video wihout subtitles, you 
+can fix by going into a video with subs and exiting when there is no sutitle-text
 
 Not implemented:
 - Audio balance is not supported

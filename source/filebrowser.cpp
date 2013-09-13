@@ -239,7 +239,7 @@ int extIsValidPictureExt(std::string ext) {
 
 // get filetype based on extention
 
-BROWSER_TYPE file_type(char * filename) {
+BROWSER_TYPE file_type(const char * filename) {
 	std::string ext(strrchr(filename, '.'));
 	if (!ext.empty() && ext.size() > 1) {
 		if (extIsValidVideoExt(ext))

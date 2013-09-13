@@ -87,7 +87,7 @@ int extIsValidVideoExt(std::string ext);
 int extIsValidAudioExt(std::string ext);
 int extIsValidPictureExt(std::string ext);
 
-BROWSER_TYPE file_type(char * filename);
+BROWSER_TYPE file_type(const char * filename);
 
 // always return 1
 int extAlwaysValid(std::string ext);
