@@ -20,7 +20,6 @@
 #include <sys/iosupport.h>
 #include <ppc/atomic.h>
 //#include <network/network.h>
-#include <console/console.h>
 #include <time/time.h>
 #include <elf/elf.h>
 
@@ -1895,10 +1894,10 @@ static void LoadingThread()
 
 	while (end_loading_thread == 0) {
 		lock(&loadingThreadLock);
-		/*Xe_SetClearColor(g_pVideoDevice, 0xFFFFFFFF);
+		Xe_SetClearColor(g_pVideoDevice, 0xFFFFFFFF);
 		Menu_DrawImg(0, 0, 1280, 720, logo, 0, 1, 1, 0xff);
 		Menu_DrawImg(640 - 55, 500, 110, 110, loading[i], 0, 1, 1, 0xff);
-		Menu_Render();*/
+		Menu_Render();
 		unlock(&loadingThreadLock);
 
 		mdelay(60);
@@ -1918,7 +1917,7 @@ int main(int argc, char** argv)
 	//	
 	// Init Video
 	InitVideo();
-	console_init();
+
 	/** loading **/
 	end_loading_thread = 0;
 

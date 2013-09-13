@@ -278,13 +278,15 @@ static void getDate(time_t time, char * out) {
 }
 
 static std::string getStrExt(const char * str) {
+	unsigned pos;
 	if (strlen(str) > 0) {
 		std::string file(str);
-		std::string ext = file.substr(file.find_last_of("."));
-		if (!ext.empty()) {
-			return ext;	
-		} else {
+		pos = file.find_last_of(".");
+		if (pos == std::string::npos) {
 			return "";
+		} else {
+			std::string ext = file.substr(pos);
+			return ext;	
 		}
 	} else {
 		return "";
@@ -299,7 +301,7 @@ int ParseDirectory() {
 	char fulldir[MAXPATHLEN];
 	char file_path[MAXPATHLEN];
 	struct dirent *entry;
-	TR;
+
 	// reset browser
 	ResetBrowser();
 
@@ -318,7 +320,7 @@ int ParseDirectory() {
 
 	// index files/folders
 	int entryNum = 0;
-	TR;
+
 	// always add an .. entry
 	if (strcmp(browser.dir, "/")) {
 
@@ -357,9 +359,9 @@ int ParseDirectory() {
 		
 		getDate(entry->d_mtime, browserList[entryNum].moddate);
 		browserList[entryNum].date = entry->d_mtime;
-		TR;
+
 		if (extValid(getStrExt(entry->d_name)) || entry->d_type == DT_DIR) {
-		TR;
+
 			if (entry->d_type != DT_DIR)
 				browserList[entryNum].type = file_type(entry->d_name);
 
@@ -371,7 +373,7 @@ int ParseDirectory() {
 		} else {
 			continue;
 		}
-		TR;
+
 		entryNum++;
 	}
 
@@ -380,7 +382,7 @@ int ParseDirectory() {
 
 	// Sort the file list
 	qsort(browserList, entryNum, sizeof (BROWSERENTRY), FileSortCallback);
-	TR;
+
 	browser.numEntries = entryNum;
 	return entryNum;
 }
