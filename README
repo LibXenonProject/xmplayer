@@ -1,10 +1,12 @@
-XMPlayer Version 0.0.4
+XMPlayer Version 0.0.4 
 ================================================================================
+Libxenon: 737315d757cc1faee79d5ac2eeae1a9c3352df54
+XMplayer: dcb5946175c96509334a638b2e8e259754721d7e
 
 Known Issues
 ================================================================================
 Mounting:
-- Endless loading screen: First try formatting using Gui Format32. If this doesn't work place xenon.elf 
+- Endless loading screen: Restart. Not working try formatting using Gui Format32. If this doesn't work place xenon.elf 
 on root of internal hdd, and place the "mplayer" folder on the root of a usb (ntfs, fat) then launch
 
 Playing video:
@@ -29,6 +31,11 @@ Not implemented:
 Install
 ================================================================================
 - Copy all files to the root of an usb stick, launch it by xell or latest dashlaunch
+
+Debug
+================================================================================
+- Do you get a red screen? Does xmplayer freeze or get stuck at endless loading? and nothing helps?
+Read DEBUG so we can fix the problem together
 
 Button Binds
 ================================================================================

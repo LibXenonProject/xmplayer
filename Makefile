@@ -150,6 +150,7 @@ dist: fullclean
 	@cp -r mplayer-files/* release/mplayer/
 	@cp README release/
 	@cp CHANGELOG release/
+	@cp DEBUG release/
 	@cd release; tar czvf $(TARGET).tar.gz *; mv $(TARGET).tar.gz ..
 	@rm -rf release
 	@$(MAKE) clean
