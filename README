@@ -1,7 +1,7 @@
 XMPlayer Version 0.0.4 
 ================================================================================
 Libxenon: 737315d757cc1faee79d5ac2eeae1a9c3352df54
-XMplayer: dcb5946175c96509334a638b2e8e259754721d7e
+XMPlayer: dcb5946175c96509334a638b2e8e259754721d7e
 
 Known Issues
 ================================================================================
@@ -20,7 +20,7 @@ Subtitles:
 vf=ass to #vf=ass in config (ass is disabled by default)
 - If your subs doesn't show all the characters, try a different font by replacing subfont.ttf in "mplayer" folder
 - If you exit a video with subtitle-text on the screen, the text will still be there if you play a video wihout subtitles, you 
-can fix by going into a video with subs and exiting when there is no sutitle-text
+can "fix" this by going into a video with subs and exiting when there is no sutitle-text
 
 Not implemented:
 - Audio balance is not supported
