@@ -11,7 +11,7 @@ How to DEBUG and help fix bugs and crashes:
 1. Intro
 ================================================================================
 There are not many who are developing for xbox 360 using libxenon, and to make 
-this platform better to use, we need to make it more stable by fixing bug and issues
+this platform better to use, we need to make it more stable by fixing bug(s) and issue(s)
 so the apps coming out will be a benefit for the whole legal homebrew community.
 
 We cannot do this alone, we need you to help us so we can help you. People have lots 
@@ -23,20 +23,26 @@ reporting bugs, you have to use the following syntax!
 ================================================================================
 ~~GENERAL~~
 XBOX Revision: <Xenon/Zephyr/Falcon/Opus/Jasper/Trinity/Corona>
+NAND Size: <Default is: 16MB, Jasper: 16MB, 256MB, 512MB, Trinity: 16MB, 4GB, Corona: 16mb, 4GB>
+
 DVD-Drive: <Toshiba-Samsung TS943A/Hitachi GDR-3120L/and more>
-USB-Drive: <X> GB Pen/Harddrive: <MODEL> FS: <Fat32/ex2fs/fatx/ntfs> Power adapter: <none/external>
+DVD-Firmware: <Standard/If flashed: firmware>
+
+USB-Drive: <X> GB Pen/Harddrive: <MODEL> FS: <Fat32/ex2fs/fatx/ntfs> Power-adapter: <none/external>
+USB-Drive Vendor ID: <Use included program>
+USB-Drive Product ID: <Use included program>
 
 XeLL Version: <0.9xx/custom>
 XMPlayer Version: <x.x.x>
 
 ~~BUG~~
 Description: A 'to the point' detailed description of what is wrong 
-Reproduce bug: A description on how to reproduce the bug/crash
+Reproduce bug: A description on what you were doing when the bug/crash happend
 
 Red Screen: <Segmentation Fault!/Exception Vector! xxx (600/700)/None>
-Red Screen code: <0x80xxxxxx 0x80xxxxxx 0x80xxxxxx etc./None - bottom of screen, last 1-4 lines>
+Red Screen code: <0x80xxxxxx 0x80xxxxxx 0x80xxxxxx etc./None - Everything below stack dump!>
 
-(Post Following if relevant)
+(Post following if relevant)
 Video file: <file.xxx> 
 Encoding: 
 Bitrate:
@@ -45,16 +51,22 @@ Bitrate:
 ================================================================================
 ~~GENERAL~~
 XBOX Revision: Falcon
+NAND Size: 16MB
+
 DVD-Drive: Philips Lite-On DG-16D2S
-USB-Drive: 8 GB Pen Kingston Datatraveler G3 FS: Fat32 Power adapter: none
+DVD-Firmware: Standard
+
+USB-Drive: 8 GB Pen Kingston Datatraveler G3 FS: Fat32 Power-adapter: none
+USB-Drive Vendor ID: 0x0951
+USB-Drive Product ID: 0x1643
 
 XeLL Version: 0.993
 XMPlayer Version: 0.0.4
 
 ~~BUG~~
 Description: Subtitle text stay on screen after I exit a video with subtitles
-Reproduce bug: Start a video with subtitles, then exit the video when there is text
-on the screen. Start a new video, and the text is still there. 
+Reproduce bug: Started a video with subtitles, then exit the video when there was text
+on the screen. Then started a new video without subtitles, and the text is still there. 
 
 Red Screen: None
 Red Screen code: None
@@ -62,6 +74,9 @@ Red Screen code: None
 4. Report your bug
 ================================================================================
 To report your bug you have to post your report, using the above syntax, on libxenon.org.
-You have to post under Bugreporting and in the XMPlaye thread. Do not start a new thread!
+You have to post under Bugreporting and in the XMPlayer thread. Do not start a new thread!
+
+If you already have a gibhub.com user, please start a "Issue" on our repo and post there:
+https://github.com/LibXenonProject/xmplayer/
 
 Thanks for your help :)
