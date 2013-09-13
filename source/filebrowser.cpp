@@ -160,55 +160,77 @@ int FileSortCallback(const void *f1, const void *f2) {
 	}
 }
 
-
-static char * video_extensions[] = {
-	".mkv", ".mov", ".mp4", ".mp4v", ".divx",
-	".avi", ".asf", ".wmv", ".vc1",
-	".tivo",
-	".mpg", ".mpeg", ".mpeg2", ".ts", ".m2ts",
-	".ogv", ".ogx", ".vp3", ".vp6", ".vp7",
-	".flv", ".264", ".x264", ".h264",
-	".3gp", ".3g2", ".rar",".rmvb",
+VID_EXT video_extensions[VID_EXT_SIZE] = {
+	{ ".mkv" }, 
+	{ ".mov" }, 
+	{ ".mp4" }, 
+	{ ".mp4v" },
+	{ ".divx" },
+	{ ".avi" }, 
+	{ ".asf" }, 
+	{ ".wmv" }, 
+	{ ".vc1" },
+	{ ".tivo" },
+	{ ".mpg" }, 
+	{ ".mpeg" }, 
+	{ ".mpeg2" }, 
+	{ ".ts" }, 
+	{ ".m2ts" },
+	{ ".ogv" }, 
+	{ ".ogx" }, 
+	{ ".vp3" }, 
+	{ ".vp6" },
+	{ ".vp7" },
+	{ ".flv" },
+	{ ".264" }, 
+	{ ".x264" },
+        { ".h264" },
+	{ ".3gp" }, 
+	{ ".3g2" }, 
+	{ ".rar" },
+	{ ".rmvb" }
 };
 
-static char * audio_extensions[] = {
-	".mp3", ".mp4", ".ogg", ".aac", ".ac3",
+AUD_EXT audio_extensions[AUD_EXT_SIZE] = {
+	{ ".mp3" }, 
+	{ ".mp4" }, 
+	{ ".ogg" }, 
+	{ ".aac" },
+	{ ".ac3" }
 };
 
-static char * picture_extensions[] = {
-	".jpg", ".png", ".jpeg", ".bmp",
+
+PIC_EXT picture_extensions[PIC_EXT_SIZE] = {
+	{ ".jpg" }, 
+	{ ".png" }, 
+	{ ".jpeg" }, 
+	{ ".bmp" }
 };
 
-int extIsValidVideoExt(char * ext) {
-	if (ext && ext[0] && ext[1]) {
-		int i = 0;
-		int extnumber = sizeof (video_extensions) / sizeof (char *);
-		for (i = 0; i < extnumber; i++) {
-			if (stricmp(ext, video_extensions[i]) == 0)
+int extIsValidVideoExt(std::string ext) {
+	if (!ext.empty() && ext.size() > 1) {
+		for (int i = 0; i < VID_EXT_SIZE; i++) {
+			if (ext == video_extensions[i].vid_ext)
 				return 1;
 		}
 	}
 	return 0;
 }
 
-int extIsValidAudioExt(char * ext) {
-	if (ext && ext[0] && ext[1]) {
-		int i = 0;
-		int extnumber = sizeof (audio_extensions) / sizeof (char *);
-		for (i = 0; i < extnumber; i++) {
-			if (stricmp(ext, audio_extensions[i]) == 0)
+int extIsValidAudioExt(std::string ext) {
+	if (!ext.empty() && ext.size() > 1) {
+		for (int i = 0; i < AUD_EXT_SIZE; i++) {
+			if (ext == audio_extensions[i].aud_ext)
 				return 1;
 		}
 	}
 	return 0;
 }
 
-int extIsValidPictureExt(char * ext) {
-	if (ext && ext[0] && ext[1]) {
-		int i = 0;
-		int extnumber = sizeof (picture_extensions) / sizeof (char *);
-		for (i = 0; i < extnumber; i++) {
-			if (stricmp(ext, picture_extensions[i]) == 0)
+int extIsValidPictureExt(std::string ext) {
+	if (!ext.empty() && ext.size() > 1) {
+		for (int i = 0; i < PIC_EXT_SIZE; i++) {
+			if (ext == picture_extensions[i].pic_ext)
 				return 1;
 		}
 	}
@@ -217,19 +239,19 @@ int extIsValidPictureExt(char * ext) {
 
 // get filetype based on extention
 
-BROWSER_TYPE file_type(const char * filename) {
-	char * ext = strrchr(filename, '.');
-	if (ext && ext[0] && ext[1]) {
+BROWSER_TYPE file_type(char * filename) {
+	std::string ext(strrchr(filename, '.'));
+	if (!ext.empty() && ext.size() > 1) {
 		if (extIsValidVideoExt(ext))
 			return BROWSER_TYPE_VIDEO;
 		else if (extIsValidAudioExt(ext))
 			return BROWSER_TYPE_AUDIO;
 		else if (extIsValidPictureExt(ext))
 			return BROWSER_TYPE_PICTURE;
-		if (ext[2] && ext[3]) {
-			if (stricmp(ext, ".elf") == 0)
+		if (!ext.empty() && ext.size() > 2) {
+			if (ext == ".elf")
 				return BROWSER_TYPE_ELF;
-			else if (stricmp(ext, ".bin") == 0)
+			else if (ext == ".bin")
 				return BROWSER_TYPE_NAND;
 		}
 	}
@@ -237,11 +259,11 @@ BROWSER_TYPE file_type(const char * filename) {
 	return BROWSER_TYPE_UNKNOW;
 }
 
-int extAlwaysValid(char *ext) {
+int extAlwaysValid(std::string ext) {
 	return 1;
 }
 
-int (*extValid)(char * ext) = NULL;
+int (*extValid)(std::string ext);
 
 #define getFormatDate() "%d/%m/%Y"
 
@@ -255,6 +277,15 @@ static void getDate(time_t time, char * out) {
 	}
 }
 
+static std::string getStrExt(const char * file) {
+	if (strlen(file) > 0) {
+		std::string str(strrchr(file, '.'));
+		return str;	
+	} else {
+		return "";
+	}
+}
+
 /***************************************************************************
  * Browse subdirectories
  **************************************************************************/
@@ -263,10 +294,7 @@ int ParseDirectory() {
 	char fulldir[MAXPATHLEN];
 	char file_path[MAXPATHLEN];
 	struct dirent *entry;
-	char * ext = NULL;
-	if (extValid == NULL)
-		extValid = extAlwaysValid;
-
+	TR;
 	// reset browser
 	ResetBrowser();
 
@@ -285,7 +313,7 @@ int ParseDirectory() {
 
 	// index files/folders
 	int entryNum = 0;
-
+	TR;
 	// always add an .. entry
 	if (strcmp(browser.dir, "/")) {
 
@@ -324,10 +352,9 @@ int ParseDirectory() {
 		
 		getDate(entry->d_mtime, browserList[entryNum].moddate);
 		browserList[entryNum].date = entry->d_mtime;
-		
-		ext = strrchr(entry->d_name, '.');
-		if (extValid(ext) || entry->d_type == DT_DIR) {
-			
+		TR;
+		if (extValid(getStrExt(entry->d_name)) || entry->d_type == DT_DIR) {
+		TR;
 			if (entry->d_type != DT_DIR)
 				browserList[entryNum].type = file_type(entry->d_name);
 
@@ -339,7 +366,7 @@ int ParseDirectory() {
 		} else {
 			continue;
 		}
-
+		TR;
 		entryNum++;
 	}
 
@@ -348,7 +375,7 @@ int ParseDirectory() {
 
 	// Sort the file list
 	qsort(browserList, entryNum, sizeof (BROWSERENTRY), FileSortCallback);
-
+	TR;
 	browser.numEntries = entryNum;
 	return entryNum;
 }
@@ -387,9 +414,9 @@ int BrowseDevice() {
  * BrowseDevice
  * Displays a list of files on the selected device
  ***************************************************************************/
-int BrowseDevice(const char * dir, const char * root) {
-	sprintf(browser.dir, dir);
-	sprintf(rootdir, root);
+int BrowseDevice(std::string dir, std::string root) {
+	sprintf(browser.dir, dir.c_str());
+	sprintf(rootdir, root.c_str());
 	ParseDirectory(); // Parse root directory
 	return browser.numEntries;
 }
