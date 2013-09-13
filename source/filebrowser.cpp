@@ -277,10 +277,15 @@ static void getDate(time_t time, char * out) {
 	}
 }
 
-static std::string getStrExt(const char * file) {
-	if (strlen(file) > 0) {
-		std::string str(strrchr(file, '.'));
-		return str;	
+static std::string getStrExt(const char * str) {
+	if (strlen(str) > 0) {
+		std::string file(str);
+		std::string ext = file.substr(file.find_last_of("."));
+		if (!ext.empty()) {
+			return ext;	
+		} else {
+			return "";
+		}
 	} else {
 		return "";
 	}
