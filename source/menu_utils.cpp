@@ -14,6 +14,8 @@ color colors[NB_COLOR] = {
 	{ 0x00000000, "Black"},
 	{ 0xFFFF0000, "Yellow"},
 	{ 0xFF000000, "Red"},
+	{ 0x0000FF00, "Blue"},
+	{ 0x00FF0000, "Green"},
 };
 
 std::string getColorFromHex(unsigned int hex, color * pColor, int max)

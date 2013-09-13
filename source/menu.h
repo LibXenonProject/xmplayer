@@ -109,7 +109,7 @@ typedef struct
         }
 } color;
 
-#define NB_COLOR 4
+#define NB_COLOR 6
 
 extern color colors[NB_COLOR];
 
