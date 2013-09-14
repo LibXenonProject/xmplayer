@@ -223,7 +223,15 @@ static void LoadHomeRessources()
 	home_curitem->SetStyle(FTGX_JUSTIFY_LEFT);
 
 	for (int i = 0; i < device_list_size; i++) {
-		home_hdd_icon[i] = new GuiImage(new GuiImageData(home_hdd_sub_icon_n_png));
+		home_hdd_icon[i] = new GuiImage(new GuiImageData(home_usb_sub_icon_n_png));
+		std::string _device = device_list[i];
+		if (_device.find("uda") != std::string::npos) {
+			home_hdd_icon[i] = new GuiImage(new GuiImageData(home_usb_sub_icon_n_png));
+		} else if (_device.find("dvd") != std::string::npos) {
+			home_hdd_icon[i] = new GuiImage(new GuiImageData(home_dvd_sub_icon_n_png));
+		} else if (_device.find("sda") != std::string::npos) {
+			home_hdd_icon[i] = new GuiImage(new GuiImageData(home_hdd_sub_icon_n_png));
+		}
 		home_device_btn[i] = new GuiButton(home_hdd_icon[i]->GetWidth(), home_hdd_icon[i]->GetHeight());
 		home_device_btn[i]->SetIcon(home_hdd_icon[i]);
 		home_device_btn[i]->SetEffectGrow();

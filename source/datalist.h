@@ -11,6 +11,8 @@
 #include "../build/home_main_function_frame_bg_png.h"
 #include "../build/welcome_background_bg_png.h"
 #include "../build/home_hdd_sub_icon_n_png.h"
+#include "../build/home_usb_sub_icon_n_png.h"
+#include "../build/home_dvd_sub_icon_n_png.h"
 #include "../build/home_horizontal_select_bar_png.h"
 #include "../build/font_ttf.h"
 
