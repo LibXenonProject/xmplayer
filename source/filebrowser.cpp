@@ -240,19 +240,24 @@ int extIsValidPictureExt(std::string ext) {
 // get filetype based on extention
 
 BROWSER_TYPE file_type(const char * filename) {
-	std::string ext(strrchr(filename, '.'));
-	if (!ext.empty() && ext.size() > 1) {
-		if (extIsValidVideoExt(ext))
-			return BROWSER_TYPE_VIDEO;
-		else if (extIsValidAudioExt(ext))
-			return BROWSER_TYPE_AUDIO;
-		else if (extIsValidPictureExt(ext))
-			return BROWSER_TYPE_PICTURE;
-		if (!ext.empty() && ext.size() > 2) {
-			if (ext == ".elf")
-				return BROWSER_TYPE_ELF;
-			else if (ext == ".bin")
-				return BROWSER_TYPE_NAND;
+	char * temp = strrchr(filename, '.');
+	if (temp == NULL) {
+		return BROWSER_TYPE_UNKNOW;
+	} else {
+		std::string ext(temp);
+		if (!ext.empty() && ext.size() > 1) {
+			if (extIsValidVideoExt(ext))
+				return BROWSER_TYPE_VIDEO;
+			else if (extIsValidAudioExt(ext))
+				return BROWSER_TYPE_AUDIO;
+			else if (extIsValidPictureExt(ext))
+				return BROWSER_TYPE_PICTURE;
+			if (!ext.empty() && ext.size() > 2) {
+				if (ext == ".elf")
+					return BROWSER_TYPE_ELF;
+				else if (ext == ".bin")
+					return BROWSER_TYPE_NAND;
+			}
 		}
 	}
 
@@ -278,21 +283,18 @@ static void getDate(time_t time, char * out) {
 }
 
 static std::string getStrExt(const char * str) {
-	unsigned pos;
-	if (strlen(str) > 0) {
-		std::string file(str);
-		pos = file.find_last_of(".");
-		if (pos == std::string::npos) {
+	 if (str == NULL) {
+		return "";
+	} else if (strlen(str) > 0) {
+		char * ext = strrchr(str, '.');
+		if (ext == NULL)  {
 			return "";
 		} else {
-			std::string ext = file.substr(pos);
-			return ext;	
+			std::string _ext(ext);
+			return _ext;
 		}
-	} else {
-		return "";
-	}
+	} 
 }
-
 /***************************************************************************
  * Browse subdirectories
  **************************************************************************/
@@ -372,8 +374,8 @@ int ParseDirectory() {
 
 		} else {
 			continue;
-		}
-
+		} 
+	
 		entryNum++;
 	}
 
