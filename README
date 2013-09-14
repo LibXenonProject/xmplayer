@@ -73,7 +73,7 @@ Soft Volume: Software volume boost
 
 - Video
 Frame Dropping: Set default frame dropping option
-Vsync: Set default vertical sync option
+Vsync: Set default vertical sync option (can cause slow downs if on)
 
 - Subtitles
 Color: Color of the subtitle

@@ -113,3 +113,13 @@ Subtitle color is white and outline color is black
 
 12/09/2013: 
 - More code cleanup, adding std::string to libgui functions
+
+13/09/2013:
+- Added a debug guide, so people can post their bugs more systematically
+
+14/09/2013: 
+- Fixed: Mplayer crashes if .rar archive is valid, but doesn't not contain video: sometimes can .rar archives be valid for unrar.c, but it doesn't means it contains video. Multi-rar achives contain 1 file,
+and because of this, a .rar with more files doesn't contain the filename where we search. So get a extension = NULL and we ignore it by sending back "none"
+- Added: New Harddrive and DVD icons: addded icons so you can quicky see your usb devices from the dvd and internal partitions
+- Added: XMplayer stops showing loading screen and shows underlying error message, if it indeed crashed: we have added a global variable (crash_dumped) in libxenon to be set to 1 if crash, and by doing this
+we can set XMplayer to break the loading loop, which then will show the underlying stack dump

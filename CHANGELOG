@@ -5,12 +5,15 @@ Version 0.0.4:
 - Fixed: First time you enter osd menu when paused, it removes it again
 - Fixed: Volume not changing in audio settings when paused
 - Fixed: Mplayer crashes if .rar archive is not supported
+- Fixed: Mplayer crashes if .rar archive is valid, but doesn't not contain video
 - Changed: Disabled balance in osd menu, it doesn't work
 - Changed: Libass disabled as default, beware libass makes xmplayer unstable
 - Changed: Subfont from Arial to Dejavu Sans
 - Changed: Removed Music and Photos menu for now, not supported
 - Added: Support for .rmvb files
 - Added: New subtitle shader with selectable color and selectable outline color. Increased stability because libass is not needed
+- Added: New Harddrive and DVD icons
+- Added: XMplayer stops showing loading screen and shows underlying error message, if it indeed crashed
 
 Version 0.0.3:
 - Fixed: Updated mount code to work with more usb devices (same as XeLL v0.993)
