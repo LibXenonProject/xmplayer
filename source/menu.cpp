@@ -93,13 +93,6 @@ static GuiText * browser_headline = NULL;
 static GuiText * browser_pagecounter = NULL;
 static GuiText * browser_subheadline = NULL;
 
-static GuiImageData * browser_photo_icon = NULL;
-static GuiImageData * browser_video_icon = NULL;
-static GuiImageData * browser_music_icon = NULL;
-
-static GuiImageData * browser_photo_folder_icon = NULL;
-static GuiImageData * browser_video_folder_icon = NULL;
-static GuiImageData * browser_music_folder_icon = NULL;
 static GuiImageData * browser_selector = NULL;
 
 static GuiImage * browser_up_icon = NULL;
@@ -134,26 +127,20 @@ static GuiImage * home_left = NULL;
 static GuiImage * home_main_function_frame_bg = NULL;
 
 static GuiImage * home_hdd_icon[STD_MAX];
-static GuiImage * home_no_hdd_icon[STD_MAX];
 static GuiButton * home_device_btn[STD_MAX];
 
 static GuiButton * home_video_btn = NULL;
 static GuiButton * home_all_btn = NULL;
-static GuiButton * home_music_btn = NULL;
-static GuiButton * home_photo_btn = NULL;
+//static GuiButton * home_music_btn = NULL;
+//static GuiButton * home_photo_btn = NULL;
 static GuiButton * home_setting_btn = NULL;
 static GuiButton * home_restart_btn = NULL;
 static GuiButton * home_shutdown_btn = NULL;
 
-static GuiImage * home_video_img = NULL;
-static GuiImage * home_music_img = NULL;
-static GuiImage * home_photo_img = NULL;
-static GuiImage * home_setting_img = NULL;
-
 static GuiText* home_video_txt = NULL;
 static GuiText * home_all_txt = NULL;
-static GuiText * home_music_txt = NULL;
-static GuiText * home_photo_txt = NULL;
+//static GuiText * home_music_txt = NULL;
+//static GuiText * home_photo_txt = NULL;
 static GuiText * home_setting_txt = NULL;
 static GuiText * home_restart_txt = NULL;
 static GuiText * home_shutdown_txt = NULL;
@@ -237,17 +224,10 @@ static void LoadHomeRessources()
 
 	for (int i = 0; i < device_list_size; i++) {
 		home_hdd_icon[i] = new GuiImage(new GuiImageData(home_hdd_sub_icon_n_png));
-		home_no_hdd_icon[i] = new GuiImage(new GuiImageData(home_nohdd_sub_icon_n_png));
 		home_device_btn[i] = new GuiButton(home_hdd_icon[i]->GetWidth(), home_hdd_icon[i]->GetHeight());
 		home_device_btn[i]->SetIcon(home_hdd_icon[i]);
 		home_device_btn[i]->SetEffectGrow();
 	}
-
-
-	home_video_img = new GuiImage(new GuiImageData(home_video_sm_icon_n_png));
-	//home_music_img = new GuiImage(new GuiImageData(home_music_sm_icon_n_png));
-	//home_photo_img = new GuiImage(new GuiImageData(home_photo_sm_icon_n_png));
-	home_setting_img = new GuiImage(new GuiImageData(home_settings_sm_icon_n_png));
 
 	home_video_txt = new GuiText("Videos", 48, 0xFFFFFFFF);
 	home_all_txt = new GuiText("All", 48, 0xFFFFFFFF);
@@ -257,18 +237,13 @@ static void LoadHomeRessources()
 	home_restart_txt = new GuiText("Restart", 48, 0xFFFFFFFF);
 	home_shutdown_txt = new GuiText("Shutdown", 48, 0xFFFFFFFF);
 
-	home_video_btn = new GuiButton(home_video_img->GetWidth(), home_video_img->GetHeight());
-	home_all_btn = new GuiButton(home_video_img->GetWidth(), home_video_img->GetHeight());
-	//home_music_btn = new GuiButton(home_music_img->GetWidth(), home_music_img->GetHeight());
-	//home_photo_btn = new GuiButton(home_photo_img->GetWidth(), home_photo_img->GetHeight());
-	home_setting_btn = new GuiButton(home_setting_img->GetWidth(), home_setting_img->GetHeight());
-	home_restart_btn = new GuiButton(home_setting_img->GetWidth(), home_setting_img->GetHeight());
-	home_shutdown_btn = new GuiButton(home_setting_img->GetWidth(), home_setting_img->GetHeight());
-
-	//	home_video_btn->SetIcon(home_video_img);
-	//	home_music_btn->SetIcon(home_music_img);
-	//	home_photo_btn->SetIcon(home_photo_img);
-	//	home_setting_btn->SetIcon(home_setting_img);
+	home_video_btn = new GuiButton(200, 110);
+	home_all_btn = new GuiButton(200, 110);
+	//home_music_btn = new GuiButton(200, 110);
+	//home_photo_btn = new GuiButton(200, 110);
+	home_setting_btn = new GuiButton(200, 110);
+	home_restart_btn = new GuiButton(200, 110);
+	home_shutdown_btn = new GuiButton(200, 110);
 
 	home_video_btn->SetLabel(home_video_txt);
 	home_all_btn->SetLabel(home_all_txt);
@@ -282,21 +257,12 @@ static void LoadHomeRessources()
 static void LoadBrowserRessources()
 {
 	// Browser
-	browser_photo_icon = new GuiImageData(browser_photo_icon_f_png);
-	browser_video_icon = new GuiImageData(browser_video_icon_f_png);
-	browser_music_icon = new GuiImageData(browser_music_icon_f_png);
-
-	browser_photo_folder_icon = new GuiImageData(browser_folder_icon_f_png);
-	browser_video_folder_icon = new GuiImageData(browser_folder_icon_f_png);
-	browser_music_folder_icon = new GuiImageData(browser_folder_icon_f_png);
-
 	browser_selector = new GuiImageData(browser_list_btn_png);
 
 	browser_pagecounter = new GuiText("@@pagecounter", 18, 0xFFFFFFFF);
 	browser_pagecounter->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	browser_pagecounter->SetPosition(1080, 643);
 	browser_pagecounter->SetMaxWidth(200);
-//	browser_pagecounter->SetStyle(FTGX_JUSTIFY_RIGHT);
 
 	browser_subheadline = new GuiText("@@subheadline", 18, 0xFFFFFFFF);
 	browser_subheadline->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
@@ -337,7 +303,7 @@ static void LoadBrowserRessources()
 	browser_bottom_bg->SetPosition(0, 0);
 
 	// no image data, pointer to image
-	browser_folder_icon = browser_video_folder_icon;
+	browser_folder_icon = new GuiImageData(browser_folder_icon_f_png);
 
 	browser_files_icon[BROWSER_TYPE_UNKNOW] = new GuiImageData(browser_file_icon_f_png);
 	browser_files_icon[BROWSER_TYPE_VIDEO] = new GuiImageData(browser_video_icon_f_png);
@@ -682,15 +648,12 @@ static void Browser(std::string title, std::string root)
 	// apply correct icon
 	switch (current_menu) {
 	case BROWSE_AUDIO:
-		browser_folder_icon = browser_music_folder_icon;
 		extValid = extIsValidAudioExt;
 		break;
 	case BROWSE_VIDEO:
-		browser_folder_icon = browser_video_folder_icon;
 		extValid = extIsValidVideoExt;
 		break;
 	case BROWSE_PICTURE:
-		browser_folder_icon = browser_photo_folder_icon;
 		extValid = extIsValidPictureExt;
 		break;
 	default:
@@ -1905,7 +1868,6 @@ static void LoadingThread()
 		if (i >= 4)
 			i = 0;
 	}
-	delay(2);
 	lock(&loadingThreadLock);
 	loading_thread_finished = 1;
 	unlock(&loadingThreadLock);
@@ -1943,17 +1905,6 @@ int main(int argc, char** argv)
 	lock(&loadingThreadLock);
 	end_loading_thread = 1;
 	unlock(&loadingThreadLock);
-	do  {
-		lock(&loadingThreadLock);
-		// try to mount undetected devices
-	//	usb_do_poll();
-	//	mount_all_devices();
-		udelay(25);
-		unlock(&loadingThreadLock);
-	} while(loading_thread_finished == 0);
-	
-	// recheck devices
-	//FindDevices();
 
 	// init mplayer
 	init_mplayer();

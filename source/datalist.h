@@ -1,28 +1,31 @@
 #pragma once
-
+//Startup
 #include "../build/logo_png.h"
 #include "../build/loading_0_png.h"
 #include "../build/loading_1_png.h"
 #include "../build/loading_2_png.h"
 #include "../build/loading_3_png.h"
 
+//Home
 #include "../build/home_left_png.h"
 #include "../build/home_main_function_frame_bg_png.h"
 #include "../build/welcome_background_bg_png.h"
-#include "../build/home_music_sm_icon_n_png.h"
-#include "../build/home_photo_sm_icon_n_png.h"
-#include "../build/home_video_sm_icon_n_png.h"
-#include "../build/home_settings_sm_icon_n_png.h"
 #include "../build/home_hdd_sub_icon_n_png.h"
-#include "../build/home_nohdd_sub_icon_n_png.h"
 #include "../build/home_horizontal_select_bar_png.h"
 #include "../build/font_ttf.h"
 
+//Browser
 #include "../build/browser_list_btn_png.h"
 #include "../build/browser_folder_icon_f_png.h"
-#include "../build/options_menu_btn_png.h"
 #include "../build/browser_list_arrow_down_png.h"
 #include "../build/browser_list_arrow_up_png.h"
+#include "../build/browser_photo_icon_f_png.h"
+#include "../build/browser_video_icon_f_png.h"
+#include "../build/browser_music_icon_f_png.h"
+#include "../build/browser_elf_icon_f_png.h"
+#include "../build/browser_file_icon_f_png.h"
+#include "../build/browser_top_png.h"
+#include "../build/browser_bottom_png.h"
 
 // osd
 #include "../build/video_control_frame_bg_png.h"
@@ -37,18 +40,6 @@
 #include "../build/video_control_rewind_btn_png.h"
 #include "../build/video_control_stop_btn_png.h"
 #include "../build/video_control_time_played_line_bg_png.h"
-
-#include "../build/browser_photo_icon_f_png.h"
-#include "../build/browser_video_icon_f_png.h"
-#include "../build/browser_music_icon_f_png.h"
-#include "../build/browser_elf_icon_f_png.h"
-#include "../build/browser_file_icon_f_png.h"
-#include "../build/browser_top_png.h"
-#include "../build/browser_bottom_png.h"
-
-#include "../build/folder_music_icon_png.h"
-#include "../build/folder_photo_icon_png.h"
-#include "../build/browser_video_icon_f_png.h"
 
 // osd 3
 #include "../build/options_menu_audio_channel_icon_f_png.h"
@@ -73,6 +64,7 @@
 #include "../build/options_menu_zoomout_icon_n_png.h"
 #include "../build/options_menu_gridview_icon_n_png.h"
 #include "../build/options_menu_gridview_icon_f_png.h"
+#include "../build/options_menu_btn_png.h"
 
 #include "../build/button_blue_png.h"
 #include "../build/button_red_png.h"
@@ -92,9 +84,6 @@
 
 #include "../build/fr_lang.h"
 
-#include "../build/folder_video_icon_png.h"
-
-
 //xbox360 buttons
 #include "../build/btn_a_png.h"
 #include "../build/btn_b_png.h"
@@ -103,10 +92,10 @@
 #include "../build/btn_bk_png.h"
 
 //keyboard
-#include "../build/keyboard_textbox_png.h"
+/* #include "../build/keyboard_textbox_png.h"
 #include "../build/keyboard_key_png.h"
 #include "../build/keyboard_key_over_png.h"
 #include "../build/keyboard_mediumkey_png.h"
 #include "../build/keyboard_mediumkey_over_png.h"
 #include "../build/keyboard_largekey_png.h"
-#include "../build/keyboard_largekey_over_png.h"
+#include "../build/keyboard_largekey_over_png.h" */

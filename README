@@ -23,7 +23,7 @@ vf=ass to #vf=ass in config (ass is disabled by default)
 can "fix" this by going into a video with subs and exiting when there is no sutitle-text
 
 Not implemented:
-- Audio balance is not supported
+- Audio balance, surround sound and optical out are not supported
 - Pictures and Music are not supported
 - DVD not working
 - No networking!
