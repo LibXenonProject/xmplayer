@@ -153,7 +153,6 @@ static char mplayer_filename[2048];
 //Saved seek
 static char seek_filename[2048];
 
-
 // ass color buffer
 // since we pass directly color to mplayer we need to allocate them or made them point to a aligned buffer
 static char _ass_color[10];
@@ -1864,6 +1863,10 @@ static void LoadingThread()
 	loading[3] = loadPNGFromMemory((unsigned char*) loading_3_png);
 
 	while (end_loading_thread == 0) {
+		if (crash_dumped) {
+			end_loading_thread = 1;
+			break;
+		}
 		lock(&loadingThreadLock);
 		Xe_SetClearColor(g_pVideoDevice, 0xFFFFFFFF);
 		Menu_DrawImg(0, 0, 1280, 720, logo, 0, 1, 1, 0xff);
@@ -1875,6 +1878,7 @@ static void LoadingThread()
 		i++;
 		if (i >= 4)
 			i = 0;
+
 	}
 	lock(&loadingThreadLock);
 	loading_thread_finished = 1;
@@ -1899,7 +1903,7 @@ int main(int argc, char** argv)
 	xenon_ata_init();
 	xenon_atapi_init();
 	usb_do_poll();
-			
+
 	// fs
 	mount_all_devices();
 	FindDevices();
