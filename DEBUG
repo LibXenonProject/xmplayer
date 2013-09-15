@@ -29,8 +29,9 @@ DVD-Drive: <Toshiba-Samsung TS943A/Hitachi GDR-3120L/and more>
 DVD-Firmware: <Standard/If flashed: firmware>
 
 USB-Drive: <X> GB Pen/Harddrive: <MODEL> FS: <Fat32/ex2fs/fatx/ntfs> Power-adapter: <none/external>
-USB-Drive Vendor ID: <Use included program>
-USB-Drive Product ID: <Use included program>
+USB-Drive Vendor ID: <Use LibxenonDBUG.exe in the _DEBUG folder>
+USB-Drive Product ID: <Use LibxenonDBUG.exe in the _DEBUG folder>
+USB-Drive All Info:  <Pastebin.com all the output from LibxenonDBUG.exe and place link here>
 
 XeLL Version: <0.9xx/custom>
 XMPlayer Version: <x.x.x>
@@ -40,7 +41,7 @@ Description: A 'to the point' detailed description of what is wrong
 Reproduce bug: A description of what you were doing when the bug/crash happend
 
 Red Screen: <Segmentation Fault!/Exception Vector! xxx (600/700)/None>
-Red Screen code: <0x80xxxxxx 0x80xxxxxx 0x80xxxxxx etc./None - Everything below stack dump!>
+Red Screen code: <Everything below stack dump: None/0x80xxxxxx 0x80xxxxxx 0x80xxxxxx etc.>
 
 (Post following if relevant)
 Video file: <file.xxx> 
@@ -57,8 +58,9 @@ DVD-Drive: Philips Lite-On DG-16D2S
 DVD-Firmware: Standard
 
 USB-Drive: 8 GB Pen Kingston Datatraveler G3 FS: Fat32 Power-adapter: none
-USB-Drive Vendor ID: 0x0951
-USB-Drive Product ID: 0x1643
+USB-Drive Vendor ID: 0951
+USB-Drive Product ID: 1643
+USB-Drive All Info:  http://pastebin.com/4Cd1WHD0
 
 XeLL Version: 0.993
 XMPlayer Version: 0.0.4
