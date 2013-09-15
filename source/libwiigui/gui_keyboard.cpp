@@ -7,7 +7,7 @@
  *
  * GUI class definitions
  ***************************************************************************/
-
+/*
 #include "gui.h"
 #include "../w_input.h"
 
@@ -26,10 +26,10 @@ static char * GetDisplayText(char * t) {
     tmptxt[MAX_KEYBOARD_DISPLAY - 1] = 0;
     return &tmptxt[0];
 }
-
+*/
 /**
  * Constructor for the GuiKeyboard class.
- */
+
 
 GuiKeyboard::GuiKeyboard(char * t, u32 max) {
     width = 540;
@@ -223,10 +223,10 @@ GuiKeyboard::GuiKeyboard(char * t, u32 max) {
         }
     }
 }
-
+*/
 /**
  * Destructor for the GuiKeyboard class.
- */
+ 
 GuiKeyboard::~GuiKeyboard() {
     delete kbText;
     delete keyTextbox;
@@ -356,3 +356,4 @@ startloop:
             this->MoveSelectionVert(-1);
     }
 }
+*/

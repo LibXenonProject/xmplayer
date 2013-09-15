@@ -12,7 +12,7 @@
 #include <sys/iosupport.h>
 #include <diskio/disc_io.h>
 #include <byteswap.h>
-#include "iso9660.h"
+#include <iso9660/iso9660.h>
 
 extern DISC_INTERFACE xenon_atapi_ops;
 extern DISC_INTERFACE xenon_ata_ops;

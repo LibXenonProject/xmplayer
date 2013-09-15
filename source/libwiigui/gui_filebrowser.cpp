@@ -70,14 +70,14 @@ void GuiFileBrowser::SetPageSize(int size) {
 
 	for (int i = 0; i < size; ++i) {
 
-		fileListText[i] = new GuiText(NULL, font_size, (XeColor) {
+		fileListText[i] = new GuiText("", font_size, (XeColor) {
 			0xff, 0xff, 0xff, 0xff
 		});
 		fileListText[i]->SetAlignment(ALIGN_LEFT, ALIGN_MIDDLE);
 		fileListText[i]->SetPosition(5, 0);
 		fileListText[i]->SetMaxWidth(800);
 
-		fileListModDate[i] = new GuiText(NULL, font_size, (XeColor) {
+		fileListModDate[i] = new GuiText("", font_size, (XeColor) {
 			0xff, 0xff, 0xff, 0xff
 		});
 		fileListModDate[i]->SetAlignment(ALIGN_LEFT, ALIGN_MIDDLE);

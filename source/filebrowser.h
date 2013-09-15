@@ -15,6 +15,7 @@
 #include <diskio/disc_io.h>
 #include <sys/types.h>
 #include <sys/stat.h> 
+#include <string>
 
 #define MAXJOLIET 255
 #define MAXDISPLAY 90
@@ -45,6 +46,29 @@ typedef struct {
 	BROWSER_TYPE type;
 } BROWSERENTRY;
 
+typedef struct _vidext {
+	std::string vid_ext;
+
+} VID_EXT;
+
+typedef struct _audext {
+	std::string aud_ext;
+
+} AUD_EXT;
+
+typedef struct _picext {
+	std::string pic_ext;
+
+} PIC_EXT;
+
+#define VID_EXT_SIZE 28
+#define AUD_EXT_SIZE 6
+#define PIC_EXT_SIZE 5
+
+extern VID_EXT video_extensions[VID_EXT_SIZE];
+extern AUD_EXT audio_extensions[AUD_EXT_SIZE];
+extern PIC_EXT picture_extensions[PIC_EXT_SIZE];
+
 extern BROWSERINFO browser;
 extern BROWSERENTRY * browserList;
 extern char rootdir[10];
@@ -55,17 +79,17 @@ void BrowserSortList();
 void ResetBrowser();
 int BrowserChangeFolder();
 int BrowseDevice();
-int BrowseDevice(const char * dir, const char * root);
+int BrowseDevice(std::string dir, std::string root);
 bool MakeFilePath(char filepath[], int type, char * filename = NULL, int filenum = -2);
 void CleanupPath(char * path);
 
-int extIsValidVideoExt(char * ext);
-int extIsValidAudioExt(char * ext);
-int extIsValidPictureExt(char * ext);
+int extIsValidVideoExt(std::string ext);
+int extIsValidAudioExt(std::string ext);
+int extIsValidPictureExt(std::string ext);
 
 BROWSER_TYPE file_type(const char * filename);
 
 // always return 1
-int extAlwaysValid(char *ext);
-extern int (*extValid)(char * ext);
+int extAlwaysValid(std::string ext);
+extern int (*extValid)(std::string ext);
 #endif

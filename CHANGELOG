@@ -1,0 +1,57 @@
+Version 0.0.4:
+- Fixed: Sometimes when mounting more than 1 USB device, it can crash, now it loads what it can
+- Fixed: Overload buffer and memory leak leading to random crashes
+- Fixed: Elf files not loading after a video has been played
+- Fixed: Audio- and subdelay shows -0 ms
+- Fixed: First time you enter osd menu when paused, it removes it again
+- Fixed: Volume not changing in audio settings when paused
+- Fixed: Mplayer crashes if .rar archive is not supported
+- Fixed: Mplayer crashes if .rar archive is valid, but doesn't not contain video
+- Changed: Disabled balance in osd menu, it doesn't work
+- Changed: Libass disabled as default, beware libass makes xmplayer unstable
+- Changed: Subfont from Arial to Dejavu Sans
+- Changed: Removed Music and Photos menu for now, not supported
+- Changed: "Restart" now restarts XMPlayer
+- Added: Support for .rmvb files
+- Added: New subtitle shader with selectable color and selectable outline color. Increased stability because libass is not needed
+- Added: New Harddrive and DVD icons
+- Added: XMplayer stops showing loading screen and shows underlying error message, if it indeed crashed
+- Added: Restart to NXE in Global Setting in "Shutdown" option
+
+Version 0.0.3:
+- Fixed: Updated mount code to work with more usb devices (same as XeLL v0.993)
+- Fixed: OSD bug
+- Added: First binary release with Corona support!!
+
+Version 0.0.2:
+- Fixed: .avi files not playing after a .mkv, .mov or .mp4 file has been played
+- Fixed: When entering a new folder "Item number/All item number" will not update until moving down on d-pad
+- Fixed: When paused, the osd buttons (y, xbox, x) unpauses video, only (a) pauses/unpauses now
+- Fixed: Osd_show_progression (x) only shows if osd-button (y) hasn't been pressed before
+- Fixed: Lb and Rb doesn't seek -600/+600
+- Fixed:The D-pad being buggy after a video has been played
+- Fixed: Some bugs with osd displaying delay as -0 because of it being close to zero
+- Fixed: Removed the 1 pixel-width line artifact in videos
+- Changed: Osd-button (y) now switches from directly on/off, this means it only needs 1 press to full osd and not 3 presses
+- Changed: When pressing the pause-button (a) progression will also show
+- Changed: The page down icon now only shows, if there are at least more items than a page
+- Changed: The (b) button doesn't exit to homescreen any more, it goes one level up, until root then goes to homescreen
+- Changed: [extension.mp4] demuxer=mov to demuxer=lavf in mplayer.conf, lavf handles .mp4 files better than mov
+- Changed: Updated libass to 0.10.0
+- Changed: Ass/ssa is now subtitle default which means outline, color, scale etc. works 
+- Changed: The audio delay option in osd is more logical, a audio_delay of 100 ms doesn't mean audio is 100 ms before video (mplayer standard), but 100 ms after
+- Changed: Replaced mxml with tinyxml, because of loading problems and it seems lighter
+- Changed: Updated GUI with button indicators, changed page size from 10 to 15
+- Added: "Restart" and "Shutdown" buttons
+- Added: A "smart menu" that saves your last selection and path when exiting a menu or playing a video (resets between devices)
+- Added: Resume-playback function: if you stop a video in the middle of playing, it will save last position and resume from there if desired (more than a minute of video has to be played)
+- Added: All libmenu's working functions available in the main osd, so libmenu will no longer be needed
+- Added: Patch from mplayerdev's mailing list which adds support for playing videos inside multivolume uncompressed rar files
+- Added: If a .rar file loads, it now gets the extension of the archived file, so the true extension profile is loaded
+- Added: The (back) button goes directly back to homepage
+- Added: Sort files. By pressing (x) in the file browser, you can order by Name or Date (day/month/year)
+- Added: ASS settings can be accessed from the subtitle osd menu
+- Added: Set ass=yes and vf=ass in mplayer config. This means it can be disabled and subfont can be used if desired
+
+Version 0.0.1:
+-Intial Release

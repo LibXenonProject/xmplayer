@@ -47,7 +47,7 @@ extern "C" {
 
 	// mplayer.c - must be done only 1 time !!!
 	int mplayer_main(int argc, char *argv[]);
-
+	char* playerGetRarExt (char * filename);
 	// use that to load a new file
 	// mplayer.cIf the interface file and object file get out of sync for any reason, t
 	void mplayer_load(char * filename);
@@ -72,7 +72,7 @@ extern "C" {
 	char* mplayer_get_subtitle(void);
 	char* mplayer_get_mute(void);	
 	char* mplayer_get_balance(void);
-	char* mplayer_get_volume(void);
+	float mplayer_get_volume(void);
       //  char* playerGetAudioStreams();
 	double mplayer_get_elapsed(void);
 	double mplayer_get_duration(void);
@@ -86,7 +86,9 @@ extern "C" {
 	void mplayer_osd_close(void);
 	void mplayer_osd_draw(int level);
 	void mplayer_osd_open(void);
-	
+	extern float vo_xenon_subtitle[4];
+	extern float vo_xenon_outline[4];	
+
 	// load save return 0 if fail, 1 on success
 	int save_file(const char * filename, void * in, int size);
 	int load_file(const char * filename, void ** buf, int * size);

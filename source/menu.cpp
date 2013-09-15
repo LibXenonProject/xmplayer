@@ -51,7 +51,7 @@ extern "C" void mount_all_devices();
 //**************************************************************************
 // Device information
 //**************************************************************************
-static char * root_dev = NULL;
+static std::string root_dev;
 static int device_list_size = 0;
 static char device_list[STD_MAX][10];
 
@@ -93,13 +93,6 @@ static GuiText * browser_headline = NULL;
 static GuiText * browser_pagecounter = NULL;
 static GuiText * browser_subheadline = NULL;
 
-static GuiImageData * browser_photo_icon = NULL;
-static GuiImageData * browser_video_icon = NULL;
-static GuiImageData * browser_music_icon = NULL;
-
-static GuiImageData * browser_photo_folder_icon = NULL;
-static GuiImageData * browser_video_folder_icon = NULL;
-static GuiImageData * browser_music_folder_icon = NULL;
 static GuiImageData * browser_selector = NULL;
 
 static GuiImage * browser_up_icon = NULL;
@@ -134,26 +127,20 @@ static GuiImage * home_left = NULL;
 static GuiImage * home_main_function_frame_bg = NULL;
 
 static GuiImage * home_hdd_icon[STD_MAX];
-static GuiImage * home_no_hdd_icon[STD_MAX];
 static GuiButton * home_device_btn[STD_MAX];
 
 static GuiButton * home_video_btn = NULL;
 static GuiButton * home_all_btn = NULL;
-static GuiButton * home_music_btn = NULL;
-static GuiButton * home_photo_btn = NULL;
+//static GuiButton * home_music_btn = NULL;
+//static GuiButton * home_photo_btn = NULL;
 static GuiButton * home_setting_btn = NULL;
 static GuiButton * home_restart_btn = NULL;
 static GuiButton * home_shutdown_btn = NULL;
 
-static GuiImage * home_video_img = NULL;
-static GuiImage * home_music_img = NULL;
-static GuiImage * home_photo_img = NULL;
-static GuiImage * home_setting_img = NULL;
-
 static GuiText* home_video_txt = NULL;
 static GuiText * home_all_txt = NULL;
-static GuiText * home_music_txt = NULL;
-static GuiText * home_photo_txt = NULL;
+//static GuiText * home_music_txt = NULL;
+//static GuiText * home_photo_txt = NULL;
 static GuiText * home_setting_txt = NULL;
 static GuiText * home_restart_txt = NULL;
 static GuiText * home_shutdown_txt = NULL;
@@ -166,7 +153,6 @@ static char mplayer_filename[2048];
 //Saved seek
 static char seek_filename[2048];
 
-
 // ass color buffer
 // since we pass directly color to mplayer we need to allocate them or made them point to a aligned buffer
 static char _ass_color[10];
@@ -175,7 +161,7 @@ static char _ass_border_color[10];
 //**************************************************************************
 // Browser variables
 //**************************************************************************
-static const char * exited_root = "";
+static std::string exited_root;
 static char exited_dir[MAXPATHLEN];
 static char exited_dir_array[64][MAXPATHLEN];
 static int exited_item[64];
@@ -236,44 +222,40 @@ static void LoadHomeRessources()
 	home_curitem->SetStyle(FTGX_JUSTIFY_LEFT);
 
 	for (int i = 0; i < device_list_size; i++) {
-		home_hdd_icon[i] = new GuiImage(new GuiImageData(home_hdd_sub_icon_n_png));
-		home_no_hdd_icon[i] = new GuiImage(new GuiImageData(home_nohdd_sub_icon_n_png));
+		home_hdd_icon[i] = new GuiImage(new GuiImageData(home_usb_sub_icon_n_png));
+		std::string _device = device_list[i];
+		if (_device.find("uda") != std::string::npos) {
+			home_hdd_icon[i] = new GuiImage(new GuiImageData(home_usb_sub_icon_n_png));
+		} else if (_device.find("dvd") != std::string::npos) {
+			home_hdd_icon[i] = new GuiImage(new GuiImageData(home_dvd_sub_icon_n_png));
+		} else if (_device.find("sda") != std::string::npos) {
+			home_hdd_icon[i] = new GuiImage(new GuiImageData(home_hdd_sub_icon_n_png));
+		}
 		home_device_btn[i] = new GuiButton(home_hdd_icon[i]->GetWidth(), home_hdd_icon[i]->GetHeight());
 		home_device_btn[i]->SetIcon(home_hdd_icon[i]);
 		home_device_btn[i]->SetEffectGrow();
 	}
 
-
-	home_video_img = new GuiImage(new GuiImageData(home_video_sm_icon_n_png));
-	home_music_img = new GuiImage(new GuiImageData(home_music_sm_icon_n_png));
-	home_photo_img = new GuiImage(new GuiImageData(home_photo_sm_icon_n_png));
-	home_setting_img = new GuiImage(new GuiImageData(home_settings_sm_icon_n_png));
-
 	home_video_txt = new GuiText("Videos", 48, 0xFFFFFFFF);
 	home_all_txt = new GuiText("All", 48, 0xFFFFFFFF);
-	home_music_txt = new GuiText("Music", 48, 0xFFFFFFFF);
-	home_photo_txt = new GuiText("Photos", 48, 0xFFFFFFFF);
+	//home_music_txt = new GuiText("Music", 48, 0xFFFFFFFF);
+	//home_photo_txt = new GuiText("Photos", 48, 0xFFFFFFFF);
 	home_setting_txt = new GuiText("Settings", 48, 0xFFFFFFFF);
 	home_restart_txt = new GuiText("Restart", 48, 0xFFFFFFFF);
 	home_shutdown_txt = new GuiText("Shutdown", 48, 0xFFFFFFFF);
 
-	home_video_btn = new GuiButton(home_video_img->GetWidth(), home_video_img->GetHeight());
-	home_all_btn = new GuiButton(home_video_img->GetWidth(), home_video_img->GetHeight());
-	home_music_btn = new GuiButton(home_music_img->GetWidth(), home_music_img->GetHeight());
-	home_photo_btn = new GuiButton(home_photo_img->GetWidth(), home_photo_img->GetHeight());
-	home_setting_btn = new GuiButton(home_setting_img->GetWidth(), home_setting_img->GetHeight());
-	home_restart_btn = new GuiButton(home_setting_img->GetWidth(), home_setting_img->GetHeight());
-	home_shutdown_btn = new GuiButton(home_setting_img->GetWidth(), home_setting_img->GetHeight());
-
-	//	home_video_btn->SetIcon(home_video_img);
-	//	home_music_btn->SetIcon(home_music_img);
-	//	home_photo_btn->SetIcon(home_photo_img);
-	//	home_setting_btn->SetIcon(home_setting_img);
+	home_video_btn = new GuiButton(200, 110);
+	home_all_btn = new GuiButton(200, 110);
+	//home_music_btn = new GuiButton(200, 110);
+	//home_photo_btn = new GuiButton(200, 110);
+	home_setting_btn = new GuiButton(200, 110);
+	home_restart_btn = new GuiButton(200, 110);
+	home_shutdown_btn = new GuiButton(200, 110);
 
 	home_video_btn->SetLabel(home_video_txt);
 	home_all_btn->SetLabel(home_all_txt);
-	home_music_btn->SetLabel(home_music_txt);
-	home_photo_btn->SetLabel(home_photo_txt);
+	//home_music_btn->SetLabel(home_music_txt);
+	//home_photo_btn->SetLabel(home_photo_txt);
 	home_setting_btn->SetLabel(home_setting_txt);
 	home_restart_btn->SetLabel(home_restart_txt);
 	home_shutdown_btn->SetLabel(home_shutdown_txt);
@@ -281,23 +263,13 @@ static void LoadHomeRessources()
 
 static void LoadBrowserRessources()
 {
-
 	// Browser
-	browser_photo_icon = new GuiImageData(browser_photo_icon_f_png);
-	browser_video_icon = new GuiImageData(browser_video_icon_f_png);
-	browser_music_icon = new GuiImageData(browser_music_icon_f_png);
-
-	browser_photo_folder_icon = new GuiImageData(browser_folder_icon_f_png);
-	browser_video_folder_icon = new GuiImageData(browser_folder_icon_f_png);
-	browser_music_folder_icon = new GuiImageData(browser_folder_icon_f_png);
-
 	browser_selector = new GuiImageData(browser_list_btn_png);
 
 	browser_pagecounter = new GuiText("@@pagecounter", 18, 0xFFFFFFFF);
 	browser_pagecounter->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	browser_pagecounter->SetPosition(1080, 643);
 	browser_pagecounter->SetMaxWidth(200);
-//	browser_pagecounter->SetStyle(FTGX_JUSTIFY_RIGHT);
 
 	browser_subheadline = new GuiText("@@subheadline", 18, 0xFFFFFFFF);
 	browser_subheadline->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
@@ -338,7 +310,7 @@ static void LoadBrowserRessources()
 	browser_bottom_bg->SetPosition(0, 0);
 
 	// no image data, pointer to image
-	browser_folder_icon = browser_video_folder_icon;
+	browser_folder_icon = new GuiImageData(browser_folder_icon_f_png);
 
 	browser_files_icon[BROWSER_TYPE_UNKNOW] = new GuiImageData(browser_file_icon_f_png);
 	browser_files_icon[BROWSER_TYPE_VIDEO] = new GuiImageData(browser_video_icon_f_png);
@@ -393,6 +365,18 @@ static void LoadXboxButtons()
 	btn_bk_text->SetEffectGrow();	
 }
 
+void ElfLoader()
+{
+	printf("Load Elf:%s\r\n", mplayer_filename);
+	char * argv[] = {
+		mplayer_filename,
+	};
+	int argc = sizeof (argv) / sizeof (char *);
+
+	elf_setArgcArgv(argc, argv);
+	elf_runFromDisk(mplayer_filename);
+}
+
 static void ExitMplayer()
 {
 	// save settings
@@ -400,18 +384,29 @@ static void ExitMplayer()
 	// restart to xell or shutdown, it will always restart to xell if mplayer cannot initiate
 	if ((XMPlayerCfg.exit_action == 0) || (strlen(MPLAYER_CONFDIR) <= 0)) {
 		exit(0);
+	} else if (XMPlayerCfg.exit_action == 1) {
+		xenon_smc_power_reboot();
 	} else {
 		xenon_smc_power_shutdown();
 	}
 }
 
+static void RestartMplayer()
+{
+	for (int i = 0; i < device_list_size; i++) {
+		sprintf(mplayer_filename, "%s/%s", device_list[i], "xenon.elf");
+		if (file_exists(mplayer_filename)) {
+			ElfLoader();	
+		}
+	}
+}
 /****************************************************************************
  * WindowPrompt
  *
  * Displays a prompt window to user, with information, an error message, or
  * presenting a user with a choice
  ***************************************************************************/
-int WindowPrompt(const char *title, const char *msg, const char *btn1Label, const char *btn2Label)
+int WindowPrompt(std::string title, std::string msg, std::string btn1Label, std::string btn2Label)
 {
 	int choice = -1;
 
@@ -444,7 +439,7 @@ int WindowPrompt(const char *title, const char *msg, const char *btn1Label, cons
 	GuiImage btn1ImgOver(&btnOutlineOver);
 	GuiButton btn1(btnOutline.GetWidth(), btnOutline.GetHeight());
 
-	if (btn2Label) {
+	if (!btn2Label.empty()) {
 		btn1.SetAlignment(ALIGN_LEFT, ALIGN_BOTTOM);
 		btn1.SetPosition(20, -25);
 	} else {
@@ -478,14 +473,14 @@ int WindowPrompt(const char *title, const char *msg, const char *btn1Label, cons
 	promptWindow.Append(&msgTxt);
 	promptWindow.Append(&btn1);
 
-	if (btn2Label)
+	if (!btn2Label.empty())
 		promptWindow.Append(&btn2);
 
 	mainWindow->SetState(STATE_DISABLED);
 	mainWindow->Append(&promptWindow);
 	mainWindow->ChangeFocus(&promptWindow);
 
-	if (btn2Label) {
+	if (!btn2Label.empty()) {
 		btn1.ResetState();
 		btn1.SetState(STATE_SELECTED);
 	}
@@ -507,7 +502,7 @@ int WindowPrompt(const char *title, const char *msg, const char *btn1Label, cons
 	return choice;
 }
 
-int SmallWindowPrompt(const char *btn1Label, const char *btn2Label)
+int SmallWindowPrompt(std::string btn1Label, std::string btn2Label)
 {
 	int choice = -1;
 	GuiWindow promptWindow(300, 72);
@@ -571,7 +566,7 @@ int SmallWindowPrompt(const char *btn1Label, const char *btn2Label)
  * Opens an on-screen keyboard window, with the data entered being stored
  * into the specified variable.
  ***************************************************************************/
-static void OnScreenKeyboard(char * var, u32 maxlen) {
+/*static void OnScreenKeyboard(char * var, u32 maxlen) {
 	int save = -1;
 
 	GuiKeyboard keyboard(var, maxlen);
@@ -630,11 +625,11 @@ static void OnScreenKeyboard(char * var, u32 maxlen) {
 
 	mainWindow->Remove(&keyboard);
 	mainWindow->SetState(STATE_DEFAULT);
-}
+}*/
 
-extern "C" void error_prompt(const char *msg)
+extern "C" void error_prompt(std::string msg)
 {
-	WindowPrompt("Error", msg, "Quit", NULL);
+	WindowPrompt("Error", msg, "Quit", "");
 	ExitMplayer();
 }
 
@@ -667,7 +662,7 @@ static void CommonSetup()
 }
 
 
-static void StringRemplaceAll(std::string & src, const std::string find, const std::string replace) 
+static void StringRemplaceAll(std::string & src, std::string find, std::string replace) 
 {
 	size_t pos = 0;
 	while((pos = src.find(find, pos)) != std::string::npos)
@@ -677,21 +672,18 @@ static void StringRemplaceAll(std::string & src, const std::string find, const s
 	}
 }
 
-static void Browser(const char * title, const char * root)
+static void Browser(std::string title, std::string root)
 {
 	int _working_menu = current_menu;
 	// apply correct icon
 	switch (current_menu) {
 	case BROWSE_AUDIO:
-		browser_folder_icon = browser_music_folder_icon;
 		extValid = extIsValidAudioExt;
 		break;
 	case BROWSE_VIDEO:
-		browser_folder_icon = browser_video_folder_icon;
 		extValid = extIsValidVideoExt;
 		break;
 	case BROWSE_PICTURE:
-		browser_folder_icon = browser_photo_folder_icon;
 		extValid = extIsValidPictureExt;
 		break;
 	default:
@@ -763,9 +755,7 @@ static void Browser(const char * title, const char * root)
 	last_menu = current_menu;
 	int last_sel_item = -1;
 	int last_sort = -1;
-	int browser_exit = 0;
 	char tmp[256];
-
 	while (current_menu == last_menu) {
 		if (last_sel_item != browser.selIndex) {
 			sprintf(tmp, "%d/%d", browser.selIndex + 1, browser.numEntries);
@@ -783,7 +773,7 @@ static void Browser(const char * title, const char * root)
 						
 			StringRemplaceAll(dir, "/", " > ");
 			StringRemplaceAll(dir, ":", "");	
-			browser_subheadline->SetText(dir.c_str());					
+			browser_subheadline->SetText(dir);					
 		}
 
 		// filebrowser sort icons
@@ -856,6 +846,14 @@ static void Browser(const char * title, const char * root)
 						audio_gui = 1;
 						current_menu = MENU_MPLAYER; */
 					} else if (file_type(mplayer_filename) == BROWSER_TYPE_VIDEO) {	
+					    	std::string ext(strrchr(mplayer_filename, '.'));
+						if (ext == ".rar") { 	
+							std::string ext(playerGetRarExt(mplayer_filename));
+							if (ext == "stop") { 
+								printf("[browser] Unsupported .rar file(s) \n");
+								goto rar_skip;
+							}
+						}
 						current_menu = MENU_MPLAYER;
 						strcpy(mplayer_seek_time, "seek 0 2");
 						if (file_exists(seek_filename)) {
@@ -864,7 +862,7 @@ static void Browser(const char * title, const char * root)
 							remove(seek_filename);
 						}
 					} else {
-						gui_browser->fileList[exited_i[current_menu]]->SetState(STATE_SELECTED);	
+rar_skip:						gui_browser->fileList[exited_i[current_menu]]->SetState(STATE_SELECTED);	
 					}
 				}
 			}
@@ -902,7 +900,6 @@ static void Browser(const char * title, const char * root)
 		}
 		Update();
 	}
-
 	// exit dir						
 	sprintf(exited_dir, "%s/", browser.dir);
 	CleanupPath(exited_dir);
@@ -943,16 +940,16 @@ static void HomePage()
 
 	home_video_txt ->SetText("Videos");
 	home_all_txt ->SetText("All");
-	home_music_txt ->SetText("Music");
-	home_photo_txt ->SetText("Photos");
+	//home_music_txt ->SetText("Music");
+	//home_photo_txt ->SetText("Photos");
 	home_setting_txt ->SetText("Settings");
 	home_restart_txt ->SetText("Restart");
 	home_shutdown_txt ->SetText("Shutdown");
 
 	home_list_v->Append(home_all_btn);
 	home_list_v->Append(home_video_btn);
-	home_list_v->Append(home_music_btn);
-	home_list_v->Append(home_photo_btn);
+	//home_list_v->Append(home_music_btn);
+	//home_list_v->Append(home_photo_btn);
 	home_list_v->Append(home_setting_btn);
 	home_list_v->Append(home_restart_btn);
 	home_list_v->Append(home_shutdown_btn);
@@ -1009,17 +1006,17 @@ static void HomePage()
 				//				case 3:
 				//					current_menu = BROWSE_PICTURE;
 				//					break;
-			case 4:
+			case 2:
 				current_menu = SETTINGS;
 				break;
-			case 5:
-				xenon_smc_power_reboot();
+			case 3:
+				RestartMplayer();
 				break;
-			case 6:
+			case 4:
 				ExitMplayer();
 				break;
 			default:
-				WindowPrompt("Warning", "Not implemented yet", "Ok", NULL);
+				WindowPrompt("Warning", "Not implemented yet", "Ok", "");
 				break;
 			}
 
@@ -1041,8 +1038,8 @@ static void HomePage()
 	}
 
 	home_list_v->Remove(home_video_btn);
-	home_list_v->Remove(home_music_btn);
-	home_list_v->Remove(home_photo_btn);
+	//home_list_v->Remove(home_music_btn);
+	//home_list_v->Remove(home_photo_btn);
 	home_list_v->Remove(home_setting_btn);
 	home_list_v->Remove(home_restart_btn);
 	home_list_v->Remove(home_shutdown_btn);
@@ -1106,7 +1103,7 @@ static void GlobalSettings()
 		switch (ret) {
 		case 0:
 			XMPlayerCfg.exit_action++;
-			if (XMPlayerCfg.exit_action > 1)
+			if (XMPlayerCfg.exit_action > 2)
 				XMPlayerCfg.exit_action = 0;
 			break;
 		case 1:
@@ -1121,10 +1118,12 @@ static void GlobalSettings()
 		if (ret >= 0 || firstRun) {
 			firstRun = false;
 
-			if (XMPlayerCfg.exit_action > 1)
+			if (XMPlayerCfg.exit_action > 2)
 				XMPlayerCfg.exit_action = 0;
 			if (XMPlayerCfg.exit_action == 0)
 				sprintf(options.value[0], "Return to Xell");
+			else if (XMPlayerCfg.exit_action == 1)
+				sprintf(options.value[0], "Restart to NXE");
 			else
 				sprintf(options.value[0], "Shutdown");
 
@@ -1224,8 +1223,8 @@ static void AudioSettings()
 			switch (ret) {
 			case 0:
 			{
-				sprintf(XMPlayerCfg.alang, languages[option_value].abbrev2);
-				sprintf(XMPlayerCfg.alang_desc, languages[option_value].language);
+				sprintf(XMPlayerCfg.alang, languages[option_value].abbrev2.c_str());
+				sprintf(XMPlayerCfg.alang_desc, languages[option_value].language.c_str());
 				audio_lang = XMPlayerCfg.alang;
 				break;
 			}
@@ -1392,7 +1391,6 @@ static void SubtitleSettings()
 	options.v[3].max = LANGUAGE_SIZE;
 
 	GuiText titleTxt("Home > Settings > Subtitle", 26, 0xfffa9600);
-
 	titleTxt.SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	titleTxt.SetPosition(150, 35);
 
@@ -1452,15 +1450,15 @@ static void SubtitleSettings()
 				}
 				case 2:
 				{
-					strcpy(XMPlayerCfg.subcp, codepages[option_value].cpname);
-					strcpy(XMPlayerCfg.subcp_desc, codepages[option_value].language);
+					strcpy(XMPlayerCfg.subcp, codepages[option_value].cpname.c_str());
+					strcpy(XMPlayerCfg.subcp_desc, codepages[option_value].language.c_str());
 					sub_cp = XMPlayerCfg.subcp;
 					break;
 				}
 				case 3:
 				{
-					strcpy(XMPlayerCfg.sublang, languages[option_value].abbrev);
-					strcpy(XMPlayerCfg.sublang_desc, languages[option_value].language);
+					strcpy(XMPlayerCfg.sublang, languages[option_value].abbrev.c_str());
+					strcpy(XMPlayerCfg.sublang_desc, languages[option_value].language.c_str());
 					dvdsub_lang = XMPlayerCfg.sublang;
 					break;
 				}
@@ -1470,8 +1468,8 @@ static void SubtitleSettings()
 		if (ret >= 0 || firstRun) {
 			firstRun = false;
 
-			strcpy(options.value[0], getColorFromHex(XMPlayerCfg.subcolor, colors, sizeof (colors)));
-			strcpy(options.value[1], getColorFromHex(XMPlayerCfg.border_color, colors, sizeof (colors)));
+			strcpy(options.value[0], getColorFromHex(XMPlayerCfg.subcolor, colors, sizeof (colors)).c_str());
+			strcpy(options.value[1], getColorFromHex(XMPlayerCfg.border_color, colors, sizeof (colors)).c_str());
 
 			strcpy(options.value[2], XMPlayerCfg.subcp_desc);
 			strcpy(options.value[3], XMPlayerCfg.sublang_desc);
@@ -1494,7 +1492,7 @@ static void SubtitleSettings()
 	SavePrefs(true);
 }
 
-static void NetworkSettingsSMB() {
+/*static void NetworkSettingsSMB() {
 	int ret;
 	int i = 0;
 	bool firstRun = true;
@@ -1689,7 +1687,7 @@ static void NetworkSettings() {
 	mainWindow->Remove(&titleTxt);
 	mainWindow->Remove(browser_top_bg);
 	mainWindow->Remove(browser_bottom_bg);
-}
+}*/
 
 //SETTINGS MENU
 
@@ -1762,7 +1760,7 @@ static void XMPSettings()
 			current_menu = SETTINGS_SUBTITLES;
 			break;
 		case 4:
-			WindowPrompt("Warning", "Not implemented yet", "Ok", NULL);
+			WindowPrompt("Warning", "Not implemented yet", "Ok", "");
 			//current_menu = SETTINGS_NETWORK;
 			break;  				
 		}
@@ -1789,9 +1787,16 @@ static void InitMplayerSettings(void)
 	audio_lang = XMPlayerCfg.alang;
 }
 
+void GetColorFloat(void)
+{
+colors[getColorIndex(XMPlayerCfg.subcolor, colors, sizeof (colors))].toFloat(vo_xenon_subtitle);
+colors[getColorIndex(XMPlayerCfg.border_color, colors, sizeof (colors))].toFloat(vo_xenon_outline);
+}
+
 void MenuMplayer()
 {
 	printf("filename:%s\r\n", mplayer_filename);
+	GetColorFloat();
 	static int mplayer_need_init = 1;
 	if (mplayer_need_init) {
 		char * argv[] = {
@@ -1808,18 +1813,6 @@ void MenuMplayer()
 		mplayer_load(mplayer_filename);
 		mplayer_return_to_player();
 	}
-}
-
-void ElfLoader()
-{
-	printf("Load Elf:%s\r\n", mplayer_filename);
-	char * argv[] = {
-		mplayer_filename,
-	};
-	int argc = sizeof (argv) / sizeof (char *);
-
-	elf_setArgcArgv(argc, argv);
-	elf_runFromDisk(mplayer_filename);
 }
 
 static void GuiLoop()
@@ -1851,11 +1844,11 @@ static void GuiLoop()
 			AudioSettings();
 		} else if (current_menu == SETTINGS_VIDEO) {
 			VideoSettings();
-		} else if (current_menu == SETTINGS_NETWORK) {
+		} /*else if (current_menu == SETTINGS_NETWORK) {
 			NetworkSettings();
 		} else if (current_menu == SETTINGS_NETWORK_SMB) {
 			NetworkSettingsSMB();
-		}
+		}*/
 	}
 }
 
@@ -1864,9 +1857,11 @@ static void FindDevices()
 	device_list_size = 0;
 	for (int i = 3; i < STD_MAX; i++) {
 		if (devoptab_list[i]->structSize) {
-			sprintf(device_list[device_list_size], "%s:/", devoptab_list[i]->name);
-			printf("findDevices : %s\r\n", device_list[device_list_size]);
-			device_list_size++;
+			if (devoptab_list[i]->name && devoptab_list[i]->name[0] != '\0') {
+				sprintf(device_list[device_list_size], "%s:/", devoptab_list[i]->name);
+				printf("findDevices : %s\r\n", device_list[device_list_size]);
+				device_list_size++;
+			}
 		}
 	}
 
@@ -1876,7 +1871,6 @@ static void FindDevices()
 static void LoadingThread()
 {
 	int i = 0;
-	float rot = 0;
 	logo = loadPNGFromMemory((unsigned char*) logo_png);
 	loading[0] = loadPNGFromMemory((unsigned char*) loading_0_png);
 	loading[1] = loadPNGFromMemory((unsigned char*) loading_1_png);
@@ -1884,6 +1878,10 @@ static void LoadingThread()
 	loading[3] = loadPNGFromMemory((unsigned char*) loading_3_png);
 
 	while (end_loading_thread == 0) {
+		if (crash_dumped) {
+			end_loading_thread = 1;
+			break;
+		}
 		lock(&loadingThreadLock);
 		Xe_SetClearColor(g_pVideoDevice, 0xFFFFFFFF);
 		Menu_DrawImg(0, 0, 1280, 720, logo, 0, 1, 1, 0xff);
@@ -1895,8 +1893,8 @@ static void LoadingThread()
 		i++;
 		if (i >= 4)
 			i = 0;
+
 	}
-	delay(2);
 	lock(&loadingThreadLock);
 	loading_thread_finished = 1;
 	unlock(&loadingThreadLock);
@@ -1920,7 +1918,7 @@ int main(int argc, char** argv)
 	xenon_ata_init();
 	xenon_atapi_init();
 	usb_do_poll();
-			
+
 	// fs
 	mount_all_devices();
 	FindDevices();
@@ -1934,17 +1932,6 @@ int main(int argc, char** argv)
 	lock(&loadingThreadLock);
 	end_loading_thread = 1;
 	unlock(&loadingThreadLock);
-	do  {
-		lock(&loadingThreadLock);
-		// try to mount undetected devices
-	//	usb_do_poll();
-	//	mount_all_devices();
-		udelay(25);
-		unlock(&loadingThreadLock);
-	} while(loading_thread_finished == 0);
-	
-	// recheck devices
-	//FindDevices();
 
 	// init mplayer
 	init_mplayer();

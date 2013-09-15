@@ -85,7 +85,46 @@ Changed: The audio delay option in osd is more logical, a audio_delay of 100 ms 
 -Added: Global, audio, video and subtitles settings in menu (no need to play with mplayer config files anymore)
 
 01/09/2013:
--Fixed: When in OSD-menu when paused, pressing (Y) won't remove OSD-menu.
-
+-Fixed: When in OSD-menu when paused, pressing (Y) won't remove OSD-menu: vo_xenon.c didn't detect the change because flip_page wasn't called, so video-out was not updated until 
+video was resumed or seeked in
 06/09/2013:
 -Fixed: Better support for big USB drives (mount code from XeLL v0.993)
+
+07/09/2013:
+- Added: Support for .rmvb files: .rmvb now shows as videofile under Videos, set lavf as it's demuxer in mplayer.conf
+- Changed: Disabled balance in osd menu, it doesn't work
+- Fixed: Audio- and subdelay shows -0 ms: audio and subtitle delay are not always zero, but because they are floats they can come increadibly close so they can show up as -0.
+- Fixed: First time you enter osd menu when paused, it removes it again: Even when osd_level = 3 the OSD layer detected the keypress you made for entering the menu, as 
+Y is the OSD button it would remove OSD again. Sometimes OSD would show but then, osd_level = 1 (the player) would detect your next keypress
+- Fixed: Volume not changing in audio settings when paused: the OSD wouldn't update the change in volume when video was paused. This was because the OSD used mplayer queue command 
+that only works when the video is playing, when paused it queues the commands
+- Fixed: Mplayer crashes if .rar archive is not supported: mplayer would crash if it was a .rar archive that stream/unrar.c didn't support. By checking the .rar before we make
+mplayer play the file, we avoid the crash
+
+10/09/2013:
+- Added: New subtitle shader with outline. Increased stability because libass is not needed: added a custom pixel shader to vo_xenon.c, so no need for a power hungry libass. 
+Subtitle color is white and outline color is black
+- Changed: Libass disabled as default, beware libass makes xmplayer unstable: libass uses a lot of CPU power which can make xmplayer unstable, freeze and crash
+- Changed: Subfont from Arial to Dejavu Sans: better looking imo
+
+11/09/2013:
+- Fixed: Elf files not loading after a video has been played: fixed in libxenon, by changing fstat() to stat() in elf.c's load from disk
+- Fixed: Overload buffer and memory leak leading to random crashes: fixed by lots of cleanup of code, mainly changing char* into std::string in .cpp files
+
+12/09/2013: 
+- More code cleanup, adding std::string to libgui functions
+
+13/09/2013:
+- Added a debug guide, so people can post their bugs more systematically
+
+14/09/2013: 
+- Fixed: Mplayer crashes if .rar archive is valid, but doesn't not contain video: sometimes can .rar archives be valid for unrar.c, but it doesn't means it contains video. Multi-rar achives contain 1 file,
+and because of this, a .rar with more files doesn't contain the filename where we search. So get a extension = NULL and we ignore it by sending back "none"
+- Added: New Harddrive and DVD icons: addded icons so you can quicky see your usb devices from the dvd and internal partitions
+- Added: XMplayer stops showing loading screen and shows underlying error message, if it indeed crashed: we have added a global variable (crash_dumped) in libxenon to be set to 1 if crash, and by doing this
+we can set XMplayer to break the loading loop, which then will show the underlying stack dump
+
+15/09/2013:
+- Fixed: Sometimes when mounting more than 1 USB device, it can crash, now it loads what it can: under FindDevices() it didn't check for name being NULL before, and would crash if it was. Now it just
+loads XMPlayer without that usb device. A Restart of XMPlayer should find it again
+- Added: "Restart" now restarts XMPlayer: added a loop to search for xenon.elf from the mounted device list, it loads the first it finds
