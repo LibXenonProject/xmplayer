@@ -1,4 +1,5 @@
 Version 0.0.4:
+- Fixed: Sometimes when mounting more than 1 USB device, it can crash, now it loads what it can
 - Fixed: Overload buffer and memory leak leading to random crashes
 - Fixed: Elf files not loading after a video has been played
 - Fixed: Audio- and subdelay shows -0 ms

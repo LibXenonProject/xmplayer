@@ -8,6 +8,7 @@ Known Issues
 Mounting:
 - Endless loading screen: Restart. Not working try formatting using Gui Format32. If this doesn't work place xenon.elf 
 on root of internal hdd, and place the "mplayer" folder on the root of a usb (ntfs, fat) then launch
+- Sometimes when mounting more than 1 USB, it will not find all of them. Just restart XMPlayer until it does
 
 Playing video:
 - Can crash while using play'n'charge kit

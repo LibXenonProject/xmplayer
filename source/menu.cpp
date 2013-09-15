@@ -1844,9 +1844,11 @@ static void FindDevices()
 	device_list_size = 0;
 	for (int i = 3; i < STD_MAX; i++) {
 		if (devoptab_list[i]->structSize) {
-			sprintf(device_list[device_list_size], "%s:/", devoptab_list[i]->name);
-			printf("findDevices : %s\r\n", device_list[device_list_size]);
-			device_list_size++;
+			if (devoptab_list[i]->name && devoptab_list[i]->name[0] != '\0') {
+				sprintf(device_list[device_list_size], "%s:/", devoptab_list[i]->name);
+				printf("findDevices : %s\r\n", device_list[device_list_size]);
+				device_list_size++;
+			}
 		}
 	}
 
