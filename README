@@ -1,7 +1,6 @@
-XMPlayer Version 0.0.4 
+XMPlayer Version 0.0.4 - September 15, 2013
 ================================================================================
 Libxenon: d3b3270a3798c1f0b4faeb26e9dfaf24e8d41631
-XMPlayer: 6b7bf9782cc891f5f09a9af53af40b74abfe9851
 
 Known Issues
 ================================================================================
@@ -23,10 +22,14 @@ vf=ass to #vf=ass in config (ass is disabled by default)
 - If you exit a video with subtitle-text on the screen, the text will still be there if you play a video wihout subtitles, you 
 can "fix" this by going into a video with subs and exiting when there is no sutitle-text
 
+Other(s):
+- Loading .elf files from the filebrowser on the internal harddrive will crash, this also means using "Restart" will crash if
+xenon.elf is only placed on internal harddrive
+
 Not implemented:
 - Audio balance, surround sound and optical out are not supported
 - Pictures and Music are not supported
-- DVD not working
+- DVD not working (crash)
 - No networking!
 
 Install
