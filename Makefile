@@ -144,9 +144,14 @@ dist: fullclean
 	@mkdir -p release/_DEBUG
 	@cp $(TARGET).elf release/_DEBUG/
 	@cp $(TARGET).elf32 release/xenon.elf
+	@cp debug/LibxenonDBUG.exe release/_DEBUG/
 	@mkdir -p release/mplayer/
+	@mkdir -p release/mplayer/cache
+	@mkdir -p release/mplayer/cache/elapsed
 	@cp -r mplayer-files/* release/mplayer/
 	@cp README release/
+	@cp CHANGELOG release/
+	@cp DEBUG release/
 	@cd release; tar czvf $(TARGET).tar.gz *; mv $(TARGET).tar.gz ..
 	@rm -rf release
 	@$(MAKE) clean

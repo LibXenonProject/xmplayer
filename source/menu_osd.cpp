@@ -150,6 +150,19 @@ static int got_metadata = 0;
 static int last_level = 0;
 static char tmpbuff[1024];
 
+static int first_enter;
+/**
+ * Reset controller
+ **/
+static void ResetController()
+{
+	int i = 0;
+	for (i = 0; i < 4; i++) {
+		struct controller_data_s ctrl_zero = {};
+		set_controller_data(i, &ctrl_zero);
+	}
+}
+
 /**
  * Callback for osd option bar
  **/
@@ -606,12 +619,12 @@ extern "C" void mplayer_osd_open()
 	}
 	osd_show = 1;
 	last_level = -1;
+	first_enter = 1;
 }
 
 static void OsdSubtitlesOptions()
 {
 	bool firstRun = true;
-	char *osd_sub_name = "";
 	float osd_subdelay;
 	if ((osd_display_option_audio == 0) && (osd_display_option_video == 0)) {
 		if (osd_display_option_subtitle) {
@@ -718,12 +731,12 @@ static void OsdSubtitlesOptions()
 			}
 			if (ret >= 0 || firstRun) {
 				firstRun = false;
-				osd_sub_name = mplayer_get_subtitle();
+				std::string osd_sub_name(mplayer_get_subtitle());
 				osd_subdelay = (sub_delay * -1000);
-				if ((osd_subdelay < 5) && (osd_subdelay > -5)) {
+				if ((osd_subdelay < 0.100) && (osd_subdelay > -0.100)) {
 					osd_subdelay = 0;
 				}
-				sprintf(subtitle_option_list.value[0], osd_sub_name);
+				sprintf(subtitle_option_list.value[0], osd_sub_name.c_str());
 				sprintf(subtitle_option_list.value[1], "%s", sub_visibility == 1 ? "Enabled" : "Disabled");
 				if (!ass_enabled) {
 					sprintf(subtitle_option_list.value[2], "%d", sub_pos);
@@ -735,7 +748,7 @@ static void OsdSubtitlesOptions()
 				osd_options_subtitle->TriggerUpdate();
 			}
 		} else {
-			osd_options_headline->SetText(NULL);
+			osd_options_headline->SetText("");
 			osd_options_subtitle_window->SetVisible(false);
 			osd_options_subtitle_window->SetFocus(0);
 			osd_options_subtitle->SetFocus(0);
@@ -747,10 +760,7 @@ static void OsdSubtitlesOptions()
 static void OsdAudioOptions()
 {
 	bool firstRun = true;
-	char *osd_mute = "";
-	char *osd_balance = "";
-	char *osd_volume = "";
-	float osd_audiodelay;
+	float osd_audiodelay, osd_volume;
 	if ((osd_display_option_subtitle == 0) && (osd_display_option_video == 0)) {
 		if (osd_display_option_audio) {
 			osd_options_window->SetFocus(0);
@@ -790,11 +800,11 @@ static void OsdAudioOptions()
 					mplayer_switch_volume(0);
 					break;
 				}
-				case 2:
+				/*case 2:
 				{
 					mplayer_switch_balance(1);
 					break;
-				}
+				} */
 				case 4:
 				{
 					audio_delay += 0.1;
@@ -808,11 +818,11 @@ static void OsdAudioOptions()
 					mplayer_switch_volume(1);
 					break;
 				}
-				case 2:
+				/*case 2:
 				{
 					mplayer_switch_balance(0);
 					break;
-				}
+				}*/
 				case 4:
 				{
 					audio_delay -= 0.1;
@@ -823,20 +833,20 @@ static void OsdAudioOptions()
 			if (ret >= 0 || firstRun) {
 				firstRun = false;
 				osd_volume = mplayer_get_volume();
-				osd_balance = mplayer_get_balance();
-				osd_mute = mplayer_get_mute();
+				//std::string osd_balance(mplayer_get_balance());
+				std::string osd_mute(mplayer_get_mute());
 				osd_audiodelay = (audio_delay * -1000);
-				if ((osd_audiodelay < 5) && (osd_audiodelay > -5)) {
+				if ((osd_audiodelay < 0.100) && (osd_audiodelay > -0.100)) {
 					osd_audiodelay = 0;
 				}
-				sprintf(audio_option_list.value[1], osd_volume);
-				sprintf(audio_option_list.value[2], osd_balance);
-				sprintf(audio_option_list.value[3], osd_mute);
+				sprintf(audio_option_list.value[1], "%.0f", osd_volume);
+				sprintf(audio_option_list.value[2], "Disabled"); //balance is not working
+				sprintf(audio_option_list.value[3], osd_mute.c_str());
 				sprintf(audio_option_list.value[4], "%.0f ms", osd_audiodelay);
 				osd_options_audio->TriggerUpdate();
 			}
 		} else {
-			osd_options_headline->SetText(NULL);
+			osd_options_headline->SetText("");
 			osd_options_audio_window->SetVisible(false);
 			osd_options_audio_window->SetFocus(0);
 			osd_options_audio->SetFocus(0);
@@ -848,7 +858,7 @@ static void OsdAudioOptions()
 static void OsdVideoOptions()
 {
 	bool firstRun = true;
-	char osd_framedrop[100] = {};
+	std::string osd_framedrop;
 	if ((osd_display_option_subtitle == 0) && (osd_display_option_audio == 0)) {
 		if (osd_display_option_video) {
 			osd_options_window->SetFocus(0);
@@ -891,19 +901,19 @@ static void OsdVideoOptions()
 			if (ret >= 0 || firstRun) {
 				firstRun = false;
 				if (frame_dropping == 2) {
-					strcpy(osd_framedrop, "Hard");
+					osd_framedrop = "Hard";
 				} else if (frame_dropping == 1) {
-					strcpy(osd_framedrop, "Enabled");
+					osd_framedrop = "Enabled";
 				} else {
-					strcpy(osd_framedrop, "Disabled");
+					osd_framedrop = "Disabled";
 				}
 				sprintf(video_option_list.value[0], "%s", vo_fs == 1 ? "Enabled" : "Disabled");
-				sprintf(video_option_list.value[1], osd_framedrop);
+				sprintf(video_option_list.value[1], osd_framedrop.c_str());
 				sprintf(video_option_list.value[2], "%s", vo_vsync == 1 ? "Enabled" : "Disabled");
 				osd_options_video->TriggerUpdate();
 			}
 		} else {
-			osd_options_headline->SetText(NULL);
+			osd_options_headline->SetText("");
 			osd_options_video_window->SetVisible(false);
 			osd_options_video_window->SetFocus(0);
 			osd_options_video->SetFocus(0);
@@ -956,6 +966,10 @@ extern "C" void mplayer_osd_close()
 
 extern "C" void mplayer_osd_draw(int level)
 {
+	if ((mplayer_get_pause() == 1) && (first_enter == 1)) {
+		ResetController();
+		first_enter = 0;
+	}	
 	//Y-osd button used because libmenu is off
 	GuiTrigger osdMenu;
 	osdMenu.SetButtonOnlyTrigger(-1, 0, PAD_BUTTON_Y);

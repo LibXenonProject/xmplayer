@@ -1,7 +1,7 @@
 #pragma once
 
 #include "mplayer_func.h"
-
+#include <string>
 // mplayer stuff
 extern "C" {
 	#include "../mplayer/mplayer.h"
@@ -63,14 +63,14 @@ enum
 
 
 typedef struct _cp {
-	const char *cpname;
-	const char *language;
+	std::string cpname;
+	std::string language;
 } CP;
 
 typedef struct _lang {
-	const char *language;
-	const char *abbrev;
-	const char *abbrev2;
+	std::string language;
+	std::string abbrev;
+	std::string abbrev2;
 } LANG;
 
 #define LANGUAGE_SIZE 135
@@ -88,17 +88,33 @@ int GetCodepageIndex();
  **/
 typedef struct
 {
-	//RRGGBB00
-	unsigned int hex;
-	char * string;
+        //RRGGBB00
+        unsigned int hex;
+        std::string string;
+       
+ /*       void fromFloat(float * v) {
+                hex = 0;
+                hex = (v[0] * 255.f) | (v[1] * 255.f) >> 8 | (v[2] * 255.f)>> 16 | (v[3] * 255.f) >> 24;
+        } */
+       
+        void toFloat(float *v) {
+                const float col[4] = {
+                        (float)((hex & 0xFF0000000) >> 24) * (1.0f / 255.0f),
+			(float)((hex & 0xFF0000) >> 16) * (1.0f / 255.0f),
+                        (float)((hex & 0xFF00) >> 8) * (1.0f / 255.0f),
+                        1.0,
+                };
+               
+                memcpy(v, col, 4 * sizeof(float));
+        }
 } color;
 
-#define NB_COLOR 4
+#define NB_COLOR 6
 
 extern color colors[NB_COLOR];
 
-char * getColorFromHex(unsigned int hex, color * pColor, int max);
-unsigned int getColorFromString(char * str, color * pColor, int max);
+std::string getColorFromHex(unsigned int hex, color * pColor, int max);
+unsigned int getColorFromString(std::string str, color * pColor, int max);
 int getColorIndex(unsigned int hex, color * pColor, int max);
 
 
@@ -108,5 +124,5 @@ void LoadOsdRessources();
 double playerSeekPrompt(char * seekfile);
 xmplayer_seek_information * playerSeekOpen(char * file);
 void format_time(char * dest, double time);
-int WindowPrompt(const char *title, const char *msg, const char *btn1Label, const char *btn2Label);
-int SmallWindowPrompt(const char *btn1Label, const char *btn2Label);
+int WindowPrompt(std::string title, std::string msg, std::string btn1Label, std::string btn2Label);
+int SmallWindowPrompt(std::string btn1Label, std::string btn2Label);

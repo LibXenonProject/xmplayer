@@ -11,10 +11,10 @@ subpos=90
 #<<==ASS/SSA settings==>>
 # Disable ASS (ass=no) if you are having random freeze (and #vf=ass)
 # ASS Subtitles switch
-ass=yes
-vf=ass
+#ass=yes
+#vf=ass
 # Subtitle font style (MarginV is the number of pixels between bottom of screen and sub)
-ass-force-style=Outline=1,Shadow=1,FontSize=16,MarginV=5,Alignment=2
+#ass-force-style=Outline=1,Shadow=1,FontSize=16,MarginV=5,Alignment=2
 #
 #<<==General subtitles settings==>>
 # Find subtitle files (loads all subs containing movie name)

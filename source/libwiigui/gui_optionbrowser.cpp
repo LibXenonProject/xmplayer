@@ -32,11 +32,11 @@ GuiOptionBrowser::GuiOptionBrowser(int w, int h, GuiImageData * bg_entry, Option
 
     for (int i = 0; i < PAGESIZE; i++) {
 
-        optionTxt[i] = new GuiText(NULL, 20, 0xFFFFFFFF);
+        optionTxt[i] = new GuiText("", 20, 0xFFFFFFFF);
         optionTxt[i]->SetAlignment(ALIGN_LEFT, ALIGN_MIDDLE);
         optionTxt[i]->SetPosition(8, 0);
 
-        optionVal[i] = new GuiText(NULL, 20, 0xFFFFFFFF);
+        optionVal[i] = new GuiText("", 20, 0xFFFFFFFF);
         optionVal[i]->SetAlignment(ALIGN_LEFT, ALIGN_MIDDLE);
         optionVal[i]->SetPosition(500, 0);
 

@@ -9,39 +9,39 @@
 // Color stuffs
 //**************************************************************************
 
-// tmp buffer
-static char unknow_color[10] = {};
-
 color colors[NB_COLOR] = {
 	{ 0xFFFFFF00, "White"},
 	{ 0x00000000, "Black"},
 	{ 0xFFFF0000, "Yellow"},
 	{ 0xFF000000, "Red"},
+	{ 0x0000FF00, "Blue"},
+	{ 0x00FF0000, "Green"},
 };
 
-char * getColorFromHex(unsigned int hex, color * pColor, int max)
+std::string getColorFromHex(unsigned int hex, color * pColor, int max)
 {
-	char * dest = NULL;
+	std::string dest;
 	for (int i = 0; i < max; i++) {
 		if (pColor[i].hex == hex) {
 			dest = pColor[i].string;
 			break;
 		}
 	}
-	if (dest == NULL) {
-		// set it to temp buffer
-		dest = unknow_color;
+	if (dest.empty()) {
 		// set it to the hexadecimal value of the color
-		sprintf(dest, "%08x", hex);
+		char buf[16];		
+		sprintf(buf, "%08x", hex);
+		dest = buf;
+		
 	}
 	return dest;
 }
 
-unsigned int getColorFromString(char * str, color * pColor, int max)
+unsigned int getColorFromString(std::string str, color * pColor, int max)
 {
 	unsigned int dest = 0;
 	for (int i = 0; i < max; i++) {
-		if (strcmp(str, pColor[i].string) == 0) {
+		if (str == pColor[i].string) {
 			dest = pColor[i].hex;
 			break;
 		}
@@ -235,7 +235,7 @@ CP codepages[CODEPAGE_SIZE] = {
 int GetAudioLangIndex()
 {
 	for (int i = 0; i < LANGUAGE_SIZE; i++)
-		if (strcmp(XMPlayerCfg.alang, languages[i].abbrev2) == 0)
+		if (strcmp(XMPlayerCfg.alang, languages[i].abbrev2.c_str()) == 0)
 			return i;
 	return 0;
 }
@@ -243,7 +243,7 @@ int GetAudioLangIndex()
 int GetCodepageIndex()
 {
 	for (int i = 0; i < CODEPAGE_SIZE; i++)
-		if (strcmp(XMPlayerCfg.subcp, codepages[i].cpname) == 0)
+		if (strcmp(XMPlayerCfg.subcp, codepages[i].cpname.c_str()) == 0)
 			return i;
 	return 0;
 }
@@ -251,7 +251,7 @@ int GetCodepageIndex()
 int GetSubLangIndex()
 {
 	for (int i = 0; i < LANGUAGE_SIZE; i++)
-		if (strcmp(XMPlayerCfg.sublang, languages[i].abbrev) == 0)
+		if (strcmp(XMPlayerCfg.sublang, languages[i].abbrev.c_str()) == 0)
 			return i;
 	return 0;
 }
