@@ -11,10 +11,12 @@ Version 0.0.4:
 - Changed: Libass disabled as default, beware libass makes xmplayer unstable
 - Changed: Subfont from Arial to Dejavu Sans
 - Changed: Removed Music and Photos menu for now, not supported
+- Changed: "Restart" now restarts XMPlayer
 - Added: Support for .rmvb files
 - Added: New subtitle shader with selectable color and selectable outline color. Increased stability because libass is not needed
 - Added: New Harddrive and DVD icons
 - Added: XMplayer stops showing loading screen and shows underlying error message, if it indeed crashed
+- Added: Restart to NXE in Global Setting in "Shutdown" option
 
 Version 0.0.3:
 - Fixed: Updated mount code to work with more usb devices (same as XeLL v0.993)

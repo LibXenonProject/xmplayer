@@ -127,3 +127,4 @@ we can set XMplayer to break the loading loop, which then will show the underlyi
 15/09/2013:
 - Fixed: Sometimes when mounting more than 1 USB device, it can crash, now it loads what it can: under FindDevices() it didn't check for name being NULL before, and would crash if it was. Now it just
 loads XMPlayer without that usb device. A Restart of XMPlayer should find it again
+- Added: "Restart" now restarts XMPlayer: added a loop to search for xenon.elf from the mounted device list, it loads the first it finds

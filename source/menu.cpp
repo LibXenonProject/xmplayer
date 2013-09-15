@@ -365,6 +365,18 @@ static void LoadXboxButtons()
 	btn_bk_text->SetEffectGrow();	
 }
 
+void ElfLoader()
+{
+	printf("Load Elf:%s\r\n", mplayer_filename);
+	char * argv[] = {
+		mplayer_filename,
+	};
+	int argc = sizeof (argv) / sizeof (char *);
+
+	elf_setArgcArgv(argc, argv);
+	elf_runFromDisk(mplayer_filename);
+}
+
 static void ExitMplayer()
 {
 	// save settings
@@ -372,11 +384,22 @@ static void ExitMplayer()
 	// restart to xell or shutdown, it will always restart to xell if mplayer cannot initiate
 	if ((XMPlayerCfg.exit_action == 0) || (strlen(MPLAYER_CONFDIR) <= 0)) {
 		exit(0);
+	} else if (XMPlayerCfg.exit_action == 1) {
+		xenon_smc_power_reboot();
 	} else {
 		xenon_smc_power_shutdown();
 	}
 }
 
+static void RestartMplayer()
+{
+	for (int i = 0; i < device_list_size; i++) {
+		sprintf(mplayer_filename, "%s/%s", device_list[i], "xenon.elf");
+		if (file_exists(mplayer_filename)) {
+			ElfLoader();	
+		}
+	}
+}
 /****************************************************************************
  * WindowPrompt
  *
@@ -987,7 +1010,7 @@ static void HomePage()
 				current_menu = SETTINGS;
 				break;
 			case 3:
-				xenon_smc_power_reboot();
+				RestartMplayer();
 				break;
 			case 4:
 				ExitMplayer();
@@ -1080,7 +1103,7 @@ static void GlobalSettings()
 		switch (ret) {
 		case 0:
 			XMPlayerCfg.exit_action++;
-			if (XMPlayerCfg.exit_action > 1)
+			if (XMPlayerCfg.exit_action > 2)
 				XMPlayerCfg.exit_action = 0;
 			break;
 		case 1:
@@ -1095,10 +1118,12 @@ static void GlobalSettings()
 		if (ret >= 0 || firstRun) {
 			firstRun = false;
 
-			if (XMPlayerCfg.exit_action > 1)
+			if (XMPlayerCfg.exit_action > 2)
 				XMPlayerCfg.exit_action = 0;
 			if (XMPlayerCfg.exit_action == 0)
 				sprintf(options.value[0], "Return to Xell");
+			else if (XMPlayerCfg.exit_action == 1)
+				sprintf(options.value[0], "Restart to NXE");
 			else
 				sprintf(options.value[0], "Shutdown");
 
@@ -1788,18 +1813,6 @@ void MenuMplayer()
 		mplayer_load(mplayer_filename);
 		mplayer_return_to_player();
 	}
-}
-
-void ElfLoader()
-{
-	printf("Load Elf:%s\r\n", mplayer_filename);
-	char * argv[] = {
-		mplayer_filename,
-	};
-	int argc = sizeof (argv) / sizeof (char *);
-
-	elf_setArgcArgv(argc, argv);
-	elf_runFromDisk(mplayer_filename);
 }
 
 static void GuiLoop()
