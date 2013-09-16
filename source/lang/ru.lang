@@ -1,0 +1,104 @@
+msgid "@@curitem"
+msgstr "@@curitem"
+
+msgid "Video"
+msgstr "Видео"
+
+msgid "All"
+msgstr "Все"
+
+msgid "Music"
+msgstr "Музыка"
+
+msgid "Photo"
+msgstr "Фото"
+
+msgid "Photos"
+msgstr "Фотографии"
+
+msgid "Setting"
+msgstr "Настройка"
+
+msgid "Settings"
+msgstr "Настройки"
+
+msgid "@@pagecounter"
+msgstr "@@pagecounter"
+
+msgid "@@subheadline"
+msgstr "@@subheadline"
+
+msgid "@@headline"
+msgstr "@@headline"
+
+msgid "@@info_filename"
+msgstr "@@info_filename"
+
+msgid "@@info_cur_time"
+msgstr "@@info_cur_time"
+
+msgid "@@info_duration"
+msgstr "@@info_duration"
+
+msgid "Filename"
+msgstr "Имя Файла"
+
+msgid "Codec"
+msgstr "Кодек"
+
+msgid "Resolution"
+msgstr "Разрешение"
+
+msgid "Bitrate"
+msgstr "Бит-rate"
+
+msgid "Audio"
+msgstr "Аудио"
+
+msgid "Information"
+msgstr "Информация"
+
+msgid "Fullscreen"
+msgstr "Во весь экран"
+
+msgid "Subtitle"
+msgstr "Субтитры"
+
+msgid "Return to gui"
+msgstr "Вернуться в меню"
+
+msgid "Warning"
+msgstr "Внимание"
+
+msgid "Not implemented yet"
+msgstr "Пока не реализовано"
+
+msgid "Ok"
+msgstr "Ок"
+
+msgid "Filename:"
+msgstr "Файл:"
+
+msgid "Codec:"
+msgstr "Кодек:"
+
+msgid "Resolution:"
+msgstr "Разрешение:"
+
+msgid "Bitrate:"
+msgstr "Бит-rate:"
+
+msgid "Subtitles"
+msgstr "Субтитры"
+
+msgid "Visibility"
+msgstr "Показать"
+
+msgid "Position"
+msgstr "Позиция"
+
+msgid "Delay"
+msgstr "Задержка"
+
+msgid "Scale"
+msgstr "Шкала"
